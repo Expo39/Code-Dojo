@@ -1,0 +1,8 @@
+{
+  "name": "Python",
+  "description": "Python fundamentals, reading and debugging code, then data structures and algorithms.",
+  "extension": ".py",
+  "test_file": "tests/test_{slug}.py",
+  "solution_file": ".solutions/{slug}.py",
+  "test_command": ["{python}", "-m", "pytest", "-q", "--no-header", "-p", "no:cacheprovider", "{test}"]
+}

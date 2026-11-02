@@ -1,0 +1,21 @@
+{
+  "name": "code-dojo",
+  "description": "Tutor-mode skills and agents for Code Dojo: session catch-up, placement, PRIMM lessons, mock interviews, reading and debugging drills, weekly reviews, exercise generation, code review and progress coaching.",
+  "version": "0.1.0",
+  "author": { "name": "Antonio Galdes" },
+  "keywords": ["learning", "tutor", "coding-interview", "spaced-repetition", "python"],
+  "skills": [
+    "./.claude/skills/dojo-session",
+    "./.claude/skills/dojo-assess",
+    "./.claude/skills/dojo-teach",
+    "./.claude/skills/dojo-mock",
+    "./.claude/skills/dojo-drill",
+    "./.claude/skills/dojo-weekly",
+    "./.claude/skills/dojo-new-exercise"
+  ],
+  "agents": [
+    "./.claude/agents/problem-setter.md",
+    "./.claude/agents/code-reviewer.md",
+    "./.claude/agents/progress-coach.md"
+  ]
+}

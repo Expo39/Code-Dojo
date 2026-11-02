@@ -1,0 +1,14 @@
+{
+  "name": "code-dojo",
+  "description": "Code Dojo tutor plugin",
+  "owner": { "name": "Antonio Galdes" },
+  "plugins": [
+    {
+      "name": "code-dojo",
+      "description": "Tutor-mode skills and agents for Code Dojo.",
+      "source": "./",
+      "version": "0.1.0",
+      "category": "learning"
+    }
+  ]
+}

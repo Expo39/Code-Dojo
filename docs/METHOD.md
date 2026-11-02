@@ -1,0 +1,106 @@
+# Method: how the dojo teaches
+
+The short version: **do, do not watch**. Every hour should end with code you wrote or code
+you can explain line by line. The rules below come from learning research and from
+experienced engineers' advice; sources are at the bottom.
+
+## Ten principles
+
+1. **Retrieval beats re-reading.** Writing a solution from a blank file, days later, is what
+   builds memory. Re-reading a solution feels productive and is not. That is why every exercise
+   goes into a redo queue and comes back from a *blank* file.
+
+2. **Spaced, not massed.** Redos come back after 1, 3, 7, 14, 30 and 60 days (Leitner boxes).
+   A clean solve moves an item up a box; a struggle sends it back to box 0. Aim for about
+   half new material and half redos.
+
+3. **Deliberate practice: just past your edge, with fast feedback.** Every exercise has tests,
+   so feedback takes seconds. Targets are set so that you are slightly stretched. If something
+   takes more than twice the target, stop, ask for a hint at the lowest level that helps, and
+   schedule a redo.
+
+4. **Predict before you run (PRIMM).** For each new concept: **P**redict what code does,
+   **R**un it, **I**nvestigate (trace, debug, annotate), **M**odify it, then **M**ake your
+   own. This builds the reading skill and the writing skill together, and it is how the tutor
+   teaches a new topic.
+
+5. **Worked examples first, then fade the help.** Novices learn faster from a clear worked
+   example than from struggling blind. The tutor shows a concept on a *different* problem,
+   then gives tiny typing steps, then a full exercise. Help fades as you improve: hints go
+   from a question, to a concept, to a plan, to pseudocode, and only last to an explanation
+   of a solution.
+
+6. **Read as much as you write.** In the AI age you will read far more code than you type.
+   Trace code by hand, predict its output, review code with planted bugs, and read real code
+   (the standard library, small open-source projects). If you cannot explain a line, you do
+   not understand the program.
+
+7. **Build things (escape tutorial hell).** Exercises train moves; projects train the game.
+   Every phase includes small projects with no step-by-step guide: you decide the structure,
+   get stuck, and get unstuck. That is where confidence comes from.
+
+8. **Train the performance, not just the knowledge.** Interviewing is a separate skill:
+   solving while talking, under time pressure, with someone watching. Practise it from week 1
+   in small doses (a talk-aloud timed problem most days, a mock every week) so that the format
+   is familiar long before it matters.
+
+9. **Use AI as a tutor, never as a ghostwriter.** In Anthropic's 2026 randomised study,
+   developers learning a new library with AI help scored 17 percentage points lower on
+   understanding than those who coded unaided. Those who used AI to *ask conceptual questions
+   and request explanations* kept their learning. So the tutor here explains, questions and
+   reviews, and never writes your exercise code.
+
+10. **Measure, and let the data steer.** Time against target, hints used, and clean solves are
+    logged for every attempt. The weekly review reads the numbers, not feelings, and changes
+    next week's plan. Confidence built on evidence survives a bad day; confidence built on
+    hope does not.
+
+## The hint ladder
+
+Ask for help at the lowest level that could unblock you. The tutor always says which level it
+is giving, and the number of levels used is logged as "hints".
+
+| Level | What you get |
+| --- | --- |
+| 1. Question | One question that points at the gap ("What should happen for an empty list?") |
+| 2. Concept | The idea or tool, no code ("This is counting: a dict from item to count") |
+| 3. Plan | The steps in plain English |
+| 4. Pseudocode | The structure with blanks you fill in |
+| 5. Walkthrough | The reference solution explained line by line; then you close it, write it from memory, and it goes to the redo queue for tomorrow |
+
+## When you are stuck (on your own)
+
+1. Reread the task and the test (1 minute).
+2. Solve the example by hand; write the steps as comments; turn each comment into code (5 minutes).
+3. Write the simplest version that works, even if ugly.
+4. Runs but wrong? Set a breakpoint and compare every variable with what you expected (5 minutes).
+5. Missing syntax? Look it up, close the page, type it from memory.
+6. Ask the tutor for a hint. Do not stay stuck past twice the target time.
+
+## Weekly balance
+
+For a default 18-hour week. The daily templates in `DAILY_SESSION.md` follow this split.
+
+| Strand | Share | What it is |
+| --- | --- | --- |
+| Learn | about 25% | new concepts with PRIMM, teach-me lessons, first attempts at new exercises |
+| Write | about 25% | the redo queue from blank files, plus new exercises |
+| Read and debug | about 20% | predict drills, code reading, bug drills, reviewing AI-written code |
+| Build | about 15% | the current project |
+| Perform | about 15% | a talk-aloud timed problem, explain drills, and the weekly mock interview |
+
+## Sources
+
+- Anthropic (2026), *How AI assistance impacts the formation of coding skills*:
+  https://www.anthropic.com/research/AI-assistance-coding-skills
+- Retrieval and spaced repetition applied to coding-interview practice (Red-Green-Code,
+  LeetCode tips 9 and 10): https://www.redgreencode.com/leetcode-tip-9-spaced-repetition/ and
+  https://www.redgreencode.com/leetcode-tip-10-planning-a-spaced-repetition-schedule/
+- PRIMM (Sentance and Waite), Raspberry Pi Foundation summary:
+  https://static.raspberrypi.org/files/curriculum/quickreads/11-Pedagogy_Summary_PRIMM_V4_2023.pdf
+- Effective learning strategies and their limits for novices (Frontiers in Education, 2022):
+  https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2022.996039/text
+- Escaping tutorial hell by building projects (Real Python):
+  https://realpython.com/how-to-get-out-of-tutorial-hell/
+- Pattern-based interview preparation and mock interviews (NeetCode):
+  https://neetcode.io/roadmap and https://blog.neetcode.io/p/prepare-coding-interviews
