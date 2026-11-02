@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && (python3 dojo.py brief 2>/dev/null || python dojo.py brief)"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(python3 dojo.py *)",
+      "Bash(python dojo.py *)",
+      "Bash(py dojo.py *)"
+    ],
+    "ask": [
+      "Edit(/workspace/python/**)",
+      "Write(/workspace/python/**)",
+      "Edit(/workspace/projects/**)",
+      "Write(/workspace/projects/**)",
+      "Bash(git push*)"
+    ]
+  }
+}
