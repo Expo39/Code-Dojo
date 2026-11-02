@@ -2,13 +2,13 @@
 
 Level: tiny
 Target: 5
-Pattern: zip
 
-Return [nums[1] - nums[0], nums[2] - nums[1], ...]. Fewer than 2 items gives [].
-Try zip(nums, nums[1:]).
+Return the differences between each number and the one before it.
 
     pairwise_diffs([1, 4, 9, 16]) -> [3, 5, 7]
-    pairwise_diffs([5]) -> []
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify pairwise_diffs
 """
 
 

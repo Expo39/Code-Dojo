@@ -2,7 +2,6 @@
 
 Level: medium
 Target: 15
-Pattern: late-binding
 
 Kind: debug
 

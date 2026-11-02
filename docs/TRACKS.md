@@ -54,6 +54,7 @@ measurable gates, not feelings, decide when to move on.
   "extension": ".rs",
   "test_file": "tests/test_{slug}.rs",
   "solution_file": ".solutions/{slug}.rs",
+  "clarify_file": ".clarify/{slug}.md",
   "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"]
 }
 ```
@@ -80,12 +81,17 @@ measurable gates, not feelings, decide when to move on.
   e01_<slug>.<ext>           task + stub. e = write, b = fix a bug, r = read and predict
   tests/test_<slug>.<ext>    tests (path set by "test_file")
   .solutions/<slug>.<ext>    reference solution (path set by "solution_file")
+  .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")
 ```
 
 - `<slug>` is unique across all tracks (it is the exercise's name in the tracker).
 - The task text contains these header lines (in a docstring or comments):
-  `Level: tiny|easy|medium|hard`, `Target: <minutes>`, `Pattern: <short-name>`, and optionally
-  `Kind: debug|predict`.
+  `Level: tiny|easy|medium|hard`, `Target: <minutes>`, and optionally `Kind: debug|predict`.
+- The task gives the statement, ONE main example and any constraint an interviewer would state
+  up front ("do not use max()", "aim for O(n)"). No edge cases, no tips, no pattern name:
+  discovering those is the learner's job. They go in `.clarify/<slug>.md`, which starts with a
+  `Pattern: <short-name>` line (read by the tracker, hidden from the learner until `done`),
+  followed by the answers to the clarifying questions an interviewer would expect.
 - Targets: tiny 5, easy 10 to 15, medium 20 to 30, hard 45 minutes, for a learner at the
   module's level working alone.
 - Each exercise has 3 to 6 tests, including edge cases. `python dojo.py verify` must show that

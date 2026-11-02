@@ -2,11 +2,14 @@
 
 Level: medium
 Target: 20
-Pattern: context-manager
 
-Write a class Timer usable as `with Timer() as t: ...`. After the block,
-t.elapsed holds the seconds the block took (use time.perf_counter). If the
-block raises, the exception must still propagate and elapsed must still be set.
+Write a class Timer usable as `with Timer() as t: ...`. After the block, t.elapsed
+holds the seconds the block took (measured with time.perf_counter).
+
+    with Timer() as t: time.sleep(0.05)   ->  t.elapsed is about 0.05
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify timer_block
 
 Read: https://docs.python.org/3/reference/datamodel.html#context-managers
 """

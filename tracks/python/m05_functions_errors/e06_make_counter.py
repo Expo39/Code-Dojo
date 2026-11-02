@@ -2,15 +2,15 @@
 
 Level: easy
 Target: 10
-Pattern: closure
 
-Return a function. Each time it is called it returns the next number, starting
+Return a function that returns the next number each time it is called, starting
 at `start`.
 
     c = make_counter(5)
     c() -> 5; c() -> 6; c() -> 7
 
-Two counters must not share state. (You will need `nonlocal`.)
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify make_counter
 """
 
 

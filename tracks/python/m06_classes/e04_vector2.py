@@ -2,14 +2,14 @@
 
 Level: easy
 Target: 15
-Pattern: dataclass-dunder
 
-Write Vector2(x, y) (a @dataclass is fine) supporting:
-- v + w -> new Vector2
-- v * 3 -> new Vector2 scaled
-- v == w compares values
-- v.length() -> float (Pythagoras)
-- repr: Vector2(x=1, y=2)
+Write Vector2(x, y) supporting v + w, v * 3 (scaling), v == w (by value),
+v.length() (Pythagoras, a float) and the repr Vector2(x=1, y=2).
+
+    Vector2(1, 2) + Vector2(3, 4) == Vector2(4, 6)
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify vector2
 """
 
 

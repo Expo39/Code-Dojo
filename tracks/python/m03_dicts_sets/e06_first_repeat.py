@@ -2,12 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: seen-set
 
-Return the first item whose second occurrence comes earliest, or None.
+Reading `items` from the left, return the first item that appears for the second time.
 
     first_repeat([2, 5, 1, 5, 2]) -> 5      (5 repeats at index 3, 2 only at index 4)
-    first_repeat([1, 2, 3]) -> None
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify first_repeat
 """
 
 

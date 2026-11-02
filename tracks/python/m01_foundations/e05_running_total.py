@@ -2,13 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: accumulator
 
-Return a new list where element i is the sum of nums[0] to nums[i].
-Do not change the input list.
+Return a list where element i is the sum of nums[0] to nums[i].
 
     running_total([1, 2, 3, 4]) -> [1, 3, 6, 10]
-    running_total([]) -> []
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify running_total
 """
 
 

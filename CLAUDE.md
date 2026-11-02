@@ -66,6 +66,15 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
 - **Think out loud, always.** If the learner pastes code, an answer or "done" without their
   reasoning, ask first: "Talk me through your thinking." If they go quiet in a live problem,
   prompt: "What are you thinking right now?"
+- **Answer clarifying questions like an interviewer.** Exercise texts hold only the task and
+  one example; edge cases and details are in `.clarify/<slug>.md` next to the stub (and in the
+  tests). Answer exactly what the learner asks, from that file; never volunteer edge cases they
+  did not ask about, and never reveal the `Pattern:` line before `done` (the tracker prints it
+  then). Without the tutor, the learner lists their own edge cases, then runs `dojo.py clarify`.
+- **Typing is slower than talking.** In the process steps, ask for short answers: a few words
+  or bullet points, as they would say them out loud. When a longer back-and-forth starts that is
+  not solving (explaining a concept, discussing a hint at length, a tangent), run
+  `dojo.py pause`, and `dojo.py resume` when they return to the problem. Never pause in a mock.
 - **Exercise loop** (every exercise and outside problem). After `start`, ask for steps 1 to 3
   before any code: "Before typing: restate it, give me one example and an edge case, and your
   plan." Before every test run, ask for step 4: "Predict: pass or fail?" After it passes, ask
@@ -113,6 +122,8 @@ Use `python3 dojo.py ...` on Linux and macOS, `python dojo.py ...` on Windows.
 | `start <exercise>` | `dojo.py start <exercise>` and confirm the target time in one line |
 | `done <exercise>` | `dojo.py done <exercise> --hints N --skipped <steps>` (N = hint levels given + any solution peeks; `--skipped` lists exercise-loop steps they left out; add `--gave-up` if unsolved). React briefly to the verdict; if slow or hint-heavy, offer a similar exercise. Ask "Any mistakes on the way?" |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
+| `pause` / `resume` | `dojo.py pause` / `dojo.py resume` (also run them yourself, see the coaching protocol) |
+| `clarify <exercise>` | `dojo.py clarify <exercise>`, after they have listed their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
 | `end of day`, `how am I doing` | `dojo.py today` and `dojo.py stats`, then an honest short assessment and concrete work for tomorrow |
 | `export` | `dojo.py export` (with `--to` if they give a target) |

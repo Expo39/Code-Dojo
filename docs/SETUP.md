@@ -37,8 +37,8 @@ from https://git-scm.com if you do not have it.
 ## Editor and debugger: VS Code or Zed
 
 Both are configured in the repo (`.vscode/` and `.zed/`). In both, inline AI suggestions are
-off for this folder (the point is to type it yourself) and `.solutions/` folders are hidden
-from the file panel.
+off for this folder (the point is to type it yourself) and the `.solutions/` and `.clarify/`
+folders are hidden from the file panel.
 
 The debugger always runs `python dojo.py test <exercise> --debug`, which runs that exercise's
 tests inside the debugger's own process, so breakpoints in your `workspace/` file are hit.

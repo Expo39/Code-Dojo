@@ -21,6 +21,7 @@ tracks/python/m04_parsing/
   e01_parse_pairs.py            the task (docstring) and a stub: never edited
   tests/test_parse_pairs.py     the tests
   .solutions/parse_pairs.py     reference answer: the tutor reads it for hints, you do not
+  .clarify/parse_pairs.md       the interviewer's answers on edge cases (python dojo.py clarify)
 ```
 
 `python dojo.py start parse_pairs` copies the stub to `workspace/python/parse_pairs.py` (your

@@ -2,13 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: slicing
 
-Return a list of lists of length `size`; the last chunk may be shorter.
-Raise ValueError if size is less than 1.
+Split `items` into consecutive lists of length `size`.
 
     chunk([1, 2, 3, 4, 5], 2) -> [[1, 2], [3, 4], [5]]
-    chunk([], 3) -> []
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify chunk
 """
 
 

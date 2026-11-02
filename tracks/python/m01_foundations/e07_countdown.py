@@ -2,14 +2,13 @@
 
 Level: tiny
 Target: 5
-Pattern: range
 
-Return the list [n, n-1, ..., 1]. For n <= 0 return [].
+Return the list [n, n-1, ..., 1].
 
     countdown(3) -> [3, 2, 1]
-    countdown(0) -> []
 
-Use range with a negative step. What is the stop value, given stop is excluded?
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify countdown
 """
 
 

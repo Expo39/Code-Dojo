@@ -2,14 +2,14 @@
 
 Level: medium
 Target: 20
-Pattern: char-scanning
 
-Convert strings like "1h30m", "45m", "2h", "90s", "1h2m3s" to a number of
-seconds. Units are h, m, s, each at most once, in that order. Raise ValueError
-for anything else ("", "10", "5x", "m5", "1m1h").
+Convert a duration string such as "1h30m" to a number of seconds.
 
     parse_duration("1h30m") -> 5400
     parse_duration("90s") -> 90
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify parse_duration
 """
 
 

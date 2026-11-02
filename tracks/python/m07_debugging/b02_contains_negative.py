@@ -2,7 +2,6 @@
 
 Level: tiny
 Target: 5
-Pattern: early-return
 
 Kind: debug
 

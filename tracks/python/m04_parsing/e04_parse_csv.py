@@ -2,15 +2,15 @@
 
 Level: easy
 Target: 20
-Pattern: line-parsing
 
-The first non-blank line is the header. Return one dict per data row, keys from
-the header, values stripped of spaces. Skip blank lines. If a row has the wrong
-number of fields, raise ValueError whose message contains the line number
-(1-based, counting every line of the text).
+Turn CSV text into a list of dicts, one per data row, with keys from the header
+row. Do not use the csv module.
 
     parse_csv("name, qty\napple, 3\npear,5")
     -> [{"name": "apple", "qty": "3"}, {"name": "pear", "qty": "5"}]
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify parse_csv
 """
 
 

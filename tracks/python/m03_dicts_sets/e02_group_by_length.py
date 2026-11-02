@@ -2,12 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: grouping
 
-Return a dict mapping a length to the list of words with that length, keeping
-the original order inside each list.
+Return a dict mapping each word length to the list of words with that length.
 
     group_by_length(["hi", "cat", "yo", "dog"]) -> {2: ["hi", "yo"], 3: ["cat", "dog"]}
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify group_by_length
 """
 
 

@@ -11,6 +11,7 @@
   "files.exclude": {
     "**/__pycache__": true,
     "**/.pytest_cache": true,
-    "**/.solutions": true
+    "**/.solutions": true,
+    "**/.clarify": true
   }
 }

@@ -2,7 +2,6 @@
 
 Level: tiny
 Target: 5
-Pattern: accumulator-init
 
 Kind: debug
 

@@ -2,15 +2,14 @@
 
 Level: medium
 Target: 20
-Pattern: hashmap-grouping
 
-Group words that are anagrams of each other. Return a list of groups; inside a
-group keep input order; order the groups by the first appearance of their first word.
+Group the words that are anagrams of each other. Return a list of groups.
 
     group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"])
     -> [["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]
 
-What can you use as a dict key that is the same for all anagrams?
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify group_anagrams
 """
 
 

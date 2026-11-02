@@ -2,7 +2,6 @@
 
 Level: easy
 Target: 10
-Pattern: shallow-copy
 
 Kind: debug
 

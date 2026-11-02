@@ -2,13 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: slicing
 
-Return a new list rotated right by k places. k can be larger than the list.
+Return `items` rotated right by k places.
 
     rotate([1, 2, 3, 4, 5], 2) -> [4, 5, 1, 2, 3]
-    rotate([1, 2, 3], 4) -> [3, 1, 2]
-    rotate([], 3) -> []
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify rotate
 """
 
 

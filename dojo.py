@@ -261,6 +261,7 @@ DEFAULT_TRACK = {
     "extension": ".py",
     "test_file": "tests/test_{slug}.py",
     "solution_file": ".solutions/{slug}.py",
+    "clarify_file": ".clarify/{slug}.md",
     "test_command": None,
 }
 
@@ -298,12 +299,18 @@ def discover(active_only: bool = True) -> dict:
                 continue
             text = path.read_text(encoding="utf-8")
             meta = {k.lower(): v.strip() for k, v in HEADER_RE.findall(text)}
+            clarify = path.parent / track["clarify_file"].format(slug=slug)
+            if clarify.exists():
+                # The pattern lives in the hidden clarify file so the task does not give it away.
+                hidden = {k.lower(): v.strip() for k, v in HEADER_RE.findall(clarify.read_text(encoding="utf-8"))}
+                meta = {**hidden, **meta}
             level = meta.get("level", "easy")
             found[slug] = {
                 "slug": slug,
                 "stub": path,
                 "solution": path.parent / track["solution_file"].format(slug=slug),
                 "test": path.parent / track["test_file"].format(slug=slug),
+                "clarify": clarify,
                 "attempt": WORKSPACE / track_name / f"{slug}{ext}",
                 "track": track_name,
                 "track_config": track,
@@ -568,14 +575,14 @@ def cmd_list(args) -> None:
             status = "mastered"
         else:
             status = f"box {card['box']}, due {card['due']}"
-        print(f"  {slug:28} {ex['level']:6} {ex['target']:>3}m  {ex['pattern'][:22]:22} {status}")
+        print(f"  {slug:28} {ex['level']:6} {ex['target']:>3}m  {status}")
 
 
 def cmd_start(args) -> None:
     ensure_files()
     timers = read_json(TIMER, {})
     if args.item in timers:
-        die(f"'{args.item}' is already running since {timers[args.item]}.")
+        die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
     ex = discover().get(args.item)
     if ex:
         due = [k for k, _ in due_items(today()) if k != args.item]
@@ -598,12 +605,12 @@ def cmd_start(args) -> None:
                 print("Redo from a blank file: do not open .history/ or old notes.")
         else:
             print(f"Continuing your file: {shown}")
-        print(f"Target: {ex['target']} min ({ex['level']}, {ex['pattern']}). "
+        print(f"Target: {ex['target']} min ({ex['level']}). "
               f"Test with: python dojo.py test {args.item}")
         print(CHECKLIST)
     else:
         print(f"Timer started for '{args.item}' (not a dojo exercise; log it with `done` as usual).")
-    timers[args.item] = now().isoformat()
+    timers[args.item] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None}
     write_json(TIMER, timers)
 
 
@@ -646,7 +653,7 @@ def cmd_done(args) -> None:
     if args.minutes is not None:
         minutes = float(args.minutes)
     elif started:
-        minutes = (now() - datetime.fromisoformat(started)).total_seconds() / 60
+        minutes = timer_minutes(started)
     else:
         die("No timer running for this item. Pass --minutes N.")
     write_json(TIMER, timers)
@@ -688,6 +695,8 @@ def cmd_done(args) -> None:
         verdict += f" ({ratio}x target {target}m)"
     verdict += f", hints {args.hints}."
     print(verdict)
+    if ex and ex["pattern"]:
+        print(f"Pattern: {ex['pattern']}")
     if ratio is not None and ratio > 2 and args.hints == 0 and result != "solved":
         print("Over twice the target without a hint: next time ask for hint 1 at 2x; "
               "an hour of struggle teaches less than a hint and a redo tomorrow.")
@@ -712,6 +721,67 @@ def cmd_log(args) -> None:
                 "minutes": args.minutes, "hints": args.hints, "result": args.result or "",
                 "pattern": args.pattern or "", "level": args.level or "", "note": args.note or ""})
     print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {on}.")
+
+
+def timer_of(value) -> dict:
+    """Timers were plain start times in older versions; normalise to the dict form."""
+    if isinstance(value, str):
+        return {"start": value, "paused_total": 0.0, "paused_at": None}
+    return value
+
+
+def timer_minutes(value) -> float:
+    t = timer_of(value)
+    seconds = (now() - datetime.fromisoformat(t["start"])).total_seconds() - t["paused_total"]
+    if t["paused_at"]:
+        seconds -= (now() - datetime.fromisoformat(t["paused_at"])).total_seconds()
+    return max(seconds, 0) / 60
+
+
+def pick_timer(timers: dict, item: str | None) -> str:
+    if item:
+        if item not in timers:
+            die(f"No timer for '{item}'.")
+        return item
+    if len(timers) != 1:
+        die("Name the timer: " + (", ".join(timers) if timers else "none running"))
+    return next(iter(timers))
+
+
+def cmd_pause(args) -> None:
+    """Stop the clock while talking things through (a concept, a long hint)."""
+    timers = read_json(TIMER, {})
+    item = pick_timer(timers, args.item)
+    t = timer_of(timers[item])
+    if t["paused_at"]:
+        die(f"'{item}' is already paused.")
+    t["paused_at"] = now().isoformat()
+    timers[item] = t
+    write_json(TIMER, timers)
+    print(f"Paused '{item}' at {fmt_min(timer_minutes(t))}. Resume with: python dojo.py resume")
+
+
+def cmd_resume(args) -> None:
+    timers = read_json(TIMER, {})
+    item = pick_timer(timers, args.item)
+    t = timer_of(timers[item])
+    if not t["paused_at"]:
+        die(f"'{item}' is not paused.")
+    t["paused_total"] += (now() - datetime.fromisoformat(t["paused_at"])).total_seconds()
+    t["paused_at"] = None
+    timers[item] = t
+    write_json(TIMER, timers)
+    print(f"Resumed '{item}' ({fmt_min(timer_minutes(t))} so far).")
+
+
+def cmd_clarify(args) -> None:
+    """Show the interviewer's answers to clarifying questions (after listing your own)."""
+    ex = get_exercise(args.item)
+    if not ex["clarify"].exists():
+        die("No clarifications for this exercise: the task text is the full specification.")
+    lines = [l for l in ex["clarify"].read_text(encoding="utf-8").splitlines()
+             if not l.startswith("Pattern:")]
+    print(re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip())
 
 
 def cmd_cancel(args) -> None:
@@ -843,7 +913,9 @@ def cmd_today(args, brief: bool = False) -> None:
         if days_left >= 0:
             lines.append(f"Target date {profile['target_date']}: {days_left} days left.")
     if timers:
-        lines.append("Timers running: " + ", ".join(f"{k} (since {v[11:16]})" for k, v in timers.items()))
+        lines.append("Timers running: " + ", ".join(
+            f"{k} ({fmt_min(timer_minutes(v))} so far{', PAUSED' if timer_of(v)['paused_at'] else ''})"
+            for k, v in timers.items()))
     if due:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in due[:8])
         more = f" and {len(due) - 8} more" if len(due) > 8 else ""
@@ -1015,7 +1087,7 @@ def cmd_sync(args) -> None:
             print(f"  {slug}: edited {changed:%Y-%m-%d %H:%M}, not logged, tests {state}.")
             found = True
     for item, started in timers.items():
-        print(f"  Timer still running: {item} since {started}.")
+        print(f"  Timer still running: {item} since {timer_of(started)['start']}.")
         found = True
     if not found:
         print("Everything is logged.")
@@ -1060,6 +1132,8 @@ HELP = """Code Dojo commands (python dojo.py <command>):
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
        mocks: done mock_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
+  pause / resume [item]    stop the clock while talking something through, then continue
+  clarify <item>           the interviewer's answers (edge cases); list your own first
   cancel <item>            discard a running timer
   mark <items/modules> --box N   seed the redo schedule for things you already know
   mistake <item> "what went wrong" "correct form"
@@ -1111,6 +1185,9 @@ def main() -> None:
     p.add_argument("--note")
     p.add_argument("--date")
     p = sub.add_parser("cancel"); p.add_argument("item")
+    p = sub.add_parser("pause"); p.add_argument("item", nargs="?")
+    p = sub.add_parser("resume"); p.add_argument("item", nargs="?")
+    p = sub.add_parser("clarify"); p.add_argument("item")
     p = sub.add_parser("mark"); p.add_argument("items", nargs="+"); p.add_argument("--box", type=int, default=2)
     p = sub.add_parser("mistake"); p.add_argument("item"); p.add_argument("what"); p.add_argument("fix")
     p = sub.add_parser("week"); p.add_argument("--write", action="store_true")
@@ -1126,7 +1203,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
         "sync": cmd_sync, "verify": cmd_verify,
     }
     if args.cmd == "brief":

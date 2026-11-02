@@ -2,16 +2,14 @@
 
 Level: tiny
 Target: 5
-Pattern: enumerate
 
-Return the index of the first element equal to `target`, or -1 if there is none.
-Do not use list.index(): loop with enumerate.
+Return the index of the first element of `items` equal to `target`.
+Do not use list.index().
 
     first_index(["a", "b", "a"], "a") -> 0
-    first_index([4, 5, 6], 6) -> 2
-    first_index([], 1) -> -1
 
-Think: where does the "not found" return go, inside or after the loop?
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify first_index
 """
 
 

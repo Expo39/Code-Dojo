@@ -2,14 +2,13 @@
 
 Level: easy
 Target: 15
-Pattern: counting
 
-Return the character that appears most often. On a tie, return the one that
-appears first in the string. Empty string gives None.
+Return the character that appears most often in `text`.
 
     most_common_char("abracadabra") -> "a"
-    most_common_char("abab") -> "a"
-    most_common_char("") -> None
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify most_common_char
 """
 
 

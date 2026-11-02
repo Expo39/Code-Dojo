@@ -2,14 +2,13 @@
 
 Level: tiny
 Target: 5
-Pattern: split-join
 
 Return the words of `text` in reverse order, joined by single spaces.
-Extra spaces anywhere are dropped.
 
     reverse_words("hello big world") -> "world big hello"
-    reverse_words("  a   b ") -> "b a"
-    reverse_words("") -> ""
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify reverse_words
 """
 
 

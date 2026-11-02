@@ -2,12 +2,13 @@
 
 Level: easy
 Target: 15
-Pattern: fixed-window
 
-Return the largest sum of any k consecutive numbers, or None if k is not in
-1..len(nums). Aim for O(n): slide the window, do not re-add it every time.
+Return the largest sum of any k consecutive numbers in `nums`. Aim for O(n).
 
     max_window_sum([2, 1, 5, 1, 3, 2], 3) -> 9
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify max_window_sum
 """
 
 

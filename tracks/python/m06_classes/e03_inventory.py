@@ -2,15 +2,14 @@
 
 Level: easy
 Target: 20
-Pattern: class-dict
 
-class Inventory with:
-- add(item, qty): qty > 0 else ValueError
-- remove(item, qty): ValueError if qty <= 0 or more than in stock; an item that
-  reaches 0 disappears from the inventory
-- count(item): stock, 0 for unknown items
-- total(): total number of units
-- low_stock(threshold): sorted list of items with stock below threshold
+Write class Inventory with add(item, qty), remove(item, qty), count(item),
+total() (all units) and low_stock(threshold) (the items with stock below threshold).
+
+    inv.add("bolt", 10); inv.add("bolt", 5); inv.count("bolt") -> 15
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify inventory
 """
 
 

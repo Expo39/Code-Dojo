@@ -2,15 +2,13 @@
 
 Level: easy
 Target: 10
-Pattern: counting
 
-Return a dict mapping each word (lower case) to how often it appears.
-Words are separated by whitespace; strip the punctuation .,!? from both ends.
+Return a dict mapping each word of `text` (lower case) to how often it appears.
 
     word_count("The cat and the hat.") -> {"the": 2, "cat": 1, "and": 1, "hat": 1}
-    word_count("") -> {}
 
-Write it with a plain dict and .get() first; then try collections.Counter.
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify word_count
 """
 
 

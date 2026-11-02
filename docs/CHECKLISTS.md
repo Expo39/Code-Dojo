@@ -16,7 +16,7 @@ because it is the step that trains reading.
 
 | # | Step | You show | Done when |
 | --- | --- | --- | --- |
-| 1 | **Understand** | The task in your own words; 1 to 3 questions about input, empty cases, duplicates, invalid data | You could explain the task to someone who has not read it |
+| 1 | **Understand** | The task in your own words; 1 to 3 questions about input, empty cases, duplicates, invalid data. The task text deliberately leaves edge cases out: ask the tutor, or list yours and then compare with `python dojo.py clarify <exercise>` | You could explain the task to someone who has not read it |
 | 2 | **Example** | One small input worked by hand, plus one edge case, written as a comment | You know the expected output of both |
 | 3 | **Plan** | The approach in 1 or 2 sentences and its rough complexity, before typing | The plan is specific enough that someone else could code it |
 | 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ..." | You said it out loud before pressing Enter |
@@ -24,6 +24,11 @@ because it is the step that trains reading.
 | 6 | **Reflect** | Time and space complexity; the input that would break it; one improvement | You could defend the solution to an interviewer |
 
 Code (between steps 3 and 4) happens in small pieces, narrated: "now I collect the counts".
+
+Typing your thinking to the tutor is slower than saying it: keep answers short (a few words,
+bullets). For a longer discussion that is not solving, the tutor pauses the clock
+(`python dojo.py pause`, then `resume`), so the time against target stays fair. Mocks are never
+paused: there, the clock is part of the test.
 
 ## 2. New concept: PRIMM
 

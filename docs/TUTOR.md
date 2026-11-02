@@ -13,6 +13,8 @@ these in plain words; the tutor runs the tracker for you.
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
 | `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/` (a blank one for a redo) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
+| `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
+| `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |
 | `log mistake: ...` | Added to `progress/mistakes.md` |

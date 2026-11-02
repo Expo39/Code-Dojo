@@ -2,13 +2,14 @@
 
 Level: easy
 Target: 10
-Pattern: generator
 
 Write a generator function that yields lists of up to `size` items from any
-iterable (it must work on an iterator that can only be read once, without
-turning it into a list first).
+iterable.
 
     list(read_chunks(range(5), 2)) -> [[0, 1], [2, 3], [4]]
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify read_chunks
 
 Read: https://docs.python.org/3/tutorial/classes.html#generators
 """

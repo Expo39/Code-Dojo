@@ -2,12 +2,14 @@
 
 Level: easy
 Target: 15
-Pattern: two-pointers
 
-`nums` is sorted ascending. Return (i, j), i < j, with nums[i] + nums[j] ==
-target, or None. Use O(1) extra space: one pointer at each end.
+`nums` is sorted ascending. Return (i, j), i < j, with nums[i] + nums[j] == target.
+Use O(1) extra space.
 
     pair_sum_sorted([1, 3, 4, 6, 9], 10) -> (0, 4)
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify pair_sum_sorted
 """
 
 

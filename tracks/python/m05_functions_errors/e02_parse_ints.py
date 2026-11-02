@@ -2,12 +2,14 @@
 
 Level: easy
 Target: 10
-Pattern: try-except
 
-Return a tuple (numbers, errors): numbers is the list of ints that int() can
-parse (spaces allowed), errors is the list of the original strings it cannot.
+Return a tuple (numbers, errors): the strings in `items` that are whole numbers,
+converted to int, and the ones that are not.
 
     parse_ints(["1", " 2 ", "x", "3.5"]) -> ([1, 2], ["x", "3.5"])
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify parse_ints
 """
 
 

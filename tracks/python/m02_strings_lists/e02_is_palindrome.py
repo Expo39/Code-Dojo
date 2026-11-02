@@ -2,14 +2,15 @@
 
 Level: easy
 Target: 10
-Pattern: string-cleaning
 
-Return True if `text` reads the same forwards and backwards when you keep only
-letters and digits and ignore case.
+Return True if `text` reads the same forwards and backwards, ignoring case and
+anything that is not a letter or a digit.
 
     is_palindrome("A man, a plan, a canal: Panama") -> True
     is_palindrome("race a car") -> False
-    is_palindrome("") -> True
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify is_palindrome
 """
 
 

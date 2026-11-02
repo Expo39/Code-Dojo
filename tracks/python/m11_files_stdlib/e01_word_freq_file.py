@@ -2,15 +2,14 @@
 
 Level: easy
 Target: 15
-Pattern: files
 
-Read the UTF-8 text file at `path` (a str or pathlib.Path). Return the n most
-common words (lower case, strip .,!?;:"'() from both ends) as a list of
-(word, count) tuples, most common first, ties alphabetical. A missing file
-raises FileNotFoundError (let Python raise it).
+Read the UTF-8 text file at `path` (a str or pathlib.Path) and return its n most
+common words as (word, count) tuples, most common first.
 
-Use `with open(path, encoding="utf-8") as f:` or pathlib.Path(path).read_text().
-Then try collections.Counter.
+    A file containing "The cat. the DOG! the cat?", n = 2 -> [("the", 3), ("cat", 2)]
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify word_freq_file
 
 Read: https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files
 """

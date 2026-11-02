@@ -12,6 +12,7 @@
     "**/.settings",
     "**/__pycache__",
     "**/.pytest_cache",
-    "**/.solutions"
+    "**/.solutions",
+    "**/.clarify"
   ]
 }

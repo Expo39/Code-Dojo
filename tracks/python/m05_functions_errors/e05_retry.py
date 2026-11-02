@@ -2,13 +2,14 @@
 
 Level: medium
 Target: 20
-Pattern: higher-order
 
-Call func() up to `attempts` times. Return its result as soon as a call does
-not raise. If every call raises, re-raise the last exception. Raise ValueError
-if attempts < 1 (without calling func).
+Call func() up to `attempts` times and return its result as soon as a call does
+not raise.
 
-    calls = iter([ValueError, ValueError, "ok"])  # see the tests
+    If func raises twice and then returns "ok", retry(func, 3) returns "ok" after 3 calls.
+
+Before coding: ask your clarifying questions (the tutor answers like an interviewer),
+or list your own edge cases and then compare: python dojo.py clarify retry
 """
 
 
