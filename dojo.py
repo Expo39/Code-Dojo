@@ -610,10 +610,33 @@ def cmd_start(args) -> None:
 def cmd_test(args) -> None:
     ex = get_exercise(args.item)
     target = "solution" if args.solution else None
+    if args.debug:
+        sys.exit(debug_in_process(ex, target))
     passed = run_exercise(ex, target=target)
     if passed is None:
         die(f"Track '{ex['track']}' has no test command; check your work with the tutor.")
     sys.exit(0 if passed else 1)
+
+
+def debug_in_process(ex: dict, target: str | None) -> int:
+    """Run a pytest-based exercise inside this process so editor breakpoints work.
+
+    The editor's debugger must start dojo.py with the venv's Python (VS Code and Zed
+    pick .venv automatically).
+    """
+    command = ex["track_config"].get("test_command") or []
+    if not any("pytest" in part for part in command):
+        die("--debug works for pytest-based tracks; debug other tracks with their own tools.")
+    try:
+        import pytest
+    except ImportError:
+        die("pytest is not importable here: start the debugger with the .venv interpreter.")
+    if target:
+        os.environ["DOJO_TARGET"] = target
+    else:
+        os.environ.pop("DOJO_TARGET", None)
+    os.chdir(ROOT)
+    return pytest.main(["-q", "--no-header", "-p", "no:cacheprovider", str(ex["test"])])
 
 
 def cmd_done(args) -> None:
@@ -1030,7 +1053,8 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   today                    today's plan: time, week balance, redo queue, next exercises
   list [module]            all exercises with their status
   start <item> [--fresh]   start the timer; for a dojo exercise also create workspace/<item>.py
-  test <item>              run that exercise's tests against your workspace file
+  test <item> [--debug]    run that exercise's tests against your workspace file
+                           (--debug: in-process, for editor breakpoints)
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
@@ -1060,6 +1084,7 @@ def main() -> None:
     p = sub.add_parser("list"); p.add_argument("module", nargs="?")
     p = sub.add_parser("start"); p.add_argument("item"); p.add_argument("--fresh", action="store_true")
     p = sub.add_parser("test"); p.add_argument("item"); p.add_argument("--solution", action="store_true")
+    p.add_argument("--debug", action="store_true")
     p = sub.add_parser("done")
     p.add_argument("item")
     p.add_argument("--hints", type=int, default=0)

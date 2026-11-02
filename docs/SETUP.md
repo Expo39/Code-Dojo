@@ -34,27 +34,47 @@ hook prints your status (`python dojo.py brief`) so the tutor knows where you ar
 On Windows, Claude Code needs Git for Windows (it runs hooks through Git Bash); install it
 from https://git-scm.com if you do not have it.
 
-## Editor and debugger (VS Code recommended)
+## Editor and debugger: VS Code or Zed
 
-1. Install VS Code and the Python extension.
-2. Open the repo folder; choose `.venv` as the interpreter when asked (Ctrl+Shift+P, then
-   "Python: Select Interpreter").
-3. **Turn off AI completion** for this folder (Copilot or similar): the point is to type it
-   yourself. The repo's `.vscode/settings.json` already disables inline suggestions here.
-4. Debugging a failing exercise: open `workspace/python/<exercise>.py`, set a breakpoint
-   (click left of a line number), then Run and Debug (Ctrl+Shift+D) and pick
-   "Debug: current exercise's tests". It runs that exercise's tests and stops at your
-   breakpoint.
+Both are configured in the repo (`.vscode/` and `.zed/`). In both, inline AI suggestions are
+off for this folder (the point is to type it yourself) and `.solutions/` folders are hidden
+from the file panel.
 
-| Debugger action | Key |
-| --- | --- |
-| Breakpoint | F9 |
-| Start / continue | F5 |
-| Step over / into / out | F10 / F11 / Shift+F11 |
-| Run any expression while paused | Debug Console |
+The debugger always runs `python dojo.py test <exercise> --debug`, which runs that exercise's
+tests inside the debugger's own process, so breakpoints in your `workspace/` file are hit.
 
-Without VS Code: put `breakpoint()` on a line and run the test; then `n` next, `s` step into,
-`p name` print, `c` continue, `q` quit.
+### VS Code
+
+1. Install VS Code and the Python extension; open the repo folder.
+2. Choose `.venv` as the interpreter (Ctrl+Shift+P, "Python: Select Interpreter").
+3. Turn off Copilot or any other AI completion for this folder if it is still active.
+4. To debug: open `workspace/python/<exercise>.py`, set a breakpoint (click left of a line
+   number or F9), open Run and Debug (Ctrl+Shift+D) and start "Debug: current exercise's tests".
+
+### Zed
+
+1. Open the repo folder. Zed detects `.venv` automatically (check the toolchain selector in the
+   status bar shows `.venv`).
+2. Edit predictions are turned off for this project in `.zed/settings.json`. If you use Zed's
+   agent panel, do not ask it for exercise code: the tutor runs in Claude Code.
+3. To debug: open `workspace/python/<exercise>.py`, set a breakpoint (click the gutter left of a
+   line), press F4 (or "debugger: start" in the command palette) and pick
+   "Debug: current exercise's tests".
+4. Tasks (command palette, "task: spawn"): `dojo: today`, `dojo: start current exercise`,
+   `dojo: test current exercise`, `dojo: list exercises`. On Windows use the "(Windows)"
+   variants, which call `python` instead of `python3`.
+
+### Debugger keys
+
+| Action | VS Code | Zed |
+| --- | --- | --- |
+| Toggle breakpoint | F9 | click the gutter (or the "editor: toggle breakpoint" command) |
+| Start / continue | F5 | F4 to start, then the debug panel's continue button |
+| Step over / into / out | F10 / F11 / Shift+F11 | the debug panel's step buttons |
+| Inspect values | Variables and Watch panels, hover | the debug panel's variables view, hover |
+
+Without an editor debugger: put `breakpoint()` on a line and run `python dojo.py test <exercise>`;
+then `n` next, `s` step into, `p name` print, `c` continue, `q` quit.
 
 ## Moving to another machine
 

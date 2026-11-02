@@ -17,6 +17,10 @@ venv/
 !.vscode/settings.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.zed/*
+!.zed/settings.json
+!.zed/debug.json
+!.zed/tasks.json
 .idea/
 .DS_Store
 Thumbs.db

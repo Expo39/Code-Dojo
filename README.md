@@ -37,7 +37,7 @@ python dojo.py doctor      # checks everything
 claude                     # the tutor; then say: assess me
 ```
 
-Full instructions, the VS Code debugger, and moving between machines: [docs/SETUP.md](docs/SETUP.md).
+Full instructions, the VS Code and Zed debugger setup, and moving between machines: [docs/SETUP.md](docs/SETUP.md).
 
 ## A day in the dojo
 

@@ -1,8 +1,16 @@
 {
   "editor.inlineSuggest.enabled": false,
-  "github.copilot.enable": { "*": false },
+  "github.copilot.enable": {
+    "*": false
+  },
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestArgs": ["tracks"],
-  "files.exclude": { "**/__pycache__": true, "**/.pytest_cache": true }
+  "python.testing.pytestArgs": [
+    "tracks"
+  ],
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.solutions": true
+  }
 }

@@ -1,0 +1,45 @@
+[
+  {
+    "label": "dojo: today",
+    "command": "python3",
+    "args": ["dojo.py", "today"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "reveal": "always"
+  },
+  {
+    "label": "dojo: test current exercise",
+    "command": "python3",
+    "args": ["dojo.py", "test", "$ZED_STEM"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "dojo: start current exercise",
+    "command": "python3",
+    "args": ["dojo.py", "start", "$ZED_STEM"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "dojo: list exercises",
+    "command": "python3",
+    "args": ["dojo.py", "list"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "dojo (Windows): today",
+    "command": "python",
+    "args": ["dojo.py", "today"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "dojo (Windows): test current exercise",
+    "command": "python",
+    "args": ["dojo.py", "test", "$ZED_STEM"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  }
+]

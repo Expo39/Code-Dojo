@@ -88,7 +88,7 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Think out loud** | Always | Asks "Talk me through your thinking" before reacting to code or answers |
 | **Redo queue before new material** | Every session | `start` warns if redos are due and you open a new exercise; the tutor suggests the queue first |
 | **Blank file for redos** | Every redo | `start` gives a fresh file; the tutor reminds you not to open `.history/` or old notes |
-| **Type it yourself, no AI completion** | All exercises and projects | Reminds you; `.vscode/settings.json` turns inline suggestions off |
+| **Type it yourself, no AI completion** | All exercises and projects | Reminds you; `.vscode/settings.json` and `.zed/settings.json` turn inline suggestions off |
 | **Exercise loop** (understand, example, plan, predict, test, reflect) | Every exercise and outside problem | Asks for the missing step; logs it with `--skipped` |
 | **PRIMM** for new concepts | Every new topic | `teach me` always runs the five steps in order; never explains before you predict |
 | **Debugging loop** (read, reproduce, hypothesise, confirm, fix, name) | Every bug and failing test | Stops a code change made before a hypothesis: "What is your hypothesis?" |
