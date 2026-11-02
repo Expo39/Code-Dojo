@@ -48,7 +48,9 @@ experienced engineers' advice; sources are at the bottom.
    developers learning a new library with AI help scored 17 percentage points lower on
    understanding than those who coded unaided. Those who used AI to *ask conceptual questions
    and request explanations* kept their learning. So the tutor here explains, questions and
-   reviews, and never writes your exercise code.
+   reviews, and never writes your exercise code. The same rule works at a job where AI writes
+   most of the code: read and explain every AI change *before* committing it, and ask the AI
+   *why* when a line is unclear.
 
 10. **Measure, and let the data steer.** Time against target, hints used, and clean solves are
     logged for every attempt. The weekly review reads the numbers, not feelings, and changes

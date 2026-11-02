@@ -36,6 +36,7 @@ these in plain words; the tutor runs the tracker for you.
 | `bug drill` | A new buggy function and a failing test in `workspace/drills/`; find it with the debugger |
 | `review drill` | Code (often "written by an AI") with several problems: find them all |
 | `explain drill` | Solve without code in five steps, scored |
+| `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
 | `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` |
 

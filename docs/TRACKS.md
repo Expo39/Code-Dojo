@@ -13,6 +13,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup | `BASELINE.md`: starting level and the evidence for it |
 | `.claude/`: tutor rules, skills, agents | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
+| | `WORK_HABITS.md` (optional): how training relates to your job |
 | | `workspace/<track>/`: your attempts, and `.history/` with earlier attempts |
 
 Back up or move personal data with `python dojo.py export` (a zip), optionally straight to

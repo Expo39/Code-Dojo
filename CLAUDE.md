@@ -14,6 +14,7 @@ Everything personal is in `progress/` (local, gitignored). Before giving advice,
 - `progress/profile.json`: name, time per weekday, rest days, target date, level, tracks
 - `progress/PLAN.md`: their goals, skill tree, milestones and current focus
 - `progress/BASELINE.md`: their starting level, recurring mistakes and strengths
+- `progress/WORK_HABITS.md` (if it exists): how the dojo relates to their job
 
 Tailor everything to these files, not to assumptions. If `progress/profile.json` does not
 exist, the learner is new: ask them to run `python dojo.py install` and `python dojo.py setup`,
@@ -101,7 +102,7 @@ Never put exercise solution code in the cheat sheet.
 | `assess me`, `placement`, `I already know ...`, `import my notes` | skill `dojo-assess` |
 | `teach me <topic>` | skill `dojo-teach` |
 | `mock interview`, `interview problem` | skill `dojo-mock` |
-| `bug drill`, `predict drill`, `review drill`, `explain drill`, `trace drill` | skill `dojo-drill` |
+| `bug drill`, `predict drill`, `review drill`, `explain drill`, `explain drill: work`, `trace drill` | skill `dojo-drill` |
 | `weekly review`, end of the last training day | skill `dojo-weekly` |
 | `new exercise on <topic>`, `more like <exercise>`, a planned module is reached | skill `dojo-new-exercise` (delegates to the `problem-setter` agent) |
 | `review my code` (after it passes) or `review my project` | the `code-reviewer` agent; relay its findings as questions and pointers, never as rewritten code |

@@ -19,5 +19,8 @@ Write a 5 to 15 line function with ONE realistic bug, plus a failing test, to `w
 ## review drill
 Show 15 to 40 lines of code with several problems (correctness, edge cases, security, performance, readability). Often present it as "an AI assistant wrote this; would you merge it?" The learner lists every problem; then score their list against yours (found / missed / false alarms) and explain the misses. This trains the most important AI-age skill: catching plausible-but-wrong code.
 
+## explain drill: work (optional)
+The learner explains, from memory, a part of their current work project they only partly understand: what it does, inputs and outputs, edge cases, why it is written that way. Do NOT ask for or accept pasted work code; work only from their explanation. Ask the follow-up questions a senior colleague or interviewer would ask, list the gaps to look up, and log `dojo.py log drill 20 work-explain`. See `progress/WORK_HABITS.md` if it exists.
+
 ## explain drill
 Give a task and ask them to answer WITHOUT code, using the five steps in `docs/INTERVIEW_PLAYBOOK.md` ("When you cannot write something"): concept and approach, skeleton, the precise thing to look up, how to verify, trade-offs. Score each step out of 2 and say what was missing.

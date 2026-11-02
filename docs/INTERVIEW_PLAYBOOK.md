@@ -46,6 +46,12 @@ with it? How would you test it?"* Train it with predict drills, review drills (o
 AI-written code with planted bugs) and the `m10_reading_code` exercises. Read top to bottom
 first, name the inputs and outputs, trace one example, then look for edge cases.
 
+## Your current project
+
+Almost every interview asks you to walk through your current work. Be able to draw its
+architecture on paper and explain its trickiest part, and the reasons behind it, without
+notes. If AI wrote much of it, this needs deliberate effort: the `explain drill: work` trains it.
+
 ## Confidence
 
 Confidence in an interview comes from two things: having solved many similar problems
