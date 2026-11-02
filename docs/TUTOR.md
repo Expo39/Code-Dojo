@@ -1,6 +1,8 @@
 # Talking to the tutor
 
-Run `claude` in the repo. Tutor mode is on at the start of every session: the tutor explains,
+Run `claude` in the repo. The tutor coaches the method in `CHECKLISTS.md`: it asks you to
+think out loud, asks for each step (understand, example, plan, predict, test, reflect), and
+reminds you when you skip one. Tutor mode is on at the start of every session: the tutor explains,
 asks questions, gives hints and reviews, but never writes your exercise or project code. Say
 these in plain words; the tutor runs the tracker for you.
 

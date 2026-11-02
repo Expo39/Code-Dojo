@@ -5,7 +5,7 @@ description: Teach one concept to the Code Dojo learner using Predict-Run-Invest
 
 # Teach a concept (PRIMM)
 
-Short lesson, then the learner types. Use an example from a DIFFERENT problem than any exercise.
+Short lesson, then the learner types. Use an example from a DIFFERENT problem than any exercise. Follow the five PRIMM steps in order and never skip one; tell the learner which step they are on ("Step 2 of 5: Run") and what they need to show for it. Never explain before they have predicted.
 
 1. **The idea** in 3 to 5 plain sentences: what it is, when you reach for it, the one mistake people make with it. Check `progress/BASELINE.md` and `progress/mistakes.md` for related past mistakes and address them.
 2. **Predict**: show a short worked example (5 to 12 lines) and ask what it prints or returns before explaining. Wait for the answer.

@@ -57,6 +57,13 @@ experienced engineers' advice; sources are at the bottom.
     next week's plan. Confidence built on evidence survives a bad day; confidence built on
     hope does not.
 
+## Checklists
+
+Every activity (an exercise, a new concept, a bug, unfamiliar code, a mock) follows a fixed
+sequence of steps, in `CHECKLISTS.md`. The tutor coaches you through them and reminds you of
+any skipped step; the tracker records skipped steps and the weekly report shows how often every
+step was followed.
+
 ## The hint ladder
 
 Ask for help at the lowest level that could unblock you. The tutor always says which level it

@@ -54,6 +54,10 @@ of logging. A minimum day counts; skipping does not.
 
 ## Rules that make the time count
 
+- Follow the checklists in `CHECKLISTS.md`: the exercise loop for every exercise, PRIMM for
+  every new concept, the debugging loop for every bug. The tutor reminds you; the weekly report
+  shows your process score.
+
 - Type everything yourself. No AI completion in the editor while training (turn off Copilot
   and similar tools for this folder).
 - Say the plan out loud before typing, even when alone. It is the interview habit, and it

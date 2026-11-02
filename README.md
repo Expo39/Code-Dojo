@@ -19,6 +19,8 @@ interview practice).
 - **Read as much as you write.** Predict, trace, debug and review drills, including spotting
   bugs in AI-written code.
 - **Build things.** A ladder of projects with requirements but no step-by-step guide.
+- **A method you cannot skip by accident.** Checklists for every activity; the tutor asks you
+  to think out loud and flags skipped steps, and the weekly report scores your process.
 - **Train the performance.** Talk-aloud timed problems most days and a mock interview every week.
 - **AI as tutor, not ghostwriter.** The evidence and the rules are in [docs/METHOD.md](docs/METHOD.md).
 
@@ -61,7 +63,7 @@ code-dojo/
 │                            dojo-weekly, dojo-new-exercise
 ├── .claude/agents/          problem-setter, code-reviewer, progress-coach
 ├── .claude-plugin/          optional: the same skills and agents as an installable plugin
-├── docs/                    METHOD, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP
+├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP
 ├── tracks/
 │   ├── python/              the Python track: README (phases, modules, milestones), modules,
 │   │                        projects/

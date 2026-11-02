@@ -39,7 +39,12 @@ INTERVALS = [1, 3, 7, 14, 30, 60]
 MASTERED_BOX = 4
 TARGETS = {"tiny": 5, "easy": 15, "medium": 30, "hard": 45}
 LOG_FIELDS = ["date", "item", "kind", "module", "pattern", "level",
-              "minutes", "target", "hints", "result", "ratio", "note"]
+              "minutes", "target", "hints", "result", "ratio", "skipped", "note"]
+# The exercise loop (docs/CHECKLISTS.md). `done --skipped` records the steps left out.
+STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
+CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
+Before running: 4 predict (pass or fail? which test?)
+After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 
 DEFAULT_PROFILE = {
@@ -233,6 +238,7 @@ def cmd_setup(args) -> None:
 
 def ensure_files() -> None:
     PROGRESS.mkdir(exist_ok=True)
+    migrate_log()
     WEEKLY.mkdir(exist_ok=True)
     (PROGRESS / "mocks").mkdir(exist_ok=True)
     if not LOG.exists():
@@ -362,6 +368,22 @@ def run_exercise(ex: dict, target: str | None = None, quiet: bool = False) -> bo
 
 
 # ------------------------------------------------------------------ log data
+
+def migrate_log() -> None:
+    """Rewrite an older log.csv with the current columns (new columns left empty)."""
+    if not LOG.exists():
+        return
+    with LOG.open(newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if reader.fieldnames == LOG_FIELDS:
+            return
+        rows = list(reader)
+    with LOG.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=LOG_FIELDS)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k, "") for k in LOG_FIELDS})
+
 
 def read_log() -> list[dict]:
     if not LOG.exists():
@@ -556,6 +578,10 @@ def cmd_start(args) -> None:
         die(f"'{args.item}' is already running since {timers[args.item]}.")
     ex = discover().get(args.item)
     if ex:
+        due = [k for k, _ in due_items(today()) if k != args.item]
+        if args.item not in read_json(REVIEWS, {}) and due:
+            print(f"Reminder: {len(due)} redo(s) due ({', '.join(due[:4])}). "
+                  "Best practice: clear the redo queue before new material.")
         attempt = ex["attempt"]
         attempt.parent.mkdir(parents=True, exist_ok=True)
         shown = attempt.relative_to(ROOT).as_posix()
@@ -568,10 +594,13 @@ def cmd_start(args) -> None:
         if not attempt.exists():
             shutil.copy(ex["stub"], attempt)
             print(f"Fresh file: {shown}")
+            if redo:
+                print("Redo from a blank file: do not open .history/ or old notes.")
         else:
             print(f"Continuing your file: {shown}")
         print(f"Target: {ex['target']} min ({ex['level']}, {ex['pattern']}). "
               f"Test with: python dojo.py test {args.item}")
+        print(CHECKLIST)
     else:
         print(f"Timer started for '{args.item}' (not a dojo exercise; log it with `done` as usual).")
     timers[args.item] = now().isoformat()
@@ -621,16 +650,29 @@ def cmd_done(args) -> None:
         result = "failed"
     ratio = round(minutes / target, 2) if target else None
     on = parse_date(args.date) if args.date else today()
+    skipped = [x.strip().lower() for x in (args.skipped or "").split(",") if x.strip()]
+    unknown = [x for x in skipped if x not in STEPS]
+    if unknown:
+        die(f"Unknown step(s): {', '.join(unknown)}. Steps: {', '.join(STEPS)}")
     append_log({"date": on.isoformat(), "item": args.item, "kind": kind, "module": module,
                 "pattern": pattern, "level": level, "minutes": round(minutes, 1),
                 "target": target or "", "hints": args.hints, "result": result,
-                "ratio": ratio if ratio is not None else "", "note": args.note or ""})
+                "ratio": ratio if ratio is not None else "",
+                "skipped": ",".join(skipped), "note": args.note or ""})
 
     verdict = f"{args.item}: {result} in {fmt_min(minutes)}"
     if ratio is not None:
         verdict += f" ({ratio}x target {target}m)"
     verdict += f", hints {args.hints}."
     print(verdict)
+    if ratio is not None and ratio > 2 and args.hints == 0 and result != "solved":
+        print("Over twice the target without a hint: next time ask for hint 1 at 2x; "
+              "an hour of struggle teaches less than a hint and a redo tomorrow.")
+    elif ratio is not None and ratio > 2 and args.hints == 0:
+        print("Solved, but over twice the target without a hint: next time ask for hint 1 at 2x.")
+    if skipped:
+        print(f"Process: skipped {', '.join(skipped)}. Next time do every step; it is the habit "
+              "the interview tests.")
     if ex and result == "failed":
         print("Tests do not pass yet. Keep going (`start` again) or add --gave-up.")
     if kind in ("exercise", "external") and not args.no_review:
@@ -853,6 +895,18 @@ def cmd_week(args) -> None:
         for p, s in sorted(stats.items(), key=lambda kv: -kv[1]["ratio"]):
             out.append(f"| {p} | {s['n']} | {s['ratio']:.2f}x | {s['hints']:.1f} | {s['clean']} |")
         out.append("")
+    tracked = [r for r in attempts if "skipped" in r]
+    if tracked:
+        full = sum(1 for r in tracked if not r.get("skipped"))
+        counts: dict[str, int] = {}
+        for r in tracked:
+            for step in filter(None, (r.get("skipped") or "").split(",")):
+                counts[step] = counts.get(step, 0) + 1
+        line = f"**Process:** every step followed in {full} of {len(tracked)} attempts ({100 * full / len(tracked):.0f}%)."
+        if counts:
+            line += " Most skipped: " + ", ".join(f"{k} ({v})" for k, v in sorted(counts.items(), key=lambda kv: -kv[1])) + "."
+        out.append(line)
+        out.append("")
     out.append(f"**Mistakes logged:** {len(mistakes)}")
     out.extend(mistakes)
     out.append("")
@@ -979,6 +1033,7 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   test <item>              run that exercise's tests against your workspace file
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
+       --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
        mocks: done mock_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
   cancel <item>            discard a running timer
@@ -1019,6 +1074,7 @@ def main() -> None:
     p.add_argument("--note")
     p.add_argument("--date")
     p.add_argument("--no-review", action="store_true")
+    p.add_argument("--skipped", help="comma-separated process steps left out: " + ",".join(STEPS))
     p = sub.add_parser("log")
     p.add_argument("kind", choices=KINDS)
     p.add_argument("minutes", type=float)

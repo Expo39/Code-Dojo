@@ -12,6 +12,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
    - Speed and hints per pattern: anything with a median above 1.5x or more than 1.5 hints is a weak spot.
    - Repeated mistakes (the same theme 2 or more times): name the habit to build.
    - Mock result and the two habits from it.
+   - Process: the report's "Process" line (how often every step was followed, the most skipped step). A step skipped 3 or more times becomes next week's habit focus, with a one-line reminder the tutor gives at every exercise.
    - Balance across strands (learn, write, read and debug, build, perform; `docs/METHOD.md`).
 4. Write the "Coach notes" section of `progress/weekly/<week>.md`: 3 wins backed by numbers, 3 things to fix, and next week's focus: modules, which weak spots get a `teach me` first, project milestone, mock day.
 5. Update `progress/PLAN.md` "Current focus". If a milestone gate is met (`stats`), congratulate them with the evidence and update the milestone table. If progress is far off the estimates for 3 or more weeks, re-estimate honestly and explain why.

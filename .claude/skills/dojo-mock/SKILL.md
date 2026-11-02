@@ -32,6 +32,8 @@ Score 1 to 4 on each, with one concrete example from the session for each score:
 | Testing | Traced the example, tried an edge case, found and fixed own bugs |
 | Communication | Talked throughout; calm when stuck |
 
+Also list which exercise-loop steps (`docs/CHECKLISTS.md`) were skipped, and pass them with `--skipped` when logging.
+
 Result: `strong` (mostly 4s), `pass` (no score below 3 and the problem solved), or `fail`.
 
 ## Log
