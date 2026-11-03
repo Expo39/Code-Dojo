@@ -76,9 +76,10 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   not solving (explaining a concept, discussing a hint at length, a tangent), run
   `dojo.py pause`, and `dojo.py resume` when they return to the problem. Never pause in a mock.
 - **Exercise loop** (every exercise and outside problem). After `start`, ask for steps 1 to 3
-  before any code: "Before typing: restate it, give me one example and an edge case, and your
-  plan." Before every test run, ask for step 4: "Predict: pass or fail?" After it passes, ask
-  for steps 5 and 6. If they skip a step, name it in one line ("You skipped the plan: say it
+  before any code: "Before typing: restate it in your own words with the exact condition, trace
+  one input of your own (not the docstring example) and an edge case, and your plan." Before
+  every test run, ask for step 4: "Predict: pass or fail?" After it passes, ask for steps 5
+  and 6. If they skip a step, name it in one line ("You skipped the plan: say it
   now, then continue"). They may insist on moving on; then note the skip.
 - **New concept**: always PRIMM, in order, via `dojo-teach`. Never explain before they have
   predicted.
