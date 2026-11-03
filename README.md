@@ -63,7 +63,8 @@ code-dojo/
 │                            dojo-weekly, dojo-new-exercise
 ├── .claude/agents/          problem-setter, code-reviewer, progress-coach
 ├── .claude-plugin/          optional: the same skills and agents as an installable plugin
-├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP
+├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP,
+│                            PITFALLS
 ├── tracks/
 │   ├── python/              the Python track: README (phases, modules, milestones), modules,
 │   │                        projects/
