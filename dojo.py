@@ -617,12 +617,26 @@ def cmd_start(args) -> None:
 def cmd_test(args) -> None:
     ex = get_exercise(args.item)
     target = "solution" if args.solution else None
+    if target is None:
+        warn_if_unsaved(ex)
     if args.debug:
         sys.exit(debug_in_process(ex, target))
     passed = run_exercise(ex, target=target)
     if passed is None:
         die(f"Track '{ex['track']}' has no test command; check your work with the tutor.")
     sys.exit(0 if passed else 1)
+
+
+def warn_if_unsaved(ex: dict) -> None:
+    """Warn when the attempt is still byte-for-byte the stub: usually an unsaved editor buffer."""
+    attempt, stub = ex["attempt"], ex["stub"]
+    try:
+        unchanged = attempt.read_bytes() == stub.read_bytes()
+    except OSError:
+        return
+    if unchanged:
+        print(f"Warning: {attempt.relative_to(ROOT).as_posix()} is unchanged from the stub. "
+              "Did you save the file?", file=sys.stderr)
 
 
 def debug_in_process(ex: dict, target: str | None) -> int:

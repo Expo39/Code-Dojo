@@ -38,7 +38,8 @@ from https://git-scm.com if you do not have it.
 
 Both are configured in the repo (`.vscode/` and `.zed/`). In both, inline AI suggestions are
 off for this folder (the point is to type it yourself) and the `.solutions/` and `.clarify/`
-folders are hidden from the file panel.
+folders are hidden from the file panel. Autosave is on in both, so `python dojo.py test` always
+runs what you see on screen (the tracker also warns if your file is still the untouched stub).
 
 The debugger always runs `python dojo.py test <exercise> --debug`, which runs that exercise's
 tests inside the debugger's own process, so breakpoints in your `workspace/` file are hit.

@@ -1,5 +1,6 @@
 {
   "show_edit_predictions": false,
+  "autosave": { "after_delay": { "milliseconds": 1000 } },
   "file_scan_exclusions": [
     "**/.git",
     "**/.svn",
