@@ -21,6 +21,7 @@ dictated code does not count as typing it yourself.
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
 | `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
+| (your prediction) | The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |

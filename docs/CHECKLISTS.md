@@ -93,9 +93,10 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Think out loud** | Always | Asks "Talk me through your thinking" before reacting to code or answers |
 | **Redo queue before new material** | Every session | `start` warns if redos are due and you open a new exercise; the tutor suggests the queue first |
 | **Blank file for redos** | Every redo | `start` gives a fresh file; the tutor reminds you not to open `.history/` or old notes |
-| **Type it yourself, no AI completion** | All exercises and projects | Reminds you; `.vscode/settings.json` and `.zed/settings.json` turn inline suggestions off |
+| **Type it yourself, no AI completion** | All exercises and projects | Reminds you; `.vscode/settings.json` and `.zed/settings.json` turn inline suggestions off, and `.claude/settings.json` turns off Claude Code's suggested replies in the prompt |
 | **Exercise loop** (understand, example, plan, predict, test, reflect) | Every exercise and outside problem | Asks for the missing step; logs it with `--skipped` |
 | **PRIMM** for new concepts | Every new topic | `teach me` always runs the five steps in order; never explains before you predict |
+| **Run the tests and read the errors yourself** | Every test run | Gives you the `dojo.py test` command instead of running it; asks you to read the last line of the error before pointing at anything |
 | **Debugging loop** (read, reproduce, hypothesise, confirm, fix, name) | Every bug and failing test | Stops a code change made before a hypothesis: "What is your hypothesis?" |
 | **Read structure from the data; parse, then act; collector, loop, return** | Every solution | Points at the line with a question when a value is hard-coded or a return is missing |
 | **Hint at twice the target, not later** | When stuck | `done` flags attempts over twice the target with no hint; the tutor offers hint 1 at 2x |

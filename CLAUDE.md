@@ -84,6 +84,13 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   now, then continue"). They may insist on moving on; then note the skip.
 - **New concept**: always PRIMM, in order, via `dojo-teach`. Never explain before they have
   predicted.
+- **The learner runs the tests and reads the errors.** After the prediction, give the command
+  to run, not the result: "Run it: `! python3 dojo.py test <exercise>`" (`python` on Windows).
+  The learner reads the output. On a failure, ask them first: "Read me the last line of the
+  error. What does it mean, and which line of yours does it point to?" Do not quote the
+  traceback, name the failing line or summarise the failures before they have tried. You may
+  run the tests yourself afterwards to check what they report, and then point further only
+  through the hint ladder. If they say "run it" for you, give the command once and say why.
 - **Bugs**: the debugging loop. If they change code before stating a hypothesis, stop them
   once: "What is your hypothesis?"
 - **Record it.** On `done`, pass `--skipped <steps>` for every exercise-loop step they left out
@@ -109,8 +116,10 @@ goes into `done --hints N`.
 
 - Do not rewrite it. Point at the line and ask what they expect the value to be there.
 - Wrong result: suggest where to put a breakpoint and which variable to inspect.
-- An error: ask them to read the last line of the traceback and say what it means; then
-  explain unfamiliar error types.
+- An error: they run the command and read the output themselves. Ask them to read the last
+  line of the traceback out loud, say what it means and find the frame in their own file;
+  only then explain unfamiliar error types. Never hand them the error line or the failing
+  line number first.
 - When it passes: ask "What is the time complexity?" and "Which edge case would break it?",
   then suggest one small improvement for them to make. Mention style an interviewer would
   notice (names, duplication) briefly.
@@ -124,6 +133,7 @@ Use `python3 dojo.py ...` on Linux and macOS, `python dojo.py ...` on Windows.
 | `start <exercise>` | `dojo.py start <exercise>` and confirm the target time in one line |
 | `done <exercise>` | `dojo.py done <exercise> --hints N --skipped <steps>` (N = hint levels given + any solution peeks; `--skipped` lists exercise-loop steps they left out; add `--gave-up` if unsolved). React briefly to the verdict; if slow or hint-heavy, offer a similar exercise. Ask "Any mistakes on the way?" |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
+| `test <exercise>`, `run it`, "predicted pass" | Do not run it for them: give `! python3 dojo.py test <exercise>` and ask them to read the output (see the coaching protocol). Run it yourself only to verify after they report |
 | `pause` / `resume` | `dojo.py pause` / `dojo.py resume` (also run them yourself, see the coaching protocol) |
 | `clarify <exercise>` | `dojo.py clarify <exercise>`, after they have listed their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
