@@ -12,7 +12,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `dojo.py` (tracker), `conftest.py` | `profile.json`: name, time per day, rest days, target date, level, tracks |
 | `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup | `BASELINE.md`: starting level and the evidence for it |
-| `.claude/`: tutor rules, skills, agents | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
+| `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
 | | `WORK_HABITS.md` (optional): how training relates to your job |
 | | `workspace/<track>/<module>/`: your attempts, `.history/` with earlier attempts, `primm/` with lesson files |
 

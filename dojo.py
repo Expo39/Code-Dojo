@@ -460,8 +460,36 @@ def due_items(on: date) -> list[tuple[str, dict]]:
 
 # ------------------------------------------------------------------ commands
 
+def ensure_claude_skills() -> str:
+    """Make .claude/skills point at .agents/skills, the one shared copy of the skills.
+
+    Git stores it as a symlink. A Windows checkout without symlink support turns it into a
+    small text file; then try to create the link, and fall back to a copy.
+    """
+    import shutil
+    target = ROOT / ".agents" / "skills"
+    link = ROOT / ".claude" / "skills"
+    if not target.is_dir():
+        return "  ! .agents/skills is missing; restore it with git."
+    if link.is_symlink() and link.resolve() == target.resolve():
+        return "Skills: .claude/skills -> .agents/skills"
+    if link.is_symlink() or link.is_file():
+        link.unlink()
+    elif link.is_dir():
+        shutil.rmtree(link)
+    link.parent.mkdir(exist_ok=True)
+    try:
+        link.symlink_to(Path("..") / ".agents" / "skills", target_is_directory=True)
+        return "Skills: linked .claude/skills -> .agents/skills"
+    except OSError:
+        shutil.copytree(target, link)
+        return ("Skills: copied .agents/skills to .claude/skills (no symlink support here); "
+                "run `python dojo.py doctor` again after editing a skill.")
+
+
 def cmd_install(args) -> None:
     """Create .venv and install requirements, the same way on every OS."""
+    print(ensure_claude_skills())
     import venv
     target = ROOT / ".venv"
     if not target.exists():
@@ -612,6 +640,10 @@ def cmd_doctor(args) -> None:
         print("  ! No profile: python dojo.py setup")
         ok = False
     print(f"Exercises found: {len(discover())}")
+    skills = ensure_claude_skills()
+    print(skills)
+    if skills.startswith("  !"):
+        ok = False
     print("All good." if ok else "Fix the items marked ! above.")
 
 

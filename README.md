@@ -58,10 +58,13 @@ Or just talk to the tutor (`start parse_pairs`, `I'm stuck`, `teach me generator
 ```text
 code-dojo/
 ├── dojo.py                  tracker: timers, tests, redo schedule, week balance, reports, export
-├── CLAUDE.md                tutor-mode rules for Claude Code
-├── .claude/skills/          dojo-session, dojo-assess, dojo-teach, dojo-mock, dojo-drill,
-│                            dojo-weekly, dojo-new-exercise
-├── .claude/agents/          problem-setter, code-reviewer, progress-coach
+├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
+├── CLAUDE.md                imports AGENTS.md, plus Claude Code notes
+├── .agents/skills/          dojo-session, dojo-assess, dojo-teach, dojo-mock, dojo-drill,
+│                            dojo-weekly, dojo-new-exercise (one copy for every tool)
+├── .claude/                 Claude Code: settings, agents (problem-setter, code-reviewer,
+│                            progress-coach), skills -> ../.agents/skills
+├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
 ├── .claude-plugin/          optional: the same skills and agents as an installable plugin
 ├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP,
 │                            PITFALLS
@@ -92,7 +95,7 @@ code-dojo/
 - **Plugin (optional).** The skills and agents also install as a Claude Code plugin from this
   repo (`/plugin marketplace add <repo>`, then `/plugin install code-dojo@code-dojo`), for
   example to use the drills and lessons in another project. Inside this repo you do not need
-  it: everything loads from `.claude/` automatically. Do not install both in the same folder,
+  it: everything loads from `.claude/` and `.agents/` automatically. Do not install both in the same folder,
   or each skill appears twice.
 
 ## Contributing exercises

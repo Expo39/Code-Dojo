@@ -27,8 +27,9 @@ target date, your tracks and your level.
 ## Claude Code (the tutor)
 
 Install Claude Code (https://claude.com/claude-code), open a terminal in the repo and run
-`claude`. The tutor rules in `CLAUDE.md`, the skills in `.claude/skills/` and the agents in
-`.claude/agents/` load automatically; nothing else to install. At the start of each session a
+`claude`. The tutor rules (`CLAUDE.md`, which imports `AGENTS.md`), the skills in
+`.agents/skills/` (through the `.claude/skills` link) and the agents in `.claude/agents/` load
+automatically; nothing else to install. At the start of each session a
 hook prints your status (`python dojo.py brief`) so the tutor knows where you are.
 
 Recommended: turn on voice dictation with `/voice` in Claude Code, then hold the spacebar to
@@ -38,6 +39,27 @@ is faster than typing them and closer to a real interview. See "Talk, do not typ
 
 On Windows, Claude Code needs Git for Windows (it runs hooks through Git Bash); install it
 from https://git-scm.com if you do not have it.
+
+## Codex or Gemini CLI (alternative tutors)
+
+The tutor also runs in OpenAI Codex and Google Gemini CLI. All three tools share one set of
+rules, `AGENTS.md`, and one copy of the skills, `.agents/skills/`, so a fix to the method
+reaches every tool. Each tool is told to skip the others' files (the "Files per tool" table in
+`AGENTS.md`), so none spends time rereading the same rules.
+
+- **Codex:** run `codex` in the repo. It reads `AGENTS.md` and discovers `.agents/skills/` on
+  its own.
+- **Gemini CLI:** run `gemini` in the repo. `.gemini/settings.json` points it at `AGENTS.md`
+  instead of `GEMINI.md`, and `.geminiignore` hides the Claude Code files from it.
+
+Differences from Claude Code: there is no session-start hook, so the tutor runs
+`python dojo.py brief` itself on your first message. The agents in `.claude/agents/` are read
+and followed by the tutor directly if the tool cannot start subagents. Turn off any suggested
+replies or inline completions the tool offers, as Claude Code's are here.
+
+**Symlinks on Windows.** `.claude/skills` is a link to `.agents/skills`. If your Git checkout
+does not create symlinks, `python dojo.py install` (or `doctor`) replaces it with a link or, if
+that is not allowed, a copy.
 
 ## Editor and debugger: VS Code or Zed
 

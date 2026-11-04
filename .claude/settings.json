@@ -24,6 +24,11 @@
       "Edit(/workspace/projects/**)",
       "Write(/workspace/projects/**)",
       "Bash(git push*)"
+    ],
+    "deny": [
+      "Read(/.gemini/**)",
+      "Read(/.geminiignore)",
+      "Read(/.codex/**)"
     ]
   }
 }
