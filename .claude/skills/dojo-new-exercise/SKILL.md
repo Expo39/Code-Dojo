@@ -10,4 +10,4 @@ description: Create new verified Code Dojo exercises. Use when the learner says 
 3. Check its report: the slugs, `verify` passing, and that the task text does not leak the solution. Do not show the learner the reference solutions.
 4. Tell the learner the new exercise names and the first command: `dojo.py start <slug>`.
 
-A brand-new module also needs its focus line marked as "seeded" in the track README (status column).
+A brand-new module also needs its focus line marked as "seeded" in the track README (status column) and a `primm/README.md` with its concepts (the problem-setter adds it).

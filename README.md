@@ -43,7 +43,7 @@ Full instructions, the VS Code and Zed debugger setup, and moving between machin
 
 ```bash
 python dojo.py today                 # time today and this week, redo queue, next exercises
-python dojo.py start parse_pairs     # timer + workspace/python/parse_pairs.py
+python dojo.py start parse_pairs     # timer + workspace/python/m04_parsing/parse_pairs.py
 python dojo.py test parse_pairs      # run the tests against your file
 python dojo.py done parse_pairs --hints 1
 python dojo.py week --write          # weekly report
@@ -66,13 +66,15 @@ code-dojo/
 ├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP,
 │                            PITFALLS
 ├── tracks/
-│   ├── python/              the Python track: README (phases, modules, milestones), modules,
-│   │                        projects/
+│   ├── python/              the Python track: README (phases, modules, milestones), modules
+│   │                        (each with a primm/ folder for lessons), projects/
 │   ├── cpp/                 placeholder for an optional future track
 │   └── ros/                 placeholder for an optional future track
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
 │                            schedule, mistakes, cheat sheet, weekly reports, mocks
-└── workspace/               YOUR attempts and projects (gitignored)
+└── workspace/               YOUR attempts and projects (gitignored), one folder per module
+                             mirroring tracks/: <track>/<module>/ holds your attempts,
+                             .history/ (earlier attempts) and primm/ (lesson files)
 ```
 
 ## Your data stays yours

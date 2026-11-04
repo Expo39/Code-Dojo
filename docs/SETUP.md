@@ -54,7 +54,7 @@ tests inside the debugger's own process, so breakpoints in your `workspace/` fil
 1. Install VS Code and the Python extension; open the repo folder.
 2. Choose `.venv` as the interpreter (Ctrl+Shift+P, "Python: Select Interpreter").
 3. Turn off Copilot or any other AI completion for this folder if it is still active.
-4. To debug: open `workspace/python/<exercise>.py`, set a breakpoint (click left of a line
+4. To debug: open `workspace/python/<module>/<exercise>.py`, set a breakpoint (click left of a line
    number or F9), open Run and Debug (Ctrl+Shift+D) and start "Debug: current exercise's tests".
 
 ### Zed
@@ -63,7 +63,7 @@ tests inside the debugger's own process, so breakpoints in your `workspace/` fil
    status bar shows `.venv`).
 2. Edit predictions are turned off for this project in `.zed/settings.json`. If you use Zed's
    agent panel, do not ask it for exercise code: the tutor runs in Claude Code.
-3. To debug: open `workspace/python/<exercise>.py`, set a breakpoint (click the gutter left of a
+3. To debug: open `workspace/python/<module>/<exercise>.py`, set a breakpoint (click the gutter left of a
    line), press F4 (or "debugger: start" in the command palette) and pick
    "Debug: current exercise's tests".
 4. Tasks (command palette, "task: spawn"): `dojo: today`, `dojo: start current exercise`,

@@ -14,7 +14,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `docs/`: method, sessions, tutor commands, setup | `BASELINE.md`: starting level and the evidence for it |
 | `.claude/`: tutor rules, skills, agents | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
 | | `WORK_HABITS.md` (optional): how training relates to your job |
-| | `workspace/<track>/`: your attempts, and `.history/` with earlier attempts |
+| | `workspace/<track>/<module>/`: your attempts, `.history/` with earlier attempts, `primm/` with lesson files |
 
 Back up or move personal data with `python dojo.py export` (a zip), optionally straight to
 another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`.
@@ -82,7 +82,14 @@ measurable gates, not feelings, decide when to move on.
   tests/test_<slug>.<ext>    tests (path set by "test_file")
   .solutions/<slug>.<ext>    reference solution (path set by "solution_file")
   .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")
+  primm/README.md            the concepts a teach-me lesson can cover in this module
 ```
+
+The learner's side mirrors it: `workspace/<track>/<module>/` holds their attempts,
+`.history/` (earlier attempts, moved there when a redo starts) and `primm/` (the files they type
+in a lesson; `python dojo.py primm <module> <topic>` creates it). The tracker ignores
+`primm/` folders, so lesson files never count as exercises. Every new module gets a
+`primm/README.md` listing its concepts.
 
 - `<slug>` is unique across all tracks (it is the exercise's name in the tracker).
 - The task text contains these header lines (in a docstring or comments):

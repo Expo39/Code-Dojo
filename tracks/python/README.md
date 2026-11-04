@@ -22,10 +22,20 @@ tracks/python/m04_parsing/
   tests/test_parse_pairs.py     the tests
   .solutions/parse_pairs.py     reference answer: the tutor reads it for hints, you do not
   .clarify/parse_pairs.md       the interviewer's answers on edge cases (python dojo.py clarify)
+  primm/README.md               the concepts a `teach me` lesson covers in this module
 ```
 
-`python dojo.py start parse_pairs` copies the stub to `workspace/python/parse_pairs.py` (your
-file) and starts the timer; `python dojo.py test parse_pairs` runs the tests against your file;
+Your side mirrors it, one folder per module (personal, gitignored):
+
+```text
+workspace/python/m04_parsing/
+  parse_pairs.py                your attempt
+  .history/                     earlier attempts, moved here when a redo starts
+  primm/<topic>.py              what you type during a teach-me lesson
+```
+
+`python dojo.py start parse_pairs` copies the stub to `workspace/python/m04_parsing/parse_pairs.py`
+(your file) and starts the timer; `python dojo.py test parse_pairs` runs the tests against your file;
 `python dojo.py done parse_pairs --hints N` logs the attempt and schedules the next redo.
 Prefixes: `e` = write it, `b` = find and fix the bug, `r` = read and predict.
 

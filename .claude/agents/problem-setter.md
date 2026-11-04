@@ -19,6 +19,6 @@ Rules:
 - One clear pattern per exercise; a story different from the concept's classic textbook example; targets realistic for the module's level (tiny 5, easy 10 to 15, medium 20 to 30 minutes).
 - Prefer practical stories (parsing text, small stateful classes, data clean-up) mixed with classic patterns; interviews are unpredictable, so vary the shapes.
 - Do not leak the solution, the edge cases or the pattern in the task text.
-- New module folder: name it `m<NN>_<topic>` matching the track README, and update its status there to "seeded".
+- New module folder: name it `m<NN>_<topic>` matching the track README, update its status there to "seeded", and add `primm/README.md` listing the module's concepts for teach-me lessons (copy the format from an existing module's `primm/README.md`).
 
 Finally run `python3 dojo.py verify <slugs>` and fix anything until it reports no problems (the stub must fail, the reference must pass). Report back: the slugs, their levels and targets, the verify result, and one line per exercise on what it trains. Do not include the reference code in your report.

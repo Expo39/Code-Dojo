@@ -31,7 +31,9 @@ TIMER = PROGRESS / "timer.json"
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
-HISTORY = WORKSPACE / ".history"
+# Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
+HISTORY_DIR = ".history"
+PRIMM_DIR = "primm"
 
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 # Leitner boxes: days until the next redo. Box 4+ counts as mastered.
@@ -288,7 +290,8 @@ def discover(active_only: bool = True) -> dict:
     for track_name, track in load_tracks(active_only).items():
         ext = track["extension"]
         for path in sorted(track["dir"].rglob(f"*{ext}")):
-            if any(part.startswith(".") or part == "tests" for part in path.relative_to(track["dir"]).parts[:-1]):
+            if any(part.startswith(".") or part in ("tests", PRIMM_DIR)
+                   for part in path.relative_to(track["dir"]).parts[:-1]):
                 continue
             m = STUB_RE.match(path.name)
             if not m or m.group(2) != ext:
@@ -305,13 +308,15 @@ def discover(active_only: bool = True) -> dict:
                 hidden = {k.lower(): v.strip() for k, v in HEADER_RE.findall(clarify.read_text(encoding="utf-8"))}
                 meta = {**hidden, **meta}
             level = meta.get("level", "easy")
+            # workspace/<track>/<module>/ mirrors tracks/<track>/<module>/
+            module_rel = path.parent.relative_to(track["dir"])
             found[slug] = {
                 "slug": slug,
                 "stub": path,
                 "solution": path.parent / track["solution_file"].format(slug=slug),
                 "test": path.parent / track["test_file"].format(slug=slug),
                 "clarify": clarify,
-                "attempt": WORKSPACE / track_name / f"{slug}{ext}",
+                "attempt": WORKSPACE / track_name / module_rel / f"{slug}{ext}",
                 "track": track_name,
                 "track_config": track,
                 "module": path.parent.name,
@@ -579,6 +584,7 @@ def cmd_import(args) -> None:
                     shutil.move(str(folder), backup / folder.name)
             print(f"Current data moved to {backup.name}/")
         z.extractall(ROOT)
+    migrate_workspace(verbose=False)  # an export from an older version may use the flat layout
     print(f"Imported {len(names)} files. Run `python dojo.py today`.")
 
 
@@ -646,14 +652,15 @@ def cmd_start(args) -> None:
         card = read_json(REVIEWS, {}).get(args.item)
         redo = card is not None and card.get("grade") != "failed"
         if attempt.exists() and (args.fresh or redo):
-            HISTORY.mkdir(parents=True, exist_ok=True)
+            history = attempt.parent / HISTORY_DIR
+            history.mkdir(parents=True, exist_ok=True)
             stamp = now().strftime("%Y%m%d_%H%M")
-            shutil.move(str(attempt), HISTORY / f"{args.item}_{stamp}{attempt.suffix}")
+            shutil.move(str(attempt), history / f"{args.item}_{stamp}{attempt.suffix}")
         if not attempt.exists():
             shutil.copy(ex["stub"], attempt)
             print(f"Fresh file: {shown}")
             if redo:
-                print("Redo from a blank file: do not open .history/ or old notes.")
+                print(f"Redo from a blank file: do not open {HISTORY_DIR}/ or old notes.")
         else:
             print(f"Continuing your file: {shown}")
         print(f"Target: {ex['target']} min ({ex['level']}). "
@@ -1182,6 +1189,93 @@ def cmd_verify(args) -> None:
     sys.exit(1 if bad else 0)
 
 
+def modules_by_name() -> dict:
+    """Map module folder name -> (track name, module path relative to the track, track settings)."""
+    found = {}
+    for ex in discover().values():
+        rel = ex["stub"].parent.relative_to(ex["track_config"]["dir"])
+        found.setdefault(ex["module"], (ex["track"], rel, ex["track_config"]))
+    return found
+
+
+def cmd_primm(args) -> None:
+    """Create (or show) the PRIMM folder of a module in the workspace, and optionally a lesson file."""
+    modules = modules_by_name()
+    matches = [m for m in modules if args.module == m] or [m for m in modules if args.module in m]
+    if len(matches) != 1:
+        hint = ", ".join(matches) if matches else ", ".join(modules)
+        die(f"Which module? {hint}")
+    track_name, rel, track = modules[matches[0]]
+    folder = WORKSPACE / track_name / rel / PRIMM_DIR
+    folder.mkdir(parents=True, exist_ok=True)
+    print(f"PRIMM folder: {folder.relative_to(ROOT).as_posix()}/")
+    if args.topic:
+        topic = re.sub(r"[^a-z0-9_]+", "_", args.topic.lower()).strip("_") or "lesson"
+        lesson = folder / f"{topic}{track['extension']}"
+        if not lesson.exists():
+            lesson.touch()
+            print(f"Lesson file (empty, you type it): {lesson.relative_to(ROOT).as_posix()}")
+        else:
+            print(f"Lesson file already there: {lesson.relative_to(ROOT).as_posix()}")
+
+
+HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
+
+
+def migrate_workspace(verbose: bool = True) -> int:
+    """Move files from the old flat layout into workspace/<track>/<module>/. Idempotent.
+
+    Old layout: workspace/<track>/<slug>.<ext> and workspace/.history/<slug>_<stamp>.<ext>.
+    Loose files that are not exercises go to workspace/<track>/scratch/. Nothing is
+    overwritten: a name clash is reported and left in place.
+    """
+    if not WORKSPACE.exists():
+        return 0
+    exercises = discover(active_only=False)
+    moves = []
+    for track_name in load_tracks(active_only=False):
+        folder = WORKSPACE / track_name
+        if not folder.is_dir():
+            continue
+        for path in sorted(p for p in folder.iterdir() if p.is_file()):
+            ex = exercises.get(path.stem)
+            if ex and ex["track"] == track_name and path.suffix == ex["attempt"].suffix:
+                moves.append((path, ex["attempt"]))
+            elif path.name != ".gitkeep":
+                moves.append((path, folder / "scratch" / path.name))
+        cache = folder / "__pycache__"
+        if cache.is_dir():
+            shutil.rmtree(cache)
+    old_history = WORKSPACE / HISTORY_DIR
+    if old_history.is_dir():
+        for path in sorted(p for p in old_history.iterdir() if p.is_file()):
+            m = HISTORY_STAMP_RE.match(path.name)
+            ex = exercises.get(m.group("slug")) if m else None
+            if ex:
+                moves.append((path, ex["attempt"].parent / HISTORY_DIR / path.name))
+    moved = 0
+    for src, dest in moves:
+        if dest.exists():
+            print(f"  migrate: kept {src.relative_to(ROOT).as_posix()} "
+                  f"({dest.relative_to(ROOT).as_posix()} already exists)")
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), dest)
+        moved += 1
+        if verbose:
+            print(f"  moved {src.relative_to(ROOT).as_posix()} -> {dest.relative_to(ROOT).as_posix()}")
+    if old_history.is_dir() and not any(old_history.iterdir()):
+        old_history.rmdir()
+    if moved:
+        print(f"Workspace reorganised by module: {moved} file(s) moved.")
+    return moved
+
+
+def cmd_migrate(args) -> None:
+    if not migrate_workspace(verbose=True):
+        print("Workspace already in the per-module layout.")
+
+
 HELP = """Code Dojo commands (python dojo.py <command>):
 
   install                  create .venv and install pytest (any OS)
@@ -1189,7 +1283,8 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   doctor                   check Python, venv, pytest and profile
   today                    today's plan: time, week balance, redo queue, next exercises
   list [module]            all exercises with their status
-  start <item> [--fresh]   start the timer; for a dojo exercise also create workspace/<item>.py
+  start <item> [--fresh]   start the timer; for a dojo exercise also create
+                           workspace/<track>/<module>/<item>.py (earlier attempts go to .history/)
   test <item> [--debug]    run that exercise's tests against your workspace file
                            (--debug: in-process, for editor breakpoints)
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
@@ -1209,6 +1304,9 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates
   sync                     find work done without logging it
+  primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file)
+                           for a teach-me lesson
+  migrate                  move files from the old flat workspace into module folders (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
 """
 
@@ -1265,6 +1363,8 @@ def main() -> None:
     sub.add_parser("stats")
     sub.add_parser("sync")
     p = sub.add_parser("verify"); p.add_argument("items", nargs="*")
+    p = sub.add_parser("primm"); p.add_argument("module"); p.add_argument("topic", nargs="?")
+    sub.add_parser("migrate")
     sub.add_parser("help")
 
     args = parser.parse_args()
@@ -1272,8 +1372,10 @@ def main() -> None:
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
         "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
-        "sync": cmd_sync, "verify": cmd_verify,
+        "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
+    if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
+        migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder
     if args.cmd == "brief":
         cmd_today(args, brief=True)
     elif args.cmd in commands:

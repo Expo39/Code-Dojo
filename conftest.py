@@ -3,7 +3,8 @@
 Tests do `from parse_pairs import parse_pairs`. This finder decides which file
 answers that import:
 
-- default: your attempt in workspace/python/<slug>.py, or the blank stub if there is none
+- default: your attempt in workspace/python/<module>/<slug>.py (the folders mirror
+  tracks/python/), or the blank stub if there is none
 - DOJO_TARGET=solution: the reference in <module>/.solutions/<slug>.py (tutor and verify only)
 - DOJO_TARGET=stub: the blank stub (verify only)
 """
@@ -21,7 +22,7 @@ STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)\.py$")
 def _index():
     stubs = {}
     for path in (ROOT / "tracks").rglob("*.py"):
-        if ".solutions" in path.parts or "tests" in path.parts:
+        if ".solutions" in path.parts or "tests" in path.parts or "primm" in path.parts:
             continue
         m = STUB_RE.match(path.name)
         if m:
@@ -43,7 +44,8 @@ class DojoFinder:
         elif self.target == "stub":
             source = stub
         else:
-            attempt = ROOT / "workspace" / "python" / f"{name}.py"
+            module = stub.parent.relative_to(ROOT / "tracks")  # e.g. python/m01_foundations
+            attempt = ROOT / "workspace" / module / f"{name}.py"
             source = attempt if attempt.exists() else stub
         return importlib.util.spec_from_file_location(name, source)
 

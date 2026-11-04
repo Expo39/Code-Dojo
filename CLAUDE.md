@@ -129,6 +129,7 @@ Use `python3 dojo.py ...` on Linux and macOS, `python dojo.py ...` on Windows.
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
 | `end of day`, `how am I doing` | `dojo.py today` and `dojo.py stats`, then an honest short assessment and concrete work for tomorrow |
 | `export` | `dojo.py export` (with `--to` if they give a target) |
+| `teach me <topic>` (lesson starts) | `dojo.py primm <module> <topic>`: the learner types the lesson in `workspace/<track>/<module>/primm/<topic>.py` |
 
 Log every mistake you see or discuss (wrong prediction, failed attempt, wrong concept, slow
 recall) with `dojo.py mistake`. Add a cheat-sheet bullet (`progress/cheatsheet.md`) only for a

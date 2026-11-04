@@ -19,7 +19,7 @@ dictated code does not count as typing it yourself.
 | Say | What happens |
 | --- | --- |
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
-| `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/` (a blank one for a redo) |
+| `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
@@ -32,7 +32,7 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks |
+| `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.py` |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
 | `more like <exercise>` | Same pattern, different story |
 | `review my code` | Senior-engineer feedback on passing code, as questions and pointers |
