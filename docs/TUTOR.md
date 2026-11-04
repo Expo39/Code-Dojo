@@ -1,10 +1,11 @@
 # Talking to the tutor
 
-Run `claude` in the repo. The tutor coaches the method in `CHECKLISTS.md`: it asks you to
+Run `claude` in the repo (or `codex`, or `gemini`: the same rules, see `SETUP.md`). The tutor coaches the method in `CHECKLISTS.md`: it asks you to
 think out loud, asks for each step (understand, example, plan, predict, test, reflect), and
 reminds you when you skip one. Tutor mode is on at the start of every session: the tutor explains,
 asks questions, gives hints and reviews, but never writes your exercise or project code. Say
-these in plain words; the tutor runs the tracker for you.
+these in plain words; the tutor runs the tracker for you, except the tests, which you run and
+read yourself (it gives you the command).
 
 ## Talk, do not type
 

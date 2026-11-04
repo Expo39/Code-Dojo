@@ -4,7 +4,7 @@ Pick the template that matches the time you have today (`python dojo.py today` n
 The order matters more than the exact minutes: **retrieval first, new material while fresh,
 performance practice, then logging**.
 
-Every session starts the same way: open Claude Code in the repo. It runs the catch-up
+Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini CLI). It runs the catch-up
 automatically (what changed, what is due, the week balance). Say `start <exercise>` and
 `done <exercise>` so the tracker can measure you.
 
@@ -61,7 +61,7 @@ of logging. A minimum day counts; skipping does not.
 - Type everything yourself. No AI completion in the editor while training (turn off Copilot
   and similar tools for this folder).
 - Say the plan out loud before typing, even when alone. It is the interview habit, and it
-  exposes gaps early. With `/voice` on in Claude Code, say it to the tutor instead of typing it.
+  exposes gaps early. With voice dictation on (`/voice` in Claude Code), say it to the tutor instead of typing it.
 - Predict before running a test. A wrong prediction is the most valuable minute of the day.
 - When stuck past twice the target, ask for a hint. Struggling for an hour teaches less than a
   level-2 hint and a redo tomorrow.

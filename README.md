@@ -2,8 +2,8 @@
 
 A personal training system for becoming a strong engineer: learn to **write** code from a
 blank file, **understand** code you did not write, and **perform** in live-coding interviews.
-Claude Code acts as a tutor that explains, questions, hints and reviews, but never writes your
-code for you.
+An AI coding agent (Claude Code, Codex or Gemini CLI) acts as a tutor that explains,
+questions, hints and reviews, but never writes your code for you.
 
 It works for anyone and any subject: choose your tracks and your weekly hours, run a
 placement, and the dojo plans, measures and adapts around you. A complete Python track ships
@@ -15,12 +15,16 @@ interview practice).
 - **Retrieval and spacing.** Every exercise comes back from a blank file after 1, 3, 7, 14, 30
   and 60 days, sooner if it went badly.
 - **Deliberate practice with instant feedback.** Every exercise has tests and a target time;
-  time and hints are logged for every attempt.
+  time, hints and skipped steps are logged for every attempt.
+- **You do the work.** You type every line, run the tests yourself and read the errors before
+  the tutor points at anything. Inline AI completion and suggested replies are turned off.
 - **Read as much as you write.** Predict, trace, debug and review drills, including spotting
   bugs in AI-written code.
+- **New concepts the PRIMM way.** Predict, run, investigate, modify, make: you commit to a
+  guess before anything is explained, in a lesson file for that module.
 - **Build things.** A ladder of projects with requirements but no step-by-step guide.
 - **A method you cannot skip by accident.** Checklists for every activity; the tutor asks you
-  to think out loud and flags skipped steps, and the weekly report scores your process.
+  to think out loud, flags skipped steps, and the weekly report scores your process.
 - **Train the performance.** Talk-aloud timed problems most days and a mock interview every week.
 - **AI as tutor, not ghostwriter.** The evidence and the rules are in [docs/METHOD.md](docs/METHOD.md).
 
@@ -34,12 +38,43 @@ cd code-dojo
 python dojo.py install     # creates .venv with pytest (any OS)
 python dojo.py setup       # your name, minutes per weekday, rest days, tracks, level
 python dojo.py doctor      # checks everything
-claude                     # the tutor; then say: assess me
+claude                     # the tutor (or: codex, gemini); then say: assess me
 ```
 
-Full instructions, the VS Code and Zed debugger setup, and moving between machines: [docs/SETUP.md](docs/SETUP.md).
+Full instructions, the VS Code and Zed debugger setup, voice dictation, using Codex or Gemini,
+and moving between machines: [docs/SETUP.md](docs/SETUP.md).
 
-## A day in the dojo
+## A session with the tutor
+
+Open the tutor in the repo and say hello. It catches up on what you did without it, tells you
+where you stand this week, and proposes today's session from
+[docs/DAILY_SESSION.md](docs/DAILY_SESSION.md) (templates from 30 minutes to 3 hours):
+
+1. **Warm-up:** cheat-sheet self-checks or a predict drill.
+2. **Redo queue first:** due exercises from a blank file, no peeking at old attempts.
+3. **Learn and write:** `teach me <topic>` when a concept is new, then the next exercises.
+4. **Read, debug or build:** a bug or review drill, a code-reading exercise, or the project.
+5. **Perform:** an unseen problem under interview conditions, or the weekly `mock interview`.
+6. **Log:** mistakes and cheat-sheet lines, then `end of day` for a summary and tomorrow's plan.
+
+Every exercise follows the same loop. Say each step out loud (voice dictation helps):
+
+| Step | You show |
+| --- | --- |
+| 1. Understand | The task in your own words with the exact condition; clarifying questions |
+| 2. Example | A trace by hand of an input you made up, plus an edge case |
+| 3. Plan | The steps, and the time and space complexity |
+| 4. Predict | "Pass" or "test X fails because ...", then you run the tests yourself |
+| 5. Test | Your example and an edge case traced through the finished code |
+| 6. Reflect | What would break it, one improvement, names an interviewer would notice |
+
+Things to say: `start <exercise>`, `done <exercise>`, `I'm stuck`, `teach me <topic>`,
+`bug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
+off until `TEACHER ON`. The full list: [docs/TUTOR.md](docs/TUTOR.md).
+
+## The tracker
+
+The tutor runs `dojo.py` for you, except the tests: those you run and read yourself.
 
 ```bash
 python dojo.py today                 # time today and this week, redo queue, next exercises
@@ -49,42 +84,67 @@ python dojo.py done parse_pairs --hints 1
 python dojo.py week --write          # weekly report
 ```
 
-Or just talk to the tutor (`start parse_pairs`, `I'm stuck`, `teach me generators`,
-`mock interview`); it runs the tracker for you. Session templates for 30 minutes to 3 hours:
-[docs/DAILY_SESSION.md](docs/DAILY_SESSION.md). All tutor commands: [docs/TUTOR.md](docs/TUTOR.md).
+| Group | Commands |
+| --- | --- |
+| Set up | `install`, `setup`, `doctor` |
+| Plan | `today`, `list [module]`, `stats`, `week [--write]` |
+| Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
+| Learn | `primm <module> <topic>` (lesson file), `log study <minutes> <topic>` |
+| Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
+| Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]`, `drive-setup`, `import`, `migrate` |
+| Maintain | `verify` |
+
+`python dojo.py help` describes every option.
 
 ## What is where
 
 ```text
 code-dojo/
-├── dojo.py                  tracker: timers, tests, redo schedule, week balance, reports, export
+├── dojo.py                  the tracker: timers, tests, redo schedule, week balance, reports, export
+├── conftest.py              lets pytest run your workspace file against the track's tests
 ├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
-├── CLAUDE.md                imports AGENTS.md, plus Claude Code notes
+├── CLAUDE.md                imports AGENTS.md, plus notes for Claude Code only
 ├── .agents/skills/          dojo-session, dojo-assess, dojo-teach, dojo-mock, dojo-drill,
 │                            dojo-weekly, dojo-new-exercise (one copy for every tool)
-├── .claude/                 Claude Code: settings, agents (problem-setter, code-reviewer,
-│                            progress-coach), skills -> ../.agents/skills
+├── .claude/                 Claude Code: settings and start hook, agents (problem-setter,
+│                            code-reviewer, progress-coach), skills -> ../.agents/skills
 ├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
-├── .claude-plugin/          optional: the same skills and agents as an installable plugin
-├── docs/                    METHOD, CHECKLISTS, DAILY_SESSION, TRACKS, TUTOR, INTERVIEW_PLAYBOOK, SETUP,
-│                            PITFALLS
+├── .claude-plugin/          optional: the same skills and agents as a Claude Code plugin
+├── .vscode/, .zed/          editor and debugger settings, AI completion off
+├── docs/                    the method, sessions, tutor commands, setup (see below)
 ├── tracks/
 │   ├── python/              the Python track: README (phases, modules, milestones), modules
-│   │                        (each with a primm/ folder for lessons), projects/
+│   │                        (stubs, tests, .clarify/, .solutions/, primm/), projects/
 │   ├── cpp/                 placeholder for an optional future track
 │   └── ros/                 placeholder for an optional future track
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
 │                            schedule, mistakes, cheat sheet, weekly reports, mocks
-└── workspace/               YOUR attempts and projects (gitignored), one folder per module
-                             mirroring tracks/: <track>/<module>/ holds your attempts,
-                             .history/ (earlier attempts) and primm/ (lesson files)
+├── workspace/               YOUR code (gitignored), mirroring tracks/:
+│                            <track>/<module>/ holds your attempts, .history/ (earlier
+│                            attempts) and primm/ (lesson files); mocks/; projects/
+└── exports/                 YOUR backups from `dojo.py export` (gitignored)
 ```
+
+## Documentation
+
+| Doc | What it covers |
+| --- | --- |
+| [SETUP.md](docs/SETUP.md) | Install, the tutor in Claude Code, Codex or Gemini, voice, editors and debugger, moving machines, Google Drive backups |
+| [TUTOR.md](docs/TUTOR.md) | Everything you can say to the tutor, and what happens |
+| [DAILY_SESSION.md](docs/DAILY_SESSION.md) | Session templates from 30 minutes to 3 hours |
+| [CHECKLISTS.md](docs/CHECKLISTS.md) | The method step by step: exercise loop, PRIMM, debugging, reading code, and every practice the tutor enforces |
+| [METHOD.md](docs/METHOD.md) | Why it is built this way: the learning research and the rules for AI |
+| [INTERVIEW_PLAYBOOK.md](docs/INTERVIEW_PLAYBOOK.md) | The process for live-coding interviews |
+| [PITFALLS.md](docs/PITFALLS.md) | Common mistakes in the first modules and how to catch them |
+| [TRACKS.md](docs/TRACKS.md) | What is shared and what is personal, and how to add a track or exercises |
+| [tracks/python/README.md](tracks/python/README.md) | The Python syllabus: phases, modules, milestones |
 
 ## Your data stays yours
 
-`progress/` and `workspace/` never go into git. Back them up or move them with
-`python dojo.py export` (a zip), or straight to another machine over SSH:
-`python dojo.py export --to user@host:path`, then `python dojo.py import <zip>` there.
+`progress/`, `workspace/` and `exports/` never go into git. Back them up or move them with
+`python dojo.py export` (a zip), straight to another machine over SSH
+(`--to user@host:path`), or to Google Drive (`drive-setup` once, then `export`). Restore with
+`python dojo.py import <zip>`.
 
 ## Make it yours, or share it
 
@@ -92,11 +152,13 @@ code-dojo/
   [docs/TRACKS.md](docs/TRACKS.md). The tutor can generate verified exercises for it.
 - **Friends** get a clean copy (personal data is gitignored), run the quick start, then
   `assess me`: the placement imports what they already know and sets their own plan.
+- **Any of three agents.** The rules (`AGENTS.md`) and skills (`.agents/skills/`) exist once
+  and serve Claude Code, Codex and Gemini CLI alike; each tool skips the others' files.
 - **Plugin (optional).** The skills and agents also install as a Claude Code plugin from this
   repo (`/plugin marketplace add <repo>`, then `/plugin install code-dojo@code-dojo`), for
   example to use the drills and lessons in another project. Inside this repo you do not need
-  it: everything loads from `.claude/` and `.agents/` automatically. Do not install both in the same folder,
-  or each skill appears twice.
+  it: everything loads automatically. Do not install both in the same folder, or each skill
+  appears twice.
 
 ## Contributing exercises
 
