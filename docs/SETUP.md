@@ -31,6 +31,11 @@ Install Claude Code (https://claude.com/claude-code), open a terminal in the rep
 `.claude/agents/` load automatically; nothing else to install. At the start of each session a
 hook prints your status (`python dojo.py brief`) so the tutor knows where you are.
 
+Recommended: turn on voice dictation with `/voice` in Claude Code, then hold the spacebar to
+talk (the dictation language is set in `/config`). Speaking the restate, trace and plan steps
+is faster than typing them and closer to a real interview. See "Talk, do not type" in
+`TUTOR.md`. On Linux it needs microphone access and may ask for an audio recorder such as SoX.
+
 On Windows, Claude Code needs Git for Windows (it runs hooks through Git Bash); install it
 from https://git-scm.com if you do not have it.
 

@@ -61,7 +61,7 @@ of logging. A minimum day counts; skipping does not.
 - Type everything yourself. No AI completion in the editor while training (turn off Copilot
   and similar tools for this folder).
 - Say the plan out loud before typing, even when alone. It is the interview habit, and it
-  exposes gaps early.
+  exposes gaps early. With `/voice` on in Claude Code, say it to the tutor instead of typing it.
 - Predict before running a test. A wrong prediction is the most valuable minute of the day.
 - When stuck past twice the target, ask for a hint. Struggling for an hour teaches less than a
   level-2 hint and a redo tomorrow.

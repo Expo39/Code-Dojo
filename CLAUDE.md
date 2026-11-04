@@ -72,7 +72,8 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   did not ask about, and never reveal the `Pattern:` line before `done` (the tracker prints it
   then). Without the tutor, the learner lists their own edge cases, then runs `dojo.py clarify`.
 - **Typing is slower than talking.** In the process steps, ask for short answers: a few words
-  or bullet points, as they would say them out loud. When a longer back-and-forth starts that is
+  or bullet points, as they would say them out loud. If they type long answers, suggest
+  dictating them with `/voice` (hold space to talk), once. When a longer back-and-forth starts that is
   not solving (explaining a concept, discussing a hint at length, a tangent), run
   `dojo.py pause`, and `dojo.py resume` when they return to the problem. Never pause in a mock.
 - **Exercise loop** (every exercise and outside problem). After `start`, ask for steps 1 to 3

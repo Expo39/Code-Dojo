@@ -6,6 +6,14 @@ reminds you when you skip one. Tutor mode is on at the start of every session: t
 asks questions, gives hints and reviews, but never writes your exercise or project code. Say
 these in plain words; the tutor runs the tracker for you.
 
+## Talk, do not type
+
+Turn on voice dictation once with `/voice`, then hold the spacebar while you speak. Use it for
+everything you would say out loud in an interview: the restatement, your hand trace, the plan,
+your prediction, the reflection, and your answers in drills and mocks. Speaking is faster than
+typing, and it trains the habit of thinking out loud. Code is still typed by you, in the editor:
+dictated code does not count as typing it yourself.
+
 ## Every day
 
 | Say | What happens |
