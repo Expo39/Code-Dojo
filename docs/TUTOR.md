@@ -59,7 +59,7 @@ dictated code does not count as typing it yourself.
 | `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
 | `weekly review` | Report, coach notes, next week's focus, plan updated |
 | `am I on track for M1?` | Trend analysis and an honest re-estimate |
-| `export` / `export to user@host:path` | Personal data zipped (and copied over SSH) |
+| `export` / `export to user@host:path` | Personal data zipped (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
 
 ## Without the tutor
@@ -75,3 +75,4 @@ tutor session catches up with `sync`.
 | `python dojo.py log study 45 <topic>` | Log time that is not an exercise (study, reading, drill, mock, project) |
 | `python dojo.py week --write` / `stats` | Weekly report / modules, patterns and fluency gates |
 | `python dojo.py export --to user@host:path` | Back up or move personal data |
+| `python dojo.py drive-setup`, then `export` | Back up to Google Drive (see `SETUP.md`) |

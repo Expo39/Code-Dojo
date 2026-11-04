@@ -93,6 +93,19 @@ target in `progress/profile.json` (`"export_target": "user@host:path"`) to just 
 `python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,
 macOS and most Linux distributions.
 
+### Google Drive
+
+```bash
+python dojo.py drive-setup     # once: sign in to Google, saves the export target
+python dojo.py export          # zips and uploads to the CodeDojo folder in your Drive
+```
+
+It uses rclone: the one on your PATH if you have it, otherwise the `rclone/rclone` Docker
+image (pulled automatically; config in `~/.config/rclone`). The sign-in asks only for access
+to files rclone itself creates (`drive.file`), not your whole Drive. Options:
+`--remote <name>` and `--folder <folder>`; `export --to rclone:<remote>:<folder>` for a one-off.
+On the other machine, download the zip from Drive and run `python dojo.py import <zip>`.
+
 ## Sharing with a friend
 
 Give them the repository (or let them fork it). Your personal data is gitignored, so they get

@@ -492,7 +492,15 @@ def cmd_export(args) -> None:
                     count += 1
     print(f"Exported {count} files to {archive}")
     target = args.to or profile.get("export_target")
-    if target:
+    if target and target.startswith("rclone:"):
+        remote = target[len("rclone:"):]
+        print(f"Uploading to {remote} with rclone ...")
+        if run_rclone(["copy", str(archive), remote], mounts={archive.parent: "/data"},
+                      local_args={str(archive): f"/data/{archive.name}"}) != 0:
+            die("rclone upload failed; the zip is still on this machine. "
+                "Run `python dojo.py drive-setup` if the remote is not configured yet.")
+        print("Uploaded. On the other device, download the zip, then: python dojo.py import <zip>")
+    elif target:
         if shutil.which("scp") is None:
             die("scp not found. Install OpenSSH (built into Windows 10+, macOS and most Linux) "
                 "or copy the zip by hand.")
@@ -501,6 +509,49 @@ def cmd_export(args) -> None:
         if result.returncode != 0:
             die("scp failed; the zip is still on this machine.")
         print("Copied. On the other device: python dojo.py import <zip>")
+
+
+RCLONE_IMAGE = "rclone/rclone:1.71"
+
+
+def run_rclone(rclone_args: list, mounts: dict | None = None, local_args: dict | None = None,
+               interactive: bool = False) -> int:
+    """Run rclone from PATH, or else from its Docker image (config in ~/.config/rclone)."""
+    sys.stdout.flush()
+    if shutil.which("rclone"):
+        return subprocess.run(["rclone", *rclone_args]).returncode
+    if shutil.which("docker") is None:
+        die("rclone not found. Install Docker (the rclone image is then pulled automatically) "
+            "or rclone itself (https://rclone.org/install/).")
+    config = Path.home() / ".config" / "rclone"
+    config.mkdir(parents=True, exist_ok=True)
+    cmd = ["docker", "run", "--rm", "-v", f"{config}:/config/rclone"]
+    if interactive:
+        cmd += ["--network", "host"]  # the Google sign-in calls back to localhost
+        cmd += ["-it"] if sys.stdin.isatty() else ["-i"]
+    if hasattr(os, "getuid"):
+        cmd += ["--user", f"{os.getuid()}:{os.getgid()}"]
+    for host_dir, container_dir in (mounts or {}).items():
+        cmd += ["-v", f"{host_dir}:{container_dir}:ro"]
+    args = [(local_args or {}).get(a, a) for a in rclone_args]
+    return subprocess.run([*cmd, RCLONE_IMAGE, *args]).returncode
+
+
+def cmd_drive_setup(args) -> None:
+    """One-time Google Drive sign-in for rclone, then save the export target."""
+    remote = args.remote
+    print(f"Creating the rclone remote '{remote}' for Google Drive. A sign-in link opens or is "
+          "printed: log in with the Google account that should hold the exports.")
+    if run_rclone(["config", "create", remote, "drive", "scope=drive.file"], interactive=True) != 0:
+        die("rclone config failed.")
+    target = f"rclone:{remote}:{args.folder}"
+    profile = read_json(PROFILE, None)
+    if profile is not None:
+        profile["export_target"] = target
+        write_json(PROFILE, profile)
+        print(f"Saved export_target = {target}. From now on `python dojo.py export` uploads there.")
+    else:
+        print(f"Done. Export with: python dojo.py export --to {target}")
 
 
 def cmd_import(args) -> None:
@@ -1152,6 +1203,8 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   mark <items/modules> --box N   seed the redo schedule for things you already know
   mistake <item> "what went wrong" "correct form"
   export [--to user@host:path]   zip progress/ and workspace/; copy over SSH with --to
+                                 (--to rclone:gdrive:CodeDojo uploads to Google Drive)
+  drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates
@@ -1207,6 +1260,7 @@ def main() -> None:
     p = sub.add_parser("week"); p.add_argument("--write", action="store_true")
     p.add_argument("--force", action="store_true"); p.add_argument("--date")
     p = sub.add_parser("export"); p.add_argument("--to"); p.add_argument("--out")
+    p = sub.add_parser("drive-setup"); p.add_argument("--remote", default="gdrive"); p.add_argument("--folder", default="CodeDojo")
     p = sub.add_parser("import"); p.add_argument("archive"); p.add_argument("--force", action="store_true")
     sub.add_parser("stats")
     sub.add_parser("sync")
@@ -1217,7 +1271,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
         "sync": cmd_sync, "verify": cmd_verify,
     }
     if args.cmd == "brief":
