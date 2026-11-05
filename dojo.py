@@ -761,6 +761,8 @@ def cmd_done(args) -> None:
     else:
         die("No timer running for this item. Pass --minutes N.")
     write_json(TIMER, timers)
+    credit = max(0.0, min(float(args.credit or 0), minutes))
+    minutes -= credit
 
     ex = discover().get(args.item)
     if ex:
@@ -793,11 +795,17 @@ def cmd_done(args) -> None:
                 "target": target or "", "hints": args.hints, "result": result,
                 "ratio": ratio if ratio is not None else "",
                 "skipped": ",".join(skipped), "note": args.note or ""})
+    if credit:
+        # Time lost to a tutor misunderstanding: off the solve time, still counted as training.
+        append_log({"date": on.isoformat(), "item": args.item, "kind": "study",
+                    "minutes": round(credit, 1), "note": "credit: tutor misunderstanding"})
 
     verdict = f"{args.item}: {result} in {fmt_min(minutes)}"
     if ratio is not None:
         verdict += f" ({ratio}x target {target}m)"
     verdict += f", hints {args.hints}."
+    if credit:
+        verdict += f" ({fmt_min(credit)} credited back.)"
     print(verdict)
     if ex and ex["pattern"]:
         print(f"Pattern: {ex['pattern']}")
@@ -1322,6 +1330,7 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
+       --credit M                minutes lost to a tutor misunderstanding (off the solve time, still logged)
        mocks: done mock_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
   pause / resume [item]    stop the clock while talking something through, then continue
@@ -1360,6 +1369,8 @@ def main() -> None:
     p.add_argument("item")
     p.add_argument("--hints", type=int, default=0)
     p.add_argument("--minutes", type=float)
+    p.add_argument("--credit", type=float, default=0,
+                   help="minutes lost to a tutor misunderstanding: taken off the solve time")
     p.add_argument("--gave-up", action="store_true")
     p.add_argument("--result", choices=["solved", "failed", "strong", "pass", "fail"])
     p.add_argument("--kind", choices=KINDS)
