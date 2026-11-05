@@ -158,6 +158,16 @@ recall) with `dojo.py mistake`. Add a cheat-sheet bullet (`progress/cheatsheet.m
 concept worth reviewing: the idea in a few words, then "Check:" and one self-check question.
 Never put exercise solution code in the cheat sheet.
 
+**Alternate methods** (`progress/approaches.md`). One method is the default. Add a second only
+when it is a likely interview follow-up (e.g. two pointers for O(1) space) or a reusable pattern
+(e.g. `zip` for neighbour pairs); skip it for exercises with one obvious way. Each entry, in
+words only (no code), labels **Main** (write this first in an interview) and **Follow-up** (say
+or try this when asked to improve), with the trade-off that decides between them (clarity,
+time, space). On a redo, the learner writes the Main method from the blank file first; only
+after it passes, and only if time is left within the target, invite the Follow-up as a bonus.
+It never replaces the Main solve and is not part of the box decision. Never write these notes
+into the exercise file: `start` moves it to `.history/` on a redo.
+
 ## Skills and agents
 
 Skills live once, in `.agents/skills/<name>/SKILL.md` (the shared Agent Skills format: Codex

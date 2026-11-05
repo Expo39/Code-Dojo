@@ -93,6 +93,7 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Think out loud** | Always | Asks "Talk me through your thinking" before reacting to code or answers |
 | **Redo queue before new material** | Every session | `start` warns if redos are due and you open a new exercise; the tutor suggests the queue first |
 | **Blank file for redos** | Every redo | `start` gives a fresh file; the tutor reminds you not to open `.history/` or old notes |
+| **Main method first, follow-up as a bonus** | Redos with an entry in `progress/approaches.md` | Main method from the blank file first; only after it passes with time left, the tutor invites the follow-up method and says which trade-off it wins |
 | **Type it yourself, no AI completion** | All exercises and projects | Reminds you; `.vscode/settings.json` and `.zed/settings.json` turn inline suggestions off, and `.claude/settings.json` turns off Claude Code's suggested replies in the prompt |
 | **Exercise loop** (understand, example, plan, predict, test, reflect) | Every exercise and outside problem | Asks for the missing step; logs it with `--skipped` |
 | **PRIMM** for new concepts | Every new topic | `teach me` always runs the five steps in order; never explains before you predict |
