@@ -7,6 +7,10 @@ Return `items` rotated right by k places.
 
     rotate([1, 2, 3, 4, 5], 2) -> [4, 5, 1, 2, 3]
 
+Trace by hand (work out the result yourself):
+
+    rotate([1, 2, 3, 4, 5, 6], 4) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify rotate
 """

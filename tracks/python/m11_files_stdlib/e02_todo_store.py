@@ -10,6 +10,11 @@ the same path sees the saved tasks.
 
     store = TodoStore("todo.json"); store.add("milk") -> 1; store.add("bread") -> 2
 
+Trace by hand (work out the result yourself):
+
+    store = TodoStore("t.json"); store.add("eggs"); store.add("tea"); store.complete(1)
+    TodoStore("t.json").open_tasks() -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify todo_store
 

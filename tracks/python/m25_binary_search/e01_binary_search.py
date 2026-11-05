@@ -8,6 +8,10 @@ Return the index of `target` in the sorted list `nums`. O(log n): do not use
 
     binary_search([1, 3, 5, 7, 9], 7) -> 3
 
+Trace by hand (work out the result yourself):
+
+    binary_search([2, 4, 6, 8, 10, 12], 10) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify binary_search
 """

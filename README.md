@@ -62,7 +62,7 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | Step | You show |
 | --- | --- |
 | 1. Understand | The task in your own words with the exact condition; clarifying questions |
-| 2. Example | A trace by hand of an input you made up, plus an edge case |
+| 2. Example | A trace by hand of the task's `Trace by hand:` input (no answer printed), plus an edge case of your own |
 | 3. Plan | The steps, and the time and space complexity |
 | 4. Predict | "Pass" or "test X fails because ...", then you run the tests yourself |
 | 5. Test | Your example and an edge case traced through the finished code |

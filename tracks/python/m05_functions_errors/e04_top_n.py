@@ -9,6 +9,10 @@ compare items, like sorted's key.
     top_n([5, 1, 9, 3], 2) -> [9, 5]
     top_n(["bb", "a", "ccc"], 1, key=len) -> ["ccc"]
 
+Trace by hand (work out the result yourself):
+
+    top_n([4, 8, 1, 6, 3], 3) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify top_n
 """

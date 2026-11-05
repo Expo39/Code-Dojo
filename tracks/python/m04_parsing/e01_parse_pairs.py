@@ -11,6 +11,10 @@ spaces. Return a list of dicts, one per line.
     parse_pairs("name Alice age 30\nname Bob city Rome")
     -> [{"name": "Alice", "age": "30"}, {"name": "Bob", "city": "Rome"}]
 
+Trace by hand (work out the result yourself):
+
+    parse_pairs("color red size L\nsize M") -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify parse_pairs
 """

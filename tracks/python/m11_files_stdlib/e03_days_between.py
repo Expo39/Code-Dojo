@@ -9,6 +9,10 @@ second. Also write weekday_name(iso), returning "Monday", "Tuesday" and so on.
     days_between("2026-11-02", "2026-12-25") -> 53
     weekday_name("2026-11-02") -> "Monday"
 
+Trace by hand (work out the result yourself):
+
+    days_between("2026-12-25", "2027-01-01") -> ?;  weekday_name("2026-12-25") -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify days_between
 

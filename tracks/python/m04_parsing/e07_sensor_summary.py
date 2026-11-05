@@ -10,6 +10,11 @@ Lines look like "sensor_id,timestamp,value". Return a dict
     -> {"t1": {"count": 2, "min": 20.0, "max": 22.0, "avg": 21.0},
         "t2": {"count": 1, "min": 5.0, "max": 5.0, "avg": 5.0}}
 
+Trace by hand (work out the result yourself):
+
+    "a1,2026-11-05T08:00,10\na1,2026-11-05T08:05,16\nb2,2026-11-05T08:00,7\na1,2026-11-05T08:10,13"
+    -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify sensor_summary
 """

@@ -9,6 +9,11 @@ at `start`.
     c = make_counter(5)
     c() -> 5; c() -> 6; c() -> 7
 
+Trace by hand (work out the result yourself):
+
+    c = make_counter(10)
+    c(); c(); c() -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify make_counter
 """

@@ -8,6 +8,10 @@ holds the seconds the block took (measured with time.perf_counter).
 
     with Timer() as t: time.sleep(0.05)   ->  t.elapsed is about 0.05
 
+Trace by hand (work out the result yourself):
+
+    with Timer() as t: print("in")   -> which of your methods run, in what order, and what is t?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify timer_block
 

@@ -17,7 +17,7 @@ because it is the step that trains reading.
 | # | Step | You show | Done when |
 | --- | --- | --- | --- |
 | 1 | **Understand** | The task in your own words, naming the exact condition (`> 0` or `>= threshold`?) and what is returned (a value, an index, a list); 1 to 3 questions about input, empty cases, duplicates, invalid data. The task text deliberately leaves edge cases out: ask the tutor, or list yours and then compare with `python dojo.py clarify <exercise>` | You could explain the task to someone who has not read it |
-| 2 | **Example** | One small input of your own worked by hand through your plan (not the task's example: its answer is already printed), plus one edge case, written as a comment | You know the expected output of both |
+| 2 | **Example** | The task's `Trace by hand:` input (printed without its output) worked through your plan, plus one edge case of your own; for an outside problem, a small input you make up | You know the expected output of both |
 | 3 | **Plan** | The approach in 1 or 2 sentences and its rough complexity, before typing | The plan is specific enough that someone else could code it |
 | 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ..." | You said it out loud before pressing Enter |
 | 5 | **Test** | Your example traced through your code line by line, then the edge case | Both give the expected output, by trace and by the tests |

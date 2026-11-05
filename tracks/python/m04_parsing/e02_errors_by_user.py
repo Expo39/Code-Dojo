@@ -13,6 +13,14 @@ ERROR) and a token user=<name>. Return a dict {user: number of ERROR lines}.
     2026-10-23 10:00:03 user=alice ERROR timeout
     -> {"alice": 2}
 
+Trace by hand (work out the result yourself):
+
+    2026-11-05 09:00:00 user=dan ERROR crash
+    2026-11-05 09:01:00 WARN user=eve slow
+    2026-11-05 09:02:00 ERROR user=eve oops
+    2026-11-05 09:03:00 user=dan INFO restart
+    -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify errors_by_user
 """

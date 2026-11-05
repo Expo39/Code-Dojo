@@ -11,6 +11,12 @@ original function's name and docstring.
     def hello(): return "hi"
     hello(); hello(); hello.calls -> 2
 
+Trace by hand (work out the result yourself):
+
+    @count_calls
+    def add(a, b): return a + b
+    add(1, 2); add(3, 4); add(5, 6); add.calls -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify count_calls
 

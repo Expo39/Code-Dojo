@@ -9,6 +9,10 @@ number as a string.
 
     fizzbuzz_list(5) -> ["1", "2", "Fizz", "4", "Buzz"]
 
+Trace by hand (work out the result yourself):
+
+    fizzbuzz_list(10) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify fizzbuzz_list
 """

@@ -7,6 +7,10 @@ Return a dict with every key from both dicts and their counts added up.
 
     merge_counts({"x": 1, "y": 2}, {"y": 3, "z": 4}) -> {"x": 1, "y": 5, "z": 4}
 
+Trace by hand (work out the result yourself):
+
+    merge_counts({"a": 2, "b": 1}, {"b": 4, "c": 1, "a": 1}) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify merge_counts
 """

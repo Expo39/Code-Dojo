@@ -8,6 +8,10 @@ Do not use list.index().
 
     first_index(["a", "b", "a"], "a") -> 0
 
+Trace by hand (work out the result yourself):
+
+    first_index(["x", "y", "z", "y"], "y") -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify first_index
 """

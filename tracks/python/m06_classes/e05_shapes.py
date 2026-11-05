@@ -9,6 +9,10 @@ is "Square(4)".
 
     Square(4).area() -> 16
 
+Trace by hand (work out the result yourself):
+
+    Rectangle(3, 5).perimeter() -> ?;  repr(Square(2)) -> ?
+
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify shapes
 """
