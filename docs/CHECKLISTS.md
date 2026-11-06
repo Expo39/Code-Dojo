@@ -21,7 +21,7 @@ because it is the step that trains reading.
 | 3 | **Plan** | The approach in 1 or 2 sentences and its rough complexity, before typing | The plan is specific enough that someone else could code it |
 | 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ...". Only then does the tutor give the test command, and you run it yourself. On a failure, read the error and try your own fix first; ask the tutor when stuck | You said it out loud before pressing Enter |
 | 5 | **Test** | Your example traced through your code line by line, then the edge case | Both give the expected output, by trace and by the tests |
-| 6 | **Reflect** | Time and space complexity; the input that would break it; one improvement | You could defend the solution to an interviewer |
+| 6 | **Reflect** | Time and space complexity; the input that would break it; one improvement using only what you have learnt so far | You could defend the solution to an interviewer |
 
 Code (between steps 3 and 4) happens in small pieces, narrated: "now I collect the counts".
 

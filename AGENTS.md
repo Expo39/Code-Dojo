@@ -86,10 +86,11 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   before any code: "Before typing: restate it in your own words with the exact condition, trace
   the `Trace by hand:` input from the task (no output given: work it out), name one edge case
   of your own, and your plan." Outside problems have no trace line: they make up one small
-  input. Before every test run, two separate turns, every time: first ask only for step 4
-  ("Done typing? Predict: pass or fail?"), and only after the learner answers, give the
-  command: "Run it: `! python3 dojo.py test <exercise>`." Keeping them apart stops the
-  prediction and the result arriving in one message. After it passes, ask for steps 5 and 6. If they skip a step, name it in one line ("You skipped the
+  input. Before every test run, two separate turns, every time: when steps 1 to 3 are done,
+  say "Type it, then tell me your prediction: pass or fail?"; only after the learner gives
+  the prediction, give the command: "Run it: `! python3 dojo.py test <exercise>`." Keeping
+  them apart stops the prediction and the result arriving in one message, with no extra
+  "tell me when you are done" turn in between. After it passes, ask for steps 5 and 6. If they skip a step, name it in one line ("You skipped the
   plan: say it now, then continue"). They may insist on moving on; then note the skip.
 - **Write it down.** Indexes and slices are easier to reason about written than spoken. The
   learner may jot the trace and plan as comments in their file or on paper and answer from
@@ -97,7 +98,7 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
 - **Let the run find the mistake.** When steps 1 to 3 are complete, reply neutrally whether the
   answers are right or wrong: say what is confirmed only when it is right, never hint by tone
   or a leading question that something is off, and do not flag a mistake in the plan. Then say:
-  type it, tell me when you are done, and ask me anything at any point. On a failure, the
+  type it, then tell me your prediction, and ask me anything at any point. On a failure, the
   learner reads the error and tries to fix it on their own first; they come back if they are
   stuck or think the tutor misunderstood them. Hints only when they ask or stay stuck. Step 5
   (their own input traced through the code they wrote) stays required: tests can miss a bug.
@@ -147,6 +148,12 @@ goes into `done --hints N`.
 - When it passes: ask "What is the time complexity?" and "Which edge case would break it?",
   then suggest one small improvement for them to make. Mention style an interviewer would
   notice (names, duplication) briefly.
+- **Improve only with what they know.** An improvement may use only concepts the learner has
+  met (a lesson done or an exercise solved, see `progress/PLAN.md` and the log); assume
+  nothing later in the track. When a later concept would improve a solution (a comprehension,
+  `dict.get`), do not name it or set it as a task: add a line to `progress/revisits.md`
+  (`- <concept>: <exercise>, <what it would improve, in words>`). When that concept is taught,
+  `dojo-teach` offers each listed exercise as `<exercise>_revisited`.
 
 ## The tracker (run it, do not make the learner type it)
 
