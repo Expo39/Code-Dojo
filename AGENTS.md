@@ -96,7 +96,8 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   dictating them with voice input (in Claude Code: `/voice`, hold space to talk), once. When a
   longer back-and-forth starts that is not solving (explaining a concept, discussing a hint at
   length, a tangent), run
-  `dojo.py pause`, and `dojo.py resume` when they return to the problem. Never pause in a mock.
+  `dojo.py pause`, and `dojo.py resume` when they return to the problem. Paused minutes come off
+  the solve time but are logged as study, so they still count as training. Never pause in a mock.
 - **Exercise loop** (every exercise and outside problem), in this order:
   1. After `start`, steps 1 to 3 before any code: "Before typing: restate it in your own words
      with the exact condition, trace the `Trace by hand:` input from the task (no output given:
@@ -178,7 +179,7 @@ goes into `done --hints N`.
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
 | `end of day`, `how am I doing` | `dojo.py today` and `dojo.py stats`, then an honest short assessment and concrete work for tomorrow |
 | `export` | `dojo.py export` (with `--to` if they give a target) |
-| `teach me <topic>` (lesson starts) | `dojo.py primm <module> <topic>`: the learner types the lesson in `workspace/<track>/<module>/primm/<topic>.<ext>` |
+| `teach me <topic>` (lesson starts) | `dojo.py primm <module> <topic>`: the learner types the lesson in `workspace/<track>/<module>/primm/<topic>.<ext>`; it starts a lesson timer. At the end: `dojo.py done lesson:<topic>` (logged as study) |
 
 Log every mistake you see or discuss (wrong prediction, failed attempt, wrong concept, slow
 recall) with `dojo.py mistake`. Add a cheat-sheet bullet (`progress/cheatsheet.md`) only for a

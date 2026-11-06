@@ -89,7 +89,7 @@ python dojo.py week --write          # weekly report
 | Set up | `install`, `setup`, `doctor` |
 | Plan | `today`, `list [module]`, `stats`, `week [--write]` |
 | Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
-| Learn | `primm <module> <topic>` (lesson file), `log study <minutes> <topic>` |
+| Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
 | Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]`, `drive-setup`, `import`, `migrate` |
 | Maintain | `verify` |

@@ -34,6 +34,7 @@ WEEKLY = PROGRESS / "weekly"
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
 PRIMM_DIR = "primm"
+LESSON_PREFIX = "lesson:"  # timer key of a PRIMM lesson, logged as study time by `done`
 
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 # Leitner boxes: days until the next redo. Box 4+ counts as mastered.
@@ -763,6 +764,17 @@ def cmd_done(args) -> None:
     write_json(TIMER, timers)
     credit = max(0.0, min(float(args.credit or 0), minutes))
     minutes -= credit
+    on = parse_date(args.date) if args.date else today()
+    paused = paused_minutes(started) if started and args.minutes is None else 0.0
+
+    if args.item.startswith(LESSON_PREFIX):
+        # A PRIMM lesson: training time, but no target, no tests and no redo schedule.
+        topic = args.item[len(LESSON_PREFIX):]
+        module = timer_of(started).get("module", "") if started else ""
+        append_log({"date": on.isoformat(), "item": topic, "kind": "study", "module": module,
+                    "minutes": round(minutes + credit + paused, 1), "note": "PRIMM lesson"})
+        print(f"Lesson '{topic}': {fmt_min(minutes + credit + paused)} logged as study.")
+        return
 
     ex = discover().get(args.item)
     if ex:
@@ -785,7 +797,6 @@ def cmd_done(args) -> None:
     else:
         result = "failed"
     ratio = round(minutes / target, 2) if target else None
-    on = parse_date(args.date) if args.date else today()
     skipped = [x.strip().lower() for x in (args.skipped or "").split(",") if x.strip()]
     unknown = [x for x in skipped if x not in STEPS]
     if unknown:
@@ -799,6 +810,10 @@ def cmd_done(args) -> None:
         # Time lost to a tutor misunderstanding: off the solve time, still counted as training.
         append_log({"date": on.isoformat(), "item": args.item, "kind": "study",
                     "minutes": round(credit, 1), "note": "credit: tutor misunderstanding"})
+    if paused >= 0.5:
+        # Clock paused for a discussion: off the solve time, still counted as training.
+        append_log({"date": on.isoformat(), "item": args.item, "kind": "study",
+                    "minutes": round(paused, 1), "note": "paused: discussion"})
 
     verdict = f"{args.item}: {result} in {fmt_min(minutes)}"
     if ratio is not None:
@@ -806,6 +821,8 @@ def cmd_done(args) -> None:
     verdict += f", hints {args.hints}."
     if credit:
         verdict += f" ({fmt_min(credit)} credited back.)"
+    if paused >= 0.5:
+        verdict += f" ({fmt_min(paused)} paused, logged as study.)"
     print(verdict)
     if ex and ex["pattern"]:
         print(f"Pattern: {ex['pattern']}")
@@ -848,6 +865,15 @@ def timer_minutes(value) -> float:
     if t["paused_at"]:
         seconds -= (now() - datetime.fromisoformat(t["paused_at"])).total_seconds()
     return max(seconds, 0) / 60
+
+
+def paused_minutes(value) -> float:
+    """Minutes the clock was paused, including a pause still open."""
+    t = timer_of(value)
+    seconds = t["paused_total"]
+    if t["paused_at"]:
+        seconds += (now() - datetime.fromisoformat(t["paused_at"])).total_seconds()
+    return seconds / 60
 
 
 def pick_timer(timers: dict, item: str | None) -> str:
@@ -1257,6 +1283,15 @@ def cmd_primm(args) -> None:
             print(f"Lesson file (empty, you type it): {lesson.relative_to(ROOT).as_posix()}")
         else:
             print(f"Lesson file already there: {lesson.relative_to(ROOT).as_posix()}")
+        key = f"{LESSON_PREFIX}{topic}"
+        timers = read_json(TIMER, {})
+        if key in timers:
+            print(f"Lesson timer already running since {timer_of(timers[key])['start']}.")
+        else:
+            timers[key] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None,
+                           "module": matches[0]}
+            write_json(TIMER, timers)
+            print(f"Lesson timer started. End it with: python dojo.py done {key}")
 
 
 HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
@@ -1345,7 +1380,8 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates
   sync                     find work done without logging it
-  primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file)
+  primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file);
+                           with a topic, starts a lesson timer: end it with `done lesson:<topic>`
                            for a teach-me lesson
   migrate                  move files from the old flat workspace into module folders (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
