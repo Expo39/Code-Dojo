@@ -97,7 +97,8 @@ in a lesson; `python dojo.py primm <module> <topic>` creates it). The tracker ig
 - The task gives the statement, ONE main example, ONE `Trace by hand:` input printed WITHOUT its
   output (a different, ordinary input of 4 to 6 items that goes through the main path; never an
   edge case, which the learner finds; write exercises only, since a `b` or `r` task is itself the
-  trace), and any constraint an interviewer would state
+  trace; a `b` task instead shows a `Check your fix with:` input, printed without its output,
+  that varies a parameter from the example so a fix that only repairs the example fails), and any constraint an interviewer would state
   up front ("do not use max()", "aim for O(n)"), including the contract: return a new
   object or change the input in place. No edge cases, no tips, no pattern name:
   discovering those is the learner's job. They go in `.clarify/<slug>.md`, which starts with a
