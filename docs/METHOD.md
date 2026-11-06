@@ -72,7 +72,7 @@ is giving, and the number of levels used is logged as "hints".
 | Level | What you get |
 | --- | --- |
 | 1. Question | One question that points at the gap ("What should happen for an empty list?") |
-| 2. Concept | The idea or tool, no code ("This is counting: a dict from item to count") |
+| 2. Concept | The idea or tool, no code ("This is counting: a map from item to count", a dict in Python) |
 | 3. Plan | The steps in plain English |
 | 4. Pseudocode | The structure with blanks you fill in |
 | 5. Walkthrough | The reference solution explained line by line; then you close it, write it from memory, and it goes to the redo queue for tomorrow |

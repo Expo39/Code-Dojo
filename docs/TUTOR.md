@@ -34,7 +34,7 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.py` |
+| `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>` |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
 | `more like <exercise>` | Same pattern, different story |
 | `review my code` | Senior-engineer feedback on passing code, as questions and pointers |

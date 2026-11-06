@@ -48,7 +48,7 @@ Never skip **Predict**: running code you have not predicted teaches almost nothi
 
 | # | Step | You show |
 | --- | --- | --- |
-| 1 | **Read** | The last line of the traceback, out loud: the error type and message. Then the frame in *your* file |
+| 1 | **Read** | The key line of the error, out loud (the last line of a traceback, the first compiler error, the failed assertion): its type and message. Then the line in *your* file |
 | 2 | **Reproduce** | The smallest input that shows the bug |
 | 3 | **Hypothesise** | "I think X is wrong because Y", before changing anything |
 | 4 | **Confirm** | A breakpoint or `print` that proves or disproves the hypothesis |

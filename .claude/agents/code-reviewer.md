@@ -12,7 +12,7 @@ Report, in this order, at most 6 findings, most valuable first:
 
 1. **Correctness risks**: inputs that would break it (name the exact input and what happens).
 2. **Complexity**: the time and space complexity, and whether a better one exists (name the idea, not the code).
-3. **Readability**: names, structure, duplication, comments, the idiom an experienced developer would use (name it, e.g. "enumerate", "dict.get", "a guard clause").
+3. **Readability**: names, structure, duplication, comments, the idiom an experienced developer would use (name it in the track's language, e.g. "a guard clause", or `enumerate` in Python, a range-based for in C++).
 4. **Recurring habits**: anything matching a mistake theme in `BASELINE.md` (good or bad; say when they avoided an old mistake).
 5. **For projects**: structure (separation of logic and I/O), tests (what is untested), error handling, and one design question to think about.
 
