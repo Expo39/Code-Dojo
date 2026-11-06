@@ -3,7 +3,7 @@
 Level: easy
 Target: 10
 
-Return `items` rotated right by k places.
+Return `items` rotated right by k places, as a new list (`items` itself stays unchanged).
 
     rotate([1, 2, 3, 4, 5], 2) -> [4, 5, 1, 2, 3]
 

@@ -98,7 +98,8 @@ in a lesson; `python dojo.py primm <module> <topic>` creates it). The tracker ig
   output (a different, ordinary input of 4 to 6 items that goes through the main path; never an
   edge case, which the learner finds; write exercises only, since a `b` or `r` task is itself the
   trace), and any constraint an interviewer would state
-  up front ("do not use max()", "aim for O(n)"). No edge cases, no tips, no pattern name:
+  up front ("do not use max()", "aim for O(n)"), including the contract: return a new
+  object or change the input in place. No edge cases, no tips, no pattern name:
   discovering those is the learner's job. They go in `.clarify/<slug>.md`, which starts with a
   `Pattern: <short-name>` line (read by the tracker, hidden from the learner until `done`),
   followed by the answers to the clarifying questions an interviewer would expect.
