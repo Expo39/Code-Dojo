@@ -1039,10 +1039,17 @@ def cmd_today(args, brief: bool = False) -> None:
         status = f"ahead by {fmt_min(gap)}"
     lines.append(f"This week: {fmt_min(wk['done'])} of {fmt_min(wk['target'])} ({status}).")
     if gap < -15 and wk["remaining_days"]:
-        extra = min(-gap / len(wk["remaining_days"]), 60)
-        lines.append(f"  Catch-up: add about {fmt_min(extra)} on each of the remaining "
-                     f"{len(wk['remaining_days'])} training days, or use the rest day"
-                     + (" (flexible)." if profile["flexible_rest_day"] else "."))
+        days = wk["remaining_days"]
+        extra = min(-gap / len(days), 60)
+        names = ", ".join("today" if d == on else d.strftime("%A") for d in days)
+        line = f"  Catch-up: add about {fmt_min(extra)} on each of: {names}"
+        if profile["flexible_rest_day"]:
+            line += " (or train on the rest day)"
+        left = -gap - extra * len(days)
+        if left > 15:
+            line += (f". About {fmt_min(left)} will stay open this week: let it go, "
+                     "it does not carry over.")
+        lines.append(line + ("" if left > 15 else "."))
     if wk["prev_gap"] < -60 and on.weekday() < 2:
         lines.append(f"  Last week finished {fmt_min(-wk['prev_gap'])} short. Do not try to repay it all; "
                      "prioritise the redo queue this week.")
