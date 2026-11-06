@@ -3,7 +3,8 @@
 Level: easy
 Target: 10
 
-Return a dict with every key from both dicts and their counts added up.
+Return a new dict with every key from both dicts and their counts added up; the
+input dicts stay unchanged.
 
     merge_counts({"x": 1, "y": 2}, {"y": 3, "z": 4}) -> {"x": 1, "y": 5, "z": 4}
 

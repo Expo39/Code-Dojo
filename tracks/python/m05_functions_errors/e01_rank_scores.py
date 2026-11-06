@@ -4,7 +4,7 @@ Level: easy
 Target: 10
 
 `records` is a list of (name, score) tuples. Return them sorted by score from
-high to low.
+high to low, as a new list (`records` itself stays unchanged).
 
     rank_scores([("bo", 3), ("al", 5), ("cy", 3)]) -> [("al", 5), ("bo", 3), ("cy", 3)]
 

@@ -3,7 +3,8 @@
 Level: easy
 Target: 10
 
-Return a list where element i is the sum of nums[0] to nums[i].
+Return a new list where element i is the sum of nums[0] to nums[i]; `nums` itself
+stays unchanged.
 
     running_total([1, 2, 3, 4]) -> [1, 3, 6, 10]
 
