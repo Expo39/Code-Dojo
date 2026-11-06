@@ -21,3 +21,7 @@ def test_bigger_than_list():
 def test_bad_size():
     with pytest.raises(ValueError):
         chunk([1, 2], 0)
+
+
+def test_size_three():
+    assert chunk([1, 2, 3, 4, 5, 6, 7], 3) == [[1, 2, 3], [4, 5, 6], [7]]

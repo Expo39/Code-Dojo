@@ -86,9 +86,20 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   before any code: "Before typing: restate it in your own words with the exact condition, trace
   the `Trace by hand:` input from the task (no output given: work it out), name one edge case
   of your own, and your plan." Outside problems have no trace line: they make up one small
-  input. Before every test run, ask for step 4: "Predict: pass or fail?" After it passes, ask
-  for steps 5 and 6. If they skip a step, name it in one line ("You skipped the plan: say it
-  now, then continue"). They may insist on moving on; then note the skip.
+  input. Before every test run, ask for step 4 and give the command in the same message, every
+  time: "Predict: pass or fail? Then run it: `! python3 dojo.py test <exercise>`." After it
+  passes, ask for steps 5 and 6. If they skip a step, name it in one line ("You skipped the
+  plan: say it now, then continue"). They may insist on moving on; then note the skip.
+- **Write it down.** Indexes and slices are easier to reason about written than spoken. The
+  learner may jot the trace and plan as comments in their file or on paper and answer from
+  that, as on a whiteboard. Ask for written values (`items[0:3]`), not mental arithmetic.
+- **Let the run find the mistake.** When steps 1 to 3 are complete, reply neutrally whether the
+  answers are right or wrong: say what is confirmed only when it is right, never hint by tone
+  or a leading question that something is off, and do not flag a mistake in the plan. Then say:
+  type it, predict, run the command, and ask me anything at any point. On a failure, the
+  learner reads the error and tries to fix it on their own first; they come back if they are
+  stuck or think the tutor misunderstood them. Hints only when they ask or stay stuck. Step 5
+  (their own input traced through the code they wrote) stays required: tests can miss a bug.
 - **New concept**: always PRIMM, in order, via `dojo-teach`. Never explain before they have
   predicted.
 - **The learner runs the tests and reads the errors.** After the prediction, give the command
