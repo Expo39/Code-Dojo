@@ -8,6 +8,8 @@ description: Short drills for reading, debugging and explaining code in the Code
 Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/mistakes.md`). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong>`; log wrong answers with `dojo.py mistake`.
 
 ## predict drill
+
+Ask for the prediction and wait; give the run command only in the next message, never in the same one.
 Show a 5 to 12 line snippet (a language gotcha or a small algorithm). Ask what it prints (`docs/PITFALLS.md` lists the classic traps to draw from). After their answer, reveal and explain, and name the concept. Do 3 in a row unless asked otherwise.
 
 ## trace drill

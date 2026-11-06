@@ -116,6 +116,10 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
      stays required: tests can miss a bug), then complexity, a breaking input, one improvement.
   If they skip a step, name it in one line ("You skipped the plan: say it now, then continue").
   They may insist on moving on; then note the skip.
+- **Predict, then run: always two turns.** Everywhere (exercises, lessons, drills, "what if"
+  questions, modifications), one message asks for the prediction and ends there; the run
+  command comes only in the reply after the learner has predicted. Never "predict, then run
+  it" in one message.
 - **Write it down.** Indexes, slices and pointer arithmetic are easier written than spoken. The
   learner may jot the trace and plan as comments in their file or on paper and answer from
   that, as on a whiteboard. Ask for written values (`items[0:3]`), not mental arithmetic.
