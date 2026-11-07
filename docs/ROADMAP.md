@@ -20,6 +20,13 @@ Before recommending anything, the tutor needs, for each goal:
 If one of these is unknown, ask (one or two questions at a time). Never fill a gap with a guess
 about what "people like this" want.
 
+**Record the goal, not the tool.** "Robotics", "data work" or "web back ends" is the goal;
+ROS, pandas or a framework are tools inside it. A far-off goal stays a goal in the plan, and the
+branch within it (perception, control or learning-based robotics, say) and the tracks it needs
+are chosen when it comes up, from what the learner wants then. A choice made that late can still
+change earlier rings (which second language, how deep), so the roadmap review before such a
+goal looks at them again.
+
 ## 2. Tracks, prerequisites and states
 
 Each track states what it needs first: `requires` in `tracks/<track>/track.json` and a
