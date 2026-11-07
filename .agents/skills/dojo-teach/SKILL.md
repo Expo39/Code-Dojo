@@ -14,6 +14,10 @@ Short lesson, then the learner types. Use an example from a DIFFERENT problem th
 4. **Modify**: ask them to change the example to do something slightly different. Review what they paste without rewriting it: point at lines, ask questions.
 5. **Make**: 3 tiny typing tasks of increasing difficulty, one at a time ("write a function that ..."), checking each before the next.
 6. **Lock it in**: name the dojo exercise(s) that use this concept next (`dojo.py list <module>`). Check `progress/revisits.md` for exercises the learner solved before knowing this concept; offer each as `<exercise>_revisited` (the same task, solved with the new concept), created with the `dojo-new-exercise` skill in this concept's module, and remove the line once it is solved. Then add one cheat-sheet bullet with a "Check:" question, and stop the timer: `dojo.py done lesson:<topic>` (logged as study; never estimate the minutes).
+7. **Read next**: the official documentation section (for Python, the matching chapter of https://docs.python.org/3/tutorial/ or the library reference) and one follow-up question with a 2-line answer (a likely interview question when their mode involves interviews).
+
+Pitch every step at the learner's level (`AGENTS.md`, Style): for a beginner, plain words, every term defined, smaller steps; for an advanced learner, fewer words and a harder Make task.
+
 **Theory form** (a `Theory:` line from a module's `primm/README.md` or a track README, or the
 learner asks for background such as Big-O, memory, a maths idea): the same steps, adapted, and
 only as much theory as the next practical step needs (`docs/ROADMAP.md`, section 6). The idea
@@ -22,4 +26,3 @@ steps for 1,000 items? for 1,000,000?"); Run is a short demo, a count or a measu
 learner types; Modify and Make end in a few lines of code that use the idea. Name the lesson
 `theory_<topic>` (`dojo.py primm <module> theory_<topic>`).
 
-7. **Read next**: the official documentation section (for Python, the matching chapter of https://docs.python.org/3/tutorial/ or the library reference) and one likely interview follow-up question with a 2-line answer.

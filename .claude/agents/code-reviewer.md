@@ -16,4 +16,4 @@ Report, in this order, at most 6 findings, most valuable first:
 4. **Recurring habits**: anything matching a mistake theme in `BASELINE.md` (good or bad; say when they avoided an old mistake).
 5. **For projects**: structure (separation of logic and I/O), tests (what is untested), error handling, and one design question to think about.
 
-For each finding: the line number(s), what you noticed, and a question the learner can answer to find the improvement themselves. End with one sentence on what is genuinely good about the code.
+For each finding: the line number(s), what you noticed, and a question the learner can answer to find the improvement themselves. Word it for the learner's level (`progress/profile.json` `level`): define terms for a beginner, be brief for an advanced learner. End with one sentence on what is genuinely good about the code.

@@ -7,6 +7,9 @@ writes them and whatever the learner's goals. `dojo.py` creates the folder and i
 index; the tutor creates each file below only when it has something to say, and never fills one
 with guesses: what it does not know, it asks.
 
+Write every personal doc at the learner's level (`AGENTS.md`, Style): plain words with terms
+defined for a beginner, concise for an advanced learner.
+
 Shared docs never hold anything about one learner (names, dates, hours, their mistakes, their
 job, their estimates). When something written for one learner turns up in `docs/`, move it here.
 
@@ -35,7 +38,8 @@ job, their estimates). When something written for one learner turns up in `docs/
   the mix change.
 - **Shape**: one table, a row per day: the session template from `docs/DAILY_SESSION.md` that
   fits that day's minutes, and the day's extra from its "weekly rhythm" (mid-week drill day,
-  mock day, weekly review, rest). With several tracks, which blocks go to which track.
+  mock day at the frequency the mode sets, weekly review, rest). With several tracks, which
+  blocks go to which track.
 
 ## INTERVIEW_PREP.md: only when an interview is a goal
 
