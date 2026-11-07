@@ -61,9 +61,10 @@ Start with research, not a blank page: say "design a track for <subject>" (skill
 `dojo-new-track`). It surveys the best free material (university courses such as MIT, Stanford,
 Harvard, Helsinki and Oxford, official documentation, well-regarded repositories on GitHub,
 GitLab and Codeberg, free books), judges each source on authority, currency, depth, exercises
-and licence (stars and "free" are not proof of quality, and niche topics need extra care),
-and builds the syllabus from what the strongest sources agree on. Exercises are always
-original. The steps below are what it produces; you can also follow them by hand.
+and licence (stars and "free" are not proof of quality, and niche topics need extra care).
+The aim is the best possible course, not a copy of the free ones: the strongest sources are the
+starting point, and the tutor's own judgement fills their gaps (what they miss, teach badly or
+leave without practice). Exercises are always original. The steps below are what it produces; you can also follow them by hand.
 
 1. Create `tracks/<name>/track.json`:
 

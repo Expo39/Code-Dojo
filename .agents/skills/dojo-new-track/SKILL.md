@@ -5,7 +5,11 @@ description: Design a new Code Dojo track, or review an existing one, from the b
 
 # Design or review a track
 
-The aim: a track as good as the best free courses, in the dojo's own format, never a copy.
+The aim: the best possible course for learning the subject, not a match for the free ones.
+Free courses, docs and repositories are inputs to judge, not a ceiling: use the strongest parts,
+reject the weak ones, look beyond the sources named here, and use your own judgement (and the
+dojo's method: practice, retrieval, reading code, projects) to fill their gaps and do better
+than any one of them. Always in the dojo's own format, never a copy.
 
 1. **Scope.** The subject, who it is for (the roadmap's goal and bar, or "any learner"), the
    language or tool version that is current today (check the official site), and for a review,
@@ -25,8 +29,11 @@ The aim: a track as good as the best free courses, in the dojo's own format, nev
    exist, so lean on official docs, standards, the maintainers' own tutorials and university
    courses, verify more, and say plainly when nothing good enough exists; then build from the
    official documentation.
-4. **Synthesise.** Module order from what the strongest sources agree on; one focus line per
-   module; `Theory:` lines for background; projects from the best project ideas; current
+4. **Synthesise, then improve.** Start from what the strongest sources agree on, then judge
+   it: what do they all miss or teach badly (for example reading and debugging code someone
+   else or an AI wrote, testing, current tools), what order would a learner really need, where
+   is practice too thin? Fix those with your own reasoning, and say where you departed from the
+   sources and why. One focus line per module; `Theory:` lines for background; projects from the best project ideas; current
    features of the current version, nothing deprecated. For a review: a list of proposed
    changes (add, move, update, remove), each with its reason and source, for approval before
    anything changes.

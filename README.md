@@ -176,8 +176,9 @@ code-dojo/
 
 - **Tracks are optional.** Add any subject with a `track.json` and modules; see
   [docs/TRACKS.md](docs/TRACKS.md). Say "design a track for <subject>": the tutor researches the
-  best free university courses, official docs and repositories, judges them critically, builds
-  the syllabus from what the strongest agree on, and generates verified, original exercises.
+  best free university courses, official docs and repositories, judges them critically, and
+  builds the best course it can: the strongest material as a base, its own judgement for what
+  they all miss, and verified, original exercises.
   Every track README says when it was last reviewed and against which version.
 - **Friends** get a clean copy (personal data is gitignored), run the quick start, then
   `assess me`: the placement imports what they already know and sets their own plan.
