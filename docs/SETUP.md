@@ -112,10 +112,10 @@ Tracks, exercises and docs keep improving. Once a day, the session start checks 
 repository and tells you when there are updates; say `update` to the tutor, or run
 `python dojo.py update`. It first shows the incoming changes and which of the changed files run
 code on your machine (the tracker, tests, hooks), and applies them only after your yes; your
-`progress/` and `workspace/` are never touched. Then it lists what changed in your tracks,
-including modules you already finished: for each new or changed exercise or new lesson topic you
-choose to learn it, mark it as already known, or leave it out. `python dojo.py changes` shows the list again at any
-time. If you work from a fork, add the original as a remote named `upstream`
+`progress/` and `workspace/` are never touched. Then it lists what changed in modules you have
+already started or finished, and you choose to learn it, mark it as already known, or leave it
+out (all at once or one by one). Changes in modules you have not reached yet need no answer:
+you meet them there. `python dojo.py changes` shows the list again at any time. If you work from a fork, add the original as a remote named `upstream`
 (`git remote add upstream <url>`); `update` pulls from it.
 
 ## Moving to another machine

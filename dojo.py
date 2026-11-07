@@ -1342,6 +1342,13 @@ def skipped_module(module: str, profile: dict) -> bool:
     return any(module.split("/")[-1].startswith(x) for x in profile.get("skip_modules", []))
 
 
+def started_modules() -> set[str]:
+    """Modules with at least one attempted exercise: the only ones whose changes need a question.
+    New material in a module the learner has not reached yet simply waits for them there."""
+    reviews = read_json(REVIEWS, {})
+    return {ex["module"] for slug, ex in discover().items() if slug in reviews}
+
+
 def topic_changes() -> dict:
     """New lesson topics per module since the learner was last asked (modules they skip stay quiet)."""
     current = module_topics()
@@ -1351,9 +1358,13 @@ def topic_changes() -> dict:
         return {}
     seen = read_json(TOPICS_SEEN, {})
     profile = read_json(PROFILE, {})
+    started = started_modules()
     out = {}
     for module in sorted(set(current) | set(seen)):
-        if skipped_module(module, profile):
+        if skipped_module(module, profile) or module.split("/")[-1] not in started:
+            if module in current and seen.get(module) != current[module]:
+                seen[module] = current[module]  # recorded silently: met when the module is reached
+                write_json(TOPICS_SEEN, seen)
             continue
         new = [t for t in current.get(module, []) if t not in seen.get(module, [])]
         gone = [t for t in seen.get(module, []) if t not in current.get(module, [])]
@@ -1379,7 +1390,13 @@ def track_changes() -> dict:
     seen = read_json(SEEN, {})
     profile = read_json(PROFILE, {})
     exercises = discover()
-    quiet = {sl for sl, ex in exercises.items() if skipped_module(ex["module"], profile)}
+    started = started_modules()
+    quiet = {sl for sl, ex in exercises.items()
+             if skipped_module(ex["module"], profile) or ex["module"] not in started}
+    silent = {sl: current[sl] for sl in quiet if seen.get(sl) != current[sl]}
+    if silent:  # nothing to ask: new material in an unreached module is met there
+        seen.update(silent)
+        write_json(SEEN, seen)
     return {"new": [s for s in current if s not in seen and s not in quiet],
             "changed": [s for s in current if s in seen and seen[s] != current[s] and s not in quiet],
             "removed": [s for s in seen if s not in current],

@@ -47,5 +47,5 @@ this page is for looking one up on your own.
 | **Taster** | A new track started small (10 to 20% of the time) next to your main one. |
 | **Maintenance** | A track gets no new material, only its redos, so you keep what you learnt. |
 | **Settings** | Your profile: mode, target level, hours per day, tracks and more. `python dojo.py settings` shows them; the weekly review suggests changes for you to accept or decline. |
-| **Track changes** | New, changed or removed exercises and lesson topics in your tracks since you were last asked (also in modules you already finished), for example after `update`. Each session start lists them and asks what you want: learn it or redo the new version, already know it, or not for me; removals are explained first. |
+| **Track changes** | New, changed or removed exercises and lesson topics in your tracks since you were last asked in modules you have started or finished, for example after `update`. The session start sums them up in a few lines and asks once what you want: all of it, one by one, or later. New material in modules you have not reached yet simply waits for you there. |
 | **Weekly review** | Once a week: your numbers, what went well, what to fix, next week's focus, and suggested settings changes. |
