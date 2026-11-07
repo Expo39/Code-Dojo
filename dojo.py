@@ -1348,6 +1348,43 @@ def cmd_mistake(args) -> None:
     print("Mistake logged.")
 
 
+# Target share of training time per strand, by mode (docs/METHOD.md, "The five strands").
+STRAND_SHARES = {
+    "interview": {"learn": 20, "write": 25, "read": 20, "build": 10, "perform": 25},
+    "hybrid": {"learn": 25, "write": 25, "read": 20, "build": 15, "perform": 15},
+    "industry": {"learn": 25, "write": 20, "read": 20, "build": 25, "perform": 10},
+    "hobby": {"learn": 30, "write": 20, "read": 15, "build": 35, "perform": 0},
+}
+KIND_STRAND = {"study": "learn", "exercise": "write", "external": "write", "drill": "read",
+               "reading": "read", "project": "build", "mock": "perform"}
+
+
+def strand_split(rows: list[dict], start: date, end: date) -> dict:
+    """Minutes per strand between two dates (inclusive)."""
+    split = {k: 0.0 for k in STRAND_SHARES["interview"]}
+    for r in rows:
+        strand = KIND_STRAND.get(r["kind"])
+        if strand and start <= parse_date(r["date"]) <= end:
+            split[strand] += float(r["minutes"] or 0)
+    return split
+
+
+def strand_line(profile: dict, rows: list[dict], on: date) -> str | None:
+    """Last 7 days by strand against the mode's shares, naming the strands that are short."""
+    shares = STRAND_SHARES.get(profile.get("mode") or "interview", STRAND_SHARES["interview"])
+    split = strand_split(rows, on - timedelta(days=6), on)
+    total = sum(split.values())
+    if total < 60:
+        return None
+    pct = {k: 100 * v / total for k, v in split.items()}
+    parts = ", ".join(f"{k} {pct[k]:.0f}% ({shares[k]})" for k in shares)
+    short = [k for k in shares if shares[k] - pct[k] >= 10]
+    line = f"Last 7 days by strand, % (target): {parts}."
+    if short:
+        line += f" Short: {', '.join(short)}: do those blocks first today and never cut them."
+    return line
+
+
 def week_numbers(profile: dict, rows: list[dict], on: date) -> dict:
     start = week_start(on)
     done = minutes_between(rows, start, on)
@@ -1764,6 +1801,9 @@ def cmd_today(args, brief: bool = False) -> None:
         days_left = (parse_date(profile["target_date"]) - on).days
         if days_left >= 0:
             lines.append(f"Target date {profile['target_date']}: {days_left} days left.")
+    balance = strand_line(profile, rows, on)
+    if balance:
+        lines.append(balance)
     session = read_json(SESSION, None)
     if session:
         clock, logged, gap = session_gap(session, rows)

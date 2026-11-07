@@ -78,6 +78,12 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
 - **The plan follows the learner.** A new goal, a date, a dropped goal, new hours, "when should I
   start X": `dojo-roadmap` (now or at the weekly review). Never change the plan, mix or settings
   silently.
+- **Keep the session template and the strand balance.** Run today's blocks from
+  `docs/DAILY_SESSION.md` with their time boxes, and say when a block ends. `today` prints the
+  last 7 days by strand against the mode's shares: a strand 10 or more points short goes first
+  after the redo queue, and when a block overruns, the time comes out of Learn or Write, never
+  out of Read and debug or Perform. Build with no project yet: say so and set one up at the
+  weekly review.
 - **Exercise loop**, in order:
   1. After `start`: "Before typing: restate it with the exact condition, trace the `Trace by
      hand:` input (no output given), one edge case of your own, your plan." Outside problems:
