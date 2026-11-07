@@ -376,6 +376,18 @@ def cmd_settings(args) -> None:
     print("Change: python dojo.py settings key=value ...   Suggestions: python dojo.py settings --review")
 
 
+def ensure_git_hooks() -> str:
+    """Turn on the shared pre-push checks (.githooks/pre-push runs tools/check.py)."""
+    if not (ROOT / ".git").exists() or not (ROOT / ".githooks" / "pre-push").exists():
+        return "Pre-push checks: not a git clone, skipped."
+    current = subprocess.run(["git", "-C", str(ROOT), "config", "core.hooksPath"],
+                             capture_output=True, text=True).stdout.strip()
+    if current == ".githooks":
+        return "Pre-push checks: on (.githooks/pre-push)"
+    subprocess.run(["git", "-C", str(ROOT), "config", "core.hooksPath", ".githooks"])
+    return "Pre-push checks: turned on (.githooks/pre-push runs tools/check.py before every push)"
+
+
 def needs_install() -> bool:
     py = find_venv_python()
     if py is None:
@@ -796,6 +808,10 @@ def cmd_export(args) -> None:
     """Zip all personal data (progress/ and workspace/), optionally copy it over SSH."""
     import zipfile
     profile = load_profile(required=False)
+    target = args.to or profile.get("export_target")
+    if target and (target.startswith("-") or target.startswith("rclone:-")):
+        die(f"Refusing export target '{target}': a target cannot start with '-' "
+            "(it would be read as an option).")
     name = re.sub(r"[^A-Za-z0-9_-]", "", profile.get("learner") or "learner") or "learner"
     out_dir = Path(args.out).expanduser() if args.out else ROOT / "exports"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -810,7 +826,6 @@ def cmd_export(args) -> None:
                     z.write(path, path.relative_to(ROOT).as_posix())
                     count += 1
     print(f"Exported {count} files to {archive}")
-    target = args.to or profile.get("export_target")
     if target and target.startswith("rclone:"):
         remote = target[len("rclone:"):]
         print(f"Uploading to {remote} with rclone ...")
@@ -824,7 +839,7 @@ def cmd_export(args) -> None:
             die("scp not found. Install OpenSSH (built into Windows 10+, macOS and most Linux) "
                 "or copy the zip by hand.")
         print(f"Copying to {target} ...")
-        result = subprocess.run(["scp", str(archive), target])
+        result = subprocess.run(["scp", "--", str(archive), target])
         if result.returncode != 0:
             die("scp failed; the zip is still on this machine.")
         print("Copied. On the other device: python dojo.py import <zip>")
@@ -859,6 +874,8 @@ def run_rclone(rclone_args: list, mounts: dict | None = None, local_args: dict |
 def cmd_drive_setup(args) -> None:
     """One-time Google Drive sign-in for rclone, then save the export target."""
     remote = args.remote
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", remote) or remote.startswith("-") or args.folder.startswith("-"):
+        die("Remote and folder names: letters, digits, '_', '.', '-', not starting with '-'.")
     print(f"Creating the rclone remote '{remote}' for Google Drive. A sign-in link opens or is "
           "printed: log in with the Google account that should hold the exports.")
     if run_rclone(["config", "create", remote, "drive", "scope=drive.file"], interactive=True) != 0:
@@ -882,7 +899,10 @@ def cmd_import(args) -> None:
     with zipfile.ZipFile(archive) as z:
         names = z.namelist()
         bad = [n for n in names if not (n.startswith("progress/") or n.startswith("workspace/"))
-               or ".." in Path(n).parts]
+               or ".." in n.replace("\\", "/").split("/") or "\\" in n or ":" in n]
+        links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
+        if links:
+            die(f"Refusing: the zip contains a symbolic link ({links[0]}).")
         if bad:
             die(f"Refusing: unexpected paths in the zip, e.g. {bad[0]}")
         has_data = PROFILE.exists() or LOG.exists()
@@ -928,6 +948,7 @@ def cmd_doctor(args) -> None:
     print(f"Exercises found: {len(discover())}")
     skills = ensure_claude_skills()
     print(skills)
+    print(ensure_git_hooks())
     if skills.startswith("  !"):
         ok = False
     print("All good." if ok else "Fix the items marked ! above.")
@@ -1403,9 +1424,30 @@ def cmd_update(args) -> None:
     if dirty:
         die("You have local changes to shared files (git status shows them). Commit or stash them, "
             "then run update again.")
-    result = subprocess.run(["git", "-C", str(ROOT), "pull", "--ff-only", remote,
-                             subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--abbrev-ref", "HEAD"],
-                                            capture_output=True, text=True).stdout.strip()])
+    branch = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--abbrev-ref", "HEAD"],
+                            capture_output=True, text=True).stdout.strip()
+    subprocess.run(["git", "-C", str(ROOT), "fetch", "--quiet", remote, branch])
+    incoming = f"HEAD..{remote}/{branch}"
+    log = subprocess.run(["git", "-C", str(ROOT), "log", "--oneline", incoming],
+                         capture_output=True, text=True).stdout.strip()
+    if not log:
+        print("Already up to date.")
+        write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": 0})
+        cmd_changes(argparse.Namespace(ack=None))
+        return
+    files = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", incoming],
+                           capture_output=True, text=True).stdout.split()
+    runs = [f for f in files if f.endswith((".py", ".sh", "track.json")) or f.startswith((".claude/", ".githooks/", ".github/"))]
+    print(f"Incoming from {remote}/{branch}:\n" + "\n".join("  " + line for line in log.splitlines()))
+    print(f"{len(files)} file(s) change" + (f"; these run on your machine, so they are worth a look "
+          f"(git diff {incoming} -- <file>):\n  " + "\n  ".join(runs) if runs else "."))
+    if not args.yes:
+        if not sys.stdin.isatty():
+            die("Run `python dojo.py update --yes` to apply them.")
+        if not ask("Apply them? (y/n)", "y").lower().startswith("y"):
+            print("Nothing changed.")
+            return
+    result = subprocess.run(["git", "-C", str(ROOT), "merge", "--ff-only", f"{remote}/{branch}"])
     if result.returncode != 0:
         die("The update could not be applied automatically (see the git message above).")
     write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": 0})
@@ -1933,7 +1975,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates (and time by track)
   modules                  your modules: assigned, excluded, before your start, or planned
-  update                   pull the shared repo's latest tracks and docs, then show what changed
+  update [--yes]           show what the shared repo changed (and which files run code), apply it
+                           after a yes, then list the new or changed exercises in your tracks
   changes [--ack [slugs]]  new, changed or removed exercises since you were last asked;
                            --ack records them as seen (all, or the slugs given)
   settings [key=value ...] show every setting, or change any (minutes=mon=60,sat=0, mode=hobby,
@@ -2008,7 +2051,7 @@ def main() -> None:
     p = sub.add_parser("import"); p.add_argument("archive"); p.add_argument("--force", action="store_true")
     sub.add_parser("stats")
     p = sub.add_parser("changes"); p.add_argument("--ack", nargs="*")
-    sub.add_parser("update")
+    p = sub.add_parser("update"); p.add_argument("--yes", action="store_true")
     sub.add_parser("modules")
     p = sub.add_parser("settings"); p.add_argument("changes", nargs="*"); p.add_argument("--review", action="store_true")
     p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")

@@ -23,7 +23,10 @@
       "Write(/workspace/python/**)",
       "Edit(/workspace/projects/**)",
       "Write(/workspace/projects/**)",
-      "Bash(git push*)"
+      "Bash(git push*)",
+      "Bash(python3 dojo.py update*)",
+      "Bash(python dojo.py update*)",
+      "Bash(py dojo.py update*)"
     ],
     "deny": [
       "Read(/.gemini/**)",
