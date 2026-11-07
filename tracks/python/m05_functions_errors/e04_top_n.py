@@ -6,6 +6,9 @@ Target: 10
 Return the n largest items, largest first. `key` is an optional function used to
 compare items, like sorted's key.
 
+Write it the way a team would want to read it: full type hints on every parameter and
+the return value (`key` may be a function or None), and a one-line docstring.
+
     top_n([5, 1, 9, 3], 2) -> [9, 5]
     top_n(["bb", "a", "ccc"], 1, key=len) -> ["ccc"]
 
