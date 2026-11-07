@@ -23,8 +23,12 @@ If one of these is unknown, ask (one or two questions at a time). Never fill a g
 about what "people like this" want.
 
 **Enough is the target, not mastery.** AI writes much of the code today, so for most goals the
-bar is fluency at the everyday level the goal needs, plus reading, reviewing and debugging code
-the learner did not write. Train to the bar, then move the track to maintenance. Never add depth,
+bar is good understanding and good basics: fluency at the everyday level the goal needs, plus
+reading, reviewing and debugging code the learner did not write. **The domain sets the depth.**
+Where a bug costs more (low-level and embedded code, real-time control, robots that move,
+security, money, medical), the bar goes deeper: memory and undefined behaviour, testing,
+debugging and review rigour, the failure modes of that domain. Say which applies, and why, when
+setting a bar. Train to the bar, then move the track to maintenance. Never add depth,
 modules or milestones the goal does not need; a harder milestone in a track README is an option,
 not a duty. If the learner asks for more later, raise the bar then.
 
