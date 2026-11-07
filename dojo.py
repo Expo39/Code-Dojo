@@ -29,6 +29,7 @@ PROFILE = PROGRESS / "profile.json"
 LOG = PROGRESS / "log.csv"
 REVIEWS = PROGRESS / "reviews.json"
 TIMER = PROGRESS / "timer.json"
+SESSION = PROGRESS / "session.json"  # the session clock: training time between timers
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
@@ -1228,6 +1229,60 @@ def cmd_resume(args) -> None:
     print(f"Resumed '{item}' ({fmt_min(timer_minutes(t))} so far).")
 
 
+def session_gap(session: dict, rows: list[dict]) -> tuple[float, float, float]:
+    """Session minutes so far, minutes logged since it started, and the gap between them."""
+    clock = timer_minutes(session)
+    logged = minutes_on(rows, parse_date(session["date"])) - session.get("logged_at_start", 0.0)
+    return clock, logged, max(clock - logged, 0.0)
+
+
+def cmd_session(args) -> None:
+    """Session clock: counts the whole training session, so time outside exercise timers
+    (warm-up, explanations, feedback, discussing a concept) is logged as study at the end.
+    Pause it for anything that is not training: breaks, dojo maintenance, being away."""
+    ensure_files()
+    session = read_json(SESSION, None)
+    rows = read_log()
+    if args.action == "start":
+        if session:
+            die("A session is already running: `session end` first.")
+        write_json(SESSION, {"date": today().isoformat(), "start": now().isoformat(),
+                             "paused_total": 0.0, "paused_at": None,
+                             "logged_at_start": minutes_on(rows, today())})
+        print("Session clock started. Pause it for breaks and anything that is not training.")
+        return
+    if not session:
+        die("No session running: `python dojo.py session start`.")
+    if args.action == "pause":
+        if session["paused_at"]:
+            die("The session is already paused.")
+        session["paused_at"] = now().isoformat()
+        write_json(SESSION, session)
+        print(f"Session paused at {fmt_min(timer_minutes(session))}.")
+    elif args.action == "resume":
+        if not session["paused_at"]:
+            die("The session is not paused.")
+        session["paused_total"] += (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
+        session["paused_at"] = None
+        write_json(SESSION, session)
+        print(f"Session resumed ({fmt_min(timer_minutes(session))} so far).")
+    elif args.action == "status":
+        clock, logged, gap = session_gap(session, rows)
+        print(f"Session {fmt_min(clock)}{' (PAUSED)' if session['paused_at'] else ''}: "
+              f"{fmt_min(logged)} logged by timers, {fmt_min(gap)} outside them.")
+    elif args.action == "end":
+        if read_json(TIMER, {}):
+            die("A timer is still running: `done` or `cancel` it first.")
+        clock, logged, gap = session_gap(session, rows)
+        if gap >= 1:
+            append_log({"date": session["date"], "item": "session", "kind": "study",
+                        "minutes": round(gap, 1), "hints": 0,
+                        "note": "training time outside timers: warm-up, explanations, feedback"})
+        SESSION.unlink()
+        print(f"Session ended: {fmt_min(clock)} in total, {fmt_min(logged)} from timers, "
+              f"{fmt_min(gap)} added as study.")
+
+
 def cmd_clarify(args) -> None:
     """Show the interviewer's answers to clarifying questions (after listing your own)."""
     ex = get_exercise(args.item)
@@ -1692,6 +1747,11 @@ def cmd_today(args, brief: bool = False) -> None:
         days_left = (parse_date(profile["target_date"]) - on).days
         if days_left >= 0:
             lines.append(f"Target date {profile['target_date']}: {days_left} days left.")
+    session = read_json(SESSION, None)
+    if session:
+        clock, logged, gap = session_gap(session, rows)
+        lines.append(f"Session clock: {fmt_min(clock)}{' (PAUSED)' if session['paused_at'] else ''}; "
+                     f"{fmt_min(gap)} outside timers is added as study at `session end`.")
     if timers:
         lines.append("Timers running: " + ", ".join(
             f"{k} ({fmt_min(timer_minutes(v))} so far{', PAUSED' if timer_of(v)['paused_at'] else ''})"
@@ -2070,6 +2130,10 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
        mocks: done mock_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
   pause / resume [item]    stop the clock while talking something through, then continue
+  session start|pause|resume|status|end
+                           the session clock: at `end`, training time outside exercise
+                           timers (warm-up, explanations, feedback) is logged as study;
+                           pause it for breaks and anything that is not training
   clarify <item>           the interviewer's answers (edge cases); list your own first
   cancel <item>            discard a running timer
   mark <items/modules> --box N   seed the redo schedule for things you already know
@@ -2148,6 +2212,7 @@ def main() -> None:
     p = sub.add_parser("pause"); p.add_argument("item", nargs="?")
     p = sub.add_parser("resume"); p.add_argument("item", nargs="?")
     p = sub.add_parser("clarify"); p.add_argument("item")
+    p = sub.add_parser("session"); p.add_argument("action", choices=["start", "pause", "resume", "status", "end"])
     p = sub.add_parser("mark"); p.add_argument("items", nargs="+"); p.add_argument("--box", type=int, default=2)
     p = sub.add_parser("mistake"); p.add_argument("item"); p.add_argument("what"); p.add_argument("fix")
     p = sub.add_parser("week"); p.add_argument("--write", action="store_true")
@@ -2171,7 +2236,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):

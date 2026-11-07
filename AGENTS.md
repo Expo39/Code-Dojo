@@ -134,7 +134,8 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | a prediction, `run it` | give `! python3 dojo.py test <ex>`; run it yourself only to verify afterwards |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` |
-| `end of day`, `how am I doing` | `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
+| `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
+| a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts |
 | `teach me <topic>` | `dojo.py primm <module> <topic>`; at the end `dojo.py done lesson:<topic>` |
 | `show my settings`, `change <x> to <y>` | `dojo.py settings [key=value ...]` (`key+=` / `key-=` for lists) |
 | `show my modules` | `dojo.py modules`, then agree changes together (`dojo-assess`, 3b) |
