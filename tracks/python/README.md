@@ -8,11 +8,15 @@ Python is a good first language for this because its syntax gets out of the way,
 goes into thinking, reading and debugging, and because it is the most common language in
 live-coding interviews.
 
-| Stage | Covers | Typical length at about 15 h a week |
+| Stage | Covers | Done when |
 | --- | --- | --- |
-| Phase 1: Foundations | writing, reading and debugging everyday Python | 7 to 9 weeks |
-| Phase 2: Patterns and engineering | data structures, algorithms, testing, projects | 10 to 12 weeks |
-| Phase 3: Interview strength | unseen mediums under time pressure, mocks | about 6 weeks |
+| Phase 1: Foundations | writing, reading and debugging everyday Python | gate M1 |
+| Phase 2: Patterns and engineering | data structures, algorithms, testing, projects | progress towards M2 |
+| Phase 3: Interview strength | unseen mediums under time pressure, mocks | gate M2 |
+
+No durations here: how long a phase takes depends on the learner's hours, speed and hints, so
+estimates live in each learner's `progress/PLAN.md`, made from their own log and revised as it
+grows (`docs/ROADMAP.md`).
 
 ## How exercises work here
 
@@ -41,11 +45,10 @@ Prefixes: `e` = write it, `b` = find and fix the bug, `r` = read and predict.
 
 ## Phases and modules
 
-Lengths assume about 15 hours a week. With fewer hours, the order
-stays the same and the dates stretch; `python dojo.py today` and the weekly review keep the
-pace honest.
+The order is the same for everyone; the pace is personal. Gates, not dates, decide when a phase
+is done (`python dojo.py stats`).
 
-### Phase 1: Foundations, about 7 to 9 weeks
+### Phase 1: Foundations
 
 | Module | Focus | Status |
 | --- | --- | --- |
@@ -63,7 +66,7 @@ pace honest.
 | m12_testing | writing your own tests: pytest, parametrize, raises, fixtures, edge cases | planned |
 | Projects | P1 word-stats CLI, P2 todo app with JSON storage, P3 log analyser | `tracks/python/projects` |
 
-### Phase 2: Patterns and engineering, about 10 to 12 weeks
+### Phase 2: Patterns and engineering
 
 | Module | Focus | Status |
 | --- | --- | --- |
@@ -86,7 +89,7 @@ pace honest.
 using the module's focus line above. External problem lists (NeetCode 150 and LeetCode) fill in
 alongside; log those with `python dojo.py done <name> --minutes N --hints H --level easy --pattern <p>`.
 
-### Phase 3: Interview strength and polish, about 6 weeks
+### Phase 3: Interview strength and polish
 
 Mixed mediums under time pressure, two mocks a week, practical problems (parse and aggregate,
 small class design, debugging an unfamiliar codebase), and explaining your projects. Python
@@ -94,9 +97,9 @@ becomes the language you think in.
 
 ### After M2
 
-Keep Python sharp with maintenance (the redo queue plus one mock a week, about 30% of the
-time) and choose what comes next in `progress/PLAN.md`: go deeper in Python (web back ends,
-data, automation) or add another track.
+Keep Python sharp in maintenance (`python dojo.py mix python=0 ...`: the redo queue keeps coming,
+plus a regular mock) and choose what comes next with the tutor (`plan my learning`,
+`docs/ROADMAP.md`): go deeper in Python (web back ends, data, automation) or add another track.
 
 ---
 
@@ -108,7 +111,7 @@ data, automation) or add another track.
 | --- | --- | --- |
 | **M1 Fundamentals fluent** | You can write everyday Python from a blank file without lookups | Phase 1 modules attempted; last 10 easy problems all solved, median at or under 1.2x target, at most 0.5 hints on average; projects P1 and P2 done; can explain mutability, scope and generators out loud |
 | **M2 Interview-ready** | You would pass most junior and mid-level live-coding rounds | Last 10 easy at or under 1.0x with 0 hints; last 8 mediums solved at or under 1.3x with at most 1 hint; last 3 mocks passed; P3 to P5 done |
-| **M3 Strong** | You are the person who explains the bug to others | About 150 unique problems solved, most patterns at box 4 (mastered); mediums in 25 to 35 minutes; can review AI code and find its bugs reliably |
+| **M3 Strong** | You are the person who explains the bug to others | About 150 unique problems solved, most patterns at box 4 (mastered); mediums at or under target; can review AI code and find its bugs reliably |
 
 Mocks are logged with `python dojo.py log mock 60 --result pass` (or `fail` / `strong`).
 
@@ -124,7 +127,7 @@ Mocks are logged with `python dojo.py log mock 60 --result pass` (or `fail` / `s
 
 ## Engineer skills trained throughout
 
-Not a phase: every week touches them.
+Not a phase: they run through every week.
 
 | Skill | How the dojo trains it |
 | --- | --- |
