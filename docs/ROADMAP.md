@@ -12,6 +12,8 @@ Before recommending anything, the tutor needs, for each goal:
 
 - **What and why**: the subject, and what it is for (a job, an interview, a project, a
   course, curiosity). The reason decides the priority more than the subject does.
+- **How far**: the bar that is enough for this goal, in the learner's words ("solve easy
+  practical problems like the ones I was asked, fluently"; "read and fix our Django code").
 - **Priority order** across goals, and any **date** (interview, exam, job start).
 - **Where they are now** in it (`BASELINE.md`, `dojo.py stats`, or a short check).
 - **Hours** per week and how stable they are.
@@ -19,6 +21,12 @@ Before recommending anything, the tutor needs, for each goal:
 
 If one of these is unknown, ask (one or two questions at a time). Never fill a gap with a guess
 about what "people like this" want.
+
+**Enough is the target, not mastery.** AI writes much of the code today, so for most goals the
+bar is fluency at the everyday level the goal needs, plus reading, reviewing and debugging code
+the learner did not write. Train to the bar, then move the track to maintenance. Never add depth,
+modules or milestones the goal does not need; a harder milestone in a track README is an option,
+not a duty. If the learner asks for more later, raise the bar then.
 
 **Record the goal, not the tool.** "Robotics", "data work" or "web back ends" is the goal;
 ROS, pandas or a framework are tools inside it. A far-off goal stays a goal in the plan, and the
@@ -43,7 +51,7 @@ Each track in a roadmap is in one state; measurable gates, never dates, move it 
 | main | the rest | where most new material comes from |
 | priority | 80 to 100% | a dated goal is close; everything else is in maintenance |
 | maintenance | 0% (`mix <track>=0`) | redos only, so it does not fade |
-| done | 0% | the learner's goal for it is met; redos continue while they come up |
+| done | 0% | the learner's bar for it is met; redos continue while they come up |
 
 `python dojo.py mix python=80 cpp=20` records the shares and `--priority "<text>"` the current
 override; `today` then splits each day by them and keeps redos coming in every track.

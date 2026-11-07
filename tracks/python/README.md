@@ -105,7 +105,10 @@ plus a regular mock) and choose what comes next with the tutor (`plan my learnin
 
 ## Milestones and fluency gates
 
-`python dojo.py stats` checks the measurable gates automatically from your log.
+`python dojo.py stats` checks the measurable gates automatically from your log. They are
+options, not a ladder everyone must climb: a learner's plan picks the bar that is enough for
+their goal (`docs/ROADMAP.md`), which may be M1, a practical-round bar, or more, and drops the
+track to maintenance once it is met.
 
 | Milestone | Meaning | Gate |
 | --- | --- | --- |

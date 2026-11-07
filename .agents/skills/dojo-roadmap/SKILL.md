@@ -12,10 +12,11 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
    `progress/BASELINE.md`, `dojo.py mix`, `dojo.py stats`, and each relevant track's
    `track.json` (`requires`) and README (Prerequisites, Theory). List the tracks that exist and
    the ones that are placeholders.
-2. **Fill the gaps by asking** (ROADMAP section 1): for each goal the what and why, the priority
-   order, any date, the current level, the hours, constraints. One or two questions at a time;
+2. **Fill the gaps by asking** (ROADMAP section 1): for each goal the what and why, how far is
+   enough (the bar, in their words), the priority order, any date, the current level, the hours, constraints. One or two questions at a time;
    skip what the files already answer. Never assume a goal or its order.
-3. **Recommend**: for each track, its state, share and start condition (a gate, not a date),
+3. **Recommend**: for each track, its state, share, start condition (a gate, not a date) and the
+   bar that ends it (then maintenance); schedule only the modules that bar needs,
    following the ordering rules (section 3). Give the reason for each in one line and the cost
    from the learner's own data (section 4). If the learner asked about one track ("when do I
    start ROS?"), answer that directly: what it needs first, how far they are from it, and what
