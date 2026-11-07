@@ -4,7 +4,8 @@ Pick the template that matches the time you have today (`python dojo.py today` n
 The order matters more than the exact minutes: **retrieval first, new material while fresh,
 performance practice, then logging**. Your own week (which day is for what, from your hours and
 your track mix) is in `progress/docs/WEEK.md`; with several tracks, the "Learn and write" block
-follows the mix that `today` shows.
+follows the mix that `today` shows. The Perform block follows your mode (`METHOD.md`): in `hobby`
+mode it becomes more Build, and in `industry` mode it alternates with Build.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini CLI). It runs the catch-up
 automatically (what changed, what is due, the week balance). Say `start <exercise>` and
@@ -50,7 +51,7 @@ of logging. A minimum day counts; skipping does not.
 | Day | Extra |
 | --- | --- |
 | One day mid-week | Replace the Perform block with an `explain drill` and a `review drill` on AI-written code |
-| The last training day | **Mock interview** (45 to 60 minutes, `/dojo-mock`) replaces the Perform and Read blocks |
+| The last training day | **Mock interview** when your mode has one this week (45 to 60 minutes, `/dojo-mock`; weekly in `interview`, every two weeks in `hybrid`, monthly in `industry`, on request in `hobby`) replaces the Perform and Read blocks |
 | End of the week | **Weekly review** (`/dojo-weekly`, 20 minutes): report, coach notes, next week's focus |
 | Rest day | Rest. If the profile has a flexible rest day, training on it counts towards the week |
 

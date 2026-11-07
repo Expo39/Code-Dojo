@@ -88,16 +88,20 @@ is giving, and the number of levels used is logged as "hints".
 
 ## Weekly balance
 
-The shares hold for any number of hours; the daily templates in `DAILY_SESSION.md` follow
-this split.
+The shares hold for any number of hours and depend on the learner's mode (`ROADMAP.md`); the
+daily templates in `DAILY_SESSION.md` follow this split.
 
-| Strand | Share | What it is |
-| --- | --- | --- |
-| Learn | about 25% | new concepts with PRIMM, teach-me lessons, first attempts at new exercises |
-| Write | about 25% | the redo queue from blank files, plus new exercises |
-| Read and debug | about 20% | predict drills, code reading, bug drills, reviewing AI-written code |
-| Build | about 15% | the current project |
-| Perform | about 15% | a talk-aloud timed problem, explain drills, and the weekly mock interview |
+| Strand | What it is | interview | hybrid | industry | hobby |
+| --- | --- | --- | --- | --- | --- |
+| Learn | new concepts with PRIMM, teach-me lessons, first attempts at new exercises | 20% | 25% | 25% | 30% |
+| Write | the redo queue from blank files, plus new exercises | 25% | 25% | 20% | 20% |
+| Read and debug | predict drills, code reading, bug drills, reviewing AI-written code | 20% | 20% | 20% | 15% |
+| Build | the current project | 10% | 15% | 25% | 35% |
+| Perform | a talk-aloud timed problem, explain drills, mock interviews | 25% | 15% | 10% | 0% |
+
+Mocks: weekly in `interview` mode, every two weeks in `hybrid`, monthly in `industry` once
+applying is near, and only on request in `hobby`. Reading and debugging never drop below 15%:
+with AI writing much of the code, it is the skill every mode needs.
 
 ## Sources
 

@@ -16,7 +16,8 @@ the thinking and the typing, and to explain, question and review.
 
 Everything personal is in `progress/` (local, gitignored). Before giving advice, read:
 
-- `progress/profile.json`: name, time per weekday, rest days, target date, level, tracks
+- `progress/profile.json`: name, mode (interview, hybrid, industry, hobby), target level, time per
+  weekday, rest days, target date, level, tracks, track mix
 - `progress/PLAN.md`: their goals, roadmap (tracks, order, mix; `docs/ROADMAP.md`), skill tree,
   milestones and current focus
 - `progress/BASELINE.md`: their starting level, recurring mistakes and strengths

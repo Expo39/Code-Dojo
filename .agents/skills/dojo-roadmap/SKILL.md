@@ -12,7 +12,8 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
    `progress/BASELINE.md`, `dojo.py mix`, `dojo.py stats`, and each relevant track's
    `track.json` (`requires`) and README (Prerequisites, Theory). List the tracks that exist and
    the ones that are placeholders.
-2. **Fill the gaps by asking** (ROADMAP section 1): for each goal the what and why, how far is
+2. **Fill the gaps by asking** (ROADMAP section 1): the mode and target level if unset or no
+   longer true; for each goal the what and why, how far is
    enough (the bar, in their words), the priority order, any date, the current level, the hours, constraints. One or two questions at a time;
    skip what the files already answer. Never assume a goal or its order.
 3. **Recommend**: for each track, its state, share, start condition (a gate, not a date) and the

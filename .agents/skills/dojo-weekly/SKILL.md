@@ -16,7 +16,8 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
    - Mock result and the two habits from it.
    - Follow-up methods in `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
    - Process: the report's "Process" line (how often every step was followed, the most skipped step). A step skipped 3 or more times becomes next week's habit focus, with a one-line reminder the tutor gives at every exercise.
-   - Balance across strands (learn, write, read and debug, build, perform; `docs/METHOD.md`).
+   - Balance across strands (learn, write, read and debug, build, perform) against the shares for
+     their mode (`docs/METHOD.md`); a missed mock counts only if the mode had one due.
    - Roadmap: with several tracks, the real split (`stats`, "Track time") against the mix; gate
      progress per track; any trigger from `docs/ROADMAP.md` section 7. If one fired, run
      `dojo-roadmap` with the learner (or carry the question to next week if they prefer).

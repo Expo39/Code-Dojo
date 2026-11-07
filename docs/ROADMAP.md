@@ -8,7 +8,28 @@ and lives in `progress/PLAN.md`. The `dojo-roadmap` skill runs it.
 
 ## 1. Start from the learner, and ask when something is missing
 
-Before recommending anything, the tutor needs, for each goal:
+First, two choices for the learner as a whole (`profile.json`, asked by `dojo.py setup`, changed
+any time):
+
+| Mode | For | What it changes |
+| --- | --- | --- |
+| `interview` | live-coding interviews, with or without a date | the most Perform practice, a mock every week, the interview playbook |
+| `hybrid` | interview-ready while growing as an engineer | the default balance, a mock every two weeks |
+| `industry` | entering an industry or role, no interview yet | more projects in that industry's style, a mock a month once applying is near |
+| `hobby` | the subject for its own sake | projects and exploration, no mocks unless asked, no timed pressure |
+
+| Target level | Means | Typical bar |
+| --- | --- | --- |
+| `hobbyist` | build your own things, read docs, fix your own bugs | working programs and the basics behind them |
+| `junior` | job-ready: everyday code fluently, read a team's code, tests, git | easy problems fluently, reading and debugging others' code |
+| `mid` | design modules, review others' code, debug unfamiliar systems | mediums, design and testing habits, performance basics |
+| `senior` | architecture, deep debugging and domain depth, guiding others | the above plus design trade-offs and the domain's depth |
+
+The mode sets how the time is spent (`METHOD.md`, weekly balance); the target level sets how far
+each goal goes, together with the rules below on enough, interviews and the domain. A learner
+who is unsure gets a recommendation with a reason, then decides.
+
+Then, for each goal:
 
 - **What and why**: the subject, and what it is for (a job, an interview, a project, a
   course, curiosity). The reason decides the priority more than the subject does.

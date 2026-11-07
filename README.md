@@ -6,8 +6,9 @@ An AI coding agent (Claude Code, Codex or Gemini CLI) acts as a tutor that expla
 questions, hints and reviews, but never writes your code for you.
 
 It works for anyone and any subject: choose your tracks and your weekly hours, run a
-placement, and the dojo plans, measures and adapts around you: it asks what you want to learn
-and why, recommends the order and the mix of tracks (one at a time, or a main track with a
+placement, and the dojo plans, measures and adapts around you: it asks why you train (interview
+prep, interview plus growth, entering an industry, or a hobby) and what level of programmer you
+want to become, what you want to learn and why, recommends the order and the mix of tracks (one at a time, or a main track with a
 taster of the next), offers the theory a module needs right before it, and revisits the plan
 when your progress or your goals change. A complete Python track ships
 with it (fundamentals, reading and debugging code, data structures and algorithms, projects,

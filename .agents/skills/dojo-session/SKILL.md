@@ -16,4 +16,4 @@ Keep the whole catch-up to a few minutes. Use `python3 dojo.py` on Linux/macOS, 
 7. Remind them in one line of this week's habit focus from the coach notes (for example "say your plan before typing"), if there is one.
 8. Start the first block (usually the warm-up, then the redo queue) unless they want something else.
 
-If today is the last training day of the week, remind them of the mock interview and the weekly review (`dojo-mock`, `dojo-weekly`). On a rest day, say so; if they still want to train, a short session counts.
+If today is the last training day of the week, remind them of the weekly review and, if their mode has a mock this week (`docs/METHOD.md`), of the mock interview (`dojo-mock`, `dojo-weekly`). On a rest day, say so; if they still want to train, a short session counts.
