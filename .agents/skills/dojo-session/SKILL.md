@@ -9,7 +9,18 @@ Keep the whole catch-up to a few minutes. Use `python3 dojo.py` on Linux/macOS, 
 
 1. If `progress/profile.json` is missing: the learner is new. Welcome them in two lines and offer to set them up here and now (the `dojo-assess` skill, step 0), or, if they prefer a terminal, `python dojo.py setup`. Stop the catch-up here.
 2. Run `dojo.py sync`. For exercises edited but not logged, ask once, as one short list, roughly how long each took and how much help they had; log each with `dojo.py done <item> --minutes N --hints H` (skip what they do not remember). For timers left running, ask, then `done --minutes N` or `cancel`.
-3. **Changes to the tracks.** If the status shows updates on the shared repo, run `dojo.py update`: it lists the incoming commits and the files among them that run code. Tell the learner in two lines and apply with `dojo.py update --yes` only after their yes. If it shows track changes (only modules they have started or finished are listed; new material in modules they have not reached waits for them there), keep it short: one line per module, at most five lines, then one question with a quick answer for all of it, e.g. "Two modules you finished gained a little: m01 floats and rounding (split_bill), m02 `match` (route_command). Add them to your queue, go one by one, or decide later?" Then apply: learn it, nothing to do for exercises, and for a lesson topic `teach me <topic>` now or a note under Current focus in `PLAN.md`; already know it, `dojo.py mark <slugs> --box 3`; not for me, `dojo.py settings skip_exercises+=<slugs>` (or `skip_modules+=<module>`). A changed exercise: one line on what changed, then redo the new version, already know it, or leave it out. Removed exercises and topics: one line each (a removed exercise leaves the redo schedule). "Later": leave it unacknowledged and ask once at the next session, never twice in one session and never during an exercise. Otherwise `dojo.py changes --ack`, and log any exclusion under Plan changes. A new module or track that touches their roadmap is a roadmap trigger (step 6).
+3. **Changes to the tracks.** Short, and never during an exercise.
+   - Updates on the shared repo: run `dojo.py update` (it lists incoming commits and the files that
+     run code), tell the learner in two lines, and only after their yes `dojo.py update --yes`.
+   - Track changes (only modules they have started or finished are listed): one line per module,
+     at most five, then one question, e.g. "m01 gained floats and rounding (split_bill), m02
+     `match` (route_command). Add them to your queue, go one by one, or decide later?"
+   - Apply: learn it, nothing to do (a lesson topic: `teach me` now, or a note under Current focus);
+     already know it, `dojo.py mark <slugs> --box 3`; not for me, `dojo.py settings
+     skip_exercises+=<slugs>` (or `skip_modules+=<module>`). A changed exercise: one line on what
+     changed, then redo it, already know it, or leave it out. Removals: one line each.
+   - "Later": ask again next session, never twice in one. Otherwise `dojo.py changes --ack`; log
+     exclusions under Plan changes. A new module or track touching a goal is a roadmap trigger.
 4. Run `dojo.py today`. Read `progress/PLAN.md` ("Current focus"), the newest `progress/weekly/*.md` coach notes, and the last rows of `progress/mistakes.md`.
 5. Ask: "Anything you practised without me, or anything that felt shaky?" Log mistakes with `dojo.py mistake` and add cheat-sheet bullets for the concepts involved.
 6. Check the roadmap triggers (`docs/ROADMAP.md`, section 7) against `today`, `stats` when a gate may have moved, and what they just told you. If one fires, say it in one line and offer `dojo-roadmap` now (5 minutes) or at the weekly review; otherwise say nothing about it.

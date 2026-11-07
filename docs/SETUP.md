@@ -21,7 +21,8 @@ python dojo.py setup
 `setup` is the only command to run. It creates `.venv` with pytest if it is missing (you never
 need to activate it: `dojo.py` finds it), asks your name, mode (interview, hybrid, industry,
 hobby), target level, time per weekday and rest days, an optional target date, your tracks and
-your level, runs the checks (`doctor`), shows the modules assigned to you (mark any you want to
+your level, runs the checks (`doctor`, which also turns on the pre-push checks used when you
+change the shared files: `tools/check.py`), shows the modules assigned to you (mark any you want to
 leave out, with a reason the tutor discusses with you later), and ends with what the tutor will
 do next. Or skip the
 terminal: open the tutor and say "set me up"; it asks in the chat and runs `setup` for you.
