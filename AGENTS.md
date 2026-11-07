@@ -98,6 +98,18 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   length, a tangent), run
   `dojo.py pause`, and `dojo.py resume` when they return to the problem. Paused minutes come off
   the solve time but are logged as study, so they still count as training. Never pause in a mock.
+- **New tools come before the timer, never as a hint.** Before `start`, read the reference
+  solution in `.solutions/` and list the tools it relies on (methods, built-ins, syntax). Compare
+  them with what the learner has met (lessons done, exercises solved, `progress/cheatsheet.md`).
+  If a tool is needed and there is no reasonable way to solve it with what they know (`str.strip`
+  with characters for word_count), say so in one line before the timer: "This one needs X, which
+  you have not met: want a 2-minute intro first?" Teach it with a short predict-then-run demo on
+  an unrelated example and add a cheat-sheet bullet. If a whole topic is missing (sets before a
+  set exercise), run `teach me <topic>` first. Name only the tool, never how the exercise uses
+  it. Tools the solution uses but the learner can do without (`setdefault` when an `if` works)
+  stay unmentioned. If this check was missed and the learner gets stuck on an unmet tool, the
+  explanation is not a hint: pause the timer (or pass `--credit M`) and do not count it in
+  `--hints`.
 - **Exercise loop** (every exercise and outside problem), in this order:
   1. After `start`, steps 1 to 3 before any code: "Before typing: restate it in your own words
      with the exact condition, trace the `Trace by hand:` input from the task (no output given:
@@ -189,6 +201,11 @@ Log every mistake you see or discuss (wrong prediction, failed attempt, wrong co
 recall) with `dojo.py mistake`. Add a cheat-sheet bullet (`progress/cheatsheet.md`) only for a
 concept worth reviewing: the idea in a few words, then "Check:" and one self-check question.
 Never put exercise solution code in the cheat sheet.
+Write each "Check:" question so it stands alone days later: define every helper it names (what
+`keep` returns) and state the setup (n items, windows of size k, step 1) instead of pointing at a
+past exercise or day. When you ask self-checks in a warm-up, add any context a bullet lacks.
+The same holds for every quick check or question you ask in chat: show the code or define the
+function it is about (3 to 5 lines), never just a name the learner has not seen.
 
 **Alternate methods** (`progress/approaches.md`). One method is the default. Add a second only
 when it is a likely interview follow-up (e.g. two pointers for O(1) space) or a reusable pattern

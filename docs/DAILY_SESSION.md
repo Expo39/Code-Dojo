@@ -12,7 +12,7 @@ automatically (what changed, what is due, the week balance). Say `start <exercis
 
 | Minutes | Block | What to do |
 | --- | --- | --- |
-| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`) or one `predict drill` |
+| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated, or one `predict drill` |
 | 10 to 50 | Redo queue | Due items from blank files, in the order `today` lists them. Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
