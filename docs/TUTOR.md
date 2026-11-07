@@ -53,7 +53,7 @@ dictated code does not count as typing it yourself.
 | `explain drill` | Solve without code in five steps, scored |
 | `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
-| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` (scheduled by your mode, or any time you ask) |
+| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/`; the interviewer keeps hidden cases for the end |
 
 ## Planning
 
