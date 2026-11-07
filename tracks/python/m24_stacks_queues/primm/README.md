@@ -2,6 +2,8 @@
 
 Concepts in this module that a `teach me` lesson can cover: stack, queue, deque, monotonic stack.
 
+Theory: stacks and queues as abstract data types (LIFO and FIFO), independent of how they are stored. The tutor offers a short theory lesson on it before the module's first exercise.
+
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of
 it yourself, in your own folder:

@@ -2,6 +2,8 @@
 
 Concepts in this module that a `teach me` lesson can cover: generators, decorators, context managers, recursion.
 
+Theory: the call stack (each call gets its own frame; how recursion unwinds). The tutor offers a short theory lesson on it before the module's first exercise.
+
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of
 it yourself, in your own folder:
