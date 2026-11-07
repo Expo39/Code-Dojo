@@ -51,6 +51,19 @@ Before running: 4 predict (pass or fail? which test?)
 After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 
+MODES = {
+    "interview": "preparing for live-coding interviews (with or without a date)",
+    "hybrid": "interview-ready and growing as an engineer at the same time",
+    "industry": "preparing to enter an industry or role, no interview yet",
+    "hobby": "for its own sake: building things, learning at your own pace",
+}
+LEVELS = {
+    "hobbyist": "build your own things, read docs, fix your own bugs",
+    "junior": "job-ready: everyday code fluently, read a team's code, tests, git",
+    "mid": "design modules, review others' code, debug unfamiliar systems",
+    "senior": "architecture, deep debugging and domain depth, guiding others",
+}
+
 DEFAULT_PROFILE = {
     "learner": "",
     "start_date": "",
@@ -203,6 +216,149 @@ What happens next
 """
 
 
+def parse_minutes(text: str, current: dict) -> dict:
+    """'60' sets every day; 'mon=60,sat=0' sets those days and keeps the rest."""
+    text = str(text).strip()
+    if text.isdigit():
+        return {day: int(text) for day in DAYS}
+    minutes = dict(current)
+    for part in text.split(","):
+        day, _, value = part.strip().partition("=")
+        day = day.strip().lower()[:3]
+        if day not in DAYS or not value.strip().isdigit():
+            die(f"Minutes: use a number, or day=minutes pairs like mon=60,sat=0 (got '{part}').")
+        minutes[day] = int(value)
+    return minutes
+
+
+# key -> (kind, allowed values or None, meaning). The mix and priority have `dojo.py mix`.
+SETTINGS = {
+    "learner": ("text", None, "your name"),
+    "goal": ("text", None, "your goal in one line"),
+    "mode": ("choice", MODES, "why you train"),
+    "target_level": ("choice", LEVELS, "the programmer you want to become"),
+    "level": ("choice", {"beginner": "", "intermediate": "", "advanced": ""}, "where you are now"),
+    "start_date": ("date", None, "first training day"),
+    "target_date": ("date", None, "a date to be ready by (empty for none)"),
+    "minutes": ("minutes", None, "minutes per day: 60 for every day, or mon=60,sat=0"),
+    "flexible_rest_day": ("bool", None, "training on a rest day counts towards the week"),
+    "tracks": ("list", None, "tracks you follow"),
+    "start_module": ("text", None, "first module offered as new material"),
+    "skip_modules": ("list", None, "modules not offered as new material"),
+    "export_target": ("text", None, "where `export` sends backups"),
+}
+
+
+def show_value(profile: dict, key: str) -> str:
+    value = profile.get(key)
+    if key == "minutes":
+        return ", ".join(f"{d}={value.get(d, 0)}" for d in DAYS)
+    if isinstance(value, list):
+        return ",".join(value) or "(none)"
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    return str(value) if value not in ("", None) else "(empty)"
+
+
+def set_setting(profile: dict, key: str, raw: str) -> None:
+    if key not in SETTINGS:
+        die(f"Unknown setting '{key}'. Settings: {', '.join(SETTINGS)} (mix and priority: dojo.py mix).")
+    kind, allowed, _ = SETTINGS[key]
+    raw = raw.strip()
+    if kind == "choice":
+        if raw not in allowed:
+            die(f"{key}: one of {', '.join(allowed)}.")
+        profile[key] = raw
+    elif kind == "date":
+        if raw:
+            parse_date(raw)
+        profile[key] = raw
+    elif kind == "minutes":
+        profile[key] = parse_minutes(raw, profile["minutes"])
+    elif kind == "bool":
+        profile[key] = raw.lower() in ("y", "yes", "true", "1")
+    elif kind == "list":
+        items = [x.strip() for x in raw.split(",") if x.strip()]
+        if key == "tracks":
+            unknown = [t for t in items if t not in load_tracks(active_only=False)]
+            if unknown:
+                die(f"Unknown track(s): {', '.join(unknown)}.")
+        profile[key] = items
+    else:
+        profile[key] = raw
+
+
+def settings_review(profile: dict) -> list[str]:
+    """Evidence-based suggestions from the last 4 full weeks; the tutor asks yes or no for each."""
+    rows = read_log()
+    on = today()
+    this_week = week_start(on)
+    start = parse_date(profile["start_date"]) if profile.get("start_date") else this_week - timedelta(days=28)
+    weeks = [this_week - timedelta(days=7 * i) for i in range(4, 0, -1)
+             if this_week - timedelta(days=7 * i) >= week_start(start)]
+    out = []
+    if len(weeks) < 2:
+        out.append(f"Only {len(weeks)} full week(s) of data: too early for time suggestions.")
+    else:
+        for i, day in enumerate(DAYS):
+            done = [minutes_on(rows, w + timedelta(days=i)) for w in weeks]
+            plan = int(profile["minutes"].get(day, 0))
+            real = statistics.median(done)
+            if abs(real - plan) >= 30 and abs(real - plan) >= 0.25 * max(plan, 1):
+                suggestion = int(round(real / 15) * 15)
+                out.append(f"minutes {day}: planned {plan}, median {real:.0f} over the last "
+                           f"{len(weeks)} weeks -> suggest `settings minutes={day}={suggestion}`")
+    if profile.get("target_date") and parse_date(profile["target_date"]) < on:
+        out.append(f"target_date {profile['target_date']} has passed -> suggest clearing it "
+                   "(`settings target_date=`) or setting the next one")
+    mix = effective_mix(profile)
+    if len(mix) > 1:
+        module_track = {ex["module"]: ex["track"] for ex in discover().values()}
+        since = on - timedelta(days=14)
+        spent: dict[str, float] = {}
+        for r in rows:
+            if parse_date(r["date"]) > since and r["module"] in module_track:
+                spent[module_track[r["module"]]] = spent.get(module_track[r["module"]], 0.0) + float(r["minutes"] or 0)
+        total = sum(spent.values())
+        for t, v in mix.items():
+            real = 100 * spent.get(t, 0) / total if total else 0
+            if total and abs(real - v) > 15:
+                out.append(f"mix {t}: planned {v}%, real {real:.0f}% over 14 days -> keep the mix and "
+                           "follow it, or change it (`mix ...`): ask which")
+    out.append("Judgement calls to ask about (no numbers decide these): mode, target_level, priority, "
+               "tracks, skip_modules (see PLAN.md, the weekly report and the roadmap triggers).")
+    return out
+
+
+def cmd_settings(args) -> None:
+    """Show every setting, change any of them (key=value), or suggest changes from the log."""
+    profile = load_profile()
+    if args.review:
+        print("Suggested changes (ask the learner yes or no for each; apply only the yes ones):")
+        for line in settings_review(profile):
+            print("  - " + line)
+        return
+    if args.changes:
+        before = {k: show_value(profile, k) for k in SETTINGS}
+        for change in args.changes:
+            key, sep, raw = change.partition("=")
+            if not sep:
+                die(f"Use key=value (got '{change}').")
+            set_setting(profile, key.strip(), raw)
+        write_json(PROFILE, profile)
+        for k in SETTINGS:
+            after = show_value(profile, k)
+            if after != before[k]:
+                print(f"  {k}: {before[k]} -> {after}")
+        print("Saved. Note the reason under 'Plan changes' in progress/PLAN.md.")
+        return
+    for key, (_, _, meaning) in SETTINGS.items():
+        print(f"  {key:18} {show_value(profile, key)}   ({meaning})")
+    print(f"  {'mix':18} {', '.join(f'{t}={v}' for t, v in effective_mix(profile).items())}   (share per track: dojo.py mix)")
+    print(f"  {'priority':18} {profile.get('priority') or '(none)'}   (what overrides the mix: dojo.py mix --priority)")
+    print("Change: python dojo.py settings key=value ...   Suggestions: python dojo.py settings --review")
+
+
 def needs_install() -> bool:
     py = find_venv_python()
     if py is None:
@@ -268,7 +424,7 @@ def cmd_setup(args) -> None:
     minutes = dict(profile["minutes"])
     if args.minutes is not None or quiet:
         if args.minutes is not None:
-            minutes = {day: int(args.minutes) for day in DAYS}
+            minutes = parse_minutes(args.minutes, minutes)
             for day in [r.strip().lower()[:3] for r in (args.rest or "").split(",") if r.strip()]:
                 if day in minutes:
                     minutes[day] = 0
@@ -350,19 +506,6 @@ def ensure_files() -> None:
 
 HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind):\s*(.+?)\s*$", re.MULTILINE)
 STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)(\.[A-Za-z0-9]+)$")
-MODES = {
-    "interview": "preparing for live-coding interviews (with or without a date)",
-    "hybrid": "interview-ready and growing as an engineer at the same time",
-    "industry": "preparing to enter an industry or role, no interview yet",
-    "hobby": "for its own sake: building things, learning at your own pace",
-}
-LEVELS = {
-    "hobbyist": "build your own things, read docs, fix your own bugs",
-    "junior": "job-ready: everyday code fluently, read a team's code, tests, git",
-    "mid": "design modules, review others' code, debug unfamiliar systems",
-    "senior": "architecture, deep debugging and domain depth, guiding others",
-}
-
 DEFAULT_TRACK = {
     "name": "",
     "extension": ".py",
@@ -1569,6 +1712,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates (and time by track)
+  settings [key=value ...] show every setting, or change any (minutes=mon=60,sat=0, mode=hobby,
+                           skip_modules=m08,m09, ...); --review suggests changes from your log
   mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
                            no arguments shows the current mix
   sync                     find work done without logging it
@@ -1589,7 +1734,7 @@ def main() -> None:
     for flag in ("--name", "--goal", "--mode", "--target-level", "--level", "--start-date",
                  "--target-date", "--rest", "--flexible", "--tracks"):
         p.add_argument(flag)
-    p.add_argument("--minutes", type=int)
+    p.add_argument("--minutes", help="one number for every day, or per day: mon=60,tue=90,...")
     sub.add_parser("install")
     sub.add_parser("doctor")
     sub.add_parser("today")
@@ -1637,6 +1782,7 @@ def main() -> None:
     p = sub.add_parser("drive-setup"); p.add_argument("--remote", default="gdrive"); p.add_argument("--folder", default="CodeDojo")
     p = sub.add_parser("import"); p.add_argument("archive"); p.add_argument("--force", action="store_true")
     sub.add_parser("stats")
+    p = sub.add_parser("settings"); p.add_argument("changes", nargs="*"); p.add_argument("--review", action="store_true")
     p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")
     sub.add_parser("sync")
     p = sub.add_parser("verify"); p.add_argument("items", nargs="*")
@@ -1648,7 +1794,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
