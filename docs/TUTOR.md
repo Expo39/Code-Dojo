@@ -59,6 +59,8 @@ dictated code does not count as typing it yourself.
 | Say | What happens |
 | --- | --- |
 | `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
+| `plan my learning` / `I want to learn <X>` / `when should I start <X>?` / `replan` | Roadmap: the tutor asks what is missing about your goals, recommends the order and mix of tracks with reasons and the cost, and records your choice (`docs/ROADMAP.md`) |
+| `I have an interview on <date>` / `focus on <X>` | The priority changes: that track takes most of the time, the others keep only their redos |
 | `weekly review` | Report, coach notes, next week's focus, plan updated |
 | `am I on track for M1?` | Trend analysis and an honest re-estimate |
 | `export` / `export to user@host:path` | Personal data zipped (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |

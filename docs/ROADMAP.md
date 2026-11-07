@@ -1,0 +1,111 @@
+# Roadmap: which tracks, in what order, in what mix
+
+The dojo is practical, but a learner rarely wants only one thing: "Python for interviews, C++
+later, robotics one day", "web back ends, then data", "C for embedded work". The roadmap
+decides the order and the mix of tracks from the learner's goals and their measured progress,
+and changes it when either changes. These rules are shared; each learner's roadmap is personal
+and lives in `progress/PLAN.md`. The `dojo-roadmap` skill runs it.
+
+## 1. Start from the learner, and ask when something is missing
+
+Before recommending anything, the tutor needs, for each goal:
+
+- **What and why**: the subject, and what it is for (a job, an interview, a project, a
+  course, curiosity). The reason decides the priority more than the subject does.
+- **Priority order** across goals, and any **date** (interview, exam, job start).
+- **Where they are now** in it (`BASELINE.md`, `dojo.py stats`, or a short check).
+- **Hours** per week and how stable they are.
+- **Anything that rules an order out or in**: work needs, confidence, hardware, operating system.
+
+If one of these is unknown, ask (one or two questions at a time). Never fill a gap with a guess
+about what "people like this" want.
+
+## 2. Tracks, prerequisites and states
+
+Each track states what it needs first: `requires` in `tracks/<track>/track.json` and a
+"Prerequisites" section in its README (for example, ROS 2 needs Python and C++ basics on
+Linux). A track the learner wants that does not exist yet is built when the roadmap reaches it
+(section 8), not in advance.
+
+Each track in a roadmap is in one state; measurable gates, never dates, move it to the next:
+
+| State | Share of new-material time | Meaning |
+| --- | --- | --- |
+| not started | none | waiting for its start condition |
+| taster | 10 to 20% | first modules, alongside a main track |
+| main | the rest | where most new material comes from |
+| priority | 80 to 100% | a dated goal is close; everything else is in maintenance |
+| maintenance | 0% (`mix <track>=0`) | redos only, so it does not fade |
+| done | 0% | the learner's goal for it is met; redos continue while they come up |
+
+`python dojo.py mix python=80 cpp=20` records the shares and `--priority "<text>"` the current
+override; `today` then splits each day by them and keeps redos coming in every track.
+
+## 3. Ordering rules
+
+1. **One main track.** At most one other track is in active learning (a taster) at a time.
+2. **One new language at a time.** A second language starts as a taster only once the first has
+   met its first milestone gate (fundamentals fluent), so the two do not blur.
+3. **Prerequisites first.** A track starts only when its `requires` are met, or when the
+   learner chooses to accept the risk (record it).
+4. **A dated goal wins.** In the run-up to an interview, exam or job start, its track becomes the
+   priority and the others go to maintenance; afterwards, review the roadmap.
+5. **Never drop a learned track to nothing.** Maintenance keeps its redo queue alive.
+6. **The reason can justify a single focus.** If the learner says one track matters for their
+   job or their confidence, keeping all new material there is a valid plan, not a lack of
+   ambition. Record when the other goals will be revisited.
+7. **The learner decides.** The tutor recommends an order with its reasons and its cost; if the
+   learner prefers another, record the choice and the risk once, then follow it.
+
+## 4. The cost of a choice, from the learner's own data
+
+Never quote generic durations ("C++ takes six months"). Estimate from the log: the learner's
+recent rate (modules or gate progress per week of real hours) gives the date of the next gate;
+moving X% of the time to another track moves that date by roughly X%. Show the arithmetic in one
+or two lines and give a range. With less than two weeks of data, say the estimate is rough.
+Shared files (track READMEs, docs) never hold time estimates; they live only in `PLAN.md`.
+
+## 5. Bridges between tracks
+
+When a second language starts, teach from what the learner already knows: name the equivalent
+in their first language ("a Python list; in C++ a `std::vector`"), and say in one line where the
+two differ. Cheat-sheet bullets for the new track include the comparison.
+
+## 6. Theory, just in time
+
+The dojo learns by doing, so theory comes only when the next practical step needs it, and only
+as much as that step needs. Each module's `primm/README.md` may have a `Theory:` line (Big-O
+before hashing, the memory model before pointers, coordinate frames before tf2). Before the first
+exercise of such a module the tutor asks:
+
+> "This module relies on <theory>. Want a short theory lesson first, or do you know it already?"
+
+A theory lesson is a `teach me` lesson in theory form (`dojo-teach`): predictions are answered on
+paper, the run step is a short demo or measurement, and it ends by applying the idea in a few
+lines of code. If the learner skips it, note it in `PLAN.md`; when they then struggle on exactly
+that idea, offer it again (once) before a hint.
+
+## 7. When the roadmap is reviewed
+
+- **Every session** (`dojo-session`), a quick check for triggers; say something only if one fires:
+  - a milestone gate was met (`dojo.py stats`), or a track's modules ran out;
+  - a date was set, changed or entered its run-up;
+  - the learner mentioned a new goal, dropped one, or changed their hours for good;
+  - progress has stalled (no gate progress, or the same weak spot, for 3 weeks);
+  - the real split (`dojo.py stats`) is more than 15 points off the mix for 2 weeks.
+  
+  On a trigger, one line: "<what happened>: this may change the plan. Review it now (5
+  minutes) or at the weekly review?" Never change the plan silently.
+- **Every week** (`dojo-weekly`): the mix against the real split, gate progress per track.
+- **Every month** (`dojo-assess`), and whenever the learner says `replan`.
+
+## 8. Writing it down, and building a missing track
+
+`progress/PLAN.md` has a **Roadmap** section (a table: track, state, share, start condition,
+why) and a **Plan changes** log (date, change, reason), so the learner can always see why the plan
+looks as it does. `profile.json` holds the same mix and priority (`dojo.py mix`).
+
+When a track reaches taster state but is only a placeholder (a README without `track.json`):
+agree its toolchain with the learner (a container keeps the host clean and is the suggested
+default for compilers and frameworks), write `track.json` and the module list in its README
+(`docs/TRACKS.md`), and generate only the first module (`dojo-new-exercise`).

@@ -6,7 +6,10 @@ An AI coding agent (Claude Code, Codex or Gemini CLI) acts as a tutor that expla
 questions, hints and reviews, but never writes your code for you.
 
 It works for anyone and any subject: choose your tracks and your weekly hours, run a
-placement, and the dojo plans, measures and adapts around you. A complete Python track ships
+placement, and the dojo plans, measures and adapts around you: it asks what you want to learn
+and why, recommends the order and the mix of tracks (one at a time, or a main track with a
+taster of the next), offers the theory a module needs right before it, and revisits the plan
+when your progress or your goals change. A complete Python track ships
 with it (fundamentals, reading and debugging code, data structures and algorithms, projects,
 interview practice).
 
@@ -87,7 +90,7 @@ python dojo.py week --write          # weekly report
 | Group | Commands |
 | --- | --- |
 | Set up | `install`, `setup`, `doctor` |
-| Plan | `today`, `list [module]`, `stats`, `week [--write]` |
+| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]` |
 | Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
@@ -104,8 +107,8 @@ code-dojo/
 ├── conftest.py              lets pytest run your workspace file against the track's tests
 ├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
 ├── CLAUDE.md                imports AGENTS.md, plus notes for Claude Code only
-├── .agents/skills/          dojo-session, dojo-assess, dojo-teach, dojo-mock, dojo-drill,
-│                            dojo-weekly, dojo-new-exercise (one copy for every tool)
+├── .agents/skills/          dojo-session, dojo-assess, dojo-roadmap, dojo-teach, dojo-mock,
+│                            dojo-drill, dojo-weekly, dojo-new-exercise (one copy for every tool)
 ├── .claude/                 Claude Code: settings and start hook, agents (problem-setter,
 │                            code-reviewer, progress-coach), skills -> ../.agents/skills
 ├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
@@ -115,8 +118,8 @@ code-dojo/
 ├── tracks/
 │   ├── python/              the Python track: README (phases, modules, milestones), modules
 │   │                        (stubs, tests, .clarify/, .solutions/, primm/), projects/
-│   ├── cpp/                 placeholder for an optional future track
-│   └── ros/                 placeholder for an optional future track
+│   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
+│   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
 │                            schedule, mistakes, cheat sheet, weekly reports, mocks
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
@@ -136,6 +139,7 @@ code-dojo/
 | [METHOD.md](docs/METHOD.md) | Why it is built this way: the learning research and the rules for AI |
 | [INTERVIEW_PLAYBOOK.md](docs/INTERVIEW_PLAYBOOK.md) | The process for live-coding interviews |
 | [PITFALLS.md](docs/PITFALLS.md) | Common mistakes in the first modules and how to catch them |
+| [ROADMAP.md](docs/ROADMAP.md) | Choosing tracks, their order and mix from your goals; theory just in time; when the plan changes |
 | [TRACKS.md](docs/TRACKS.md) | What is shared and what is personal, and how to add a track or exercises |
 | [tracks/python/README.md](tracks/python/README.md) | The Python syllabus: phases, modules, milestones |
 

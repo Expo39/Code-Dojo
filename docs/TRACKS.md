@@ -40,8 +40,9 @@ Ring 2  depth: patterns + engineering        testing, design, projects
 Ring 3  optional directions                  other tracks, chosen later, only if wanted
 ```
 
-Rules of thumb: one main track at a time; at most 10% of a week on a "taster" of the next ring;
-measurable gates, not feelings, decide when to move on.
+Rules of thumb: one main track at a time, at most one taster of the next; measurable gates,
+not feelings or dates, decide when to move on. The full rules for ordering and mixing tracks,
+and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the shares.
 
 ## Adding a track
 
@@ -55,7 +56,8 @@ measurable gates, not feelings, decide when to move on.
   "test_file": "tests/test_{slug}.rs",
   "solution_file": ".solutions/{slug}.rs",
   "clarify_file": ".clarify/{slug}.md",
-  "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"]
+  "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"],
+  "requires": ["Fluent in one language (first milestone of its track)"]
 }
 ```
 
@@ -66,8 +68,13 @@ measurable gates, not feelings, decide when to move on.
    means "passed". Set `"test_command": null` for a track without automatic tests (a reading
    or theory track); attempts are then logged by hand and judged with the tutor.
 
-2. Write `tracks/<name>/README.md`: the phases, the modules with one focus line each, and
-   measurable milestones (copy the structure of `tracks/python/README.md`).
+   `requires` (optional) lists, in words, what a learner should have before starting the track;
+   the roadmap reads it (`ROADMAP.md`).
+
+2. Write `tracks/<name>/README.md`: the phases, the modules with one focus line each,
+   measurable milestones (copy the structure of `tracks/python/README.md`), a "Prerequisites"
+   section and a "Theory" section (the background the track relies on, by module). No time
+   estimates: they depend on the learner and live in their `PLAN.md`.
 
 3. Add modules as folders (`m01_basics/`, ...) with exercises in the format below. Ask the
    tutor (`/dojo-new-exercise`) to generate them; it verifies each one.
@@ -82,14 +89,17 @@ measurable gates, not feelings, decide when to move on.
   tests/test_<slug>.<ext>    tests (path set by "test_file")
   .solutions/<slug>.<ext>    reference solution (path set by "solution_file")
   .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")
-  primm/README.md            the concepts a teach-me lesson can cover in this module
+  primm/README.md            the concepts a teach-me lesson can cover in this module, and an
+                             optional "Theory:" line (background offered before the module)
 ```
 
 The learner's side mirrors it: `workspace/<track>/<module>/` holds their attempts,
 `.history/` (earlier attempts, moved there when a redo starts) and `primm/` (the files they type
 in a lesson; `python dojo.py primm <module> <topic>` creates it). The tracker ignores
 `primm/` folders, so lesson files never count as exercises. Every new module gets a
-`primm/README.md` listing its concepts.
+`primm/README.md` listing its concepts, plus a `Theory:` line when the module relies on
+background that is not code (complexity, memory, maths); the tutor offers it before the
+module's first exercise (`ROADMAP.md`, section 6).
 
 - `<slug>` is unique across all tracks (it is the exercise's name in the tracker).
 - The task text contains these header lines (in a docstring or comments):

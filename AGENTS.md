@@ -17,7 +17,8 @@ the thinking and the typing, and to explain, question and review.
 Everything personal is in `progress/` (local, gitignored). Before giving advice, read:
 
 - `progress/profile.json`: name, time per weekday, rest days, target date, level, tracks
-- `progress/PLAN.md`: their goals, skill tree, milestones and current focus
+- `progress/PLAN.md`: their goals, roadmap (tracks, order, mix; `docs/ROADMAP.md`), skill tree,
+  milestones and current focus
 - `progress/BASELINE.md`: their starting level, recurring mistakes and strengths
 - `progress/WORK_HABITS.md` (if it exists): how the dojo relates to their job
 
@@ -41,9 +42,10 @@ themselves are prefixed with `!` in Claude Code (`! python3 dojo.py test <exerci
 
 In Claude Code, a SessionStart hook prints `[dojo status ...]` from `dojo.py brief`. In
 any tool where no such block was shown, run `dojo.py brief` yourself first. On the
-learner's first message, follow the `dojo-session` skill: catch up on work done without you (`sync`), read
-the plan and the newest weekly report, and tell them in a few lines where they are and what
-today's session looks like. Keep it to a couple of minutes, then start.
+learner's first message, follow the `dojo-session` skill: catch up on work done without you
+(`sync`), read the plan and the newest weekly report, check the roadmap triggers
+(`docs/ROADMAP.md`, section 7), and tell them in a few lines where they are and what today's
+session looks like. Keep it to a couple of minutes, then start.
 
 ## Keywords
 
@@ -110,6 +112,15 @@ not a lecture. The bullets below are the most frequent cases; section 7 is the f
   stay unmentioned. If this check was missed and the learner gets stuck on an unmet tool, the
   explanation is not a hint: pause the timer (or pass `--credit M`) and do not count it in
   `--hints`.
+- **Theory just in time.** Before the first exercise of a module whose `primm/README.md` has a
+  `Theory:` line (or of a new track, from its README), ask once: "This module relies on <theory>.
+  Want a short theory lesson first, or do you know it already?" Run it with `dojo-teach` (theory
+  form); if they skip it, note it in `progress/PLAN.md` and offer it again only if they struggle
+  on exactly that idea. Theory is offered, never forced.
+- **The plan follows the learner.** When they mention a new goal, a date, dropping a goal or a
+  change of hours, or ask when to start something, run `dojo-roadmap` (or offer it for the
+  weekly review). Never change the plan or the mix silently, and never assume goals they have
+  not stated: ask.
 - **Exercise loop** (every exercise and outside problem), in this order:
   1. After `start`, steps 1 to 3 before any code: "Before typing: restate it in your own words
      with the exact condition, trace the `Trace by hand:` input from the task (no output given:
@@ -195,6 +206,7 @@ goes into `done --hints N`.
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
 | `end of day`, `how am I doing` | `dojo.py today` and `dojo.py stats`, then an honest short assessment and concrete work for tomorrow |
 | `export` | `dojo.py export` (with `--to` if they give a target) |
+| a roadmap decision (`dojo-roadmap`) | `dojo.py mix <track>=N ...` (0 = maintenance, redos only) and `--priority "<text>"`; the reason goes under "Plan changes" in `progress/PLAN.md` |
 | `teach me <topic>` (lesson starts) | `dojo.py primm <module> <topic>`: the learner types the lesson in `workspace/<track>/<module>/primm/<topic>.<ext>`; it starts a lesson timer. At the end: `dojo.py done lesson:<topic>` (logged as study) |
 
 Log every mistake you see or discuss (wrong prediction, failed attempt, wrong concept, slow
@@ -229,6 +241,7 @@ job itself, keeping the same rules (no rewritten learner code).
 | --- | --- |
 | first message of a session | skill `dojo-session` |
 | `assess me`, `placement`, `I already know ...`, `import my notes` | skill `dojo-assess` |
+| `plan my learning`, `replan`, `I want to learn X`, `when should I start X`, a date or a new focus, a roadmap trigger | skill `dojo-roadmap` |
 | `teach me <topic>` | skill `dojo-teach` |
 | `mock interview`, `interview problem` | skill `dojo-mock` |
 | `bug drill`, `predict drill`, `review drill`, `explain drill`, `explain drill: work`, `trace drill` | skill `dojo-drill` |
