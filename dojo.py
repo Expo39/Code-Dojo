@@ -33,6 +33,7 @@ MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
 SEEN = PROGRESS / "tracks_seen.json"  # exercise -> content hash the learner has already been asked about
+TOPICS_SEEN = PROGRESS / "topics_seen.json"  # track/module -> lesson topics already asked about
 UPSTREAM_CHECK = PROGRESS / "upstream_check.json"
 PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
@@ -1323,6 +1324,41 @@ def exercise_hash(ex: dict) -> str:
     return h.hexdigest()[:16]
 
 
+TOPICS_RE = re.compile(r"can cover:\s*(.+?)\.?\s*$", re.MULTILINE)
+
+
+def module_topics() -> dict:
+    """track/module -> the lesson topics its primm/README.md lists."""
+    out = {}
+    for track_name, track in load_tracks(active_only=True).items():
+        for readme in sorted(track["dir"].glob(f"*/{PRIMM_DIR}/README.md")):
+            m = TOPICS_RE.search(readme.read_text(encoding="utf-8"))
+            if m:
+                out[f"{track_name}/{readme.parent.parent.name}"] = [t.strip() for t in m.group(1).split(", ") if t.strip()]
+    return out
+
+
+def skipped_module(module: str, profile: dict) -> bool:
+    return any(module.split("/")[-1].startswith(x) for x in profile.get("skip_modules", []))
+
+
+def topic_changes() -> dict:
+    """New lesson topics per module since the learner was last asked (modules they skip stay quiet)."""
+    current = module_topics()
+    if not TOPICS_SEEN.exists():
+        if PROFILE.exists():
+            write_json(TOPICS_SEEN, current)
+        return {}
+    seen = read_json(TOPICS_SEEN, {})
+    profile = read_json(PROFILE, {})
+    out = {}
+    for module, topics in current.items():
+        new = [t for t in topics if t not in seen.get(module, [])]
+        if new and not skipped_module(module, profile):
+            out[module] = new
+    return out
+
+
 def track_changes() -> dict:
     """New, changed and removed exercises in the learner's tracks since they were last asked.
     The first run records everything as seen, so a new learner is not asked about every exercise."""
@@ -1330,11 +1366,15 @@ def track_changes() -> dict:
     if not SEEN.exists():
         if PROFILE.exists():
             write_json(SEEN, current)
-        return {"new": [], "changed": [], "removed": []}
+        return {"new": [], "changed": [], "removed": [], "topics": topic_changes()}
     seen = read_json(SEEN, {})
-    return {"new": [s for s in current if s not in seen],
-            "changed": [s for s in current if s in seen and seen[s] != current[s]],
-            "removed": [s for s in seen if s not in current]}
+    profile = read_json(PROFILE, {})
+    exercises = discover()
+    quiet = {sl for sl, ex in exercises.items() if skipped_module(ex["module"], profile)}
+    return {"new": [s for s in current if s not in seen and s not in quiet],
+            "changed": [s for s in current if s in seen and seen[s] != current[s] and s not in quiet],
+            "removed": [s for s in seen if s not in current],
+            "topics": topic_changes()}
 
 
 def acknowledge_changes(slugs: list[str] | None = None) -> None:
@@ -1349,11 +1389,16 @@ def acknowledge_changes(slugs: list[str] | None = None) -> None:
             reviews.pop(slug, None)  # the exercise is gone; its history stays in the log
     write_json(SEEN, seen)
     write_json(REVIEWS, reviews)
+    if not slugs:  # acknowledging everything includes the lesson topics
+        write_json(TOPICS_SEEN, module_topics())
 
 
 def changes_lines(changes: dict) -> list[str]:
     exercises = discover()
     lines = []
+    if changes.get("topics"):
+        lines.append("new lesson topics: " + "; ".join(
+            f"{m} ({', '.join(t)})" for m, t in changes["topics"].items()))
     for kind in ("new", "changed", "removed"):
         if not changes[kind]:
             continue
@@ -1420,6 +1465,8 @@ def cmd_changes(args) -> None:
         print("  " + line)
     print("For each new or changed exercise: learn it (nothing to do), already know it "
           "(`mark <slug> --box 3`), or not for me (`settings skip_exercises+=<slug>`, or skip_modules+=<module>).")
+    print("For new lesson topics: learn it (`teach me <topic>`, now or when that module comes up), "
+          "already know it, or not for me.")
     print("Then: python dojo.py changes --ack [slugs]")
 
 

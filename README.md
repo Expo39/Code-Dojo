@@ -14,9 +14,9 @@ It works for anyone, at any level, for any subject. You tell it:
 
 It then recommends the order of what to learn, offers the theory a topic needs right before
 it, measures every attempt, and suggests changes to your plan and settings each week for you
-to accept or decline. When the shared tracks change (someone adds exercises, a module, a
-track), it tells you at the start of a session and asks whether you want to learn the new
-material or already know it. The tutor explains at your level. A complete Python track ships with it
+to accept or decline. When the shared tracks change (new exercises, new lesson topics, a
+module, a track), even in modules you already finished, it tells you at the start of a session
+and asks whether you want to learn the new material or already know it. The tutor explains at your level. A complete Python track ships with it
 (fundamentals, reading and debugging code, data structures and algorithms, projects, interview
 practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
 

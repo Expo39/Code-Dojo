@@ -39,7 +39,9 @@ The aim: a track as good as the best free courses, in the dojo's own format, nev
      solutions, whatever the licence; structure, topic order and the *kind* of example may be
      borrowed, with the source credited.
 6. **Build only what is needed now**: the first module (`dojo-new-exercise`), the rest as
-   "planned". Shared track files go in a pull request or commit; the learner's choices stay in
+   "planned". A review that adds lesson topics to a module that already has exercises also adds
+   exercises for them, so no topic is taught without practice. Learners are told at their next
+   session (new topics and exercises, also in modules they finished) and choose for each. Shared track files go in a pull request or commit; the learner's choices stay in
    `progress/`.
 7. **Close**: the sources used and the ones rejected (one line why), the module list, and what
    was changed (or, for a review, what is proposed).
