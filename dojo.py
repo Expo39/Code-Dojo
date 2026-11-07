@@ -54,7 +54,7 @@ DEFAULT_PROFILE = {
     "learner": "",
     "start_date": "",
     "target_date": "",
-    "goal": "Pass live-coding interviews in Python",
+    "goal": "",
     "minutes": {"mon": 180, "tue": 180, "wed": 180, "thu": 180,
                 "fri": 180, "sat": 180, "sun": 0},
     "flexible_rest_day": True,
@@ -62,6 +62,11 @@ DEFAULT_PROFILE = {
     "start_module": "",
     "skip_modules": [],
     "tracks": [],
+    # Share of new-material time per track (percent). 0 = maintenance: redos only, no new
+    # material. Empty = the active tracks share equally. Set with `dojo.py mix`.
+    "mix": {},
+    # What overrides the mix right now, in words (e.g. "interview on 2027-03-01"), or empty.
+    "priority": "",
     "export_target": "",
 }
 
@@ -215,6 +220,16 @@ def cmd_setup(args) -> None:
     print("\nTracks available: " + ", ".join(f"{k} ({v['name']})" for k, v in available.items()))
     chosen = ask("Tracks to follow, comma separated (empty = all)", ",".join(profile["tracks"]))
     profile["tracks"] = [t.strip() for t in chosen.split(",") if t.strip() in available]
+    if len(profile["tracks"]) > 1:
+        print("\nSeveral tracks: how should new-material time be shared? Percent per track,")
+        print("summing to 100; 0 = redos only (maintenance). The tutor can plan this with you:")
+        print("say `plan my learning` (docs/ROADMAP.md).")
+        current = effective_mix(profile)
+        mix = {t: int(ask(f"  {t} %", str(current.get(t, 0)))) for t in profile["tracks"]}
+        if sum(mix.values()) == 100:
+            profile["mix"] = mix
+        else:
+            print("  Not 100 in total: kept the previous mix. Change it later with `dojo.py mix`.")
     write_json(PROFILE, profile)
 
     print("\nWhere are you now? (The tutor can refine this: run /dojo-assess in Claude Code.)")
@@ -266,6 +281,8 @@ DEFAULT_TRACK = {
     "solution_file": ".solutions/{slug}.py",
     "clarify_file": ".clarify/{slug}.md",
     "test_command": None,
+    # What a learner should have before starting this track, in words (docs/ROADMAP.md).
+    "requires": [],
 }
 
 
@@ -1009,10 +1026,54 @@ def in_scope(ex: dict, profile: dict) -> bool:
     return not start or module >= start
 
 
-def next_new(profile: dict, limit: int = 3) -> list[dict]:
+def effective_mix(profile: dict) -> dict:
+    """Map each active track -> its percent of new-material time (0 = maintenance)."""
+    active = list(load_tracks(active_only=True))
+    mix = {t: int(v) for t, v in (profile.get("mix") or {}).items() if t in active}
+    if not mix:
+        if not active:
+            return {}
+        share, rest = divmod(100, len(active))
+        return {t: share + (1 if i < rest else 0) for i, t in enumerate(active)}
+    full = {t: mix.get(t, 0) for t in active}
+    return dict(sorted(full.items(), key=lambda kv: -kv[1]))  # largest share first
+
+
+def next_new(profile: dict, limit: int = 3, track: str | None = None) -> list[dict]:
     reviews = read_json(REVIEWS, {})
     return [ex for slug, ex in discover().items()
-            if slug not in reviews and in_scope(ex, profile)][:limit]
+            if slug not in reviews and in_scope(ex, profile)
+            and (track is None or ex["track"] == track)][:limit]
+
+
+def cmd_mix(args) -> None:
+    """Show or set the share of new-material time per track, and the current priority."""
+    profile = load_profile()
+    available = load_tracks(active_only=False)
+    mix = effective_mix(profile)
+    if args.shares:
+        for share in args.shares:
+            name, _, value = share.partition("=")
+            if name not in available or not value.isdigit():
+                die(f"Use track=percent with one of: {', '.join(available)} (got '{share}').")
+            mix[name] = int(value)
+            if name not in profile["tracks"]:
+                profile["tracks"] = list(profile["tracks"] or load_tracks(active_only=True)) + [name]
+        if sum(mix.values()) != 100:
+            die("The shares must add up to 100 (0 = maintenance). Would be: "
+                + ", ".join(f"{t}={v}" for t, v in mix.items()))
+        profile["mix"] = mix
+    if args.priority is not None:
+        profile["priority"] = args.priority
+    if args.shares or args.priority is not None:
+        write_json(PROFILE, profile)
+        print("Saved. Record the reason under 'Plan changes' in progress/PLAN.md.")
+    for name, value in mix.items():
+        state = "maintenance (redos only)" if value == 0 else f"{value}% of new material"
+        print(f"  {name:12} {state}")
+        if args.shares and value > 0 and available[name]["requires"]:
+            print("    requires: " + "; ".join(available[name]["requires"]))
+    print(f"Priority: {profile.get('priority') or '(none)'}")
 
 
 def cmd_today(args, brief: bool = False) -> None:
@@ -1027,6 +1088,7 @@ def cmd_today(args, brief: bool = False) -> None:
     wk = week_numbers(profile, rows, on)
     due = due_items(on)
     timers = read_json(TIMER, {})
+    mix = effective_mix(profile)
     upcoming = next_new(profile)
 
     lines = []
@@ -1067,7 +1129,18 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append(f"Redo queue ({len(due)} due): {names}{more}.")
     else:
         lines.append("Redo queue: nothing due.")
-    if upcoming:
+    if profile.get("priority"):
+        lines.append(f"Priority: {profile['priority']}.")
+    if len(mix) > 1:
+        lines.append("Mix: " + ", ".join(
+            f"{t} maintenance (redos only)" if v == 0
+            else f"{t} {v}%" + (f" (about {fmt_min(plan * v / 100)} of today)" if plan else "")
+            for t, v in mix.items()) + ".")
+        for t, v in mix.items():
+            items = next_new(profile, track=t) if v > 0 else []
+            if items:
+                lines.append(f"Next new ({t}): " + ", ".join(f"{e['slug']} ({e['module']})" for e in items) + ".")
+    elif upcoming:
         lines.append("Next new: " + ", ".join(f"{e['slug']} ({e['module']})" for e in upcoming) + ".")
     weak = [(p, s) for p, s in recent_stats(rows, 14, on).items()
             if s["n"] >= 2 and (s["ratio"] > 1.5 or s["hints"] > 1.5)]
@@ -1180,6 +1253,20 @@ def cmd_stats(args) -> None:
         tried = sum(1 for s in slugs if s in reviews)
         mastered = sum(1 for s in slugs if reviews.get(s, {}).get("box", 0) >= MASTERED_BOX)
         print(f"  {name:40} {tried:>2}/{len(slugs):<2} mastered {mastered}")
+    mix = effective_mix(load_profile(required=False))
+    if len(mix) > 1:
+        module_track = {ex["module"]: ex["track"] for ex in exercises.values()}
+        since = on - timedelta(days=28)
+        spent: dict[str, float] = {}
+        for r in rows:
+            if parse_date(r["date"]) > since and r["module"] in module_track:
+                t = module_track[r["module"]]
+                spent[t] = spent.get(t, 0.0) + float(r["minutes"] or 0)
+        total_t = sum(spent.values()) or 1
+        print("Track time, last 28 days (exercises and lessons with a module) against the mix:")
+        for t, v in mix.items():
+            print(f"  {t:12} {fmt_min(spent.get(t, 0))} ({100 * spent.get(t, 0) / total_t:.0f}%), mix {v}%")
+        print()
     print("\nLast 28 days by pattern:")
     for p, s in sorted(recent_stats(rows, 28, on).items(), key=lambda kv: -kv[1]["ratio"]):
         print(f"  {p:28} n={s['n']:<3} median {s['ratio']:.2f}x  hints {s['hints']:.1f}  clean {s['clean']}")
@@ -1385,7 +1472,9 @@ HELP = """Code Dojo commands (python dojo.py <command>):
   drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
-  stats                    modules, patterns, fluency gates
+  stats                    modules, patterns, fluency gates (and time by track)
+  mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
+                           no arguments shows the current mix
   sync                     find work done without logging it
   primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file);
                            with a topic, starts a lesson timer: end it with `done lesson:<topic>`
@@ -1447,6 +1536,7 @@ def main() -> None:
     p = sub.add_parser("drive-setup"); p.add_argument("--remote", default="gdrive"); p.add_argument("--folder", default="CodeDojo")
     p = sub.add_parser("import"); p.add_argument("archive"); p.add_argument("--force", action="store_true")
     sub.add_parser("stats")
+    p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")
     sub.add_parser("sync")
     p = sub.add_parser("verify"); p.add_argument("items", nargs="*")
     p = sub.add_parser("primm"); p.add_argument("module"); p.add_argument("topic", nargs="?")
@@ -1457,7 +1547,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
