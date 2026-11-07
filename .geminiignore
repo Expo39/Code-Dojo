@@ -1,6 +1,6 @@
-# Files for other agents: Gemini CLI reads AGENTS.md and .agents/skills instead.
+# Other tools' files: Gemini CLI reads AGENTS.md (.gemini/settings.json), .agents/skills and
+# .gemini/agents instead.
 CLAUDE.md
-.claude/settings.json
-.claude/settings.local.json
+.claude/
 .claude-plugin/
 .codex/

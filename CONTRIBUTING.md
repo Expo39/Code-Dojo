@@ -18,7 +18,9 @@ reviews; nobody else can push to `main` directly.
   clarify file), verified and original. Improve an existing exercise, or let one exercise train
   two topics, before adding a new one: more exercises are not a better track. A new track starts from research into the best current
   free courses and docs (`dojo-new-track`) and lists its sources and review date in its README.
-- **Docs, skills and agents** that work for any learner, at any level and in any mode.
+- **Docs, skills and agents** that work for any learner, at any level and in any mode. A subagent
+  exists for each tool (`.claude/agents/`, `.codex/agents/`, `.gemini/agents/`): change all three
+  together; the checks compare them.
 - **Tracker fixes and features** in `dojo.py`, plain Python 3.10+, no new dependencies without a
   reason.
 

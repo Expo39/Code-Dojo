@@ -156,9 +156,10 @@ Every settings, mix or module change gets a dated line with its reason under Pla
 
 ## Skills and agents
 
-Skills: `.agents/skills/<name>/SKILL.md` (`.claude/skills` links there); a tool that does not load
-them reads the file. Agents: `.claude/agents/<name>.md`; a tool without subagents follows the file
-itself, keeping these rules.
+Skills: `.agents/skills/<name>/SKILL.md`, read by every tool (`.claude/skills` links there).
+Agents exist once per tool, saying the same thing: `.claude/agents/<name>.md`,
+`.codex/agents/<name>.toml`, `.gemini/agents/<name>.md`. Change all three together; the pre-push
+check fails when they differ. A tool that cannot start subagents follows the file itself.
 
 | When | Use |
 | --- | --- |
@@ -178,9 +179,9 @@ itself, keeping these rules.
 
 | Tool | Reads | Skips |
 | --- | --- | --- |
-| Claude Code | `CLAUDE.md` (imports this file), `.claude/` | `.gemini/`, `.geminiignore`, `.codex/` |
-| Codex | `AGENTS.md`, `.agents/skills/`, `.claude/agents/` when named | `CLAUDE.md`, `.claude/settings*.json`, `.claude-plugin/`, `.gemini/` |
-| Gemini CLI | `AGENTS.md`, `.agents/skills/`, `.claude/agents/` when named | `CLAUDE.md`, `.claude/settings*.json`, `.claude-plugin/`, `.codex/` |
+| Claude Code | `CLAUDE.md` (imports this file), `.claude/` (agents, skills link, settings) | `.gemini/`, `.geminiignore`, `.codex/` (open them only to maintain an agent) |
+| Codex | `AGENTS.md`, `.agents/skills/`, `.codex/agents/` | `CLAUDE.md`, `.claude/`, `.claude-plugin/`, `.gemini/`, `.geminiignore` |
+| Gemini CLI | `AGENTS.md` (via `.gemini/settings.json`), `.agents/skills/`, `.gemini/agents/` | `CLAUDE.md`, `.claude/`, `.claude-plugin/`, `.codex/` (all in `.geminiignore`) |
 
 ## Style
 

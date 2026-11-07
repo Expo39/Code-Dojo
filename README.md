@@ -126,7 +126,8 @@ code-dojo/
 │                            for every tool)
 ├── .claude/                 Claude Code: settings and start hook, agents (problem-setter,
 │                            code-reviewer, progress-coach), skills -> ../.agents/skills
-├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
+├── .gemini/, .geminiignore  Gemini CLI: reads AGENTS.md, its own agents/; skips the other tools' files
+├── .codex/                  Codex: its own agents/ (the same three subagents, in Codex's format)
 ├── .claude-plugin/          optional: the same skills and agents as a Claude Code plugin
 ├── .github/                 CODEOWNERS (the owner reviews every change), pull request template,
 │                            checks workflow, Dependabot

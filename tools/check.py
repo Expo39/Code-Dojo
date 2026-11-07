@@ -8,6 +8,7 @@ Looks only at what changed since the base (default: origin/main), so it stays fa
   3. no learner name from the local profile in shared files (local runs only)
   4. changed Python files compile, changed JSON files parse
   5. changed exercises still verify: the stub fails, the reference passes
+  6. each subagent says the same in .claude/agents, .codex/agents and .gemini/agents
 Exit code 0 = all good. Skip once in an emergency with: git push --no-verify
 """
 from __future__ import annotations
@@ -30,6 +31,47 @@ SECRETS = {
     "Google OAuth secret": re.compile(r"\bGOCSPX-[A-Za-z0-9_-]{20,}\b"),
 }
 SKIP_SCAN = ("tools/check.py",)  # holds the patterns themselves
+
+
+READ_ONLY = "You are read-only: never create, edit or delete files."
+
+
+def agent_parity() -> list[str]:
+    """The three copies of every subagent must agree (name, description, instructions).
+    Codex and Gemini name tools differently, so a read-only Claude agent (no Write or Edit tool)
+    carries READ_ONLY as the first line of its instructions in the other two."""
+    try:
+        import tomllib  # Python 3.11+; on 3.10 the Codex copies are not compared
+    except ModuleNotFoundError:
+        tomllib = None
+    problems = []
+    claude = {p.stem: p for p in (ROOT / ".claude" / "agents").glob("*.md")}
+    for folder, ext in ((".codex/agents", ".toml"), (".gemini/agents", ".md")):
+        others = {p.stem for p in (ROOT / folder).glob(f"*{ext}")}
+        for name in sorted(set(claude) ^ others):
+            problems.append(f"subagent '{name}' is in only one of .claude/agents and {folder}")
+    for name, path in claude.items():
+        m = re.match(r"^---\n(.*?)\n---\n(.*)$", path.read_text(encoding="utf-8"), re.DOTALL)
+        meta = dict(re.findall(r"^(\w+):\s*(.*)$", m.group(1), re.MULTILINE))
+        body = m.group(2).strip()
+        tools = {t.strip() for t in meta.get("tools", "").split(",") if t.strip()}
+        if tools and not tools & {"Write", "Edit", "MultiEdit", "NotebookEdit"}:
+            body = f"{READ_ONLY}\n\n{body}"
+        codex = ROOT / ".codex" / "agents" / f"{name}.toml"
+        if codex.exists() and tomllib:
+            t = tomllib.loads(codex.read_text(encoding="utf-8"))
+            if (t.get("name"), t.get("description"), t.get("developer_instructions", "").strip()) != \
+                    (meta["name"], meta["description"], body):
+                problems.append(f".codex/agents/{name}.toml differs from .claude/agents/{name}.md")
+        gemini = ROOT / ".gemini" / "agents" / f"{name}.md"
+        if gemini.exists():
+            g = re.match(r"^---\n(.*?)\n---\n(.*)$", gemini.read_text(encoding="utf-8"), re.DOTALL)
+            gmeta = dict(re.findall(r"^(\w+):\s*(.*)$", g.group(1), re.MULTILINE)) if g else {}
+            gdesc = json.loads(gmeta["description"]) if gmeta.get("description", "").startswith('"') \
+                else gmeta.get("description")
+            if not g or (gmeta.get("name"), gdesc, g.group(2).strip()) != (meta["name"], meta["description"], body):
+                problems.append(f".gemini/agents/{name}.md differs from .claude/agents/{name}.md")
+    return problems
 
 
 def git(*args: str) -> str:
@@ -90,6 +132,8 @@ def main() -> int:
                                 capture_output=True, text=True, cwd=ROOT)
         if result.returncode:
             problems.append("exercises do not verify:\n" + result.stdout.strip())
+
+    problems += [p + " (edit all three copies of an agent together)" for p in agent_parity()]
 
     if problems:
         print("Checks failed:")

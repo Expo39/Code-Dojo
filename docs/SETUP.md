@@ -50,14 +50,15 @@ rules, `AGENTS.md`, and one copy of the skills, `.agents/skills/`, so a fix to t
 reaches every tool. Each tool is told to skip the others' files (the "Files per tool" table in
 `AGENTS.md`), so none spends time rereading the same rules.
 
-- **Codex:** run `codex` in the repo. It reads `AGENTS.md` and discovers `.agents/skills/` on
+- **Codex:** run `codex` in the repo. It reads `AGENTS.md`, its subagents in `.codex/agents/`, and discovers `.agents/skills/` on
   its own.
-- **Gemini CLI:** run `gemini` in the repo. `.gemini/settings.json` points it at `AGENTS.md`
+- **Gemini CLI:** run `gemini` in the repo. It uses its subagents in `.gemini/agents/`; `.gemini/settings.json` points it at `AGENTS.md`
   instead of `GEMINI.md`, and `.geminiignore` hides the Claude Code files from it.
 
 Differences from Claude Code: there is no session-start hook, so the tutor runs
-`python dojo.py brief` itself on your first message. The agents in `.claude/agents/` are read
-and followed by the tutor directly if the tool cannot start subagents. Turn off any suggested
+`python dojo.py brief` itself on your first message. The three subagents (problem-setter,
+code-reviewer, progress-coach) exist for each tool, in its own folder and format, and say the
+same thing (the pre-push check compares them). Turn off any suggested
 replies or inline completions the tool offers, as Claude Code's are here.
 
 **Symlinks on Windows.** `.claude/skills` is a link to `.agents/skills`. If your Git checkout
