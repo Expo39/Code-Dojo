@@ -175,7 +175,9 @@ code-dojo/
   it: everything loads automatically. Do not install both in the same folder, or each skill
   appears twice.
 
-## Contributing exercises
+## Contributing
 
-`python dojo.py verify` checks that every stub fails and every reference solution passes. New
-exercises follow the format in [docs/TRACKS.md](docs/TRACKS.md).
+Changes come in as pull requests, reviewed by the owner before they are merged; see
+[CONTRIBUTING.md](CONTRIBUTING.md). `python dojo.py verify` checks that every stub fails and
+every reference solution passes; new exercises follow the format in
+[docs/TRACKS.md](docs/TRACKS.md).
