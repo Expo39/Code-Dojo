@@ -28,6 +28,14 @@ the learner did not write. Train to the bar, then move the track to maintenance.
 modules or milestones the goal does not need; a harder milestone in a track README is an option,
 not a duty. If the learner asks for more later, raise the bar then.
 
+**An interview (or exam) goal aims to do great, at that company's standard.** When the learner
+names the company or the exam, ask what is known of its standard: the format, the level of the
+problems, the topics and languages the role names, past questions. Set the bar from that, aiming
+to pass it comfortably, not just scrape through. If nothing is known, play safe: the track's
+interview-ready milestone (in Python, M2) plus every topic the role names. Record the standard
+and the bar in `progress/docs/INTERVIEW_PREP.md`; when the interview is over, the bar returns to
+the learner's everyday one.
+
 **Record the goal, not the tool.** "Robotics", "data work" or "web back ends" is the goal;
 ROS, pandas or a framework are tools inside it. A far-off goal stays a goal in the plan, and the
 branch within it (perception, control or learning-based robotics, say) and the tracks it needs

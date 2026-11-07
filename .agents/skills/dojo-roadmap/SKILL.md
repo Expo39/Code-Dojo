@@ -16,7 +16,9 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
    enough (the bar, in their words), the priority order, any date, the current level, the hours, constraints. One or two questions at a time;
    skip what the files already answer. Never assume a goal or its order.
 3. **Recommend**: for each track, its state, share, start condition (a gate, not a date) and the
-   bar that ends it (then maintenance); schedule only the modules that bar needs,
+   bar that ends it (then maintenance); schedule only the modules that bar needs (for an
+   interview or exam goal, the bar comes from the company's or exam's standard, or the safe side
+   when it is unknown: ROADMAP section 1),
    following the ordering rules (section 3). Give the reason for each in one line and the cost
    from the learner's own data (section 4). If the learner asked about one track ("when do I
    start ROS?"), answer that directly: what it needs first, how far they are from it, and what

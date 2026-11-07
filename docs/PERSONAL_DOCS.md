@@ -42,7 +42,9 @@ job, their estimates). When something written for one learner turns up in `docs/
 - **From**: the learner's goal and date (`profile.json` `target_date`, `PLAN.md`).
 - **Written by**: `dojo-roadmap` when an interview becomes a goal or gets a date; `dojo-mock`
   adds what each mock showed.
-- **Shape**: the role and what the interview format is known to be (ask); the run-up plan from
+- **Shape**: the company and role, what its standard is known to be (format, level, topics; ask)
+  and the bar set from it (`docs/ROADMAP.md`: do great at that standard; unknown means the safe
+  side); the run-up plan from
   `docs/INTERVIEW_PLAYBOOK.md` with real dates once a date exists; 3 stories about their work
   (problem, what they did, result, what they learned), written by the learner in their words;
   questions to ask the interviewer; the two habits the latest mock asked for.
