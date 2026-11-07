@@ -91,7 +91,7 @@ alongside; log those with `python dojo.py done <name> --minutes N --hints H --le
 
 ### Phase 3: Interview strength and polish
 
-Mixed mediums under time pressure, two mocks a week, practical problems (parse and aggregate,
+Mixed mediums under time pressure, frequent mocks (if interviews are a goal), practical problems (parse and aggregate,
 small class design, debugging an unfamiliar codebase), and explaining your projects. Python
 becomes the language you think in.
 
@@ -125,8 +125,10 @@ Mocks are logged with `python dojo.py log mock 60 --result pass` (or `fail` / `s
 - **Slow or hint-heavy on a pattern?** It shows under "Weak spots" in `today` and in the
   weekly report; the weekly review turns it into a `teach me` lesson plus redos before any new
   material.
-- **Faster than planned?** Skip ahead with the profile's `start_module`, or mark known material
-  with `python dojo.py mark <module> --box 2`. `/dojo-assess` does this properly.
+- **Faster than planned?** Skip ahead (`python dojo.py settings start_module=<module>`), or mark
+  known material with `python dojo.py mark <module> --box 2`. `/dojo-assess` does this properly.
+- **Training different hours than planned?** The weekly review suggests settings that match
+  what you really do, one yes-or-no question each.
 
 ## Engineer skills trained throughout
 
@@ -137,7 +139,7 @@ Not a phase: they run through every week.
 | Reading and understanding code | predict drills, `m10_reading_code`, review drills on AI-written code, reading real open-source and standard-library code |
 | Debugging | `m07`, `m08`, bug drills, always confirming a hypothesis in the debugger before fixing |
 | Testing | every exercise has tests; from Phase 2 you write the tests yourself (`m12`, projects) |
-| Communication | talk-aloud solving, explain drills, weekly mock interview, explaining your projects |
+| Communication | talk-aloud solving, explain drills, mock interviews (as often as your mode says), explaining your projects |
 | Working with AI critically | the tutor never writes your code; review drills train spotting plausible-but-wrong code; in projects you may use AI only to *explain*, then you verify |
 | Tools | terminal, git, a debugger, a virtual environment, pytest |
 

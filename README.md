@@ -127,6 +127,8 @@ code-dojo/
 │                            code-reviewer, progress-coach), skills -> ../.agents/skills
 ├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
 ├── .claude-plugin/          optional: the same skills and agents as a Claude Code plugin
+├── .github/                 CODEOWNERS (the owner reviews every change), pull request template
+├── CONTRIBUTING.md          how to propose tracks, exercises and fixes
 ├── .vscode/, .zed/          editor and debugger settings, AI completion off
 ├── docs/                    the method, sessions, tutor commands, setup (see below)
 ├── tracks/
