@@ -189,9 +189,41 @@ def weekly_target(profile: dict) -> int:
     return sum(int(profile["minutes"].get(day, 0)) for day in DAYS)
 
 
+NEXT_STEPS = """
+What happens next
+  Open the tutor in this folder (`claude`, `codex` or `gemini`) and say:  assess me
+  The tutor then:
+    - asks about your background and your goals (what, why, how far is enough, any date),
+      and imports notes or old logs you point it to;
+    - gives a short practical check to find your real starting point;
+    - writes your plan (progress/PLAN.md: roadmap, skill tree, milestones from your own pace),
+      your baseline, and your own docs (progress/docs/);
+    - starts the first session. From then on, just say hello at the start of each session.
+  Everything you need to say to it: docs/TUTOR.md. Without the tutor: python dojo.py help.
+"""
+
+
+def needs_install() -> bool:
+    py = find_venv_python()
+    if py is None:
+        return True
+    return subprocess.run([str(py), "-c", "import pytest"], capture_output=True).returncode != 0
+
+
 def cmd_setup(args) -> None:
+    """One command for a new learner: install if needed, ask (or take flags), check, explain."""
+    quiet = args.yes  # the tutor passes --yes with flags after asking the learner in chat
+
+    def value(flag, prompt: str, default: str) -> str:
+        if flag is not None:
+            return str(flag)
+        return default if quiet else ask(prompt, default)
+
+    if needs_install():
+        print("First run: creating .venv and installing pytest ...")
+        cmd_install(args)
     existing = read_json(PROFILE, None)
-    if existing and not args.fresh:
+    if existing and not args.fresh and not quiet:
         print(f"Profile found for '{existing.get('learner')}'.")
         if ask("Is this you? (y/n)", "y").lower().startswith("n"):
             print("Run `python dojo.py setup --fresh` to archive that progress and start clean.")
@@ -210,67 +242,75 @@ def cmd_setup(args) -> None:
     if existing:
         profile.update(existing)
 
-    print("\nCode Dojo setup. All of this can be changed later with `python dojo.py setup`.\n")
-    profile["learner"] = ask("Your name", profile["learner"] or os.environ.get("USER", os.environ.get("USERNAME", "")))
-    profile["goal"] = ask("Your goal in one line", profile["goal"])
-    print("\nWhy are you training? (It sets how much interview practice you get; change it any time.)")
-    for key, text in MODES.items():
-        print(f"  {key:10} {text}")
-    mode = ask("Mode", profile["mode"] or "hybrid").strip().lower()
-    profile["mode"] = mode if mode in MODES else profile["mode"]
-    print("\nWhat kind of programmer do you want to become? (It sets how far each goal goes.)")
-    for key, text in LEVELS.items():
-        print(f"  {key:10} {text}")
-    level = ask("Target level", profile["target_level"] or "junior").strip().lower()
-    profile["target_level"] = level if level in LEVELS else profile["target_level"]
-    profile["start_date"] = ask("Start date (YYYY-MM-DD)", profile["start_date"] or today().isoformat())
-    profile["target_date"] = ask("Target date, e.g. an interview (YYYY-MM-DD, empty for none)", profile["target_date"])
+    if not quiet:
+        print("\nCode Dojo setup: a few questions, then a check, then what to do next.")
+        print("Everything can be changed later (run this again, or tell the tutor).\n")
+    profile["learner"] = value(args.name, "Your name",
+                               profile["learner"] or os.environ.get("USER", os.environ.get("USERNAME", "")))
+    profile["goal"] = value(args.goal, "Your goal in one line (the tutor refines it with you)", profile["goal"])
+    if not quiet:
+        print("\nWhy are you training? (It sets how much interview practice you get.)")
+        for key, text in MODES.items():
+            print(f"  {key:10} {text}")
+    mode = value(args.mode, "Mode", profile["mode"] or "hybrid").strip().lower()
+    profile["mode"] = mode if mode in MODES else (profile["mode"] or "hybrid")
+    if not quiet:
+        print("\nWhat kind of programmer do you want to become? (It sets how far each goal goes.)")
+        for key, text in LEVELS.items():
+            print(f"  {key:10} {text}")
+    level = value(args.target_level, "Target level", profile["target_level"] or "junior").strip().lower()
+    profile["target_level"] = level if level in LEVELS else (profile["target_level"] or "junior")
+    profile["start_date"] = value(args.start_date, "Start date (YYYY-MM-DD)",
+                                  profile["start_date"] or today().isoformat())
+    profile["target_date"] = value(args.target_date, "Target date, e.g. an interview (YYYY-MM-DD, empty for none)",
+                                   profile["target_date"])
 
-    print("\nHow many minutes can you train on each day? 0 = rest day.")
-    print("Tip: enter one number for every day (e.g. 180), then adjust single days.")
-    same = ask("Minutes for every day (empty to set day by day)", "")
     minutes = dict(profile["minutes"])
-    if same:
-        minutes = {day: int(same) for day in DAYS}
-        rest = ask("Rest days, comma separated (e.g. sun or sat,sun; empty for none)", "sun")
-        for day in [r.strip().lower()[:3] for r in rest.split(",") if r.strip()]:
-            if day in minutes:
-                minutes[day] = 0
+    if args.minutes is not None or quiet:
+        if args.minutes is not None:
+            minutes = {day: int(args.minutes) for day in DAYS}
+            for day in [r.strip().lower()[:3] for r in (args.rest or "").split(",") if r.strip()]:
+                if day in minutes:
+                    minutes[day] = 0
     else:
-        for day in DAYS:
-            minutes[day] = int(ask(f"  {day}", str(minutes.get(day, 0))))
+        print("\nHow many minutes can you train on each day? 0 = rest day.")
+        print("Tip: enter one number for every day (e.g. 60), then adjust single days.")
+        same = ask("Minutes for every day (empty to set day by day)", "")
+        if same:
+            minutes = {day: int(same) for day in DAYS}
+            rest = ask("Rest days, comma separated (e.g. sun or sat,sun; empty for none)", "sun")
+            for day in [r.strip().lower()[:3] for r in rest.split(",") if r.strip()]:
+                if day in minutes:
+                    minutes[day] = 0
+        else:
+            for day in DAYS:
+                minutes[day] = int(ask(f"  {day}", str(minutes.get(day, 0))))
     profile["minutes"] = minutes
-    flex = ask("Flexible rest day? Training on a rest day counts towards the week (y/n)",
-               "y" if profile["flexible_rest_day"] else "n")
+    flex = value(args.flexible, "Flexible rest day? Training on a rest day counts towards the week (y/n)",
+                 "y" if profile["flexible_rest_day"] else "n")
     profile["flexible_rest_day"] = flex.lower().startswith("y")
 
     available = load_tracks(active_only=False)
-    print("\nTracks available: " + ", ".join(f"{k} ({v['name']})" for k, v in available.items()))
-    chosen = ask("Tracks to follow, comma separated (empty = all)", ",".join(profile["tracks"]))
+    if not quiet:
+        print("\nTracks available: " + ", ".join(f"{k} ({v['name']})" for k, v in available.items()))
+        print("(Several tracks, or one you want that is not here yet? The tutor plans that with you.)")
+    chosen = value(args.tracks, "Tracks to follow, comma separated (empty = all)", ",".join(profile["tracks"]))
     profile["tracks"] = [t.strip() for t in chosen.split(",") if t.strip() in available]
-    if len(profile["tracks"]) > 1:
+    if len(profile["tracks"]) > 1 and not quiet:
         print("\nSeveral tracks: how should new-material time be shared? Percent per track,")
-        print("summing to 100; 0 = redos only (maintenance). The tutor can plan this with you:")
-        print("say `plan my learning` (docs/ROADMAP.md).")
+        print("summing to 100; 0 = redos only (maintenance). The tutor can plan this with you.")
         current = effective_mix(profile)
         mix = {t: int(ask(f"  {t} %", str(current.get(t, 0)))) for t in profile["tracks"]}
         if sum(mix.values()) == 100:
             profile["mix"] = mix
         else:
             print("  Not 100 in total: kept the previous mix. Change it later with `dojo.py mix`.")
-    write_json(PROFILE, profile)
-
-    print("\nWhere are you now? (The tutor can refine this: run /dojo-assess in Claude Code.)")
-    print("  beginner     = new to writing code by hand")
-    print("  intermediate = can write small programs, slow or needs hints")
-    print("  advanced     = fluent in Python basics, here for patterns and interviews")
-    profile["level"] = ask("Level", profile["level"])
-    modules = sorted({ex["module"] for ex in discover().values()})
-    print("Modules: " + ", ".join(modules))
-    profile["start_module"] = ask("Start at module (empty = the first)", profile["start_module"])
-    skip = ask("Modules you already know well, comma separated (empty for none)",
-               ",".join(profile["skip_modules"]))
-    profile["skip_modules"] = [m.strip() for m in skip.split(",") if m.strip()]
+    if not quiet:
+        print("\nWhere are you now? The tutor's placement (`assess me`) checks this properly.")
+        print("  beginner     = new to writing code by hand")
+        print("  intermediate = can write small programs, slow or needs hints")
+        print("  advanced     = fluent in the basics, here for patterns and interviews")
+    profile["level"] = value(args.level, "Level", profile["level"])
 
     PROGRESS.mkdir(exist_ok=True)
     WORKSPACE.mkdir(exist_ok=True)
@@ -278,8 +318,9 @@ def cmd_setup(args) -> None:
     ensure_files()
     total = weekly_target(profile)
     print(f"\nSaved. Weekly target: {fmt_min(total)} over "
-          f"{sum(1 for d in DAYS if minutes[d] > 0)} days.")
-    print("Next: `python dojo.py doctor` to check the setup, then `python dojo.py today`.")
+          f"{sum(1 for d in DAYS if minutes[d] > 0)} days.\n")
+    cmd_doctor(args)
+    print(NEXT_STEPS)
 
 
 def ensure_files() -> None:
@@ -569,7 +610,7 @@ def cmd_install(args) -> None:
     result = subprocess.run([py, "-m", "pip", "install", "-q", "-r", str(ROOT / "requirements.txt")])
     if result.returncode != 0:
         die("pip failed; see the messages above.")
-    print("Done. Next: python dojo.py setup")
+    print("Install done.")
 
 
 def cmd_export(args) -> None:
@@ -1127,7 +1168,8 @@ def cmd_mix(args) -> None:
 def cmd_today(args, brief: bool = False) -> None:
     profile = load_profile(required=not brief)
     if not PROFILE.exists():
-        print("[dojo] No profile yet: ask the learner to run `python dojo.py setup`.")
+        print("[dojo] New learner, no profile yet: offer to set them up in chat (dojo-assess, step 0),\n"
+              "or they run `python dojo.py setup` in a terminal.")
         return
     rows = read_log()
     on = today()
@@ -1496,10 +1538,13 @@ def cmd_migrate(args) -> None:
         print("Workspace already in the per-module layout.")
 
 
-HELP = """Code Dojo commands (python dojo.py <command>):
+HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.py setup
 
-  install                  create .venv and install pytest (any OS)
-  setup [--fresh]          create or edit your profile (mode, target level, time per day, rest days)
+  setup [--fresh]          START HERE: installs if needed, asks your mode, target level, time per
+                           day, tracks and level, checks everything, then says what the tutor does next
+                           (--yes with --name, --mode, --target-level, --minutes, --rest, --tracks, ...:
+                           no questions; the tutor uses this after asking you in chat)
+  install                  create .venv and install pytest (setup does this for you)
   doctor                   check Python, venv, pytest and profile
   today                    today's plan: time, week balance, redo queue, next exercises
   list [module]            all exercises with their status
@@ -1540,6 +1585,11 @@ def main() -> None:
     sub = parser.add_subparsers(dest="cmd")
 
     p = sub.add_parser("setup"); p.add_argument("--fresh", action="store_true")
+    p.add_argument("--yes", action="store_true", help="no questions: flags, else current or default values")
+    for flag in ("--name", "--goal", "--mode", "--target-level", "--level", "--start-date",
+                 "--target-date", "--rest", "--flexible", "--tracks"):
+        p.add_argument(flag)
+    p.add_argument("--minutes", type=int)
     sub.add_parser("install")
     sub.add_parser("doctor")
     sub.add_parser("today")
