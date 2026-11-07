@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import re
@@ -31,6 +32,8 @@ TIMER = PROGRESS / "timer.json"
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
+SEEN = PROGRESS / "tracks_seen.json"  # exercise -> content hash the learner has already been asked about
+UPSTREAM_CHECK = PROGRESS / "upstream_check.json"
 PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
@@ -75,6 +78,7 @@ DEFAULT_PROFILE = {
     "level": "beginner",
     "start_module": "",
     "skip_modules": [],
+    "skip_exercises": [],
     "tracks": [],
     # Share of new-material time per track (percent). 0 = maintenance: redos only, no new
     # material. Empty = the active tracks share equally. Set with `dojo.py mix`.
@@ -245,6 +249,7 @@ SETTINGS = {
     "tracks": ("list", None, "tracks you follow"),
     "start_module": ("text", None, "first module offered as new material"),
     "skip_modules": ("list", None, "modules not offered as new material"),
+    "skip_exercises": ("list", None, "single exercises not offered as new material"),
     "export_target": ("text", None, "where `export` sends backups"),
 }
 
@@ -343,8 +348,15 @@ def cmd_settings(args) -> None:
         for change in args.changes:
             key, sep, raw = change.partition("=")
             if not sep:
-                die(f"Use key=value (got '{change}').")
-            set_setting(profile, key.strip(), raw)
+                die(f"Use key=value, or key+=value to add to a list (got '{change}').")
+            key = key.strip()
+            if key.endswith("+"):  # key+=a,b adds to a list setting instead of replacing it
+                key = key[:-1].strip()
+                if SETTINGS.get(key, ("",))[0] != "list":
+                    die(f"+= works only for list settings ({', '.join(k for k, v in SETTINGS.items() if v[0] == 'list')}).")
+                raw = ",".join(list(profile.get(key, [])) + [x for x in raw.split(",") if x.strip()
+                                                             and x.strip() not in profile.get(key, [])])
+            set_setting(profile, key, raw)
         write_json(PROFILE, profile)
         for k in SETTINGS:
             after = show_value(profile, k)
@@ -1249,10 +1261,139 @@ def recent_stats(rows: list[dict], days: int, on: date) -> dict:
     return out
 
 
+def exercise_hash(ex: dict) -> str:
+    """What the learner sees and is tested on: task, tests and clarify answers."""
+    h = hashlib.sha256()
+    for path in (ex["stub"], ex["test"], ex["clarify"]):
+        h.update(path.read_bytes() if path.exists() else b"")
+    return h.hexdigest()[:16]
+
+
+def track_changes() -> dict:
+    """New, changed and removed exercises in the learner's tracks since they were last asked.
+    The first run records everything as seen, so a new learner is not asked about every exercise."""
+    current = {slug: exercise_hash(ex) for slug, ex in discover().items()}
+    if not SEEN.exists():
+        if PROFILE.exists():
+            write_json(SEEN, current)
+        return {"new": [], "changed": [], "removed": []}
+    seen = read_json(SEEN, {})
+    return {"new": [s for s in current if s not in seen],
+            "changed": [s for s in current if s in seen and seen[s] != current[s]],
+            "removed": [s for s in seen if s not in current]}
+
+
+def acknowledge_changes(slugs: list[str] | None = None) -> None:
+    current = {slug: exercise_hash(ex) for slug, ex in discover().items()}
+    seen = read_json(SEEN, {})
+    reviews = read_json(REVIEWS, {})
+    for slug in (slugs or list(current) + list(seen)):
+        if slug in current:
+            seen[slug] = current[slug]
+        else:
+            seen.pop(slug, None)
+            reviews.pop(slug, None)  # the exercise is gone; its history stays in the log
+    write_json(SEEN, seen)
+    write_json(REVIEWS, reviews)
+
+
+def changes_lines(changes: dict) -> list[str]:
+    exercises = discover()
+    lines = []
+    for kind in ("new", "changed", "removed"):
+        if not changes[kind]:
+            continue
+        if kind == "removed":
+            lines.append(f"{len(changes[kind])} removed: {', '.join(changes[kind])} "
+                         "(recording them as seen drops them from the redo schedule)")
+            continue
+        by_module: dict[str, list[str]] = {}
+        for slug in changes[kind]:
+            module = f"{exercises[slug]['track']}/{exercises[slug]['module']}" if slug in exercises else "?"
+            by_module.setdefault(module, []).append(slug)
+        lines.append(f"{len(changes[kind])} {kind}: " + "; ".join(
+            f"{m} ({', '.join(sl)})" for m, sl in by_module.items()))
+    return lines
+
+
+def upstream_remote() -> str:
+    names = subprocess.run(["git", "-C", str(ROOT), "remote"], capture_output=True, text=True).stdout.split()
+    return "upstream" if "upstream" in names else ("origin" if "origin" in names else "")
+
+
+def upstream_behind(fetch: bool) -> int | None:
+    """Commits on the shared repo's main branch that this copy does not have (None = unknown)."""
+    remote = upstream_remote()
+    if not remote:
+        return None
+    if fetch:
+        try:
+            subprocess.run(["git", "-C", str(ROOT), "fetch", "--quiet", remote],
+                           capture_output=True, timeout=8)
+        except (subprocess.TimeoutExpired, OSError):
+            return None
+    branch = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--abbrev-ref", f"{remote}/HEAD"],
+                            capture_output=True, text=True).stdout.strip() or f"{remote}/main"
+    out = subprocess.run(["git", "-C", str(ROOT), "rev-list", "--count", f"HEAD..{branch}"],
+                         capture_output=True, text=True)
+    return int(out.stdout.strip()) if out.returncode == 0 and out.stdout.strip().isdigit() else None
+
+
+def daily_upstream_check() -> int | None:
+    """At most one network check a day, so session start stays fast."""
+    state = read_json(UPSTREAM_CHECK, {})
+    if state.get("date") == today().isoformat():
+        return state.get("behind")
+    behind = upstream_behind(fetch=True)
+    if PROGRESS.exists():
+        write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": behind})
+    return behind
+
+
+def cmd_changes(args) -> None:
+    """Show track changes since the learner was last asked; --ack records them as seen."""
+    load_profile()
+    if args.ack is not None:
+        acknowledge_changes(args.ack or None)
+        print("Recorded as seen" + (f": {', '.join(args.ack)}." if args.ack else ": all current changes."))
+        return
+    lines = changes_lines(track_changes())
+    if not lines:
+        print("No track changes since you were last asked.")
+        return
+    print("Track changes since you were last asked:")
+    for line in lines:
+        print("  " + line)
+    print("For each new or changed exercise: learn it (nothing to do), already know it "
+          "(`mark <slug> --box 3`), or not for me (`settings skip_exercises+=<slug>`, or skip_modules+=<module>).")
+    print("Then: python dojo.py changes --ack [slugs]")
+
+
+def cmd_update(args) -> None:
+    """Pull the shared repo's latest tracks and docs, then show what changed in your tracks."""
+    remote = upstream_remote()
+    if not remote:
+        die("No git remote found: this copy cannot be updated with git.")
+    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=no"],
+                           capture_output=True, text=True).stdout.strip()
+    if dirty:
+        die("You have local changes to shared files (git status shows them). Commit or stash them, "
+            "then run update again.")
+    result = subprocess.run(["git", "-C", str(ROOT), "pull", "--ff-only", remote,
+                             subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--abbrev-ref", "HEAD"],
+                                            capture_output=True, text=True).stdout.strip()])
+    if result.returncode != 0:
+        die("The update could not be applied automatically (see the git message above).")
+    write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": 0})
+    cmd_changes(argparse.Namespace(ack=None))
+
+
 def in_scope(ex: dict, profile: dict) -> bool:
     """False for modules the learner skipped or that come before their start module."""
     module = ex["module"]
     if any(module.startswith(s) for s in profile.get("skip_modules", [])):
+        return False
+    if ex["slug"] in profile.get("skip_exercises", []):
         return False
     start = profile.get("start_module", "")
     return not start or module >= start
@@ -1383,6 +1524,14 @@ def cmd_today(args, brief: bool = False) -> None:
     if weak:
         lines.append("Weak spots (last 14 days): " + ", ".join(
             f"{p} ({s['ratio']:.1f}x, {s['hints']:.1f} hints)" for p, s in weak[:5]) + ".")
+    changes = changes_lines(track_changes())
+    if changes:
+        lines.append("Track changes to ask about (learn it / already know it / not for me): "
+                     + " | ".join(changes) + ". Details: `python dojo.py changes`.")
+    behind = daily_upstream_check() if brief else upstream_behind(fetch=False)
+    if behind:
+        lines.append(f"Updates on the shared repo: {behind} new commit(s). Say `update` "
+                     "or run `python dojo.py update`.")
     if brief:
         print("[dojo status, from `python dojo.py brief`]")
     print("\n".join(lines))
@@ -1712,8 +1861,12 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates (and time by track)
+  update                   pull the shared repo's latest tracks and docs, then show what changed
+  changes [--ack [slugs]]  new, changed or removed exercises since you were last asked;
+                           --ack records them as seen (all, or the slugs given)
   settings [key=value ...] show every setting, or change any (minutes=mon=60,sat=0, mode=hobby,
-                           skip_modules=m08,m09, ...); --review suggests changes from your log
+                           skip_modules=m08,m09, ...; key+=value adds to a list);
+                           --review suggests changes from your log
   mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
                            no arguments shows the current mix
   sync                     find work done without logging it
@@ -1782,6 +1935,8 @@ def main() -> None:
     p = sub.add_parser("drive-setup"); p.add_argument("--remote", default="gdrive"); p.add_argument("--folder", default="CodeDojo")
     p = sub.add_parser("import"); p.add_argument("archive"); p.add_argument("--force", action="store_true")
     sub.add_parser("stats")
+    p = sub.add_parser("changes"); p.add_argument("--ack", nargs="*")
+    sub.add_parser("update")
     p = sub.add_parser("settings"); p.add_argument("changes", nargs="*"); p.add_argument("--review", action="store_true")
     p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")
     sub.add_parser("sync")
@@ -1794,7 +1949,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
