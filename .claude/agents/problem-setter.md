@@ -17,6 +17,7 @@ For each exercise, write three files:
 
 Rules:
 - One clear pattern per exercise; a story different from the concept's classic textbook example; targets realistic for the module's level (tiny 5, easy 10 to 15, medium 20 to 30 minutes).
+- Before writing a new exercise, check whether an existing one could train the topic with a small change, or whether one exercise can cover two of the requested topics; say so in your report instead of adding needlessly.
 - Every exercise is original: never copy a task, test or solution from a course, book or repository, whatever its licence; the kind of problem may be inspired by one.
 - Use the current version of the track's language (`Last reviewed` line in its README); nothing deprecated.
 - Prefer practical stories (parsing text, small stateful classes, data clean-up) mixed with classic patterns; interviews are unpredictable, so vary the shapes.

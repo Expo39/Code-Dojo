@@ -1352,10 +1352,19 @@ def topic_changes() -> dict:
     seen = read_json(TOPICS_SEEN, {})
     profile = read_json(PROFILE, {})
     out = {}
-    for module, topics in current.items():
-        new = [t for t in topics if t not in seen.get(module, [])]
-        if new and not skipped_module(module, profile):
-            out[module] = new
+    for module in sorted(set(current) | set(seen)):
+        if skipped_module(module, profile):
+            continue
+        new = [t for t in current.get(module, []) if t not in seen.get(module, [])]
+        gone = [t for t in seen.get(module, []) if t not in current.get(module, [])]
+        # "default arguments" -> "default and keyword arguments" is a rewording, not a removal
+        reworded = [(g, n) for g in gone for n in new
+                    if all(w in n.lower() for w in g.lower().split())]
+        new = [n for n in new if n not in {r[1] for r in reworded}] + \
+              [f"{n} (was: {g})" for g, n in reworded if n != g and any(w not in g.lower() for w in n.lower().split())]
+        gone = [g for g in gone if g not in {r[0] for r in reworded}]
+        if new or gone:
+            out[module] = {"new": new, "removed": gone}
     return out
 
 
@@ -1396,15 +1405,17 @@ def acknowledge_changes(slugs: list[str] | None = None) -> None:
 def changes_lines(changes: dict) -> list[str]:
     exercises = discover()
     lines = []
-    if changes.get("topics"):
-        lines.append("new lesson topics: " + "; ".join(
-            f"{m} ({', '.join(t)})" for m, t in changes["topics"].items()))
+    topics = changes.get("topics", {})
+    for kind in ("new", "removed"):
+        parts = [f"{m} ({', '.join(t[kind])})" for m, t in topics.items() if t[kind]]
+        if parts:
+            lines.append(f"{kind} lesson topics: " + "; ".join(parts))
     for kind in ("new", "changed", "removed"):
         if not changes[kind]:
             continue
         if kind == "removed":
-            lines.append(f"{len(changes[kind])} removed: {', '.join(changes[kind])} "
-                         "(recording them as seen drops them from the redo schedule)")
+            lines.append(f"{len(changes[kind])} removed exercise(s): {', '.join(changes[kind])} "
+                         "(recording them as seen drops them from your redo schedule)")
             continue
         by_module: dict[str, list[str]] = {}
         for slug in changes[kind]:
@@ -1465,8 +1476,10 @@ def cmd_changes(args) -> None:
         print("  " + line)
     print("For each new or changed exercise: learn it (nothing to do), already know it "
           "(`mark <slug> --box 3`), or not for me (`settings skip_exercises+=<slug>`, or skip_modules+=<module>).")
+    print("For a changed exercise: redo the new version (nothing to do), already know it "
+          "(`mark <slug> --box 3`), or leave it out (`settings skip_exercises+=<slug>`).")
     print("For new lesson topics: learn it (`teach me <topic>`, now or when that module comes up), "
-          "already know it, or not for me.")
+          "already know it, or not for me. Removed exercises and topics: tell the learner, then acknowledge.")
     print("Then: python dojo.py changes --ack [slugs]")
 
 
