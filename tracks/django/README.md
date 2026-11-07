@@ -1,5 +1,8 @@
 # Django (placeholder track)
 
+Last reviewed: not yet (placeholder). Before building it, research current courses and versions
+with `dojo-new-track`.
+
 Not built yet, and not part of any plan unless a learner chooses it in their roadmap
 (`docs/ROADMAP.md`). When a plan reaches it, the tutor writes `track.json` (`docs/TRACKS.md`)
 and generates the first module only. A learner who already has Django material (notes, small

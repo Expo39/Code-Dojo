@@ -1,6 +1,6 @@
 # PRIMM lessons: m06_classes
 
-Concepts in this module that a `teach me` lesson can cover: state, custom exceptions, dunder methods, dataclasses, inheritance.
+Concepts in this module that a `teach me` lesson can cover: state, properties, class attributes, custom exceptions, dunder methods, dataclasses, inheritance and composition.
 
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of

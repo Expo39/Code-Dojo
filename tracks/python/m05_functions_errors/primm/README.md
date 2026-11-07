@@ -1,6 +1,6 @@
 # PRIMM lessons: m05_functions_errors
 
-Concepts in this module that a `teach me` lesson can cover: sort keys, try/except, raising, default arguments, closures, higher-order functions.
+Concepts in this module that a `teach me` lesson can cover: sort keys, lambda, try/except, raising, default and keyword arguments, `*args`/`**kwargs`, type hints and docstrings, closures, higher-order functions.
 
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of

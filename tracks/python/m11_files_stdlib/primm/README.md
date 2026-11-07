@@ -1,6 +1,6 @@
 # PRIMM lessons: m11_files_stdlib
 
-Concepts in this module that a `teach me` lesson can cover: files, pathlib, json, datetime, collections.
+Concepts in this module that a `teach me` lesson can cover: files, pathlib, json, datetime, collections, random, your own modules and `__main__`, command-line arguments (argparse).
 
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of

@@ -1,5 +1,8 @@
 # Python track
 
+Last reviewed: 7 November 2026, against Python 3.15 (exercises run on 3.10 or newer), with the
+courses and repositories under "Resources for this track".
+
 Python fundamentals, reading and debugging code, then data structures and algorithms, with
 projects and interview practice throughout. One of the tracks a learner can choose; nothing
 here is compulsory. A learner's own goals and dates live in their `progress/PLAN.md`.
@@ -52,17 +55,17 @@ is done (`python dojo.py stats`).
 
 | Module | Focus | Status |
 | --- | --- | --- |
-| m01_foundations | loops, conditions, accumulators, best-so-far, range, enumerate, return | seeded |
+| m01_foundations | loops, conditions (including `match`), accumulators, best-so-far, range, enumerate, return, floats and rounding | seeded |
 | m02_strings_lists | slicing, split/join, zip, comprehensions, runs | seeded |
 | m03_dicts_sets | counting, grouping, seen-sets, set operations | seeded |
-| m04_parsing | text to records, logs, config, CSV, parse-then-act | seeded |
-| m05_functions_errors | sort keys, try/except, raising, default arguments, closures, higher-order functions | seeded |
-| m06_classes | state, custom exceptions, dunder methods, dataclasses, inheritance | seeded |
+| m04_parsing | text to records, logs, config, CSV, parse-then-act, regular expressions basics | seeded |
+| m05_functions_errors | sort keys, lambda, try/except, raising, default and keyword arguments, `*args`/`**kwargs`, type hints and docstrings, closures, higher-order functions | seeded |
+| m06_classes | state, properties, class attributes, custom exceptions, dunder methods, dataclasses, inheritance and composition | seeded |
 | m07_debugging | classic logic bugs, found with the debugger | seeded |
 | m08_python_model | names vs objects, mutability, aliasing, copies, scope, late binding | seeded |
 | m09_iterators_decorators | generators, decorators, context managers, recursion | seeded |
 | m10_reading_code | tracing by hand, predicting output | seeded |
-| m11_files_stdlib | files, pathlib, json, datetime, collections | seeded |
+| m11_files_stdlib | files, pathlib, json, datetime, collections, random, your own modules and `__main__`, command-line arguments (argparse) | seeded |
 | m12_testing | writing your own tests: pytest, parametrize, raises, fixtures, edge cases | planned |
 | Projects | P1 word-stats CLI, P2 todo app with JSON storage, P3 log analyser | `tracks/python/projects` |
 
@@ -75,7 +78,7 @@ is done (`python dojo.py stats`).
 | m23_sliding_window | fixed and variable windows | seeded |
 | m24_stacks_queues | stack, queue, deque, monotonic stack | seeded |
 | m25_binary_search | on arrays and on the answer | seeded |
-| m26_recursion_backtracking | subsets, permutations, combinations | planned |
+| m26_recursion_backtracking | recursion, merge sort, subsets, permutations, combinations | planned |
 | m27_linked_lists | node classes, reversal, fast and slow pointers | planned |
 | m28_trees | traversals, BST, depth, level order | planned |
 | m29_graphs | grids, BFS, DFS, topological sort | planned |
@@ -157,3 +160,16 @@ Not a phase: they run through every week.
 | Interview problems | LeetCode Top Interview 150: https://leetcode.com/studyplan/top-interview-150/ |
 | Practising out loud with a person | Pramp or interviewing.io, or a friend reading you a problem |
 | Testing | pytest docs, "Get started" and "How to parametrize": https://docs.pytest.org/ |
+
+Free courses and repositories this track's structure draws on (checked 7 November 2026). The
+dojo's exercises are original; these shaped the topic order and the kinds of examples.
+
+| Source | Used for | Why it is trusted |
+| --- | --- | --- |
+| Harvard CS50P: https://cs50.harvard.edu/python/ | order of the fundamentals; regular expressions, libraries, unit tests early, type hints | university course, current, real-world problem sets |
+| University of Helsinki, Python Programming MOOC: https://programming-25.mooc.fi/ | the most exercise-heavy path; references, scope, classes, encapsulation, comprehensions, recursion | university course, 250+ auto-checked exercises, updated yearly |
+| MIT 6.100L: https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/ | mutability and aliasing, floats, testing and debugging, complexity, searching and sorting | university course with full lectures and problem sets |
+| Stanford CS106A syllabus: https://web.stanford.edu/class/cs106a/ | decomposition, text and file processing | university course (public syllabus) |
+| Exercism Python: https://exercism.org/tracks/python | idiomatic small exercises with mentoring | active, MIT licence, maintained by Python practitioners |
+| TheAlgorithms/Python: https://github.com/TheAlgorithms/Python | reference implementations for Phase 2 | very widely used, MIT licence, active (reference, not a course) |
+| practical-tutorials/project-based-learning: https://github.com/practical-tutorials/project-based-learning | project ideas | the most-starred learning list, MIT licence, active |
