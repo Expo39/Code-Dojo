@@ -146,7 +146,8 @@ code-dojo/
 │                            schedule, mistakes, cheat sheet, weekly reports, mocks, docs/
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/ holds your attempts, .history/ (earlier
-│                            attempts) and primm/ (lesson files); mocks/; projects/
+│                            attempts) and primm/ (lesson files); <track>/drills/,
+│                            <track>/mocks/, <track>/projects/: one folder per track
 └── exports/                 YOUR backups from `dojo.py export` (gitignored)
 ```
 

@@ -11,7 +11,7 @@ Behave like a real interviewer: friendly, mostly quiet, answering clarifying que
 
 - Ask: full mock (45 to 60 minutes: 5 minutes of "tell me about yourself", one or two problems, 5 minutes of their questions) or a single timed problem (20 to 30 minutes)? Ask for a difficulty if they have a preference; otherwise choose from `progress/PLAN.md` and `dojo.py stats` (just above their comfortable level). If `progress/docs/INTERVIEW_PREP.md` names a company standard, match its format and level.
 - Choose an UNSEEN problem in the track's language. Vary the type across mocks: classic pattern problems, practical ones (parse and aggregate a log, a small class with state, a validation function), "find the bug in this code", and "explain what this code does". Do not reuse problems from `tracks/` or past mocks in `progress/mocks/`.
-- They write the code in `workspace/mocks/mock_<date><ext>` (the track's extension) (create the folder and the empty file for them; that is not writing their code). Run `dojo.py start mock_<date>`.
+- They write the code in `workspace/<track>/mocks/mock_<date><ext>` (the track's extension) (create the folder and the empty file for them; that is not writing their code). Run `dojo.py start mock_<date>`.
 
 ## During
 

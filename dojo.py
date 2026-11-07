@@ -1972,13 +1972,15 @@ def cmd_primm(args) -> None:
             print(f"Lesson timer started. End it with: python dojo.py done {key}")
 
 
+TRACK_SIDE_FOLDERS = ("drills", "mocks")  # workspace/<track>/drills/, workspace/<track>/mocks/
 HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
 
 
 def migrate_workspace(verbose: bool = True) -> int:
     """Move files from the old flat layout into workspace/<track>/<module>/. Idempotent.
 
-    Old layout: workspace/<track>/<slug>.<ext> and workspace/.history/<slug>_<stamp>.<ext>.
+    Old layout: workspace/<track>/<slug>.<ext>, workspace/.history/<slug>_<stamp>.<ext>, and
+    workspace/drills/ and workspace/mocks/ (now workspace/<track>/drills/ and .../mocks/).
     Loose files that are not exercises go to workspace/<track>/scratch/. Nothing is
     overwritten: a name clash is reported and left in place.
     """
@@ -1999,6 +2001,23 @@ def migrate_workspace(verbose: bool = True) -> int:
         cache = folder / "__pycache__"
         if cache.is_dir():
             shutil.rmtree(cache)
+    # drills/ and mocks/ used to sit at the workspace root; they belong to the track whose
+    # extension the file has (left in place when no single active track matches)
+    active = load_tracks(active_only=True)
+    for kind in TRACK_SIDE_FOLDERS:
+        old = WORKSPACE / kind
+        if not old.is_dir():
+            continue
+        for path in sorted(p for p in old.iterdir() if p.is_file()):
+            owners = [t for t, s in active.items() if s["extension"] == path.suffix]
+            if len(owners) == 1:
+                moves.append((path, WORKSPACE / owners[0] / kind / path.name))
+            else:
+                print(f"  migrate: kept {path.relative_to(ROOT).as_posix()} "
+                      f"(no single active track uses {path.suffix or 'no extension'})")
+        cache = old / "__pycache__"
+        if cache.is_dir():
+            shutil.rmtree(cache)
     old_history = WORKSPACE / HISTORY_DIR
     if old_history.is_dir():
         for path in sorted(p for p in old_history.iterdir() if p.is_file()):
@@ -2017,8 +2036,9 @@ def migrate_workspace(verbose: bool = True) -> int:
         moved += 1
         if verbose:
             print(f"  moved {src.relative_to(ROOT).as_posix()} -> {dest.relative_to(ROOT).as_posix()}")
-    if old_history.is_dir() and not any(old_history.iterdir()):
-        old_history.rmdir()
+    for old in [old_history] + [WORKSPACE / kind for kind in TRACK_SIDE_FOLDERS]:
+        if old.is_dir() and not any(old.iterdir()):
+            old.rmdir()
     if moved:
         print(f"Workspace reorganised by module: {moved} file(s) moved.")
     return moved

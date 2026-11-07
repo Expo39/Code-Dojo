@@ -13,7 +13,7 @@ Rules:
 - Write tests for the core logic (from P2 onwards), and a short README explaining how to run it.
 - Log the time: `python dojo.py log project 60 P2 --note "added persistence"`.
 
-Code lives in `workspace/projects/<name>/` (personal, gitignored) or in your own repository.
+Code lives in `workspace/python/projects/<name>/` (personal, gitignored) or in your own repository.
 
 | # | Project | When | Skills |
 | --- | --- | --- | --- |

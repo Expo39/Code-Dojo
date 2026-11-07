@@ -48,7 +48,7 @@ dictated code does not count as typing it yourself.
 | --- | --- |
 | `predict drill` | "What does this print?", three in a row |
 | `trace drill` | Fill in a trace table of variables, iteration by iteration |
-| `bug drill` | A new buggy function and a failing test in `workspace/drills/`; find it with the debugger |
+| `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/`; find it with the debugger |
 | `review drill` | Code (often "written by an AI") with several problems: find them all |
 | `explain drill` | Solve without code in five steps, scored |
 | `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
