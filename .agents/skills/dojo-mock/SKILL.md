@@ -39,5 +39,5 @@ Result: `strong` (mostly 4s), `pass` (no score below 3 and the problem solved), 
 ## Log
 
 - `dojo.py done mock_<date> --kind mock --result <strong|pass|fail> --hints N --target <planned minutes> --level <level> --pattern <pattern> --no-review --note "<one line>"`. The fluency gate in `stats` reads these results.
-- Write `progress/mocks/<date>.md`: the problem, their final code (copied from their file), the scores with examples, the 2 habits to work on, and a similar problem to practise.
+- Write `progress/mocks/<date>.md`: the problem, their final code (copied from their file), the scores with examples, the 2 habits to work on, and a similar problem to practise. If `progress/docs/INTERVIEW_PREP.md` exists, update its "habits from the latest mock" line.
 - Log mistakes with `dojo.py mistake`. If it went badly, offer the similar problem as a `dojo-new-exercise` so it enters the redo queue.

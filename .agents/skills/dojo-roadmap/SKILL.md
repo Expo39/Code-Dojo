@@ -25,6 +25,8 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
    - `progress/PLAN.md`: the Roadmap table (track, state, share, start condition, why) and a dated
      line under Plan changes with the reason; update Current focus if it changes now. Ring 3 and
      milestone estimates stay consistent with the table.
+   - `progress/docs/` (spec: `docs/PERSONAL_DOCS.md`): update `WEEK.md` when the mix or the hours
+     change; create or update `INTERVIEW_PREP.md` when an interview is a goal or gets a date.
    - `dojo.py mix <track>=N ...` (shares sum to 100, 0 = maintenance) and `--priority "<text>"`
      for a dated or stated override (`--priority ""` clears it). Add the track to the profile if
      needed (`mix` does it).

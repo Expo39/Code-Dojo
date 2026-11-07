@@ -30,6 +30,9 @@ On a re-assessment, use `dojo.py stats` and the last 4 weekly reports instead of
 ## 4. Write the files
 
 - `progress/BASELINE.md`: background, the evidence (tables of timings and hints where available), a diagnosis (recurring mistakes as "theme / example / habit to build"), strengths, placement. On a re-assessment, add a row to its "Current" table instead of rewriting history.
+- `progress/docs/` (spec: `docs/PERSONAL_DOCS.md`): `PITFALLS.md` seeded from the recurring
+  mistakes, `WEEK.md` from their hours; `WORK_HABITS.md` only if they already work in the field
+  and want it (ask). Never put anything about this learner in shared files.
 - `progress/PLAN.md`: why they are doing this, goals in order, time, a skill tree (ring 1 = fundamentals of the main track, ring 2 = depth and engineering, ring 3 = optional later directions only if they want them), milestones with gates taken from the track README, dated estimates with a range and the reasoning, and a "Current focus" section. Base estimates on their real speed (time ratio and hints) and their real weekly hours (assume about 80% of the planned time).
 
 ## 5. Close

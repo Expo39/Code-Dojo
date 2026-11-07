@@ -121,7 +121,7 @@ code-dojo/
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
-│                            schedule, mistakes, cheat sheet, weekly reports, mocks
+│                            schedule, mistakes, cheat sheet, weekly reports, mocks, docs/
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/ holds your attempts, .history/ (earlier
 │                            attempts) and primm/ (lesson files); mocks/; projects/
@@ -139,6 +139,7 @@ code-dojo/
 | [METHOD.md](docs/METHOD.md) | Why it is built this way: the learning research and the rules for AI |
 | [INTERVIEW_PLAYBOOK.md](docs/INTERVIEW_PLAYBOOK.md) | The process for live-coding interviews |
 | [PITFALLS.md](docs/PITFALLS.md) | Common mistakes in the first modules and how to catch them |
+| [PERSONAL_DOCS.md](docs/PERSONAL_DOCS.md) | What goes in your own `progress/docs/` and how the tutor keeps it |
 | [ROADMAP.md](docs/ROADMAP.md) | Choosing tracks, their order and mix from your goals; theory just in time; when the plan changes |
 | [TRACKS.md](docs/TRACKS.md) | What is shared and what is personal, and how to add a track or exercises |
 | [tracks/python/README.md](tracks/python/README.md) | The Python syllabus: phases, modules, milestones |

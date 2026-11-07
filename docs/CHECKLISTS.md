@@ -106,5 +106,5 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Balance the strands** (learn, write, read and debug, build, perform) | Every week | The weekly review checks the split and moves the next week's blocks |
 | **Perform regularly** (timed problem, weekly mock) | Most days; weekly | `dojo-session` reminds on mock day; the weekly review notes a missed mock |
 | **Projects: smallest working version first, commit each step, tests from P2** | Projects | `review my project` checks commits, structure and tests |
-| **AI as tutor, never ghostwriter** | Always, also at work | Never writes your code; at work: explain each AI diff before committing, debug first (`WORK_HABITS.md` if present) |
+| **AI as tutor, never ghostwriter** | Always, also at work | Never writes your code; at work: explain each AI diff before committing, debug first (`progress/docs/WORK_HABITS.md` if present) |
 | **Sustainable pace** (minimum day instead of skipping, rest day, sleep) | Every week | `today` caps catch-up at an hour a day; the weekly review adjusts the plan instead of piling up debt |

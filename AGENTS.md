@@ -20,7 +20,9 @@ Everything personal is in `progress/` (local, gitignored). Before giving advice,
 - `progress/PLAN.md`: their goals, roadmap (tracks, order, mix; `docs/ROADMAP.md`), skill tree,
   milestones and current focus
 - `progress/BASELINE.md`: their starting level, recurring mistakes and strengths
-- `progress/WORK_HABITS.md` (if it exists): how the dojo relates to their job
+- `progress/docs/`: their own docs (pitfalls, weekly rhythm, and if relevant interview prep and
+  work habits), written by the tutor to the spec in `docs/PERSONAL_DOCS.md`. Anything about one
+  learner goes there, never into shared files
 
 Tailor everything to these files, not to assumptions. If `progress/profile.json` does not
 exist, the learner is new: ask them to run `dojo.py install` and `dojo.py setup`,

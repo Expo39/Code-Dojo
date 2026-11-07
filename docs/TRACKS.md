@@ -10,10 +10,10 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | Shared (in git, the same for everyone) | Personal (in `progress/` and `workspace/`, gitignored, never pushed) |
 | --- | --- |
 | `dojo.py` (tracker), `conftest.py` | `profile.json`: name, time per day, rest days, target date, level, tracks |
-| `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, skill tree, milestones, estimates, current focus |
-| `docs/`: method, sessions, tutor commands, setup | `BASELINE.md`: starting level and the evidence for it |
+| `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
+| `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
-| | `WORK_HABITS.md` (optional): how training relates to your job |
+| | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
 | | `workspace/<track>/<module>/`: your attempts, `.history/` with earlier attempts, `primm/` with lesson files |
 
 Back up or move personal data with `python dojo.py export` (a zip), optionally straight to

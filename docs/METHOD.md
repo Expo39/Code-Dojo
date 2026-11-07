@@ -88,7 +88,8 @@ is giving, and the number of levels used is logged as "hints".
 
 ## Weekly balance
 
-For a default 18-hour week. The daily templates in `DAILY_SESSION.md` follow this split.
+The shares hold for any number of hours; the daily templates in `DAILY_SESSION.md` follow
+this split.
 
 | Strand | Share | What it is |
 | --- | --- | --- |

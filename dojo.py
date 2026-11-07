@@ -31,6 +31,7 @@ TIMER = PROGRESS / "timer.json"
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
+PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
 PRIMM_DIR = "primm"
@@ -77,6 +78,20 @@ Read it at the end of each week; the weekly review turns repeats into drills.
 
 | Date | Item | What went wrong | Correct form |
 | --- | --- | --- | --- |
+"""
+
+PERSONAL_DOCS_INDEX = """# Your docs
+
+Personal and local (gitignored). The shared docs in `docs/` describe the method for everyone;
+these apply it to you. The tutor writes and updates them from your own data, following
+`docs/PERSONAL_DOCS.md`; each is created only when it has something to say.
+
+| File | What it holds | Updated |
+| --- | --- | --- |
+| `PITFALLS.md` | Your own recurring traps, from `progress/mistakes.md` | weekly review |
+| `WEEK.md` | Your weekly rhythm: which day is for what, from your hours | placement, when hours change |
+| `INTERVIEW_PREP.md` | Your interview goal: date, run-up plan, stories, questions | when an interview is a goal |
+| `WORK_HABITS.md` | How training relates to your job, if you work in the field | placement, on request |
 """
 
 CHEATSHEET_HEADER = """# Cheat sheet
@@ -268,6 +283,13 @@ def ensure_files() -> None:
         CHEATSHEET.write_text(CHEATSHEET_HEADER, encoding="utf-8")
     if not REVIEWS.exists():
         write_json(REVIEWS, {})
+    PERSONAL_DOCS.mkdir(exist_ok=True)
+    old_habits = PROGRESS / "WORK_HABITS.md"  # older checkouts kept it at the top of progress/
+    if old_habits.exists() and not (PERSONAL_DOCS / "WORK_HABITS.md").exists():
+        shutil.move(str(old_habits), PERSONAL_DOCS / "WORK_HABITS.md")
+    index = PERSONAL_DOCS / "README.md"
+    if not index.exists():
+        index.write_text(PERSONAL_DOCS_INDEX, encoding="utf-8")
 
 
 # ----------------------------------------------------------------- exercises

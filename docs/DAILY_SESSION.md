@@ -2,7 +2,9 @@
 
 Pick the template that matches the time you have today (`python dojo.py today` names it).
 The order matters more than the exact minutes: **retrieval first, new material while fresh,
-performance practice, then logging**.
+performance practice, then logging**. Your own week (which day is for what, from your hours and
+your track mix) is in `progress/docs/WEEK.md`; with several tracks, the "Learn and write" block
+follows the mix that `today` shows.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini CLI). It runs the catch-up
 automatically (what changed, what is due, the week balance). Say `start <exercise>` and

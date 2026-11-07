@@ -1,8 +1,10 @@
 # Common pitfalls
 
-The traps almost every learner falls into in the first modules. Each one looks obvious once
-named and keeps coming back until it has been traced by hand a few times. The tutor draws
-predict drills from this list; use it yourself as a self-check before you say "done".
+The traps almost every learner falls into in the first modules (examples in Python; most hold
+in any language). Each one looks obvious once named and keeps coming back until it has been
+traced by hand a few times. The tutor draws predict drills from this list; use it yourself as a
+self-check before you say "done". Your own recurring traps, taken from your mistakes log, are in
+`progress/docs/PITFALLS.md` (`PERSONAL_DOCS.md`).
 
 Each entry: the trap, the rule, and a question to check yourself.
 
@@ -25,16 +27,12 @@ Each entry: the trap, the rule, and a question to check yourself.
 | Thinking a "backwards" range raises an error | If start is already at or past stop (in the step's direction), the range is empty, with no error and no infinite loop | What is `list(range(1, -2))`? And `list(range(0, 0, -1))`? |
 | Counting down with `range(n, 1, -1)` | Count down to 1 with `range(n, 0, -1)`: the stop is still excluded | What does `list(range(3, 1, -1))` give? |
 | `for x in n` where `n` is an int | An int is not iterable; loop over `range(...)` | What does `TypeError: 'int' object is not iterable` point at? |
-| Skipping the first item with `items[:len(items)]` | `items[1:]` skips the first item (and copies the list, O(n) space); `range(1, len(items))` avoids the copy | What does `[1, 2, 3][1:]` give? |
 
 ## Values and types
 
 | Trap | Rule | Check |
 | --- | --- | --- |
-| `items is None` to test for an empty list | `[]` is a real (empty) list, not `None`; test emptiness with `not items` | What does `[] is None` give? |
 | `print` instead of `return` | `print` only shows a value; `return` hands it to the caller | What does a test receive from a function that only prints? |
-| `&` or `/` as logical operators, `=` to compare | Use `and`, `or`, `not`; `=` assigns, `==` compares | Why is `if a & b > 0` risky? |
-| Numbers left as ints in a list of strings | When every element must be a string, convert with `str(n)` | What type is each element of the FizzBuzz output? |
 
 ## Reading the task
 
@@ -51,7 +49,6 @@ Each entry: the trap, the rule, and a question to check yourself.
 | --- | --- | --- |
 | Calling a fixed set of variables O(k) or O(n) | A fixed number of variables is O(1) space, however many there are | What is the extra space of a running total? |
 | Forgetting the output list | An output list of n items is O(n) space (O(1) auxiliary if the output is not counted) | What is the space of building a list of n strings? |
-| Using letters that were never defined | Name Big-O with the input's own variable (`n` = length of the list); use another letter only after defining it | What would `k` stand for in your answer? |
 | Thinking a slice is free | A slice copies: O(k) time and space for k items | Does `items[1:]` change the total time of a loop from O(n)? |
 
 ## Workflow
@@ -59,5 +56,3 @@ Each entry: the trap, the rule, and a question to check yourself.
 | Trap | Rule | Check |
 | --- | --- | --- |
 | Running the tests on an unsaved file | Save first (autosave is on in the repo's editor settings); `dojo.py test` warns when the file is still the stub | Did you see the stub's `NotImplementedError` in the output? |
-| Code that drifts from the plan | Reread each line against the plan you said out loud before you predict | Which line differs from the plan? |
-| Answering "what does it return" with the spec | Trace the code's own variables; what the spec says is a separate question | What does *your* code return for `[]`? |

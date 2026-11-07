@@ -10,7 +10,9 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
 3. Analyse honestly, with numbers:
    - Time against the plan, and why (ask; do not assume). If short, adjust the plan or the profile's hours rather than piling up debt; a capped catch-up of at most an hour a day is fine.
    - Speed and hints per pattern: anything with a median above 1.5x or more than 1.5 hints is a weak spot.
-   - Repeated mistakes (the same theme 2 or more times): name the habit to build.
+   - Repeated mistakes (the same theme 2 or more times): name the habit to build, and add or
+     update its row in `progress/docs/PITFALLS.md` (last seen date; retire rows unseen for 6
+     weeks; spec in `docs/PERSONAL_DOCS.md`).
    - Mock result and the two habits from it.
    - Follow-up methods in `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
    - Process: the report's "Process" line (how often every step was followed, the most skipped step). A step skipped 3 or more times becomes next week's habit focus, with a one-line reminder the tutor gives at every exercise.
@@ -18,5 +20,5 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
 4. Write the "Coach notes" section of `progress/weekly/<week>.md`: 3 wins backed by numbers, 3 things to fix, and next week's focus: modules, which weak spots get a `teach me` first, project milestone, mock day.
 5. Update `progress/PLAN.md` "Current focus". If a milestone gate is met (`stats`), congratulate them with the evidence and update the milestone table. If progress is far off the estimates for 3 or more weeks, re-estimate honestly and explain why.
 6. Run `dojo.py export` if the profile has an `export_target` (weekly backup).
-7. Ask one short question about work: which of the three habits in `progress/WORK_HABITS.md` (if the file exists) they used this week. No numbers, no pressure.
+7. Ask one short question about work: which of the three habits in `progress/docs/WORK_HABITS.md` (if the file exists) they used this week. No numbers, no pressure.
 8. Tell the learner the summary in 6 to 8 lines. End with one specific thing they did better than a month ago.
