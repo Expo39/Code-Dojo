@@ -28,7 +28,7 @@ Rules: `docs/ROADMAP.md` (read it first). Everything written here is personal (`
    - `dojo.py mix <track>=N ...` (sum 100, 0 = maintenance) and `--priority "<text>"` (`""`
      clears it).
 6. Modules move in or out: show `dojo.py modules` and agree them (`dojo-assess`, 3b).
-7. A track starting now that is a placeholder: agree the toolchain, write `track.json` and its
-   README modules (`docs/TRACKS.md`), generate the first module only (`dojo-new-exercise`).
+7. A track starting now that is a placeholder: design it with `dojo-new-track` (research,
+   toolchain agreed with the learner, first module only).
 8. **Close** in 3 to 5 lines: the order, this week's mix, what moves each track on, and when the
    roadmap is next reviewed.

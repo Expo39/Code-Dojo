@@ -57,6 +57,14 @@ and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the
 
 ## Adding a track
 
+Start with research, not a blank page: say "design a track for <subject>" (skill
+`dojo-new-track`). It surveys the best free material (university courses such as MIT, Stanford,
+Harvard, Helsinki and Oxford, official documentation, well-regarded repositories on GitHub,
+GitLab and Codeberg, free books), judges each source on authority, currency, depth, exercises
+and licence (stars and "free" are not proof of quality, and niche topics need extra care),
+and builds the syllabus from what the strongest sources agree on. Exercises are always
+original. The steps below are what it produces; you can also follow them by hand.
+
 1. Create `tracks/<name>/track.json`:
 
 ```json
@@ -68,7 +76,8 @@ and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the
   "solution_file": ".solutions/{slug}.rs",
   "clarify_file": ".clarify/{slug}.md",
   "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"],
-  "requires": ["Fluent in one language (first milestone of its track)"]
+  "requires": ["Fluent in one language (first milestone of its track)"],
+  "reviewed": "2026-11-07"
 }
 ```
 
@@ -80,12 +89,16 @@ and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the
    or theory track); attempts are then logged by hand and judged with the tutor.
 
    `requires` (optional) lists, in words, what a learner should have before starting the track;
-   the roadmap reads it (`ROADMAP.md`).
+   the roadmap reads it (`ROADMAP.md`). `reviewed` is the date the track was last checked
+   against current courses and the current version; `doctor` flags a track not reviewed for
+   over a year, because the field keeps changing.
 
 2. Write `tracks/<name>/README.md`: the phases, the modules with one focus line each,
    measurable milestones (copy the structure of `tracks/python/README.md`), a "Prerequisites"
-   section and a "Theory" section (the background the track relies on, by module). No time
-   estimates: they depend on the learner and live in their `PLAN.md`.
+   section and a "Theory" section (the background the track relies on, by module), a "Last
+   reviewed: <date>, against <tool and version>" line at the top, and a sources table (what each
+   source was used for, why it is trusted). No time estimates: they depend on the learner and
+   live in their `PLAN.md`.
 
 3. Add modules as folders (`m01_basics/`, ...) with exercises in the format below. Ask the
    tutor (`/dojo-new-exercise`) to generate them; it verifies each one.

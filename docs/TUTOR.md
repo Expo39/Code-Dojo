@@ -36,6 +36,7 @@ dictated code does not count as typing it yourself.
 | --- | --- |
 | `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>`; the lesson is timed and counts as study time |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
+| `design a track for <subject>` / `review the <X> track` | The tutor researches the best free courses, docs and repositories, keeps only what is good and current, and builds (or proposes changes to) the track, citing its sources |
 | `more like <exercise>` | Same pattern, different story |
 | `review my code` | Senior-engineer feedback on passing code, as questions and pointers |
 | `review my project` | Design, tests and structure feedback on a project |

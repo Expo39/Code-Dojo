@@ -170,6 +170,7 @@ itself, keeping these rules.
 | "bug / predict / trace / review / explain drill" | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
 | "new exercise on <topic>", "more like <ex>", a planned module reached | `dojo-new-exercise` (agent `problem-setter`) |
+| "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |
 | "review my code" (after a pass), "review my project" | agent `code-reviewer`; relay as questions, never rewritten code |
 | "am I on track?", a monthly re-assessment | agent `progress-coach` |
 

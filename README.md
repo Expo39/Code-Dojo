@@ -122,7 +122,8 @@ code-dojo/
 ├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
 ├── CLAUDE.md                imports AGENTS.md, plus notes for Claude Code only
 ├── .agents/skills/          dojo-session, dojo-assess, dojo-roadmap, dojo-teach, dojo-mock,
-│                            dojo-drill, dojo-weekly, dojo-new-exercise (one copy for every tool)
+│                            dojo-drill, dojo-weekly, dojo-new-exercise, dojo-new-track (one copy
+│                            for every tool)
 ├── .claude/                 Claude Code: settings and start hook, agents (problem-setter,
 │                            code-reviewer, progress-coach), skills -> ../.agents/skills
 ├── .gemini/, .geminiignore  Gemini CLI: read AGENTS.md, skip the other tools' files
@@ -174,7 +175,10 @@ code-dojo/
 ## Make it yours, or share it
 
 - **Tracks are optional.** Add any subject with a `track.json` and modules; see
-  [docs/TRACKS.md](docs/TRACKS.md). The tutor can generate verified exercises for it.
+  [docs/TRACKS.md](docs/TRACKS.md). Say "design a track for <subject>": the tutor researches the
+  best free university courses, official docs and repositories, judges them critically, builds
+  the syllabus from what the strongest agree on, and generates verified, original exercises.
+  Every track README says when it was last reviewed and against which version.
 - **Friends** get a clean copy (personal data is gitignored), run the quick start, then
   `assess me`: the placement imports what they already know and sets their own plan.
 - **Any of three agents.** The rules (`AGENTS.md`) and skills (`.agents/skills/`) exist once

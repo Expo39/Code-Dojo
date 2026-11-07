@@ -12,7 +12,8 @@
     "./.agents/skills/dojo-mock",
     "./.agents/skills/dojo-drill",
     "./.agents/skills/dojo-weekly",
-    "./.agents/skills/dojo-new-exercise"
+    "./.agents/skills/dojo-new-exercise",
+    "./.agents/skills/dojo-new-track"
   ],
   "agents": [
     "./.claude/agents/problem-setter.md",

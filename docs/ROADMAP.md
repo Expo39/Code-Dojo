@@ -159,6 +159,7 @@ the learner can always see why the plan looks as it does. `profile.json` holds t
 and priority (`dojo.py mix`).
 
 When a track reaches taster state but is only a placeholder (a README without `track.json`):
-agree its toolchain with the learner (a container keeps the host clean and is the suggested
-default for compilers and frameworks), write `track.json` and the module list in its README
-(`docs/TRACKS.md`), and generate only the first module (`dojo-new-exercise`).
+research and design it with `dojo-new-track` (the best current free courses, docs and
+repositories, judged critically), agree its toolchain with the learner (a container keeps the
+host clean and is the suggested default for compilers and frameworks), and generate only the
+first module.

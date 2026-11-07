@@ -17,6 +17,8 @@ For each exercise, write three files:
 
 Rules:
 - One clear pattern per exercise; a story different from the concept's classic textbook example; targets realistic for the module's level (tiny 5, easy 10 to 15, medium 20 to 30 minutes).
+- Every exercise is original: never copy a task, test or solution from a course, book or repository, whatever its licence; the kind of problem may be inspired by one.
+- Use the current version of the track's language (`Last reviewed` line in its README); nothing deprecated.
 - Prefer practical stories (parsing text, small stateful classes, data clean-up) mixed with classic patterns; interviews are unpredictable, so vary the shapes.
 - Do not leak the solution, the edge cases or the pattern in the task text. A `b` exercise shows a `Check your fix with:` input (no output) that varies a parameter from the example, so a fix that only repairs the example fails on it; the tests cover it. The contract is not an edge case: whether to return a new object or change the input in place goes in the task text, in one plain clause.
 - A `<slug>_revisited` exercise (asked for after a concept lesson) repeats a solved exercise's task in the concept's module: same behaviour and tests, plus one line in the task naming the concept to use ("solve it with a comprehension"). It is the only exercise allowed to reuse an earlier story. Never write the old exercise's solution into it.

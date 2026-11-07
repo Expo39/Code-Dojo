@@ -15,7 +15,8 @@ reviews; nobody else can push to `main` directly.
 ## What fits
 
 - **Tracks and exercises** in the format of `docs/TRACKS.md` (task, tests, reference solution,
-  clarify file), verified.
+  clarify file), verified and original. A new track starts from research into the best current
+  free courses and docs (`dojo-new-track`) and lists its sources and review date in its README.
 - **Docs, skills and agents** that work for any learner, at any level and in any mode.
 - **Tracker fixes and features** in `dojo.py`, plain Python 3.10+, no new dependencies without a
   reason.

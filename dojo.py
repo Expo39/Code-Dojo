@@ -563,6 +563,8 @@ DEFAULT_TRACK = {
     "test_command": None,
     # What a learner should have before starting this track, in words (docs/ROADMAP.md).
     "requires": [],
+    # When the track was last checked against current courses and the current version (YYYY-MM-DD).
+    "reviewed": "",
 }
 
 
@@ -946,6 +948,13 @@ def cmd_doctor(args) -> None:
         print("  ! No profile: python dojo.py setup")
         ok = False
     print(f"Exercises found: {len(discover())}")
+    for name, track in load_tracks(active_only=False).items():
+        reviewed = track.get("reviewed", "")
+        if not reviewed:
+            print(f"  note: track '{name}' has no review date (dojo-new-track, review)")
+        elif (today() - parse_date(reviewed)).days > 365:
+            print(f"  note: track '{name}' was last reviewed on {reviewed}: over a year ago, "
+                  "worth a review against current courses and versions (dojo-new-track)")
     skills = ensure_claude_skills()
     print(skills)
     print(ensure_git_hooks())
