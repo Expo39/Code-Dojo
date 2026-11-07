@@ -1,6 +1,6 @@
 # PRIMM lessons: m02_strings_lists
 
-Concepts in this module that a `teach me` lesson can cover: slicing, split/join, zip, comprehensions, runs.
+Concepts in this module that a `teach me` lesson can cover: slicing, split/join, zip, comprehensions, runs, `match` with list patterns.
 
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of

@@ -55,8 +55,8 @@ is done (`python dojo.py stats`).
 
 | Module | Focus | Status |
 | --- | --- | --- |
-| m01_foundations | loops, conditions (including `match`), accumulators, best-so-far, range, enumerate, return, floats and rounding | seeded |
-| m02_strings_lists | slicing, split/join, zip, comprehensions, runs | seeded |
+| m01_foundations | loops, conditions, accumulators, best-so-far, range, enumerate, return, floats and rounding | seeded |
+| m02_strings_lists | slicing, split/join, zip, comprehensions, runs, `match` with list patterns | seeded |
 | m03_dicts_sets | counting, grouping, seen-sets, set operations | seeded |
 | m04_parsing | text to records, logs, config, CSV, parse-then-act, regular expressions basics | seeded |
 | m05_functions_errors | sort keys, lambda, try/except, raising, default and keyword arguments, `*args`/`**kwargs`, type hints and docstrings, closures, higher-order functions | seeded |

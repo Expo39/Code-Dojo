@@ -1,6 +1,6 @@
 # PRIMM lessons: m01_foundations
 
-Concepts in this module that a `teach me` lesson can cover: loops, conditions (including `match`), accumulators, best-so-far, range, enumerate, return, floats and rounding.
+Concepts in this module that a `teach me` lesson can cover: loops, conditions, accumulators, best-so-far, range, enumerate, return, floats and rounding.
 
 A lesson runs the five PRIMM steps (`docs/CHECKLISTS.md`, section 2): predict a worked
 example, run and investigate it, modify it, then make three tiny functions. You type all of
