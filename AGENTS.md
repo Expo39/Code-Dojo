@@ -211,6 +211,8 @@ goes into `done --hints N`.
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form in words>"` |
 | `end of day`, `how am I doing` | `dojo.py today` and `dojo.py stats`, then an honest short assessment and concrete work for tomorrow |
 | `export` | `dojo.py export` (with `--to` if they give a target) |
+| `update`, or the status shows updates on the shared repo | `dojo.py update` (after a yes): pulls the shared tracks and docs, then lists the track changes to ask about (`dojo-session`, step 3) |
+| track changes in the status | ask learn it / already know it / not for me per module, apply (`mark --box 3`, `settings skip_exercises+=...`), then `dojo.py changes --ack` |
 | `show my settings`, `change <setting> to <value>` | `dojo.py settings` / `dojo.py settings key=value ...` (any setting, e.g. `minutes=mon=60,sat=0`, `mode=hobby`); the reason goes under "Plan changes" |
 | a roadmap decision (`dojo-roadmap`) | `dojo.py mix <track>=N ...` (0 = maintenance, redos only) and `--priority "<text>"`; the reason goes under "Plan changes" in `progress/PLAN.md` |
 | `teach me <topic>` (lesson starts) | `dojo.py primm <module> <topic>`: the learner types the lesson in `workspace/<track>/<module>/primm/<topic>.<ext>`; it starts a lesson timer. At the end: `dojo.py done lesson:<topic>` (logged as study) |

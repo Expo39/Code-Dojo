@@ -14,7 +14,9 @@ It works for anyone, at any level, for any subject. You tell it:
 
 It then recommends the order of what to learn, offers the theory a topic needs right before
 it, measures every attempt, and suggests changes to your plan and settings each week for you
-to accept or decline. The tutor explains at your level. A complete Python track ships with it
+to accept or decline. When the shared tracks change (someone adds exercises, a module, a
+track), it tells you at the start of a session and asks whether you want to learn the new
+material or already know it. The tutor explains at your level. A complete Python track ships with it
 (fundamentals, reading and debugging code, data structures and algorithms, projects, interview
 practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
 
@@ -104,6 +106,7 @@ python dojo.py week --write          # weekly report
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
 | Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]`, `drive-setup`, `import`, `migrate` |
+| Updates | `update` (pull the shared tracks and docs), `changes [--ack]` (what changed in your tracks since you were last asked) |
 | Maintain | `verify` |
 
 `python dojo.py help` describes every option.
