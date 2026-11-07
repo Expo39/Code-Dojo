@@ -68,6 +68,9 @@ DEFAULT_PROFILE = {
     "mix": {},
     # What overrides the mix right now, in words (e.g. "interview on 2027-03-01"), or empty.
     "priority": "",
+    # Why they train and the programmer they want to become (docs/ROADMAP.md, section 1).
+    "mode": "",
+    "target_level": "",
     "export_target": "",
 }
 
@@ -210,6 +213,16 @@ def cmd_setup(args) -> None:
     print("\nCode Dojo setup. All of this can be changed later with `python dojo.py setup`.\n")
     profile["learner"] = ask("Your name", profile["learner"] or os.environ.get("USER", os.environ.get("USERNAME", "")))
     profile["goal"] = ask("Your goal in one line", profile["goal"])
+    print("\nWhy are you training? (It sets how much interview practice you get; change it any time.)")
+    for key, text in MODES.items():
+        print(f"  {key:10} {text}")
+    mode = ask("Mode", profile["mode"] or "hybrid").strip().lower()
+    profile["mode"] = mode if mode in MODES else profile["mode"]
+    print("\nWhat kind of programmer do you want to become? (It sets how far each goal goes.)")
+    for key, text in LEVELS.items():
+        print(f"  {key:10} {text}")
+    level = ask("Target level", profile["target_level"] or "junior").strip().lower()
+    profile["target_level"] = level if level in LEVELS else profile["target_level"]
     profile["start_date"] = ask("Start date (YYYY-MM-DD)", profile["start_date"] or today().isoformat())
     profile["target_date"] = ask("Target date, e.g. an interview (YYYY-MM-DD, empty for none)", profile["target_date"])
 
@@ -296,6 +309,19 @@ def ensure_files() -> None:
 
 HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind):\s*(.+?)\s*$", re.MULTILINE)
 STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)(\.[A-Za-z0-9]+)$")
+MODES = {
+    "interview": "preparing for live-coding interviews (with or without a date)",
+    "hybrid": "interview-ready and growing as an engineer at the same time",
+    "industry": "preparing to enter an industry or role, no interview yet",
+    "hobby": "for its own sake: building things, learning at your own pace",
+}
+LEVELS = {
+    "hobbyist": "build your own things, read docs, fix your own bugs",
+    "junior": "job-ready: everyday code fluently, read a team's code, tests, git",
+    "mid": "design modules, review others' code, debug unfamiliar systems",
+    "senior": "architecture, deep debugging and domain depth, guiding others",
+}
+
 DEFAULT_TRACK = {
     "name": "",
     "extension": ".py",
@@ -1151,6 +1177,9 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append(f"Redo queue ({len(due)} due): {names}{more}.")
     else:
         lines.append("Redo queue: nothing due.")
+    if profile.get("mode") or profile.get("target_level"):
+        lines.append("Mode: " + (profile.get("mode") or "not set")
+                     + ", target level: " + (profile.get("target_level") or "not set") + ".")
     if profile.get("priority"):
         lines.append(f"Priority: {profile['priority']}.")
     if len(mix) > 1:
@@ -1470,7 +1499,7 @@ def cmd_migrate(args) -> None:
 HELP = """Code Dojo commands (python dojo.py <command>):
 
   install                  create .venv and install pytest (any OS)
-  setup [--fresh]          create or edit your profile (time per day, rest days, target date)
+  setup [--fresh]          create or edit your profile (mode, target level, time per day, rest days)
   doctor                   check Python, venv, pytest and profile
   today                    today's plan: time, week balance, redo queue, next exercises
   list [module]            all exercises with their status
