@@ -33,7 +33,7 @@ On a re-assessment, use `dojo.py stats` and the last 4 weekly reports instead of
 - `progress/docs/` (spec: `docs/PERSONAL_DOCS.md`): `PITFALLS.md` seeded from the recurring
   mistakes, `WEEK.md` from their hours; `WORK_HABITS.md` only if they already work in the field
   and want it (ask). Never put anything about this learner in shared files.
-- `progress/PLAN.md`: why they are doing this, goals in order, time, a Roadmap table and a Plan changes log (`dojo-roadmap`, `docs/ROADMAP.md`), a skill tree (ring 1 = fundamentals of the main track, ring 2 = depth and engineering, ring 3 = later directions only if they want them), milestones with gates taken from the track README, dated estimates with a range and the reasoning, and a "Current focus" section. Estimates come only from this learner's data and hours, never from generic durations. Base estimates on their real speed (time ratio and hints) and their real weekly hours (assume about 80% of the planned time).
+- `progress/PLAN.md`: why they are doing this, goals in order, time, a Roadmap table and a Plan changes log (`dojo-roadmap`, `docs/ROADMAP.md`), a skill tree built from their goals (rings in priority and prerequisite order, each naming the goal it serves and the gate that unlocks the next; every goal they stated gets a ring, nothing they want is labelled optional; `docs/TRACKS.md`), milestones with gates taken from the track README, dated estimates with a range and the reasoning, and a "Current focus" section. Estimates come only from this learner's data and hours, never from generic durations. Base estimates on their real speed (time ratio and hints) and their real weekly hours (assume about 80% of the planned time).
 
 ## 5. Close
 

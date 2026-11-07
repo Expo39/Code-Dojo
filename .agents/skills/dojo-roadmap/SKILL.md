@@ -23,8 +23,9 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
 4. **Let them decide.** If they choose differently, say the risk once, then follow their choice.
 5. **Write it down**:
    - `progress/PLAN.md`: the Roadmap table (track, state, share, start condition, why) and a dated
-     line under Plan changes with the reason; update Current focus if it changes now. Ring 3 and
-     milestone estimates stay consistent with the table.
+     line under Plan changes with the reason; update Current focus if it changes now. Redraw the Skill
+     tree from the goals so its rings match the table (`docs/TRACKS.md`), and keep milestone
+     estimates consistent with both.
    - `progress/docs/` (spec: `docs/PERSONAL_DOCS.md`): update `WEEK.md` when the mix or the hours
      change; create or update `INTERVIEW_PREP.md` when an interview is a goal or gets a date.
    - `dojo.py mix <track>=N ...` (shares sum to 100, 0 = maintenance) and `--priority "<text>"`

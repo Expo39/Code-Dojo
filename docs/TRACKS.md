@@ -31,14 +31,22 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
 
 ## Skill trees
 
-A plan organises skills in rings: inner rings first, outer rings unlock when the inner ring's
-gate is met. Typical shape:
+A plan organises skills in rings: inner rings first, and an outer ring unlocks when the gate
+of the ring it depends on is met. The rings are built from the learner's goals, not from a fixed
+template: each ring serves a goal they stated, in their priority order, after its prerequisites
+(`ROADMAP.md`). Their number varies, and nothing the learner wants is labelled optional; only an
+idea they called "maybe" is marked as such. Two learners, two trees:
 
 ```
-Ring 1  fundamentals of the first track     fluency: write, read, debug
-Ring 2  depth: patterns + engineering        testing, design, projects
-Ring 3  optional directions                  other tracks, chosen later, only if wanted
+"Pass a Python interview; robotics later"      "Data analysis at work, then web back ends"
+Ring 1  Python fundamentals                    Ring 1  Python fundamentals
+Ring 2  algorithms + interview practice        Ring 2  files, SQL, pandas, a data project
+Ring 3  C, then C++ basics (for ROS)           Ring 3  HTTP, a web framework, testing
+Ring 4  ROS 2 and a robot project              Ring 4  (maybe) deployment and cloud
 ```
+
+Each ring names the goal it serves, its tracks or modules, and the gate that unlocks the next.
+The skill tree and the roadmap table in `PLAN.md` describe the same plan and change together.
 
 Rules of thumb: one main track at a time, at most one taster of the next; measurable gates,
 not feelings or dates, decide when to move on. The full rules for ordering and mixing tracks,
