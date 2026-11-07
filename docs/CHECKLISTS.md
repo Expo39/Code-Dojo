@@ -109,4 +109,4 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Perform regularly** (timed problem, mock) | As often as the mode says (`METHOD.md`) | `dojo-session` reminds on mock day; the weekly review notes a missed mock |
 | **Projects: smallest working version first, commit each step, tests from P2** | Projects | `review my project` checks commits, structure and tests |
 | **AI as tutor, never ghostwriter** | Always, also at work | Never writes your code; at work: explain each AI diff before committing, debug first (`progress/docs/WORK_HABITS.md` if present) |
-| **Sustainable pace** (minimum day instead of skipping, rest day, sleep) | Every week | `today` caps catch-up at an hour a day; the weekly review adjusts the plan instead of piling up debt |
+| **Sustainable pace** (minimum day instead of skipping, rest day, sleep) | Every week | `today` caps catch-up at an hour a day; the weekly review suggests settings that match the hours you really train (`settings --review`), one yes-or-no question each, instead of piling up debt |

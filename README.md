@@ -93,7 +93,7 @@ python dojo.py week --write          # weekly report
 | Group | Commands |
 | --- | --- |
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
-| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]` |
+| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]` |
 | Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |

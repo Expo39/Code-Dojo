@@ -23,6 +23,13 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
      `dojo-roadmap` with the learner (or carry the question to next week if they prefer).
 4. Write the "Coach notes" section of `progress/weekly/<week>.md`: 3 wins backed by numbers, 3 things to fix, and next week's focus: modules, which weak spots get a `teach me` first, project milestone, mock day.
 5. Update `progress/PLAN.md` "Current focus". If a milestone gate is met (`stats`), congratulate them with the evidence and update the milestone table. If progress is far off the estimates for 3 or more weeks, re-estimate honestly and explain why.
-6. Run `dojo.py export` if the profile has an `export_target` (weekly backup).
-7. Ask one short question about work: which of the three habits in `progress/docs/WORK_HABITS.md` (if the file exists) they used this week. No numbers, no pressure.
-8. Tell the learner the summary in 6 to 8 lines. End with one specific thing they did better than a month ago.
+6. **Settings review, yes or no.** Run `dojo.py settings --review`. For each suggestion, and for
+   the judgement calls it lists (mode, target level, priority, tracks, skipped modules) where this
+   week's evidence or what the learner said points to a change, ask one short yes-or-no question
+   with the evidence ("Wednesdays averaged 20 minutes against 90 planned: set Wednesday to 15?").
+   Apply only the yes answers (`dojo.py settings key=value ...`, `dojo.py mix ...`) and add a line
+   under Plan changes in `progress/PLAN.md` for each. A no is fine and changes nothing; do not ask
+   the same question again next week unless the evidence has grown.
+7. Run `dojo.py export` if the profile has an `export_target` (weekly backup).
+8. Ask one short question about work: which of the three habits in `progress/docs/WORK_HABITS.md` (if the file exists) they used this week. No numbers, no pressure.
+9. Tell the learner the summary in 6 to 8 lines. End with one specific thing they did better than a month ago.

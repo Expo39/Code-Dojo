@@ -144,7 +144,9 @@ that idea, offer it again (once) before a hint.
   
   On a trigger, one line: "<what happened>: this may change the plan. Review it now (5
   minutes) or at the weekly review?" Never change the plan silently.
-- **Every week** (`dojo-weekly`): the mix against the real split, gate progress per track.
+- **Every week** (`dojo-weekly`): the mix against the real split, gate progress per track, and a
+  settings review (`dojo.py settings --review`): each suggested change is one yes-or-no question
+  to the learner, and only the yes answers are applied.
 - **Every month** (`dojo-assess`), and whenever the learner says `replan`.
 
 ## 8. Writing it down, and building a missing track

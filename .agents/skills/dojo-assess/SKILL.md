@@ -16,11 +16,11 @@ and rest days; an interview or other date, if any; which track to start with (`t
 anything else they want goes to the roadmap later); their level in one word (beginner,
 intermediate, advanced). Recommend with a reason when they are unsure. Then run, with their answers:
 
-`dojo.py setup --yes --name "<name>" --goal "<goal in one line>" --mode <mode> --target-level <level> --minutes <N> --rest <days> --tracks <track> --level <level> [--target-date YYYY-MM-DD]`
+`dojo.py setup --yes --name "<name>" --goal "<goal in one line>" --mode <mode> --target-level <level> --minutes <N, or mon=60,tue=90,...> --rest <days> --tracks <track> --level <level> [--target-date YYYY-MM-DD]`
 
 It installs what is missing, saves the profile, runs the checks and prints what comes next.
 Fix anything `doctor` marks with `!`, tell them in two lines what happens now, and go on to
-section 1. (Different minutes per day: run `dojo.py setup` without `--yes` in a terminal later.)
+section 1. Any setting can be changed later with `dojo.py settings key=value`.
 
 ## 1. Gather what exists (ask, do not assume)
 
