@@ -135,7 +135,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `teach me <topic>` | `dojo.py primm <module> <topic>`; at the end `dojo.py done lesson:<topic>` |
 | `show my settings`, `change <x> to <y>` | `dojo.py settings [key=value ...]` (`key+=` / `key-=` for lists) |
 | `show my modules` | `dojo.py modules`, then agree changes together (`dojo-assess`, 3b) |
-| `update`, or updates in the status | `dojo.py update` after a yes; then the track-changes questions (`dojo-session`, step 3) |
+| `update`, or updates in the status | `dojo.py update` (shows the incoming commits and the files that run code); tell the learner, and only after their yes `dojo.py update --yes`; then the track-changes questions (`dojo-session`, step 3) |
 | a roadmap decision | `dojo.py mix <track>=N ...` (0 = maintenance), `--priority "<text>"` |
 | `export` | `dojo.py export [--to <target>]` |
 

@@ -1,0 +1,15 @@
+#!/bin/sh
+# Code Dojo pre-push checks (tools/check.py). Turned on by `python dojo.py setup` or `doctor`
+# (git config core.hooksPath .githooks). Skip once in an emergency: git push --no-verify
+cd "$(git rev-parse --show-toplevel)" || exit 1
+PY=python3; command -v python3 >/dev/null 2>&1 || PY=python
+refs=$(cat)
+printf '%s\n' "$refs" | while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -n "$local_sha" ] || continue
+  case "$local_sha" in 0000000*) continue ;; esac
+  base="$remote_sha"; case "$base" in 0000000*|"") base="origin/main" ;; esac
+  "$PY" tools/check.py --base "$base" || exit 1
+done || exit 1
+# Optional personal checks that are not shared: .git/hooks/pre-push.local (same input as this hook)
+if [ -x .git/hooks/pre-push.local ]; then printf '%s\n' "$refs" | .git/hooks/pre-push.local "$@" || exit 1; fi
+exit 0

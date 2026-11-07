@@ -67,7 +67,7 @@ dictated code does not count as typing it yourself.
 | `I have an interview on <date>` / `focus on <X>` | The priority changes: that track takes most of the time, the others keep only their redos |
 | `weekly review` | Report, coach notes, next week's focus, plan updated, and settings changes suggested from your log for you to accept or decline, one yes-or-no question each |
 | `am I on track?` | Trend analysis against your own bar and milestones, and an honest re-estimate |
-| `update` | The latest shared tracks and docs are pulled in; new or changed exercises in your tracks are listed, and for each group you say: learn it, already know it, or not for me |
+| `update` | The incoming shared changes are shown (and which files run code); after your yes they are pulled in; new or changed exercises in your tracks are listed, and for each group you say: learn it, already know it, or not for me |
 | `export` / `export to user@host:path` | Personal data zipped (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
 
