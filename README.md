@@ -119,6 +119,7 @@ code-dojo/
 │   ├── python/              the Python track: README (phases, modules, milestones), modules
 │   │                        (stubs, tests, .clarify/, .solutions/, primm/), projects/
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
+│   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
 │                            schedule, mistakes, cheat sheet, weekly reports, mocks, docs/
