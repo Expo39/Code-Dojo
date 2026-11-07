@@ -52,20 +52,20 @@ dictated code does not count as typing it yourself.
 | `explain drill` | Solve without code in five steps, scored |
 | `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
-| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` |
+| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` (scheduled by your mode, or any time you ask) |
 
 ## Planning
 
 | Say | What happens |
 | --- | --- |
-| `show my settings` / `change <setting> to <value>` | Every setting at a glance (`python dojo.py settings`), or any one changed: minutes per day, mode, target level, tracks, dates, skipped modules |
 | `set me up` (first time) | The tutor asks your mode, target level, time and track in the chat, runs `python dojo.py setup` for you, then goes on to placement |
+| `show my settings` / `change <setting> to <value>` | Every setting at a glance (`python dojo.py settings`), or any one changed: minutes per day, mode, target level, tracks, dates, skipped modules |
 | `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
 | `plan my learning` / `I want to learn <X>` / `when should I start <X>?` / `replan` | Roadmap: the tutor asks what is missing about your goals, recommends the order and mix of tracks with reasons and the cost, and records your choice (`docs/ROADMAP.md`) |
 | `change my mode to <hobby/industry/...>` / `I want to be a <junior/mid/...> developer` | Mode or target level updated; the weekly balance, mocks and bars follow (`docs/ROADMAP.md`) |
 | `I have an interview on <date>` / `focus on <X>` | The priority changes: that track takes most of the time, the others keep only their redos |
 | `weekly review` | Report, coach notes, next week's focus, plan updated, and settings changes suggested from your log for you to accept or decline, one yes-or-no question each |
-| `am I on track for M1?` | Trend analysis and an honest re-estimate |
+| `am I on track?` | Trend analysis against your own bar and milestones, and an honest re-estimate |
 | `export` / `export to user@host:path` | Personal data zipped (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
 
@@ -76,6 +76,8 @@ tutor session catches up with `sync`.
 
 | Command | Purpose |
 | --- | --- |
+| `python dojo.py setup` | First time: installs, asks your settings, checks, says what comes next |
+| `python dojo.py settings [key=value ...]` | Show or change any setting; `--review` suggests changes from your log |
 | `python dojo.py today` | Today's plan |
 | `python dojo.py list [module]` | Exercises and their status |
 | `python dojo.py start <ex>` / `test <ex>` / `done <ex> --hints N` | Do an exercise |

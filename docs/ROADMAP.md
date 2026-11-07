@@ -153,8 +153,8 @@ that idea, offer it again (once) before a hint.
 
 `progress/PLAN.md` has a **Roadmap** section (a table: track, state, share, start condition,
 why), a **Skill tree** drawn from the same goals (rings in priority and prerequisite order, each
-naming the goal it serves; `TRACKS.md`), and a **Plan changes** log (date, change, reason), so the learner can always see why the plan
-looks as it does. `profile.json` holds the same mix and priority (`dojo.py mix`).
+naming the goal it serves; `TRACKS.md`), and a **Plan changes** log (date, change, reason), so
+the learner can always see why the plan looks as it does. `profile.json` holds the same mix and priority (`dojo.py mix`).
 
 When a track reaches taster state but is only a placeholder (a README without `track.json`):
 agree its toolchain with the learner (a container keeps the host clean and is the suggested

@@ -40,9 +40,9 @@ experienced engineers' advice; sources are at the bottom.
    get stuck, and get unstuck. That is where confidence comes from.
 
 8. **Train the performance, not just the knowledge.** Interviewing is a separate skill:
-   solving while talking, under time pressure, with someone watching. Practise it from week 1
-   in small doses (a talk-aloud timed problem most days, a mock every week) so that the format
-   is familiar long before it matters.
+   solving while talking, under time pressure, with someone watching. If interviews are part of
+   your goal, practise it from week 1 in small doses (talk-aloud timed problems, mocks as often
+   as your mode says) so that the format is familiar long before it matters. As a hobby, skip it.
 
 9. **Use AI as a tutor, never as a ghostwriter.** In Anthropic's 2026 randomised study,
    developers learning a new library with AI help scored 17 percentage points lower on

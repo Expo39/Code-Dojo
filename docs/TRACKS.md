@@ -9,7 +9,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 
 | Shared (in git, the same for everyone) | Personal (in `progress/` and `workspace/`, gitignored, never pushed) |
 | --- | --- |
-| `dojo.py` (tracker), `conftest.py` | `profile.json`: name, time per day, rest days, target date, level, tracks |
+| `dojo.py` (tracker), `conftest.py` | `profile.json`: name, mode, target level, time per day, rest days, target date, level, tracks, mix (`python dojo.py settings` shows it) |
 | `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
@@ -23,10 +23,10 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
 
 1. `python dojo.py setup` in a terminal (it installs, asks, checks and says what comes next),
    or say "set me up" to the tutor, which asks in the chat and runs it for you.
-2. Say `assess me` (the tutor goes on to it by itself after "set me up"). The tutor asks about your background, imports what you
-   already have (notes, old logs, a list of topics you know), gives a short diagnostic, and
-   then writes your `BASELINE.md` and `PLAN.md`, sets your start module and seeds the redo
-   queue for what you already know.
+2. Say `assess me` (the tutor goes on to it by itself after "set me up"). The tutor asks about
+   your background and goals, imports what you already have (notes, old logs, a list of topics
+   you know), gives a short diagnostic, and then writes your `BASELINE.md`, `PLAN.md` and
+   personal docs, sets your start module and seeds the redo queue for what you already know.
 3. Follow `docs/DAILY_SESSION.md`. Re-run `/dojo-assess` monthly, or whenever the plan feels
    wrong.
 
@@ -88,7 +88,8 @@ and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the
 3. Add modules as folders (`m01_basics/`, ...) with exercises in the format below. Ask the
    tutor (`/dojo-new-exercise`) to generate them; it verifies each one.
 
-4. Add the track to your profile (`python dojo.py setup`) and to your `PLAN.md`.
+4. Add the track to your profile (`python dojo.py mix <track>=N ...`, or ask the tutor to plan
+   it with you: `plan my learning`) and to your `PLAN.md`.
 
 ## Exercise format
 

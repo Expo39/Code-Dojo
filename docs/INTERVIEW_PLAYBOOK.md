@@ -1,8 +1,11 @@
 # Live-coding interview playbook
 
-Interviews are unpredictable, so do not prepare for *questions*. Prepare a *process* that works
-on any question, and practise it until it runs on its own under pressure. The weekly mock
-(`/dojo-mock`) and the daily Perform block train exactly this.
+For learners whose goal includes interviews (mode `interview` or `hybrid`, or an interview that
+comes up). Interviews are unpredictable, so do not prepare for *questions*. Prepare a *process*
+that works on any question, and practise it until it runs on its own under pressure. Mocks
+(`/dojo-mock`) and the Perform block train exactly this. When a real interview comes, tell the
+tutor the company and what it is known to test: the bar is set from that standard
+(`ROADMAP.md`), and your prep goes in `progress/docs/INTERVIEW_PREP.md`.
 
 ## The process (every problem, every time)
 
@@ -51,14 +54,14 @@ notes. If AI wrote much of it, this needs deliberate effort: the `explain drill:
 
 Confidence in an interview comes from two things: having solved many similar problems
 cleanly (the redo queue and `python dojo.py stats` show this, so look at them the day before),
-and having been in the interview situation many times before (the weekly mocks). Neither
+and having been in the interview situation many times before (the mocks). Neither
 can be faked on the day, and both build steadily.
 
 ## Interview soon (the last 2 weeks before a real interview)
 
 | When | Change |
 | --- | --- |
-| 14 to 4 days before | Stop new modules. Daily: 1 unseen easy-to-medium problem out loud with a timer, the redo queue, one `explain drill`. Mocks every other day. Read the company's stack and prepare 3 stories about your work (problem, what you did, result, what you learned) |
+| 14 to 4 days before | Stop new modules. Daily: 1 unseen easy-to-medium problem out loud with a timer, the redo queue, one `explain drill`. Mocks every other day. Read the company's stack and prepare 3 stories about your work (problem, what you did, result, what you learned) in `progress/docs/INTERVIEW_PREP.md` |
 | 3 days before | Redo your 10 worst problems from blank files. Prepare questions for them |
 | The day before | Light: two easy problems you know, review `progress/mistakes.md` and the cheat sheet. Sleep |
 | The day | One easy warm-up problem 90 minutes before. Check the editor, camera and microphone. Then stop |

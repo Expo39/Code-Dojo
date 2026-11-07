@@ -7,8 +7,8 @@ your track mix) is in `progress/docs/WEEK.md`; with several tracks, the "Learn a
 follows the mix that `today` shows. The Perform block follows your mode (`METHOD.md`): in `hobby`
 mode it becomes more Build, and in `industry` mode it alternates with Build.
 
-Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini CLI). It runs the catch-up
-automatically (what changed, what is due, the week balance). Say `start <exercise>` and
+Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini
+CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance). Say `start <exercise>` and
 `done <exercise>` so the tracker can measure you.
 
 ## Full session (3 hours)
@@ -19,7 +19,7 @@ automatically (what changed, what is due, the week balance). Say `start <exercis
 | 10 to 50 | Redo queue | Due items from blank files, in the order `today` lists them. Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
-| 120 to 150 | Read, debug or build | Alternate by day: a `bug drill` or `review drill` + one `m10` reading exercise, or 30 minutes on the current project |
+| 120 to 150 | Read, debug or build | Alternate by day: a `bug drill` or `review drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |
 | 150 to 170 | Perform | One unseen problem under interview conditions: a timer, out loud, no hints for the first 10 minutes (`interview problem`), or an `explain drill` |
 | 170 to 180 | Log | Any mistakes, one cheat-sheet line per new concept, `end of day` to the tutor |
 
@@ -60,11 +60,11 @@ of logging. A minimum day counts; skipping does not.
 - Follow the checklists in `CHECKLISTS.md`: the exercise loop for every exercise, PRIMM for
   every new concept, the debugging loop for every bug. The tutor reminds you; the weekly report
   shows your process score.
-
 - Type everything yourself. No AI completion in the editor while training (turn off Copilot
   and similar tools for this folder).
 - Say the plan out loud before typing, even when alone. It is the interview habit, and it
-  exposes gaps early. With voice dictation on (`/voice` in Claude Code), say it to the tutor instead of typing it.
+  exposes gaps early. With voice dictation on (`/voice` in Claude Code), say it to the tutor
+  instead of typing it.
 - Predict before running a test. A wrong prediction is the most valuable minute of the day.
 - When stuck past twice the target, ask for a hint. Struggling for an hour teaches less than a
   level-2 hint and a redo tomorrow.

@@ -5,14 +5,18 @@ blank file, **understand** code you did not write, and **perform** in live-codin
 An AI coding agent (Claude Code, Codex or Gemini CLI) acts as a tutor that explains,
 questions, hints and reviews, but never writes your code for you.
 
-It works for anyone and any subject: choose your tracks and your weekly hours, run a
-placement, and the dojo plans, measures and adapts around you: it asks why you train (interview
-prep, interview plus growth, entering an industry, or a hobby) and what level of programmer you
-want to become, what you want to learn and why, recommends the order and the mix of tracks (one at a time, or a main track with a
-taster of the next), offers the theory a module needs right before it, and revisits the plan
-when your progress or your goals change. A complete Python track ships
-with it (fundamentals, reading and debugging code, data structures and algorithms, projects,
-interview practice).
+It works for anyone, at any level, for any subject. You tell it:
+
+- **why you train**: interview prep, interview plus growth, entering an industry, or a hobby;
+- **what level of programmer you want to become**: hobbyist, junior, mid or senior;
+- **what you want to learn, and how far is enough**: good basics and understanding, or more
+  where a job, an interview or the field needs it.
+
+It then recommends the order of what to learn, offers the theory a topic needs right before
+it, measures every attempt, and suggests changes to your plan and settings each week for you
+to accept or decline. The tutor explains at your level. A complete Python track ships with it
+(fundamentals, reading and debugging code, data structures and algorithms, projects, interview
+practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
 
 ## Why it works
 
@@ -29,7 +33,8 @@ interview practice).
 - **Build things.** A ladder of projects with requirements but no step-by-step guide.
 - **A method you cannot skip by accident.** Checklists for every activity; the tutor asks you
   to think out loud, flags skipped steps, and the weekly report scores your process.
-- **Train the performance.** Talk-aloud timed problems most days and a mock interview every week.
+- **Train the performance, if you need it.** Talk-aloud timed problems and mock interviews, as
+  often as your mode says (weekly when preparing for an interview, never unless asked as a hobby).
 - **AI as tutor, not ghostwriter.** The evidence and the rules are in [docs/METHOD.md](docs/METHOD.md).
 
 ## Quick start
@@ -60,7 +65,8 @@ where you stand this week, and proposes today's session from
 2. **Redo queue first:** due exercises from a blank file, no peeking at old attempts.
 3. **Learn and write:** `teach me <topic>` when a concept is new, then the next exercises.
 4. **Read, debug or build:** a bug or review drill, a code-reading exercise, or the project.
-5. **Perform:** an unseen problem under interview conditions, or the weekly `mock interview`.
+5. **Perform** (interview-related modes): an unseen problem under interview conditions, or a
+   `mock interview`; in hobby mode this time goes to building.
 6. **Log:** mistakes and cheat-sheet lines, then `end of day` for a summary and tomorrow's plan.
 
 Every exercise follows the same loop. Say each step out loud (voice dictation helps):
@@ -143,6 +149,7 @@ code-dojo/
 | [METHOD.md](docs/METHOD.md) | Why it is built this way: the learning research and the rules for AI |
 | [INTERVIEW_PLAYBOOK.md](docs/INTERVIEW_PLAYBOOK.md) | The process for live-coding interviews |
 | [PERSONAL_DOCS.md](docs/PERSONAL_DOCS.md) | What goes in your own `progress/docs/` and how the tutor keeps it |
+| [GLOSSARY.md](docs/GLOSSARY.md) | The words the dojo uses, in plain language |
 | [ROADMAP.md](docs/ROADMAP.md) | Choosing tracks, their order and mix from your goals; theory just in time; when the plan changes |
 | [TRACKS.md](docs/TRACKS.md) | What is shared and what is personal, and how to add a track or exercises |
 | [tracks/python/README.md](tracks/python/README.md) | The Python syllabus: phases, modules, milestones |

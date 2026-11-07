@@ -58,7 +58,7 @@ and followed by the tutor directly if the tool cannot start subagents. Turn off 
 replies or inline completions the tool offers, as Claude Code's are here.
 
 **Symlinks on Windows.** `.claude/skills` is a link to `.agents/skills`. If your Git checkout
-does not create symlinks, `python dojo.py install` (or `doctor`) replaces it with a link or, if
+does not create symlinks, `python dojo.py setup` (or `doctor`) replaces it with a link or, if
 that is not allowed, a copy.
 
 ## Editor and debugger: VS Code or Zed
@@ -111,7 +111,7 @@ python dojo.py export --to user@other-machine:~/
 ```
 
 On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip`. Set a default
-target in `progress/profile.json` (`"export_target": "user@host:path"`) to just run
+target once (`python dojo.py settings export_target=user@host:path`) to just run
 `python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,
 macOS and most Linux distributions.
 
@@ -131,4 +131,5 @@ On the other machine, download the zip from Drive and run `python dojo.py import
 ## Sharing with a friend
 
 Give them the repository (or let them fork it). Your personal data is gitignored, so they get
-a clean copy. They run the "First time" steps above, then `/dojo-assess` in Claude Code.
+a clean copy. They run `python dojo.py setup` (or say "set me up" to the tutor), then
+`assess me`.
