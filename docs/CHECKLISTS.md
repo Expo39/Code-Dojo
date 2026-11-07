@@ -101,7 +101,7 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Plan follows your goals and progress** | Every session (quick check), every week | `dojo-session` checks the roadmap triggers and says one line if one fires; the weekly review compares the mix with the real split (`dojo.py stats`); nothing in the plan changes silently |
 | **Run the tests and read the errors yourself** | Every test run | Gives you the `dojo.py test` command instead of running it; asks you to read the last line of the error before pointing at anything |
 | **Debugging loop** (read, reproduce, hypothesise, confirm, fix, name) | Every bug and failing test | Stops a code change made before a hypothesis: "What is your hypothesis?" |
-| **Read structure from the data; parse, then act; collector, loop, return** | Every solution | Points at the line with a question when a value is hard-coded or a return is missing |
+| **Your own habits to build** (from `progress/docs/PITFALLS.md` and the weekly coach notes) | Every solution | Points at the line with a question when one of them slips |
 | **Hint at twice the target, not later** | When stuck | `done` flags attempts over twice the target with no hint; the tutor offers hint 1 at 2x |
 | **Hints from the lowest level** | When stuck | Always starts at level 1 and says the level |
 | **Log every attempt, mistake and new concept** | End of each task | Runs `done`, `mistake` and adds the cheat-sheet line; asks "Any mistakes on the way?" |

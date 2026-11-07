@@ -15,17 +15,12 @@ on any question, and practise it until it runs on its own under pressure. The we
 | 5. Test (3 to 5 min) | Trace your example through the code line by line; then the edge case; fix calmly and say what was wrong | Finding your own bug is a strong signal, not a weak one |
 | 6. Reflect (1 to 2 min) | Time and space complexity; what you would improve with more time | Shows you think beyond "it works" |
 
-## Habits that fix the most common failures
+## When you are stuck
 
-- **Read structure from the data.** Never hard-code a value from the example (keys, lengths,
-  names). Loop over what is actually there.
-- **Parse, then act.** Pull every field of a record into variables first; decide only when the
-  record is complete.
-- **Collector, loop, return.** Make the result container before the loop, update it inside,
-  return it after. Check the last line returns what was asked.
-- **Run the example before saying done.** Out loud, line by line.
-- **Stuck?** Say what you know, what you are unsure of, and the simplest thing you could do
-  now. Then do it. A working brute force beats an unfinished clever solution.
+Say what you know, what you are unsure of, and the simplest thing you could do now. Then do it.
+A working brute force beats an unfinished clever solution. The habits that fix *your* most
+common failures come from your own mistakes and mocks; they are in `progress/docs/PITFALLS.md`
+and, when an interview is a goal, `progress/docs/INTERVIEW_PREP.md`.
 
 ## When you cannot write something
 

@@ -12,12 +12,13 @@ job, their estimates). When something written for one learner turns up in `docs/
 
 ## PITFALLS.md: your own traps
 
-- **From**: `progress/mistakes.md`. A theme that comes back 2 or more times becomes an entry;
-  general traps that every learner meets stay in `docs/PITFALLS.md` and are not copied.
+- **From**: `progress/mistakes.md`. A theme that comes back 2 or more times becomes an entry.
+  There is no shared list of pitfalls: what trips one learner does not trip another, so each
+  learner's list is built only from their own mistakes.
 - **Written by**: `dojo-weekly` (step 3, repeated mistakes); seeded by `dojo-assess` from the
   recurring mistakes in `BASELINE.md`.
 - **Used by**: predict and trace drills (`dojo-drill`) draw from it first; warm-up self-checks.
-- **Shape**: the same table as `docs/PITFALLS.md`, plus when it was last seen:
+- **Shape**: one table, in the learner's track language:
 
 ```markdown
 | Trap | Rule | Check | Last seen |

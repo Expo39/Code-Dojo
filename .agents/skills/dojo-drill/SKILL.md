@@ -10,7 +10,7 @@ Always NEW material, written for the drill: never reuse exercise files or reveal
 ## predict drill
 
 Ask for the prediction and wait; give the run command only in the next message, never in the same one.
-Show a 5 to 12 line snippet (a language gotcha or a small algorithm). Ask what it prints (draw first from the learner's own traps in `progress/docs/PITFALLS.md`, then the classic ones in `docs/PITFALLS.md`). After their answer, reveal and explain, and name the concept. Do 3 in a row unless asked otherwise.
+Show a 5 to 12 line snippet (a language gotcha or a small algorithm). Ask what it prints (draw first from the learner's own traps in `progress/docs/PITFALLS.md` and recent rows of `progress/mistakes.md`). After their answer, reveal and explain, and name the concept. Do 3 in a row unless asked otherwise.
 
 ## trace drill
 A 10 to 20 line function and one input. The learner writes the value of each variable after each loop iteration (a trace table). Check the table row by row.

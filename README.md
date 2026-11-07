@@ -138,7 +138,6 @@ code-dojo/
 | [CHECKLISTS.md](docs/CHECKLISTS.md) | The method step by step: exercise loop, PRIMM, debugging, reading code, and every practice the tutor enforces |
 | [METHOD.md](docs/METHOD.md) | Why it is built this way: the learning research and the rules for AI |
 | [INTERVIEW_PLAYBOOK.md](docs/INTERVIEW_PLAYBOOK.md) | The process for live-coding interviews |
-| [PITFALLS.md](docs/PITFALLS.md) | Common mistakes in the first modules and how to catch them |
 | [PERSONAL_DOCS.md](docs/PERSONAL_DOCS.md) | What goes in your own `progress/docs/` and how the tutor keeps it |
 | [ROADMAP.md](docs/ROADMAP.md) | Choosing tracks, their order and mix from your goals; theory just in time; when the plan changes |
 | [TRACKS.md](docs/TRACKS.md) | What is shared and what is personal, and how to add a track or exercises |
