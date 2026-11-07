@@ -15,6 +15,7 @@ Report:
 3. **Patterns**: the 3 weakest and 3 strongest patterns with numbers; mistake themes that keep recurring after being logged.
 4. **Performance**: mock results over time and the most common low-scoring area.
 5. **Milestones**: for each upcoming milestone in `PLAN.md`, which gate conditions are met, which are not, and a re-estimated date range from the observed rate (show the arithmetic briefly). Say plainly whether the original estimate still holds.
-6. **Recommendations**: at most 5, concrete (what, how long, which days), ordered by expected impact. Include one about sustainability if hours are consistently short or very long.
+6. **Roadmap**: if `progress/profile.json` has several tracks, the real split per track (`dojo.py stats`, "Track time") against the mix, gate progress per track, and any trigger from `docs/ROADMAP.md` section 7 that has fired. Estimates of a track change come from this learner's rate, not from generic durations.
+7. **Recommendations**: at most 5, concrete (what, how long, which days), ordered by expected impact. Include one about sustainability if hours are consistently short or very long.
 
 Use numbers, not adjectives. If the data is too thin for a conclusion, say so.
