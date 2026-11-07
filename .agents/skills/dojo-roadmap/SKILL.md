@@ -35,8 +35,10 @@ in `progress/` (gitignored). Use `python3 dojo.py` on Linux/macOS, `python dojo.
    - `dojo.py mix <track>=N ...` (shares sum to 100, 0 = maintenance) and `--priority "<text>"`
      for a dated or stated override (`--priority ""` clears it). Add the track to the profile if
      needed (`mix` does it).
-6. **If a track starts now and is a placeholder**: agree the toolchain, write its `track.json`
+6. If the decision moves modules in or out (a new bar, a new track), show `dojo.py modules` and
+   agree them with the learner (`dojo-assess`, section 3b).
+7. **If a track starts now and is a placeholder**: agree the toolchain, write its `track.json`
    and README modules (`docs/TRACKS.md`), then generate the first module only (`dojo-new-exercise`).
    Shared track files go in git; the learner's choice does not.
-7. **Close** in 3 to 5 lines: the order, this week's mix, what moves each track to its next state,
+8. **Close** in 3 to 5 lines: the order, this week's mix, what moves each track to its next state,
    and when the roadmap will next be looked at.

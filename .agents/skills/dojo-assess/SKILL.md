@@ -42,6 +42,26 @@ On a re-assessment, use `dojo.py stats` and the last 4 weekly reports instead of
 - `start_module`: the first module with real gaps. Modules clearly mastered: `dojo.py mark <module> --box 3`; partly known: `--box 1`. Record them with `dojo.py settings level=<level> start_module=<module> skip_modules=<a,b> tracks=<t>`.
 - Never skip modules that target their diagnosed gaps.
 
+## 3b. Agree the modules together
+
+Run `dojo.py modules` and show the list: which modules are assigned to them (and, in one line,
+why: what their bar and goals need), which are left out, which are planned. Ask: "Anything you
+want to leave out, or add?" Read any notes they gave at setup (`[your note: ...]`) and start with
+those.
+
+- **Leaving out an assigned module**: ask why. "I already know it": offer a quick check (one
+  exercise from it, or the evidence they have), then `dojo.py mark <module> --box 3` if it holds.
+  "Not needed": say in one or two lines whether their bar or a goal relies on it, and what it
+  would cost to skip.
+- **Adding a module that was left out**: ask why (they missed it at setup, a job needs it,
+  interest), and say why it was left out (beyond their bar, covered elsewhere, a later ring).
+- Decide together; the learner has the last word (`docs/ROADMAP.md`, rule 7): say the risk once,
+  then follow it. Apply with `dojo.py settings skip_modules+=<module>` or `skip_modules-=<module>`,
+  and log each change with its reason under Plan changes in `progress/PLAN.md`.
+
+The same conversation runs whenever the learner says "show my modules", or when a roadmap
+change moves modules in or out.
+
 ## 4. Write the files
 
 - `progress/BASELINE.md`: background, the evidence (tables of timings and hints where available), a diagnosis (recurring mistakes as "theme / example / habit to build"), strengths, placement. On a re-assessment, add a row to its "Current" table instead of rewriting history.

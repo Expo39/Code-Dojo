@@ -36,7 +36,7 @@ this page is for looking one up on your own.
 | Word | Meaning |
 | --- | --- |
 | **Track** | A subject, such as Python or C++. Each track has modules. |
-| **Module** | A topic within a track, such as "dicts and sets", with its exercises. |
+| **Module** | A topic within a track, such as "dicts and sets", with its exercises. `python dojo.py modules` shows yours: *assigned* (offered as new material), *excluded* (left out; its redos still come back), *planned* (no exercises yet). |
 | **Mode** | Why you train: `interview`, `hybrid` (interview plus growth), `industry` (entering a field) or `hobby`. It sets how much interview practice you get. |
 | **Target level** | The programmer you want to become: hobbyist, junior, mid or senior. It sets how far each goal goes. |
 | **Bar** | How far is enough for a goal, in your own words. Training stops at the bar, then the track goes to maintenance. |

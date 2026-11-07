@@ -59,6 +59,7 @@ dictated code does not count as typing it yourself.
 | Say | What happens |
 | --- | --- |
 | `set me up` (first time) | The tutor asks your mode, target level, time and track in the chat, runs `python dojo.py setup` for you, then goes on to placement |
+| `show my modules` | Your modules (assigned, left out, planned) with your progress; say which to leave out or add, and the tutor talks it through with you: your reason, its view, then you decide together |
 | `show my settings` / `change <setting> to <value>` | Every setting at a glance (`python dojo.py settings`), or any one changed: minutes per day, mode, target level, tracks, dates, skipped modules |
 | `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
 | `plan my learning` / `I want to learn <X>` / `when should I start <X>?` / `replan` | Roadmap: the tutor asks what is missing about your goals, recommends the order and mix of tracks with reasons and the cost, and records your choice (`docs/ROADMAP.md`) |
@@ -80,6 +81,7 @@ tutor session catches up with `sync`.
 | `python dojo.py setup` | First time: installs, asks your settings, checks, says what comes next |
 | `python dojo.py settings [key=value ...]` | Show or change any setting; `--review` suggests changes from your log |
 | `python dojo.py today` | Today's plan |
+| `python dojo.py modules` | Your modules: assigned, excluded, before your start, planned |
 | `python dojo.py update` / `changes` | Pull shared updates / see new, changed or removed exercises since you were last asked |
 | `python dojo.py list [module]` | Exercises and their status |
 | `python dojo.py start <ex>` / `test <ex>` / `done <ex> --hints N` | Do an exercise |

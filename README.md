@@ -46,11 +46,13 @@ repo (`git clone <this repo> code-dojo`, then `cd code-dojo`), then do **one** o
 
 - **In a terminal:** `python dojo.py setup`. It installs what it needs, asks why you are training
   (interview, interview plus growth, entering an industry, or a hobby), the level of programmer
-  you want to become, your time per day and your tracks, checks everything, and tells you
-  exactly what the tutor will do next.
+  you want to become, your time per day and your tracks, checks everything, shows the modules
+  assigned to you (you can mark any to leave out, with a reason), and tells you exactly what the
+  tutor will do next.
 - **In the AI tutor:** open `claude` (or `codex`, `gemini`) in the folder and say **set me up**.
   It asks the same questions in the chat, runs the setup for you, then goes straight on to your
-  placement: your goals, a short practical check, your plan.
+  placement: your goals, a short practical check, your plan, and your modules, which you go
+  through together: leave any out or add any back, each with a reason, and decide together.
 
 Either way, everything can be changed later.
 
@@ -101,7 +103,7 @@ python dojo.py week --write          # weekly report
 | Group | Commands |
 | --- | --- |
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
-| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]` |
+| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules` |
 | Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |

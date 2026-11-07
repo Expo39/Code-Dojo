@@ -27,6 +27,8 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
    your background and goals, imports what you already have (notes, old logs, a list of topics
    you know), gives a short diagnostic, and then writes your `BASELINE.md`, `PLAN.md` and
    personal docs, sets your start module and seeds the redo queue for what you already know.
+   Then you go through your modules together (`python dojo.py modules`): leave any out or add
+   any back, each with a reason, and decide together.
 3. Follow `docs/DAILY_SESSION.md`. Re-run `/dojo-assess` monthly, or whenever the plan feels
    wrong.
 
