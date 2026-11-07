@@ -15,14 +15,14 @@ In the commands below, replace `python` with what your system uses.
 ```bash
 git clone <your fork or copy of this repo> code-dojo
 cd code-dojo
-python dojo.py install
 python dojo.py setup
-python dojo.py doctor
 ```
 
-`install` creates `.venv` and installs pytest into it; you do not need to activate it, because
-`dojo.py` finds it itself. `setup` asks for your name, time per weekday, rest days, an optional
-target date, your tracks and your level.
+`setup` is the only command to run. It creates `.venv` with pytest if it is missing (you never
+need to activate it: `dojo.py` finds it), asks your name, mode (interview, hybrid, industry,
+hobby), target level, time per weekday and rest days, an optional target date, your tracks and
+your level, runs the checks (`doctor`), and ends with what the tutor will do next. Or skip the
+terminal: open the tutor and say "set me up"; it asks in the chat and runs `setup` for you.
 
 ## Claude Code (the tutor)
 

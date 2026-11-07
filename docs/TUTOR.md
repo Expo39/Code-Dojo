@@ -58,6 +58,7 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
+| `set me up` (first time) | The tutor asks your mode, target level, time and track in the chat, runs `python dojo.py setup` for you, then goes on to placement |
 | `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
 | `plan my learning` / `I want to learn <X>` / `when should I start <X>?` / `replan` | Roadmap: the tutor asks what is missing about your goals, recommends the order and mix of tracks with reasons and the cost, and records your choice (`docs/ROADMAP.md`) |
 | `change my mode to <hobby/industry/...>` / `I want to be a <junior/mid/...> developer` | Mode or target level updated; the weekly balance, mocks and bars follow (`docs/ROADMAP.md`) |

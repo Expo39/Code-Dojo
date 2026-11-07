@@ -21,8 +21,9 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
 
 ## Starting as a new learner
 
-1. `python dojo.py install`, then `python dojo.py setup` (time, rest days, tracks, level).
-2. In Claude Code, run `/dojo-assess`. The tutor asks about your background, imports what you
+1. `python dojo.py setup` in a terminal (it installs, asks, checks and says what comes next),
+   or say "set me up" to the tutor, which asks in the chat and runs it for you.
+2. Say `assess me` (the tutor goes on to it by itself after "set me up"). The tutor asks about your background, imports what you
    already have (notes, old logs, a list of topics you know), gives a short diagnostic, and
    then writes your `BASELINE.md` and `PLAN.md`, sets your start module and seeds the redo
    queue for what you already know.

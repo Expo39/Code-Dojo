@@ -34,16 +34,18 @@ interview practice).
 
 ## Quick start
 
-Requires Python 3.10+ (on Windows use `py` or `python`; on macOS and Linux `python3`).
+Requires Python 3.10+ (on Windows use `py` or `python`; on macOS and Linux `python3`). Get the
+repo (`git clone <this repo> code-dojo`, then `cd code-dojo`), then do **one** of these:
 
-```bash
-git clone <this repo> code-dojo
-cd code-dojo
-python dojo.py install     # creates .venv with pytest (any OS)
-python dojo.py setup       # your name, minutes per weekday, rest days, tracks, level
-python dojo.py doctor      # checks everything
-claude                     # the tutor (or: codex, gemini); then say: assess me
-```
+- **In a terminal:** `python dojo.py setup`. It installs what it needs, asks why you are training
+  (interview, interview plus growth, entering an industry, or a hobby), the level of programmer
+  you want to become, your time per day and your tracks, checks everything, and tells you
+  exactly what the tutor will do next.
+- **In the AI tutor:** open `claude` (or `codex`, `gemini`) in the folder and say **set me up**.
+  It asks the same questions in the chat, runs the setup for you, then goes straight on to your
+  placement: your goals, a short practical check, your plan.
+
+Either way, everything can be changed later.
 
 Full instructions, the VS Code and Zed debugger setup, voice dictation, using Codex or Gemini,
 and moving between machines: [docs/SETUP.md](docs/SETUP.md).
@@ -90,7 +92,7 @@ python dojo.py week --write          # weekly report
 
 | Group | Commands |
 | --- | --- |
-| Set up | `install`, `setup`, `doctor` |
+| Set up | `setup` (installs and checks for you), `install`, `doctor` |
 | Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]` |
 | Practise | `start`, `test [--debug]`, `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |

@@ -7,7 +7,7 @@ description: Start-of-session catch-up for the Code Dojo learner. Use on the lea
 
 Keep the whole catch-up to a few minutes. Use `python3 dojo.py` on Linux/macOS, `python dojo.py` on Windows.
 
-1. If `progress/profile.json` is missing: the learner is new. Point them to `python dojo.py install`, `python dojo.py setup`, then run the `dojo-assess` skill. Stop here.
+1. If `progress/profile.json` is missing: the learner is new. Welcome them in two lines and offer to set them up here and now (the `dojo-assess` skill, step 0), or, if they prefer a terminal, `python dojo.py setup`. Stop the catch-up here.
 2. Run `dojo.py sync`. For exercises edited but not logged, ask once, as one short list, roughly how long each took and how much help they had; log each with `dojo.py done <item> --minutes N --hints H` (skip what they do not remember). For timers left running, ask, then `done --minutes N` or `cancel`.
 3. Run `dojo.py today`. Read `progress/PLAN.md` ("Current focus"), the newest `progress/weekly/*.md` coach notes, and the last rows of `progress/mistakes.md`.
 4. Ask: "Anything you practised without me, or anything that felt shaky?" Log mistakes with `dojo.py mistake` and add cheat-sheet bullets for the concepts involved.

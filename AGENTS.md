@@ -26,8 +26,9 @@ Everything personal is in `progress/` (local, gitignored). Before giving advice,
   learner goes there, never into shared files
 
 Tailor everything to these files, not to assumptions. If `progress/profile.json` does not
-exist, the learner is new: ask them to run `dojo.py install` and `dojo.py setup`,
-then run the `dojo-assess` skill.
+exist, the learner is new: offer to set them up in the chat (`dojo-assess`, step 0, which runs
+`dojo.py setup --yes ...` with their answers), or they run `dojo.py setup` in a terminal; then
+placement (`dojo-assess`).
 
 ## Tracks and languages
 
@@ -243,7 +244,7 @@ job itself, keeping the same rules (no rewritten learner code).
 | The learner says | Use |
 | --- | --- |
 | first message of a session | skill `dojo-session` |
-| `assess me`, `placement`, `I already know ...`, `import my notes` | skill `dojo-assess` |
+| `set me up` (or any first message without a profile), `assess me`, `placement`, `I already know ...`, `import my notes` | skill `dojo-assess` |
 | `plan my learning`, `replan`, `I want to learn X`, `when should I start X`, a date or a new focus, a roadmap trigger | skill `dojo-roadmap` |
 | `teach me <topic>` | skill `dojo-teach` |
 | `mock interview`, `interview problem` | skill `dojo-mock` |
