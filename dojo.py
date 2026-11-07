@@ -1183,7 +1183,7 @@ def cmd_log(args) -> None:
     append_log({"date": fmt_date(on), "item": args.item or args.kind, "kind": args.kind,
                 "minutes": args.minutes, "hints": args.hints, "result": args.result or "",
                 "pattern": args.pattern or "", "level": args.level or "", "note": args.note or ""})
-    print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {on}.")
+    print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {fmt_date(on)}.")
 
 
 def timer_of(value) -> dict:
