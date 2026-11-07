@@ -92,6 +92,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions).
+  For a quick check (a few lines, not a test file), give both ways to run it: the one-line
+  terminal command (`! python3 -c '...'`) and the same lines to type in the REPL (`python3`,
+  one statement per line).
 - **Write it down.** Indexes and slices: let them jot traces as comments or on paper; ask for
   written values, not mental arithmetic.
 - **New concept**: PRIMM via `dojo-teach`; never explain before they predict.
