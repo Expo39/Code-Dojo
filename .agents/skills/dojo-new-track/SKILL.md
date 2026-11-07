@@ -47,7 +47,10 @@ than any one of them. Always in the dojo's own format, never a copy.
      borrowed, with the source credited.
 6. **Build only what is needed now**: the first module (`dojo-new-exercise`), the rest as
    "planned". A review that adds lesson topics to a module that already has exercises also adds
-   exercises for them, so no topic is taught without practice. Learners are told at their next
+   exercises for them, so no topic is taught without practice. **No bloat**: add an exercise only
+   if it trains something no existing exercise does (one per topic, two only when the topic
+   has two distinct skills); fold small topics into existing modules rather than new ones;
+   remove or merge exercises that duplicate others. More exercises are not a better course. Learners are told at their next
    session (new topics and exercises, also in modules they finished) and choose for each. Shared track files go in a pull request or commit; the learner's choices stay in
    `progress/`.
 7. **Close**: the sources used and the ones rejected (one line why), the module list, and what
