@@ -350,13 +350,18 @@ def cmd_settings(args) -> None:
             if not sep:
                 die(f"Use key=value, or key+=value to add to a list (got '{change}').")
             key = key.strip()
-            if key.endswith("+"):  # key+=a,b adds to a list setting instead of replacing it
-                key = key[:-1].strip()
+            if key.endswith(("+", "-")):  # key+=a adds to a list setting, key-=a removes from it
+                op, key = key[-1], key[:-1].strip()
                 if SETTINGS.get(key, ("",))[0] != "list":
-                    die(f"+= works only for list settings ({', '.join(k for k, v in SETTINGS.items() if v[0] == 'list')}).")
-                raw = ",".join(list(profile.get(key, [])) + [x for x in raw.split(",") if x.strip()
-                                                             and x.strip() not in profile.get(key, [])])
+                    die(f"+= and -= work only for list settings ({', '.join(k for k, v in SETTINGS.items() if v[0] == 'list')}).")
+                given = [x.strip() for x in raw.split(",") if x.strip()]
+                current = list(profile.get(key, []))
+                kept = [x for x in current if x not in given] if op == "-" else current + [x for x in given if x not in current]
+                raw = ",".join(kept)
             set_setting(profile, key, raw)
+        notes = profile.get("module_notes", {})
+        for module in [m for m in notes if not any(m.startswith(x) for x in profile.get("skip_modules", []))]:
+            notes.pop(module)  # back in scope: the reason for leaving it out no longer applies
         write_json(PROFILE, profile)
         for k in SETTINGS:
             after = show_value(profile, k)
@@ -488,6 +493,25 @@ def cmd_setup(args) -> None:
     print(f"\nSaved. Weekly target: {fmt_min(total)} over "
           f"{sum(1 for d in DAYS if minutes[d] > 0)} days.\n")
     cmd_doctor(args)
+    print("\nYour modules for now (all of your tracks; placement may move your start point):\n")
+    print_modules(profile)
+    if not quiet:
+        print("\nAnything you want to leave out already? Give a short reason for each: the tutor")
+        print("goes through them with you in placement and you decide together.")
+        out = ask("Modules to leave out, comma separated (empty = none, decide in placement)", "")
+        notes = dict(profile.get("module_notes", {}))
+        known = {r["module"] for r in module_overview(profile)}
+        for module in [m.strip() for m in out.split(",") if m.strip()]:
+            if module not in known:
+                print(f"  Unknown module '{module}', skipped.")
+                continue
+            notes[module] = "wants it left out: " + ask(f"  Why leave out {module}?", "no reason given")
+            if module not in profile["skip_modules"]:
+                profile["skip_modules"].append(module)
+        if notes:
+            profile["module_notes"] = notes
+            write_json(PROFILE, profile)
+            print("Noted. The tutor will ask about these in placement.")
     print(NEXT_STEPS)
 
 
@@ -1388,6 +1412,53 @@ def cmd_update(args) -> None:
     cmd_changes(argparse.Namespace(ack=None))
 
 
+MODULE_ROW_RE = re.compile(r"^\|\s*(m\d\d_[a-z0-9_]+)\s*\|\s*(.+?)\s*\|\s*(\w+)\s*\|\s*$", re.MULTILINE)
+
+
+def module_overview(profile: dict) -> list[dict]:
+    """Every module of the learner's tracks, in order, with the learner's status for it."""
+    exercises = discover()
+    reviews = read_json(REVIEWS, {})
+    out = []
+    for track_name, track in load_tracks(active_only=True).items():
+        readme = track["dir"] / "README.md"
+        focus = {m: (f, st) for m, f, st in MODULE_ROW_RE.findall(readme.read_text(encoding="utf-8"))} \
+            if readme.exists() else {}
+        on_disk = sorted({ex["module"] for ex in exercises.values() if ex["track"] == track_name})
+        for module in sorted(set(on_disk) | set(focus)):
+            slugs = [sl for sl, ex in exercises.items() if ex["track"] == track_name and ex["module"] == module]
+            if any(module.startswith(x) for x in profile.get("skip_modules", [])):
+                state = "excluded"
+            elif not slugs:
+                state = "planned"
+            elif profile.get("start_module") and module < profile["start_module"]:
+                state = "before start"
+            else:
+                state = "assigned"
+            out.append({"track": track_name, "module": module, "focus": focus.get(module, ("", ""))[0],
+                        "state": state, "total": len(slugs), "tried": sum(1 for sl in slugs if sl in reviews),
+                        "note": profile.get("module_notes", {}).get(module, "")})
+    return out
+
+
+def print_modules(profile: dict) -> None:
+    rows = module_overview(profile)
+    for track in dict.fromkeys(r["track"] for r in rows):
+        print(f"{track}:")
+        for r in (x for x in rows if x["track"] == track):
+            count = f"{r['tried']}/{r['total']}" if r["total"] else "   "
+            note = f"  [your note: {r['note']}]" if r["note"] else ""
+            print(f"  {r['state']:13} {r['module']:28} {count:6} {r['focus']}{note}")
+    print("assigned = offered as new material; excluded = left out (redos still come back);")
+    print("before start = before your start module; planned = no exercises yet, written when reached.")
+
+
+def cmd_modules(args) -> None:
+    """Show the learner's modules; the tutor goes through them with the learner (dojo-assess)."""
+    print_modules(load_profile())
+    print("Leave one out: python dojo.py settings skip_modules+=<module>; add one back: skip_modules-=<module>.")
+
+
 def in_scope(ex: dict, profile: dict) -> bool:
     """False for modules the learner skipped or that come before their start module."""
     module = ex["module"]
@@ -1861,11 +1932,12 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
   stats                    modules, patterns, fluency gates (and time by track)
+  modules                  your modules: assigned, excluded, before your start, or planned
   update                   pull the shared repo's latest tracks and docs, then show what changed
   changes [--ack [slugs]]  new, changed or removed exercises since you were last asked;
                            --ack records them as seen (all, or the slugs given)
   settings [key=value ...] show every setting, or change any (minutes=mon=60,sat=0, mode=hobby,
-                           skip_modules=m08,m09, ...; key+=value adds to a list);
+                           skip_modules=m08,m09, ...; key+=value adds to a list, key-=value removes);
                            --review suggests changes from your log
   mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
                            no arguments shows the current mix
@@ -1937,6 +2009,7 @@ def main() -> None:
     sub.add_parser("stats")
     p = sub.add_parser("changes"); p.add_argument("--ack", nargs="*")
     sub.add_parser("update")
+    sub.add_parser("modules")
     p = sub.add_parser("settings"); p.add_argument("changes", nargs="*"); p.add_argument("--review", action="store_true")
     p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")
     sub.add_parser("sync")
@@ -1949,7 +2022,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update,
+        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
