@@ -85,7 +85,7 @@ DEFAULT_PROFILE = {
     # Share of new-material time per track (percent). 0 = maintenance: redos only, no new
     # material. Empty = the active tracks share equally. Set with `dojo.py mix`.
     "mix": {},
-    # What overrides the mix right now, in words (e.g. "interview on 2027-03-01"), or empty.
+    # What overrides the mix right now, in words (e.g. "interview on 01/03/2027"), or empty.
     "priority": "",
     # Why they train and the programmer they want to become (docs/ROADMAP.md, section 1).
     "mode": "",
@@ -120,7 +120,7 @@ CHEATSHEET_HEADER = """# Cheat sheet
 
 Concepts worth reviewing, kept short by the tutor. One bullet per concept:
 the idea in a few words, then "Check:" with a self-check question.
-Mark mastered bullets with "(mastered YYYY-MM-DD)".
+Mark mastered bullets with "(mastered DD/MM/YYYY)".
 
 ## Python syntax and built-ins
 
@@ -144,7 +144,23 @@ def now() -> datetime:
     return datetime.now().replace(microsecond=0)
 
 
+# European dates everywhere the learner looks: DD/MM/YYYY in data and output, DD-MM-YYYY in
+# file names, DD_MM_YYYY in names that must also be valid identifiers (mock_07_11_2026.py).
+DATE_FMT = "%d/%m/%Y"
+FILE_DATE_FMT = "%d-%m-%Y"
+STAMP_FMT = "%d%m%Y_%H%M%S"
+
+
+def fmt_date(d: date) -> str:
+    return d.strftime(DATE_FMT)
+
+
 def parse_date(text: str) -> date:
+    """DD/MM/YYYY (also DD-MM-YYYY or DD.MM.YYYY); ISO YYYY-MM-DD is still read, for old data."""
+    text = text.strip()
+    m = re.fullmatch(r"(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})", text)
+    if m:
+        return date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
     return date.fromisoformat(text)
 
 
@@ -417,7 +433,7 @@ def cmd_setup(args) -> None:
             return
         print("Editing the existing profile (press Enter to keep a value).")
     if args.fresh and (PROGRESS.exists() and any(PROGRESS.iterdir())):
-        stamp = now().strftime("%Y%m%d_%H%M%S")
+        stamp = now().strftime(STAMP_FMT)
         archive = ROOT / f"progress_archive_{stamp}"
         shutil.move(str(PROGRESS), archive)
         if WORKSPACE.exists() and any(p for p in WORKSPACE.iterdir() if p.name != ".gitkeep"):
@@ -447,9 +463,9 @@ def cmd_setup(args) -> None:
             print(f"  {key:10} {text}")
     level = value(args.target_level, "Target level", profile["target_level"] or "junior").strip().lower()
     profile["target_level"] = level if level in LEVELS else (profile["target_level"] or "junior")
-    profile["start_date"] = value(args.start_date, "Start date (YYYY-MM-DD)",
-                                  profile["start_date"] or today().isoformat())
-    profile["target_date"] = value(args.target_date, "Target date, e.g. an interview (YYYY-MM-DD, empty for none)",
+    profile["start_date"] = value(args.start_date, "Start date (DD/MM/YYYY)",
+                                  profile["start_date"] or fmt_date(today()))
+    profile["target_date"] = value(args.target_date, "Target date, e.g. an interview (DD/MM/YYYY, empty for none)",
                                    profile["target_date"])
 
     minutes = dict(profile["minutes"])
@@ -565,7 +581,7 @@ DEFAULT_TRACK = {
     "test_command": None,
     # What a learner should have before starting this track, in words (docs/ROADMAP.md).
     "requires": [],
-    # When the track was last checked against current courses and the current version (YYYY-MM-DD).
+    # When the track was last checked against current courses and the current version (DD/MM/YYYY).
     "reviewed": "",
 }
 
@@ -714,7 +730,7 @@ def append_log(row: dict) -> None:
 
 
 def minutes_on(rows: list[dict], d: date) -> float:
-    key = d.isoformat()
+    key = fmt_date(d)
     return sum(float(r["minutes"] or 0) for r in rows if r["date"] == key)
 
 
@@ -746,9 +762,9 @@ def schedule(item: str, result: str, ratio: float | None, hints: int, on: date) 
     else:
         card["box"] = 0
         grade = "struggled"
-    card["last"] = on.isoformat()
+    card["last"] = fmt_date(on)
     card["grade"] = grade
-    card["due"] = (on + timedelta(days=INTERVALS[card["box"]])).isoformat()
+    card["due"] = fmt_date(on + timedelta(days=INTERVALS[card["box"]]))
     reviews[item] = card
     write_json(REVIEWS, reviews)
     return card
@@ -757,7 +773,7 @@ def schedule(item: str, result: str, ratio: float | None, hints: int, on: date) 
 def due_items(on: date) -> list[tuple[str, dict]]:
     reviews = read_json(REVIEWS, {})
     due = [(k, v) for k, v in reviews.items() if parse_date(v["due"]) <= on]
-    return sorted(due, key=lambda kv: (kv[1]["due"], kv[1]["box"]))
+    return sorted(due, key=lambda kv: (parse_date(kv[1]["due"]), kv[1]["box"]))
 
 
 # ------------------------------------------------------------------ commands
@@ -819,7 +835,7 @@ def cmd_export(args) -> None:
     name = re.sub(r"[^A-Za-z0-9_-]", "", profile.get("learner") or "learner") or "learner"
     out_dir = Path(args.out).expanduser() if args.out else ROOT / "exports"
     out_dir.mkdir(parents=True, exist_ok=True)
-    archive = out_dir / f"code-dojo_{name}_{now().strftime('%Y%m%d_%H%M%S')}.zip"
+    archive = out_dir / f"code-dojo_{name}_{now().strftime(STAMP_FMT)}.zip"
     count = 0
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         for folder in (PROGRESS, WORKSPACE):
@@ -914,7 +930,7 @@ def cmd_import(args) -> None:
             die("This copy already has progress. Run `python dojo.py export` first to keep it, "
                 "then `python dojo.py import <zip> --force`.")
         if has_data:
-            stamp = now().strftime("%Y%m%d_%H%M%S")
+            stamp = now().strftime(STAMP_FMT)
             backup = ROOT / f"progress_archive_{stamp}"
             backup.mkdir()
             for folder in (PROGRESS, WORKSPACE):
@@ -923,6 +939,7 @@ def cmd_import(args) -> None:
             print(f"Current data moved to {backup.name}/")
         z.extractall(ROOT)
     migrate_workspace(verbose=False)  # an export from an older version may use the flat layout
+    migrate_dates(verbose=False)
     print(f"Imported {len(names)} files. Run `python dojo.py today`.")
 
 
@@ -1004,7 +1021,7 @@ def cmd_start(args) -> None:
         if attempt.exists() and (args.fresh or redo):
             history = attempt.parent / HISTORY_DIR
             history.mkdir(parents=True, exist_ok=True)
-            stamp = now().strftime("%Y%m%d_%H%M")
+            stamp = now().strftime("%d%m%Y_%H%M")
             shutil.move(str(attempt), history / f"{args.item}_{stamp}{attempt.suffix}")
         if not attempt.exists():
             shutil.copy(ex["stub"], attempt)
@@ -1088,7 +1105,7 @@ def cmd_done(args) -> None:
         # A PRIMM lesson: training time, but no target, no tests and no redo schedule.
         topic = args.item[len(LESSON_PREFIX):]
         module = timer_of(started).get("module", "") if started else ""
-        append_log({"date": on.isoformat(), "item": topic, "kind": "study", "module": module,
+        append_log({"date": fmt_date(on), "item": topic, "kind": "study", "module": module,
                     "minutes": round(minutes + credit + paused, 1), "note": "PRIMM lesson"})
         print(f"Lesson '{topic}': {fmt_min(minutes + credit + paused)} logged as study.")
         return
@@ -1118,18 +1135,18 @@ def cmd_done(args) -> None:
     unknown = [x for x in skipped if x not in STEPS]
     if unknown:
         die(f"Unknown step(s): {', '.join(unknown)}. Steps: {', '.join(STEPS)}")
-    append_log({"date": on.isoformat(), "item": args.item, "kind": kind, "module": module,
+    append_log({"date": fmt_date(on), "item": args.item, "kind": kind, "module": module,
                 "pattern": pattern, "level": level, "minutes": round(minutes, 1),
                 "target": target or "", "hints": args.hints, "result": result,
                 "ratio": ratio if ratio is not None else "",
                 "skipped": ",".join(skipped), "note": args.note or ""})
     if credit:
         # Time lost to a tutor misunderstanding: off the solve time, still counted as training.
-        append_log({"date": on.isoformat(), "item": args.item, "kind": "study",
+        append_log({"date": fmt_date(on), "item": args.item, "kind": "study",
                     "minutes": round(credit, 1), "note": "credit: tutor misunderstanding"})
     if paused >= 0.5:
         # Clock paused for a discussion: off the solve time, still counted as training.
-        append_log({"date": on.isoformat(), "item": args.item, "kind": "study",
+        append_log({"date": fmt_date(on), "item": args.item, "kind": "study",
                     "minutes": round(paused, 1), "note": "paused: discussion"})
 
     verdict = f"{args.item}: {result} in {fmt_min(minutes)}"
@@ -1163,7 +1180,7 @@ def cmd_done(args) -> None:
 def cmd_log(args) -> None:
     ensure_files()
     on = parse_date(args.date) if args.date else today()
-    append_log({"date": on.isoformat(), "item": args.item or args.kind, "kind": args.kind,
+    append_log({"date": fmt_date(on), "item": args.item or args.kind, "kind": args.kind,
                 "minutes": args.minutes, "hints": args.hints, "result": args.result or "",
                 "pattern": args.pattern or "", "level": args.level or "", "note": args.note or ""})
     print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {on}.")
@@ -1246,7 +1263,7 @@ def cmd_session(args) -> None:
     if args.action == "start":
         if session:
             die("A session is already running: `session end` first.")
-        write_json(SESSION, {"date": today().isoformat(), "start": now().isoformat(),
+        write_json(SESSION, {"date": fmt_date(today()), "start": now().isoformat(),
                              "paused_total": 0.0, "paused_at": None,
                              "logged_at_start": minutes_on(rows, today())})
         print("Session clock started. Pause it for breaks and anything that is not training.")
@@ -1316,8 +1333,8 @@ def cmd_mark(args) -> None:
     box = max(0, min(args.box, len(INTERVALS) - 1))
     for slug in slugs:
         card = reviews.get(slug, {"box": 0, "attempts": 0, "clean": 0})
-        card.update({"box": box, "grade": "placed", "last": on.isoformat(),
-                     "due": (on + timedelta(days=INTERVALS[box])).isoformat()})
+        card.update({"box": box, "grade": "placed", "last": fmt_date(on),
+                     "due": fmt_date(on + timedelta(days=INTERVALS[box]))})
         reviews[slug] = card
     write_json(REVIEWS, reviews)
     print(f"Placed {len(slugs)} exercises in box {box} (first redo in {INTERVALS[box]} days).")
@@ -1327,7 +1344,7 @@ def cmd_mistake(args) -> None:
     ensure_files()
     clean = [s.replace("|", "/").replace("\n", " ") for s in (args.item, args.what, args.fix)]
     with MISTAKES.open("a", encoding="utf-8") as f:
-        f.write(f"| {today().isoformat()} | {clean[0]} | {clean[1]} | {clean[2]} |\n")
+        f.write(f"| {fmt_date(today())} | {clean[0]} | {clean[1]} | {clean[2]} |\n")
     print("Mistake logged.")
 
 
@@ -1524,11 +1541,11 @@ def upstream_behind(fetch: bool) -> int | None:
 def daily_upstream_check() -> int | None:
     """At most one network check a day, so session start stays fast."""
     state = read_json(UPSTREAM_CHECK, {})
-    if state.get("date") == today().isoformat():
+    if state.get("date") == fmt_date(today()):
         return state.get("behind")
     behind = upstream_behind(fetch=True)
     if PROGRESS.exists():
-        write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": behind})
+        write_json(UPSTREAM_CHECK, {"date": fmt_date(today()), "behind": behind})
     return behind
 
 
@@ -1573,7 +1590,7 @@ def cmd_update(args) -> None:
                          capture_output=True, text=True).stdout.strip()
     if not log:
         print("Already up to date.")
-        write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": 0})
+        write_json(UPSTREAM_CHECK, {"date": fmt_date(today()), "behind": 0})
         cmd_changes(argparse.Namespace(ack=None))
         return
     files = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", incoming],
@@ -1591,7 +1608,7 @@ def cmd_update(args) -> None:
     result = subprocess.run(["git", "-C", str(ROOT), "merge", "--ff-only", f"{remote}/{branch}"])
     if result.returncode != 0:
         die("The update could not be applied automatically (see the git message above).")
-    write_json(UPSTREAM_CHECK, {"date": today().isoformat(), "behind": 0})
+    write_json(UPSTREAM_CHECK, {"date": fmt_date(today()), "behind": 0})
     cmd_changes(argparse.Namespace(ack=None))
 
 
@@ -1829,10 +1846,10 @@ def cmd_week(args) -> None:
     reviews = read_json(REVIEWS, {})
     mastered = sum(1 for c in reviews.values() if c["box"] >= MASTERED_BOX)
     mistakes = [line for line in (MISTAKES.read_text(encoding="utf-8").splitlines() if MISTAKES.exists() else [])
-                if line.startswith("| 2") and start.isoformat() <= line[2:12] <= end.isoformat()]
+                if is_dated_row(line) and start <= parse_date(line.split("|")[1]) <= end]
 
     iso = on.isocalendar()
-    out = [f"# Week {iso[0]}-W{iso[1]:02d} ({start} to {end})", ""]
+    out = [f"# Week {iso[1]} of {iso[0]} ({fmt_date(start)} to {fmt_date(end)})", ""]
     pct = 100 * total / target if target else 0
     out.append(f"**Time:** {fmt_min(total)} of {fmt_min(target)} ({pct:.0f}%).")
     out.append("")
@@ -1874,7 +1891,7 @@ def cmd_week(args) -> None:
     print(text)
     if args.write:
         WEEKLY.mkdir(parents=True, exist_ok=True)
-        path = WEEKLY / f"{iso[0]}-W{iso[1]:02d}.md"
+        path = WEEKLY / f"week_{start.strftime(FILE_DATE_FMT)}.md"
         if path.exists() and not args.force:
             print(f"{path.relative_to(ROOT)} exists; pass --force to overwrite.")
         else:
@@ -1948,7 +1965,7 @@ def cmd_sync(args) -> None:
     rows = read_log()
     last_logged: dict[str, datetime] = {}
     for r in rows:
-        last_logged[r["item"]] = datetime.fromisoformat(r["date"] + "T23:59:59")
+        last_logged[r["item"]] = datetime.combine(parse_date(r["date"]), datetime.max.time())
     timers = read_json(TIMER, {})
     exercises = discover()
     found = False
@@ -1960,7 +1977,7 @@ def cmd_sync(args) -> None:
         if slug not in last_logged or changed > last_logged[slug]:
             passed = run_exercise(exercises[slug], quiet=True)
             state = {True: "passes", False: "does not pass", None: "no test command"}[passed]
-            print(f"  {slug}: edited {changed:%Y-%m-%d %H:%M}, not logged, tests {state}.")
+            print(f"  {slug}: edited {changed:%d/%m/%Y %H:%M}, not logged, tests {state}.")
             found = True
     for item, started in timers.items():
         print(f"  Timer still running: {item} since {timer_of(started)['start']}.")
@@ -2099,14 +2116,132 @@ def migrate_workspace(verbose: bool = True) -> int:
     for old in [old_history] + [WORKSPACE / kind for kind in TRACK_SIDE_FOLDERS]:
         if old.is_dir() and not any(old.iterdir()):
             old.rmdir()
+    # generated folders (drills/, mocks/) hold only the files the learner works in; their tests
+    # sit in a tests/ subfolder, and import from the folder above
+    for track_name in load_tracks(active_only=False):
+        for kind in TRACK_SIDE_FOLDERS:
+            folder = WORKSPACE / track_name / kind
+            if not folder.is_dir():
+                continue
+            for path in sorted(folder.glob("test_*")):
+                dest = folder / "tests" / path.name
+                if not path.is_file() or dest.exists():
+                    continue
+                dest.parent.mkdir(exist_ok=True)
+                text = path.read_text(encoding="utf-8")
+                dest.write_text(text.replace("Path(__file__).parent)", "Path(__file__).parent.parent)"),
+                                encoding="utf-8")
+                path.unlink()
+                moved += 1
+                if verbose:
+                    print(f"  moved {path.relative_to(ROOT).as_posix()} -> {kind}/tests/{path.name}")
+            cache = folder / "__pycache__"
+            if cache.is_dir():
+                shutil.rmtree(cache)
     if moved:
         print(f"Workspace reorganised by module: {moved} file(s) moved.")
     return moved
 
 
+ISO_DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
+ISO_IN_NAME_RE = re.compile(r"(?<!\d)(20\d{2})[-_](0[1-9]|1[0-2])[-_](0[1-9]|[12]\d|3[01])(?!\d)")
+ISO_STAMP_RE = re.compile(r"(?<!\d)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])_(\d{4,6})(?!\d)")
+
+
+def is_dated_row(line: str) -> bool:
+    """A markdown table row whose first cell is a date (the mistakes log)."""
+    cells = line.split("|")
+    if len(cells) < 3 or not line.startswith("|"):
+        return False
+    try:
+        parse_date(cells[1])
+        return True
+    except ValueError:
+        return False
+
+
+def euro_date(text: str) -> str:
+    """An ISO date string as DD/MM/YYYY; anything else unchanged."""
+    return fmt_date(date.fromisoformat(text)) if text and ISO_DATE_RE.match(text) else text
+
+
+def euro_name(name: str, sep: str = "_") -> str:
+    """ISO dates and stamps inside a file or item name, turned day-first."""
+    name = ISO_STAMP_RE.sub(lambda m: f"{m[3]}{m[2]}{m[1]}_{m[4]}", name)
+    return ISO_IN_NAME_RE.sub(lambda m: f"{m[3]}{sep}{m[2]}{sep}{m[1]}", name)
+
+
+def migrate_dates(verbose: bool = True) -> int:
+    """Turn ISO dates in personal data and file names into the European format. Idempotent."""
+    changes = 0
+    if LOG.exists():
+        rows = read_log()
+        new = [dict(r, date=euro_date(r["date"]), item=euro_name(r["item"])) for r in rows]
+        if new != rows:
+            with LOG.open("w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=LOG_FIELDS)
+                writer.writeheader()
+                writer.writerows({k: r.get(k, "") for k in LOG_FIELDS} for r in new)
+            changes += 1
+    reviews = read_json(REVIEWS, None)
+    if reviews:
+        new = {k: dict(c, **{f: euro_date(c[f]) for f in ("last", "due") if c.get(f)})
+               for k, c in reviews.items()}
+        if new != reviews:
+            write_json(REVIEWS, new)
+            changes += 1
+    for path, keys in ((PROFILE, ("start_date", "target_date")), (UPSTREAM_CHECK, ("date",)),
+                       (SESSION, ("date",))):
+        data = read_json(path, None)
+        if isinstance(data, dict):
+            new = dict(data, **{k: euro_date(data[k]) for k in keys if isinstance(data.get(k), str)})
+            if new != data:
+                write_json(path, new)
+                changes += 1
+    if MISTAKES.exists():
+        text = MISTAKES.read_text(encoding="utf-8")
+        new = re.sub(r"^\| (\d{4}-\d{2}-\d{2}) \|", lambda m: f"| {euro_date(m[1])} |", text, flags=re.M)
+        if new != text:
+            MISTAKES.write_text(new, encoding="utf-8")
+            changes += 1
+    renames = []
+    if (PROGRESS / "mocks").is_dir():
+        renames += [(p, p.with_name(euro_name(p.name, "-"))) for p in (PROGRESS / "mocks").iterdir()]
+    if WEEKLY.is_dir():
+        for p in WEEKLY.glob("*-W*.md"):
+            m = re.fullmatch(r"(\d{4})-W(\d{2})\.md", p.name)
+            if m:
+                monday = date.fromisocalendar(int(m[1]), int(m[2]), 1)
+                renames.append((p, WEEKLY / f"week_{monday.strftime(FILE_DATE_FMT)}.md"))
+    for folder in (WORKSPACE, ROOT / "exports"):
+        if folder.is_dir():
+            renames += [(p, p.with_name(euro_name(p.name))) for p in folder.rglob("*")
+                        if p.is_file() and "__pycache__" not in p.parts]
+    for src, dest in renames:
+        if src == dest:
+            continue
+        if dest.exists():
+            print(f"  dates: kept {src.relative_to(ROOT).as_posix()} ({dest.name} already exists)")
+            continue
+        if src.suffix in (".py", ".md", ".txt"):  # a test imports its module by name
+            text = src.read_text(encoding="utf-8")
+            new = euro_name(text)
+            if new != text:
+                src.write_text(new, encoding="utf-8")
+        src.rename(dest)
+        changes += 1
+        if verbose:
+            print(f"  renamed {src.relative_to(ROOT).as_posix()} -> {dest.name}")
+    if changes and verbose:
+        print(f"Dates switched to DD/MM/YYYY: {changes} file(s) updated.")
+    return changes
+
+
 def cmd_migrate(args) -> None:
     if not migrate_workspace(verbose=True):
         print("Workspace already in the per-module layout.")
+    if not migrate_dates(verbose=True):
+        print("Dates already in the European format.")
 
 
 HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.py setup
@@ -2142,7 +2277,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                                  (--to rclone:gdrive:CodeDojo uploads to Google Drive)
   drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
   import <zip> [--force]         restore an export on this machine
-  week [--write]           weekly report (writes progress/weekly/YYYY-Www.md)
+  week [--write]           weekly report (writes progress/weekly/week_<Monday DD-MM-YYYY>.md)
   stats                    modules, patterns, fluency gates (and time by track)
   modules                  your modules: assigned, excluded, before your start, or planned
   update [--yes]           show what the shared repo changed (and which files run code), apply it
@@ -2241,6 +2376,8 @@ def main() -> None:
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
         migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder
+    if args.cmd not in ("help", "migrate") and PROGRESS.exists():
+        migrate_dates(verbose=False)  # older data used ISO dates (YYYY-MM-DD)
     if args.cmd == "brief":
         cmd_today(args, brief=True)
     elif args.cmd in commands:

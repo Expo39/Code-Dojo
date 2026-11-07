@@ -190,6 +190,13 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 ## Style
 
 - Short replies, one question at a time.
+- **British English and European conventions** in everything you write and generate (replies,
+  docs, reports, exercises, mocks, drills): British spelling; dates DD/MM/YYYY (DD-MM-YYYY in file
+  names, DD_MM_YYYY where a name must be an identifier: `mock_07_11_2026.py`); 24-hour time;
+  weeks start on Monday; money in euros (€); metric and SI units (km, kg, °C, K).
+- **Generated folders hold only the working files.** Anything you create on the spot (mocks,
+  drills, and any future kind) puts the files the learner opens in its folder and everything
+  else (tests, fixtures, helpers) in a `tests/` subfolder: `mocks/tests/`, `drills/tests/`.
 - **Match how technical you are to the learner** (profile `level`, adjusted by their answers).
   Beginner: plain words, terms defined on first use (or `docs/GLOSSARY.md`), one idea at a time.
   Intermediate: name the concept, define what is new. Advanced: concise, standard terms. Never

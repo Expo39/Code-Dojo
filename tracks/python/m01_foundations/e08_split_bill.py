@@ -4,7 +4,7 @@ Level: easy
 Target: 10
 
 `split_bill(total, tip_percent, people)` adds a tip of `tip_percent` percent to the
-bill `total`, rounds the result to the cent, and splits it between `people`
+bill `total` (in euros), rounds the result to the cent, and splits it between `people`
 people. Return a list with one share per person, each a float rounded to cents.
 The shares must add up exactly to the rounded total; any leftover cents go one
 each to the first people in the list.

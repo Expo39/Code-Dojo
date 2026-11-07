@@ -13,7 +13,7 @@ spaces. Return a list of dicts, one per line.
 
 Trace by hand (work out the result yourself):
 
-    parse_pairs("color red size L\nsize M") -> ?
+    parse_pairs("colour red size L\nsize M") -> ?
 
 Before coding: ask your clarifying questions (the tutor answers like an interviewer),
 or list your own edge cases and then compare: python dojo.py clarify parse_pairs

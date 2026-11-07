@@ -14,6 +14,7 @@ For each exercise, write three files:
 4. `.clarify/<slug>.md`: a heading, a `Pattern: <short-name>` line, then the answers an interviewer would give to clarifying questions (empty input, duplicates, ties, invalid data, what to return when nothing matches), one bullet each, covering every behaviour the tests check.
 
 Rules:
+- Write in British English with European conventions: dates DD/MM/YYYY, money in euros (€), metric and SI units (km, kg, °C, K), 24-hour time.
 - One clear pattern per exercise; a story different from the concept's classic textbook example; targets realistic for the module's level (tiny 5, easy 10 to 15, medium 20 to 30 minutes).
 - Before writing a new exercise, check whether an existing one could train the topic with a small change, or whether one exercise can cover two of the requested topics; say so in your report instead of adding needlessly.
 - Every exercise is original: never copy a task, test or solution from a course, book or repository, whatever its licence; the kind of problem may be inspired by one.

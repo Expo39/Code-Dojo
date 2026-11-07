@@ -78,7 +78,7 @@ leave without practice). Exercises are always original. The steps below are what
   "clarify_file": ".clarify/{slug}.md",
   "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"],
   "requires": ["Fluent in one language (first milestone of its track)"],
-  "reviewed": "2026-11-07"
+  "reviewed": "07/11/2026"
 }
 ```
 

@@ -1,11 +1,15 @@
-from datetime import date
+from datetime import datetime
 
 NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 
+def parse(day):
+    return datetime.strptime(day, "%d/%m/%Y").date()
+
+
 def days_between(start, end):
-    return (date.fromisoformat(end) - date.fromisoformat(start)).days
+    return (parse(end) - parse(start)).days
 
 
-def weekday_name(iso):
-    return NAMES[date.fromisoformat(iso).weekday()]
+def weekday_name(day):
+    return NAMES[parse(day).weekday()]

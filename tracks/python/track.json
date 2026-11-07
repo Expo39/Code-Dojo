@@ -5,5 +5,5 @@
   "test_file": "tests/test_{slug}.py",
   "solution_file": ".solutions/{slug}.py",
   "test_command": ["{python}", "-m", "pytest", "-q", "--no-header", "-p", "no:cacheprovider", "{test}"],
-  "reviewed": "2026-11-07"
+  "reviewed": "07/11/2026"
 }

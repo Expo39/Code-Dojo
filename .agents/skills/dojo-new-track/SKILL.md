@@ -40,7 +40,7 @@ than any one of them. Always in the dojo's own format, never a copy.
    - `README.md`: "Last reviewed: <date>, against <tool and version>" at the top; phases, modules,
      milestones, Prerequisites, Theory, and a "Sources" table (what each was used for, why it is
      trusted). No time estimates.
-   - `track.json` with `"reviewed": "<YYYY-MM-DD>"`.
+   - `track.json` with `"reviewed": "<DD/MM/YYYY>"`.
    - Exercises are original, in the dojo format: never copy text, exercises or solutions,
      whatever the licence; structure, topic order and the *kind* of example may be borrowed,
      credited.

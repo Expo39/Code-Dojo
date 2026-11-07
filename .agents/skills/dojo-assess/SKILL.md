@@ -15,7 +15,7 @@ junior, mid, senior: one line each); minutes per day and rest days; any date; th
 with (`tracks/*/track.json`; anything else goes to the roadmap later); their level in one word
 (beginner, intermediate, advanced). Then run:
 
-`dojo.py setup --yes --name "<name>" --goal "<one line>" --mode <mode> --target-level <level> --minutes <N or mon=60,tue=90,...> --rest <days> --tracks <track> --level <level> [--target-date YYYY-MM-DD]`
+`dojo.py setup --yes --name "<name>" --goal "<one line>" --mode <mode> --target-level <level> --minutes <N or mon=60,tue=90,...> --rest <days> --tracks <track> --level <level> [--target-date DD/MM/YYYY]`
 
 It installs what is missing, saves, checks and lists their modules. Fix anything marked `!`,
 then section 1.

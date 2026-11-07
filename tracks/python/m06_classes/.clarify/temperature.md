@@ -9,6 +9,6 @@ you listed yourself before reading this.
 - No rounding: return the converted value as computed (tests compare approximately).
 - Exactly -273.15 is allowed; anything below raises ValueError.
 - The constructor applies the same check.
-- Assigning a Fahrenheit value that is below absolute zero also raises ValueError.
+- Assigning a kelvin value below 0 K (absolute zero) also raises ValueError.
 - A rejected assignment leaves the old reading unchanged.
-- Both `celsius` and `fahrenheit` must be properties (not plain attributes or methods).
+- Both `celsius` and `kelvin` must be properties (not plain attributes or methods).

@@ -16,9 +16,9 @@ class Temperature:
         self._celsius = value
 
     @property
-    def fahrenheit(self):
-        return self._celsius * 9 / 5 + 32
+    def kelvin(self):
+        return self._celsius - ABSOLUTE_ZERO
 
-    @fahrenheit.setter
-    def fahrenheit(self, value):
-        self.celsius = (value - 32) * 5 / 9
+    @kelvin.setter
+    def kelvin(self, value):
+        self.celsius = value + ABSOLUTE_ZERO
