@@ -27,7 +27,7 @@ reviews; nobody else can push to `main` directly.
 Everything you write follows the conventions in `AGENTS.md` (Style): British English; dates
 DD/MM/YYYY (DD-MM-YYYY in file names, DD_MM_YYYY in identifiers); 24-hour time; weeks from
 Monday; euros; metric and SI units. Anything generated on the spot (drills, mocks) goes in a type
-folder named by its focus, with its own tests and `.history/`.
+folder named by its focus, with its own tests and `.history/` where the kind needs them.
 
 ## What does not
 

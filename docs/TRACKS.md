@@ -124,7 +124,8 @@ The learner's side mirrors it: `workspace/<track>/<module>/` holds their attempt
 in a lesson; `python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
 sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
 code stays in one folder. Drills and mocks sit in type folders (`drills/bug/`, `drills/review/`,
-`mocks/practical/`, ...), each with its own test folder and `.history/`, and each file is named
+`mocks/practical/`, ...), each with its own test folder and `.history/` where the kind needs them
+(bug drills and mocks; review drills are only the file), and each file is named
 after its focus (`drills/bug/find_owner.py`, `mocks/practical/popular_items_07_11_2026.py`), so
 they stay easy to find as they pile up. The tracker moves older layouts (the root `drills/` and
 `mocks/`, numbered `bug_<n>` and `mock_<date>` files) into this one. The tracker ignores
