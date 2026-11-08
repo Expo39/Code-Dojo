@@ -55,7 +55,7 @@ dictated code does not count as typing it yourself.
 | `trace drill` | Fill in a trace table of variables, iteration by iteration |
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
 | `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/bug/`, named after the function; find it with the debugger |
-| `review drill` | Code (often "written by an AI") with several problems: find them all |
+| `review drill` | Code (often "written by an AI") in `workspace/<track>/drills/review/` with several problems: find them all, then fix them, run the tests written after your review, and compare your fix with the original in `.history/` |
 | (after any drill) | A report in `progress/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
 | `explain drill` | Solve without code in five steps, scored |
 | `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
