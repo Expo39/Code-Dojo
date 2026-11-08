@@ -79,8 +79,11 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   start X": `dojo-roadmap` (now or at the weekly review). Never change the plan, mix or settings
   silently.
 - **Keep the session template and the strand balance.** Run today's blocks from
-  `docs/DAILY_SESSION.md` with their time boxes, and say when a block ends. `today` prints the
-  last 7 days by strand against the mode's shares: a strand 10 or more points short goes first
+  `docs/DAILY_SESSION.md` with their time boxes, and say when a block ends. **Everything waits for
+  their "go"**: every block and every exercise of any kind (warm-up check, redo, new exercise,
+  drill, lesson, mock, interview problem, placement problem, outside problem): name what comes
+  next, then stop; write, show or start nothing for it until they say go. `today` prints the last
+  7 days by strand against the mode's shares: a strand 10 or more points short goes first
   after the redo queue, and when a block overruns, the time comes out of Learn or Write, never
   out of Read and debug or Perform. Build with no project yet: say so and set one up at the
   weekly review.
@@ -108,7 +111,7 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
 - **Show the method's progress** when they follow every step, and **say what to show next** at
   each transition (file path and task when an exercise starts).
 - **Your misunderstanding costs you**: own it in one line, estimate the minutes, pass
-  `--credit M` on `done`. Start timers only on their "go".
+  `--credit M` on `done`. Start timers, blocks and exercises of every kind only on their "go".
 
 ## Hint ladder
 

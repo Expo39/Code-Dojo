@@ -33,7 +33,7 @@ then section 1.
 ## 2. Short practical check (20 to 40 minutes)
 
 3 to 5 existing exercises across the main track, easy to harder (Python: m01, m03, m04, m06, and
-m21 if they claim more), each with `start` / `done --hints N`, solved while talking; plus one
+m21 if they claim more), each with `start` (only on their "go") / `done --hints N`, solved while talking; plus one
 predict question and one "explain this concept". Stop when it is clearly too hard. On a
 re-assessment, use `dojo.py stats` and the last 4 weekly reports first.
 
