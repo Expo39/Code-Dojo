@@ -1,15 +1,18 @@
 [
   {
-    "label": "Debug: current exercise's tests",
+    "label": "Debug: this file (exercise, drill, mock, lesson)",
     "adapter": "Debugpy",
     "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/dojo.py",
-    "args": ["test", "$ZED_STEM", "--debug"],
+    "args": [
+      "debug",
+      "$ZED_FILE"
+    ],
     "cwd": "$ZED_WORKTREE_ROOT",
     "justMyCode": true
   },
   {
-    "label": "Debug: current file",
+    "label": "Debug: current file as a script",
     "adapter": "Debugpy",
     "request": "launch",
     "program": "$ZED_FILE",

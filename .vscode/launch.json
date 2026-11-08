@@ -2,21 +2,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug: current exercise's tests",
+      "name": "Debug: this file (exercise, drill, mock, lesson)",
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/dojo.py",
       "args": [
-        "test",
-        "${fileBasenameNoExtension}",
-        "--debug"
+        "debug",
+        "${file}"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true
     },
     {
-      "name": "Debug: current file",
+      "name": "Debug: current file as a script",
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",

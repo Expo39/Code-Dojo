@@ -80,8 +80,8 @@ tests inside the debugger's own process, so breakpoints in your `workspace/` fil
 1. Install VS Code and the Python extension; open the repo folder.
 2. Choose `.venv` as the interpreter (Ctrl+Shift+P, "Python: Select Interpreter").
 3. Turn off Copilot or any other AI completion for this folder if it is still active.
-4. To debug: open `workspace/python/<module>/<exercise>.py`, set a breakpoint (click left of a line
-   number or F9), open Run and Debug (Ctrl+Shift+D) and start "Debug: current exercise's tests".
+4. To debug: open the file (an exercise, a drill, a mock or a lesson), set a breakpoint (click left
+   of a line number or F9), open Run and Debug (Ctrl+Shift+D) and start "Debug: this file".
 
 ### Zed
 
@@ -89,9 +89,9 @@ tests inside the debugger's own process, so breakpoints in your `workspace/` fil
    status bar shows `.venv`).
 2. Edit predictions are turned off for this project in `.zed/settings.json`. If you use Zed's
    agent panel, do not ask it for exercise code: the tutor runs in Claude Code.
-3. To debug: open `workspace/python/<module>/<exercise>.py`, set a breakpoint (click the gutter left of a
-   line), press F4 (or "debugger: start" in the command palette) and pick
-   "Debug: current exercise's tests".
+3. To debug: open the file (an exercise, a drill, a mock or a lesson), set a breakpoint (click the
+   gutter left of a line), press F4 (or "debugger: start" in the command palette) and pick
+   "Debug: this file".
 4. Tasks (command palette, "task: spawn"): `dojo: today`, `dojo: start current exercise`,
    `dojo: test current exercise`, `dojo: list exercises`. On Windows use the "(Windows)"
    variants, which call `python` instead of `python3`.
@@ -105,7 +105,11 @@ tests inside the debugger's own process, so breakpoints in your `workspace/` fil
 | Step over / into / out | F10 / F11 / Shift+F11 | the debug panel's step buttons |
 | Inspect values | Variables and Watch panels, hover | the debug panel's variables view, hover |
 
-Without an editor debugger: put `breakpoint()` on a line and run `python dojo.py test <exercise>`;
+"Debug: this file" runs `dojo.py debug <file>`: an exercise runs its tests, a drill or mock the
+test file in its `tests/` folder (as does an open test file), anything else runs as a script.
+
+Without an editor debugger: put `breakpoint()` on a line and run `python dojo.py debug <file>` in a
+terminal (not through Claude Code's `!`, which cannot take typed input);
 then `n` next, `s` step into, `p name` print, `c` continue, `q` quit.
 
 ## Getting updates

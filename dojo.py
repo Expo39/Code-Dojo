@@ -1085,6 +1085,38 @@ def debug_in_process(ex: dict, target: str | None) -> int:
     return pytest.main(["-q", "--no-header", "-p", "no:cacheprovider", str(ex["test"])])
 
 
+def cmd_debug(args) -> None:
+    """Debug whatever file is open in the editor, so its breakpoints work.
+
+    A dojo exercise runs its tests in-process; a generated file with tests next to it
+    (drills, mocks: <folder>/tests/test_<stem><ext>) runs those, as does an open test file;
+    anything else (a lesson,
+    a project file, a scratch file) runs as a script.
+    """
+    path = Path(args.file).resolve()
+    if not path.is_file():
+        die(f"No such file: {args.file}")
+    for ex in discover().values():
+        if path in (ex["attempt"].resolve(), ex["stub"].resolve()):
+            sys.exit(debug_in_process(ex, None))
+    tests = path.parent / "tests" / f"test_{path.stem}{path.suffix}"
+    if path.name.startswith("test_"):
+        tests = path
+    if tests.is_file():
+        try:
+            import pytest
+        except ImportError:
+            die("pytest is not importable here: start the debugger with the .venv interpreter.")
+        os.chdir(ROOT)
+        sys.exit(pytest.main(["-q", "--no-header", "-p", "no:cacheprovider", str(tests)]))
+    if path.suffix != ".py":
+        die(f"No tests found for {path.name}; debug it with its own language's tools.")
+    import runpy
+    os.chdir(path.parent)
+    sys.path.insert(0, str(path.parent))
+    runpy.run_path(str(path), run_name="__main__")
+
+
 def cmd_done(args) -> None:
     ensure_files()
     timers = read_json(TIMER, {})
@@ -2298,6 +2330,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            workspace/<track>/<module>/<item>.py (earlier attempts go to .history/)
   test <item> [--debug]    run that exercise's tests against your workspace file
                            (--debug: in-process, for editor breakpoints)
+  debug <file>             debug any open file with editor breakpoints: an exercise runs its
+                           tests, a drill or mock its tests/ file, anything else runs as a script
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
@@ -2356,6 +2390,7 @@ def main() -> None:
     p = sub.add_parser("start"); p.add_argument("item"); p.add_argument("--fresh", action="store_true")
     p = sub.add_parser("test"); p.add_argument("item"); p.add_argument("--solution", action="store_true")
     p.add_argument("--debug", action="store_true")
+    p = sub.add_parser("debug"); p.add_argument("file")
     p = sub.add_parser("done")
     p.add_argument("item")
     p.add_argument("--hints", type=int, default=0)
@@ -2410,7 +2445,7 @@ def main() -> None:
     args = parser.parse_args()
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
-        "start": cmd_start, "test": cmd_test, "done": cmd_done, "log": cmd_log,
+        "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
         "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
     }
