@@ -14,7 +14,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/` |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
-| | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `.history/` with earlier attempts, `primm/` with lesson files), `drills/`, `mocks/`, `projects/` |
+| | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `.history/` with earlier attempts, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
 
 Back up or move personal data with `python dojo.py export` (a zip), optionally straight to
 another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`.
@@ -123,7 +123,11 @@ The learner's side mirrors it: `workspace/<track>/<module>/` holds their attempt
 `.history/` (earlier attempts, moved there when a redo starts) and `primm/` (the files they type
 in a lesson; `python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
 sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
-code stays in one folder (the tracker moves files from the old root `drills/` and `mocks/`). The tracker ignores
+code stays in one folder. Drills and mocks sit in type folders (`drills/bug/`, `drills/review/`,
+`mocks/practical/`, ...), each with its own test folder and `.history/`, and each file is named
+after its focus (`drills/bug/find_owner.py`, `mocks/practical/popular_items_07_11_2026.py`), so
+they stay easy to find as they pile up. The tracker moves older layouts (the root `drills/` and
+`mocks/`, numbered `bug_<n>` and `mock_<date>` files) into this one. The tracker ignores
 `primm/` folders, so lesson files never count as exercises. Every new module gets a
 `primm/README.md` listing its concepts, plus a `Theory:` line when the module relies on
 background that is not code (complexity, memory, maths); the tutor offers it before the

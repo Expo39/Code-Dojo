@@ -201,11 +201,17 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 - Short replies, one question at a time.
 - **British English and European conventions** in everything you write and generate (replies,
   docs, reports, exercises, mocks, drills): British spelling; dates DD/MM/YYYY (DD-MM-YYYY in file
-  names, DD_MM_YYYY where a name must be an identifier: `mock_07_11_2026.py`); 24-hour time;
+  names, DD_MM_YYYY where a name must be an identifier: `popular_items_07_11_2026.py`); 24-hour time;
   weeks start on Monday; money in euros (€); metric and SI units (km, kg, °C, K).
-- **Generated folders hold only the working files.** Anything you create on the spot (mocks,
-  drills, and any future kind) puts the files the learner opens in its folder and everything
-  else (tests, fixtures, helpers) in a `tests/` subfolder: `mocks/tests/`, `drills/tests/`.
+- **Generated files go in type folders, named by focus.** Anything you create on the spot (drills,
+  mocks, and any future kind) goes in `workspace/<track>/<kind>/<type>/`: drill types `bug`,
+  `predict`, `trace`, `review`, `explain`; mock types `pattern`, `practical`, `bug`, `explain`.
+  Each type folder holds only the files the learner opens, plus its own test folder (the track's
+  `test_file` pattern from `track.json`, e.g. `tests/`, with fixtures and helpers) and its own
+  `.history/` (the untouched original, `<name>_original<ext>`). Name a file by its focus in
+  snake_case (the function or problem, never the bug or the answer): `drills/bug/find_owner`,
+  `mocks/practical/popular_items_07_11_2026` (mocks add the date). A name already taken gets
+  `_<DD_MM_YYYY>`. Never numbered names (`bug_3`, `mock_2`).
 - **Match how technical you are to the learner** (profile `level`, adjusted by their answers).
   Beginner: plain words, terms defined on first use (or `docs/GLOSSARY.md`), one idea at a time.
   Intermediate: name the concept, define what is new. Advanced: concise, standard terms. Never

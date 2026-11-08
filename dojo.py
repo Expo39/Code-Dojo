@@ -145,7 +145,7 @@ def now() -> datetime:
 
 
 # European dates everywhere the learner looks: DD/MM/YYYY in data and output, DD-MM-YYYY in
-# file names, DD_MM_YYYY in names that must also be valid identifiers (mock_07_11_2026.py).
+# file names, DD_MM_YYYY in names that must also be valid identifiers (popular_items_07_11_2026.py).
 DATE_FMT = "%d/%m/%Y"
 FILE_DATE_FMT = "%d-%m-%Y"
 STAMP_FMT = "%d%m%Y_%H%M%S"
@@ -1085,13 +1085,30 @@ def debug_in_process(ex: dict, target: str | None) -> int:
     return pytest.main(["-q", "--no-header", "-p", "no:cacheprovider", str(ex["test"])])
 
 
+def side_track(path: Path) -> dict | None:
+    """The track whose workspace folder holds this file (workspace/<track>/...), if any."""
+    try:
+        name = path.resolve().relative_to(WORKSPACE.resolve()).parts[0]
+    except (ValueError, IndexError):
+        return None
+    return load_tracks(active_only=False).get(name)
+
+
+def test_slug(track: dict, path: Path) -> str | None:
+    """The slug a test file belongs to, from the track's test_file pattern; None if not a test."""
+    pattern = Path(track["test_file"]).name
+    regex = "^" + re.escape(pattern).replace(re.escape("{slug}"), "(.+)") + "$"
+    m = re.match(regex, path.name)
+    return m.group(1) if m else None
+
+
 def cmd_debug(args) -> None:
     """Debug whatever file is open in the editor, so its breakpoints work.
 
-    A dojo exercise runs its tests in-process; a generated file with tests next to it
-    (drills, mocks: <folder>/tests/test_<stem><ext>) runs those, as does an open test file;
-    anything else (a lesson,
-    a project file, a scratch file) runs as a script.
+    A dojo exercise runs its tests in-process; a drill or mock (drills/<type>/,
+    mocks/<type>/) runs its test file, found with the track's test_file pattern, as does an
+    open test file; anything else (a lesson, a project file) runs as a script. Python tracks
+    only: other languages debug with their own tools.
     """
     path = Path(args.file).resolve()
     if not path.is_file():
@@ -1099,10 +1116,13 @@ def cmd_debug(args) -> None:
     for ex in discover().values():
         if path in (ex["attempt"].resolve(), ex["stub"].resolve()):
             sys.exit(debug_in_process(ex, None))
-    tests = path.parent / "tests" / f"test_{path.stem}{path.suffix}"
-    if path.name.startswith("test_"):
-        tests = path
-    if tests.is_file():
+    track = side_track(path)
+    if track and not any("pytest" in part for part in track.get("test_command") or []):
+        die(f"debug works for pytest-based tracks; debug {track['name']} with its own tools.")
+    tests = None
+    if track:
+        tests = path if test_slug(track, path) else path.parent / track["test_file"].format(slug=path.stem)
+    if tests and tests.is_file():
         try:
             import pytest
         except ImportError:
@@ -2122,6 +2142,11 @@ def cmd_primm(args) -> None:
 
 
 TRACK_SIDE_FOLDERS = ("drills", "mocks")  # workspace/<track>/drills/, workspace/<track>/mocks/
+# Each drill or mock lives in a type folder with its own tests/ and .history/:
+# drills/<type>/<focus>.<ext>, mocks/<type>/<problem>_<DD_MM_YYYY>.<ext>
+DRILL_TYPES = ("bug", "predict", "trace", "review", "explain")
+MOCK_TYPES = ("pattern", "practical", "bug", "explain")
+LEGACY_MOCKS = "earlier"  # flat mock_<date> files from before the type folders
 HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
 
 
@@ -2190,28 +2215,82 @@ def migrate_workspace(verbose: bool = True) -> int:
             old.rmdir()
     # generated folders (drills/, mocks/) hold only the files the learner works in; their tests
     # sit in a tests/ subfolder, and import from the folder above
-    for track_name in load_tracks(active_only=False):
+    for track_name, track in load_tracks(active_only=False).items():
         for kind in TRACK_SIDE_FOLDERS:
             folder = WORKSPACE / track_name / kind
             if not folder.is_dir():
                 continue
-            for path in sorted(folder.glob("test_*")):
-                dest = folder / "tests" / path.name
-                if not path.is_file() or dest.exists():
+            for path in sorted(p for p in folder.iterdir() if p.is_file() and test_slug(track, p)):
+                dest = folder / track["test_file"].format(slug=test_slug(track, path))
+                if dest.parent == folder or dest.exists():
                     continue
-                dest.parent.mkdir(exist_ok=True)
+                dest.parent.mkdir(parents=True, exist_ok=True)
                 text = path.read_text(encoding="utf-8")
                 dest.write_text(text.replace("Path(__file__).parent)", "Path(__file__).parent.parent)"),
                                 encoding="utf-8")
                 path.unlink()
                 moved += 1
                 if verbose:
-                    print(f"  moved {path.relative_to(ROOT).as_posix()} -> {kind}/tests/{path.name}")
+                    print(f"  moved {path.relative_to(ROOT).as_posix()} -> "
+                          f"{dest.relative_to(ROOT).as_posix()}")
             cache = folder / "__pycache__"
             if cache.is_dir():
                 shutil.rmtree(cache)
+    moved += migrate_side_folders(verbose)
     if moved:
         print(f"Workspace reorganised by module: {moved} file(s) moved.")
+    return moved
+
+
+def migrate_side_folders(verbose: bool = True) -> int:
+    """Move flat drills/ and mocks/ files into type folders. Idempotent.
+
+    Old layout: drills/bug_<n>.<ext>, mocks/mock_<date>.<ext>, each with its test file (the
+    track's test_file pattern, e.g. tests/test_<stem>.py) and .history/<stem>_original. A drill goes to drills/<type>/ (the type is its name's
+    prefix, else "other"); a mock goes to mocks/earlier/, as its type was never recorded.
+    The stem is kept, so the tests still import it; the tutor may rename them later.
+    """
+    moved = 0
+    for track_name, track in load_tracks(active_only=False).items():
+        for kind in TRACK_SIDE_FOLDERS:
+            folder = WORKSPACE / track_name / kind
+            if not folder.is_dir():
+                continue
+            for path in sorted(p for p in folder.iterdir() if p.is_file() and p.name != ".gitkeep"):
+                if kind == "drills":
+                    prefix = path.stem.split("_")[0]
+                    group = prefix if prefix in DRILL_TYPES else "other"
+                else:
+                    group = LEGACY_MOCKS
+                dest_dir = folder / group
+                if test_slug(track, path):
+                    continue  # a test file left beside the drills; the tests/ step moves those
+                test_rel = track["test_file"].format(slug=path.stem)
+                pairs = [(path, dest_dir / path.name), (folder / test_rel, dest_dir / test_rel),
+                         (folder / HISTORY_DIR / f"{path.stem}_original{path.suffix}",
+                          dest_dir / HISTORY_DIR / f"{path.stem}_original{path.suffix}")]
+                for src, dest in pairs:
+                    if not src.is_file():
+                        continue
+                    if dest.exists():
+                        print(f"  migrate: kept {src.relative_to(ROOT).as_posix()} "
+                              f"({dest.relative_to(ROOT).as_posix()} already exists)")
+                        continue
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.move(str(src), dest)
+                    moved += 1
+                    if verbose:
+                        print(f"  moved {src.relative_to(ROOT).as_posix()} -> "
+                              f"{dest.relative_to(ROOT).as_posix()}")
+            for sub in (folder / "tests", folder / HISTORY_DIR):
+                cache = sub / "__pycache__"
+                if cache.is_dir():
+                    shutil.rmtree(cache)
+                if sub.is_dir() and not any(sub.iterdir()):
+                    sub.rmdir()
+            cache = folder / "__pycache__"
+            if cache.is_dir():
+                shutil.rmtree(cache)
     return moved
 
 
@@ -2336,7 +2415,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
        --credit M                minutes lost to a tutor misunderstanding (off the solve time, still logged)
-       mocks: done mock_<date> --kind mock --result strong|pass|fail --no-review
+       mocks: done <problem>_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
   pause / resume [item]    stop the clock while talking something through, then continue
   session start|pause|resume|status|end

@@ -12,18 +12,19 @@ Behave like a real interviewer: friendly, mostly quiet, answering clarifying que
 - Ask: full mock (45 to 60 minutes: 5 minutes of "tell me about yourself", one or two problems, 5 minutes of their questions) or a single timed problem (20 to 30 minutes)? Ask for a difficulty if they have a preference; otherwise choose from `progress/PLAN.md` and `dojo.py stats` (just above their comfortable level). If `progress/docs/INTERVIEW_PREP.md` names a company standard, match its format and level.
 - Choose an UNSEEN problem in the track's language. Vary the type across mocks: classic pattern problems, practical ones (parse and aggregate a log, a small class with state, a validation function), "find the bug in this code", and "explain what this code does". Do not reuse problems from `tracks/` or past mocks in `progress/mocks/`.
 - Wait for their "go" before writing the files or showing the problem (`AGENTS.md`: everything waits for their go).
-- **Set up the files as an interview platform would** (CoderPad, HackerRank, a shared editor with a starter file): never a blank file. In `workspace/<track>/mocks/` (create it; these are your files, not the learner's code):
-  - `mock_<DD_MM_YYYY><ext>` (underscores, so a test can import it): a docstring or comment block with the full problem statement, the input and output types, constraints, and one or two examples with their outputs; then the signature with an empty body (`raise NotImplementedError` in Python; the track's equivalent elsewhere). For a small class with state: the class with its method signatures and one-line docstrings. For "find the bug": the buggy code. For "explain this code": the code only.
-  - `tests/test_mock_<DD_MM_YYYY><ext>` (the `tests/` subfolder: only the starter files sit in `mocks/`): the visible sample tests, exactly the docstring examples and nothing more, in the track's test style; a Python test adds the folder above it (`Path(__file__).parent.parent`) to `sys.path` before importing. Check they fail against the stub. "Explain this code" has no test file.
+- **Set up the files as an interview platform would** (CoderPad, HackerRank, a shared editor with a starter file): never a blank file. In `workspace/<track>/mocks/<type>/`, the problem's type: `pattern` (a classic pattern problem), `practical` (parse and aggregate, a small class with state, validation), `bug` (find the bug), `explain` (explain this code). Create the folders; these are your files, not the learner's code. `<problem>` is the problem's focus in snake_case (`popular_items`), and the file name adds the date:
+  - `<problem>_<DD_MM_YYYY><ext>` (underscores, so a test can import it; a name already taken gets `_2`): a docstring or comment block with the full problem statement, the input and output types, constraints, and one or two examples with their outputs; then the signature with an empty body (`raise NotImplementedError` in Python; the track's equivalent elsewhere). For a small class with state: the class with its method signatures and one-line docstrings. For "find the bug": the buggy code. For "explain this code": the code only.
+  - its test file at the track's `test_file` pattern inside the type folder (`mocks/<type>/tests/test_<problem>_<DD_MM_YYYY>.py` in Python: only the starter files sit in `mocks/<type>/`): the visible sample tests, exactly the docstring examples and nothing more, in the track's test style; a Python test adds the folder above it (`Path(__file__).parent.parent`) to `sys.path` before importing. Check they fail against the stub. "Explain this code" has no test file.
+  - Copy the untouched starter file to `mocks/<type>/.history/<problem>_<DD_MM_YYYY>_original<ext>`, so their final code can be compared with it afterwards.
   - The hidden cases (edge cases, a second shape of input) stay with you, in your scratchpad, never in `workspace/`; they are what the learner's clarifying questions would uncover. They go into the report afterwards.
-  - Run `dojo.py start mock_<DD_MM_YYYY>`. Give the file path and the problem statement in the chat as well.
+  - Run `dojo.py start <problem>_<DD_MM_YYYY>`. Give the file path and the problem statement in the chat as well.
 
 ## During
 
 - Give the problem statement only. Answer clarifying questions. Do not volunteer edge cases.
 - If they are silent for long, prompt once: "Can you talk me through what you are thinking?"
 - If stuck for more than about 5 minutes: one small hint, as an interviewer would, and count it.
-- They may run the sample tests at any point: prediction first, then the run command in its own message (`.venv/bin/python -m pytest -q workspace/<track>/mocks/tests/test_mock_<DD_MM_YYYY><ext>` for Python). Passing samples is not "done", as on a real platform.
+- They may run the sample tests at any point: prediction first, then the run command in its own message (the track's test command on that file, e.g. `.venv/bin/python -m pytest -q workspace/python/mocks/<type>/tests/test_<problem>_<DD_MM_YYYY>.py`). Passing samples is not "done", as on a real platform.
 - When they say they are done, run their code on the samples and your hidden cases and show a table (input, got, expected). A failing hidden case is theirs to read and fix, as an interviewer would ask.
 
 ## Feedback (after time is up)
@@ -44,6 +45,6 @@ Result: `strong` (mostly 4s), `pass` (no score below 3 and the problem solved), 
 
 ## Log
 
-- `dojo.py done mock_<DD_MM_YYYY> --kind mock --result <strong|pass|fail> --hints N --target <planned minutes> --level <level> --pattern <pattern> --no-review --note "<one line>"`. The fluency gate in `stats` reads these results.
-- Write `progress/mocks/<DD-MM-YYYY>.md`: the problem, their final code (copied from their file), the hidden cases with their results, the scores with examples, the 2 habits to work on, and a similar problem to practise. If `progress/docs/INTERVIEW_PREP.md` exists, update its "habits from the latest mock" line.
+- `dojo.py done <problem>_<DD_MM_YYYY> --kind mock --result <strong|pass|fail> --hints N --target <planned minutes> --level <level> --pattern <pattern> --no-review --note "<one line>"`. The fluency gate in `stats` reads these results.
+- Write `progress/mocks/<DD-MM-YYYY>_<problem>.md`: the problem, their final code (copied from their file), the hidden cases with their results, the scores with examples, the 2 habits to work on, and a similar problem to practise. If `progress/docs/INTERVIEW_PREP.md` exists, update its "habits from the latest mock" line.
 - Log mistakes with `dojo.py mistake`. If it went badly, offer the similar problem as a `dojo-new-exercise` so it enters the redo queue.
