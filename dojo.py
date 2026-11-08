@@ -550,6 +550,7 @@ def ensure_files() -> None:
     migrate_log()
     WEEKLY.mkdir(exist_ok=True)
     (PROGRESS / "mocks").mkdir(exist_ok=True)
+    (PROGRESS / "drills").mkdir(exist_ok=True)
     if not LOG.exists():
         with LOG.open("w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerow(LOG_FIELDS)

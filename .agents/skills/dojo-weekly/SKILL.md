@@ -6,7 +6,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
 # Weekly review (about 20 minutes)
 
 1. Run `dojo.py week --write` (add `--date DD/MM/YYYY` for a past week) and `dojo.py stats`.
-2. Read: the report, `progress/PLAN.md`, last week's coach notes, this week's `progress/mocks/`, and the week's rows in `progress/mistakes.md`.
+2. Read: the report, `progress/PLAN.md`, last week's coach notes, this week's `progress/mocks/` and `progress/drills/` (what was missed and the false alarms), and the week's rows in `progress/mistakes.md`.
 3. Analyse honestly, with numbers:
    - Time against the plan, and why (ask; do not assume). If short, adjust the plan or the profile's hours rather than piling up debt; a capped catch-up of at most an hour a day is fine.
    - Speed and hints per pattern: anything with a median above 1.5x or more than 1.5 hints is a weak spot.

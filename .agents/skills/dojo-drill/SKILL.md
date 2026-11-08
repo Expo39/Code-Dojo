@@ -7,6 +7,15 @@ description: Short drills for reading, debugging and explaining code in the Code
 
 Wait for the learner's "go" before writing or showing a drill, even when the session template says a drill is next (`AGENTS.md`: everything waits for their go). A drill that needs files (code to review, a trace or predict snippet the learner keeps) follows the same layout in its own type folder: `workspace/<track>/drills/<type>/<focus><ext>` with that folder's tests and `.history/` (`AGENTS.md`, generated files). Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/mistakes.md`). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong>`; log wrong answers with `dojo.py mistake`.
 
+## Report (every drill with an answer)
+
+After scoring, write `progress/drills/<DD-MM-YYYY>_<type>_<focus>.md` (a name already taken gets `_2`): a header (the drill file and its `.history/` original, the task in one line, the minutes), then
+1. **My answer**: what the learner said, in their words, close to verbatim; for a second pass after a prompt, a separate list, saying what prompted it.
+2. **The real issues** (or the right answers): a table with the line, the problem and why it is wrong, in words; never the fixed code.
+3. **Comparison**: found on the first pass, found after a prompt, missed, false alarms (and any fair suggestion that is not a bug).
+4. **The habit to take away**, one or two lines.
+Predict and trace drills in chat get the same report (their predictions or table against the real values). The weekly review and the progress coach read these reports.
+
 ## predict drill
 
 Ask for the prediction and wait; give the run command only in the next message, never in the same one.

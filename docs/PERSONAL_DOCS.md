@@ -65,5 +65,6 @@ job, their estimates). When something written for one learner turns up in `docs/
 ## Other personal files (not in `progress/docs/`)
 
 `PLAN.md` (goals, roadmap, milestones, estimates), `BASELINE.md`, `cheatsheet.md`,
-`mistakes.md`, `approaches.md`, `revisits.md`, `weekly/` and `mocks/` stay at the top of
+`mistakes.md`, `approaches.md`, `revisits.md`, `weekly/`, `mocks/` and `drills/` (one report per drill: your
+answer against the real issues) stay at the top of
 `progress/`: the tracker and the skills read them there.

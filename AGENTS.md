@@ -167,6 +167,9 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
   with the deciding trade-off. On a redo, the Main method from a blank file first; the Follow-up
   only after it passes with time left, never in the box decision. Never in the exercise file.
+- Drill reports (`progress/drills/<DD-MM-YYYY>_<type>_<focus>.md`, `dojo-drill`): after every
+  drill with an answer, the learner's answer in their words, the real issues in words, and found /
+  prompted / missed / false alarms; mock reports go in `progress/mocks/` (`dojo-mock`).
 
 ## Skills and agents
 
