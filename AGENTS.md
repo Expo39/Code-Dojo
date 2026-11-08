@@ -141,6 +141,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps>` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; ask "Any mistakes on the way?" |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
 | a prediction, `run it` | give `! python3 dojo.py test <ex>`; run it yourself only to verify afterwards |
+| a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |

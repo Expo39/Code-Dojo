@@ -72,8 +72,10 @@ off for this folder (the point is to type it yourself) and the `.solutions/` and
 folders are hidden from the file panel. Autosave is on in both, so `python dojo.py test` always
 runs what you see on screen (the tracker also warns if your file is still the untouched stub).
 
-The debugger always runs `python dojo.py test <exercise> --debug`, which runs that exercise's
-tests inside the debugger's own process, so breakpoints in your `workspace/` file are hit.
+The debugger runs `python dojo.py debug <file>` on the file you have open, inside the debugger's
+own process, so breakpoints in your `workspace/` file are hit: an exercise runs its tests, a drill
+or mock (`drills/<type>/`, `mocks/<type>/`) the test file in its type folder, and anything else,
+such as a lesson file, runs as a script. Python tracks only; other languages use their own tools.
 
 ### VS Code
 

@@ -5,7 +5,9 @@ think out loud, asks for each step (understand, example, plan, predict, test, re
 reminds you when you skip one. Tutor mode is on at the start of every session: the tutor explains,
 asks questions, gives hints and reviews, but never writes your exercise or project code. Say
 these in plain words; the tutor runs the tracker for you, except the tests, which you run and
-read yourself (it gives you the command).
+read yourself (it gives you the command). Nothing starts until you say **go**: the tutor names
+the next block or exercise (a warm-up check, a redo, a drill, a lesson, a mock, an interview
+problem) and waits; no file, problem or timer appears before your go.
 
 ## Talk, do not type
 
