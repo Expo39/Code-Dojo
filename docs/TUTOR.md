@@ -7,7 +7,9 @@ asks questions, gives hints and reviews, but never writes your exercise or proje
 these in plain words; the tutor runs the tracker for you, except the tests, which you run and
 read yourself (it gives you the command). Nothing starts until you say **go**: the tutor names
 the next block or exercise (a warm-up check, a redo, a drill, a lesson, a mock, an interview
-problem) and waits; no file, problem or timer appears before your go.
+problem) and waits; no file, problem or timer appears before your go. If the tutor misunderstands
+you and it costs you time, it says so and gives the minutes back (`done --credit M`), so your solve
+time stays fair.
 
 ## Talk, do not type
 
@@ -27,10 +29,11 @@ dictated code does not count as typing it yourself.
 | (your prediction) | The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
+| `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |
 | `log mistake: ...` | Added to `progress/mistakes.md` |
-| `end of day` / `how am I doing` | Today, the week, weak spots, and concrete advice for tomorrow |
+| `end of day` / `how am I doing` | Today, the week, weak spots, and concrete advice for tomorrow; at the end of the day the session clock stops and the training outside exercise timers is logged as study |
 
 ## Learning
 
@@ -50,6 +53,7 @@ dictated code does not count as typing it yourself.
 | --- | --- |
 | `predict drill` | "What does this print?", three in a row |
 | `trace drill` | Fill in a trace table of variables, iteration by iteration |
+| `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
 | `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/bug/`, named after the function; find it with the debugger |
 | `review drill` | Code (often "written by an AI") with several problems: find them all |
 | `explain drill` | Solve without code in five steps, scored |

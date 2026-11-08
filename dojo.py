@@ -2446,7 +2446,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file);
                            with a topic, starts a lesson timer: end it with `done lesson:<topic>`
                            for a teach-me lesson
-  migrate                  move files from the old flat workspace into module folders (also automatic)
+  migrate                  move older layouts into the current one: module folders, drills/<type>/
+                           and mocks/<type>/ (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
 """
 

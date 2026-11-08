@@ -104,7 +104,7 @@ python dojo.py week --write          # weekly report
 | --- | --- |
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
 | Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules` |
-| Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify` |
+| Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify`, `session start\|pause\|resume\|status\|end` (the session clock) |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
 | Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]`, `drive-setup`, `import`, `migrate` |

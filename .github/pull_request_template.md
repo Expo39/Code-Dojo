@@ -8,4 +8,5 @@
       (those belong in each learner's gitignored `progress/`; see `docs/PERSONAL_DOCS.md`)
 - [ ] New or changed exercises pass `python dojo.py verify <slugs>` (stub fails, reference passes)
 - [ ] Docs and skills that describe the changed behaviour are updated
+- [ ] British English and European conventions (DD/MM/YYYY, 24-hour time, euros, metric units)
 - [ ] No time estimates in shared files (`docs/ROADMAP.md`, section 4)

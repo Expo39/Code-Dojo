@@ -9,7 +9,17 @@ mode it becomes more Build, and in `industry` mode it alternates with Build.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini
 CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance). Say `start <exercise>` and
-`done <exercise>` so the tracker can measure you.
+`done <exercise>` so the tracker can measure you. The tutor names each block and waits for your
+**go** before starting it.
+
+**The session clock** (`python dojo.py session start`, started by the tutor with the first block)
+counts the training between exercise timers too: warm-up, explanations, feedback. It is paused
+for breaks, time away and work on the dojo itself, and `end of day` logs it as study.
+
+**The strand balance.** `today` shows the last 7 days by strand (learn, write, read, build,
+perform) against your mode's shares (`METHOD.md`). A strand 10 or more points short goes first,
+straight after the redo queue; when a block overruns, the time comes out of Learn or Write, never
+out of Read and debug or Perform.
 
 ## Full session (3 hours)
 

@@ -51,7 +51,7 @@ Never skip **Predict**: running code you have not predicted teaches almost nothi
 | 1 | **Read** | The key line of the error, out loud (the last line of a traceback, the first compiler error, the failed assertion): its type and message. Then the line in *your* file |
 | 2 | **Reproduce** | The smallest input that shows the bug |
 | 3 | **Hypothesise** | "I think X is wrong because Y", before changing anything |
-| 4 | **Confirm** | A breakpoint or `print` that proves or disproves the hypothesis |
+| 4 | **Confirm** | A breakpoint ("Debug: this file" in the editor, on any exercise, drill or mock: `SETUP.md`) or `print` that proves or disproves the hypothesis |
 | 5 | **Fix** | The smallest change; then rerun the tests |
 | 6 | **Name** | The bug class (off-by-one, mutable default, early return, ...) and how to avoid it next time |
 
