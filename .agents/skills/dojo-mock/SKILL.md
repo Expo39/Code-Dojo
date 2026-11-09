@@ -17,6 +17,7 @@ Behave like a real interviewer: friendly, mostly quiet, answering clarifying que
   - its test file at the track's `test_file` pattern inside the type folder (`mocks/<type>/tests/test_<problem>_<DD_MM_YYYY>.py` in Python: only the starter files sit in `mocks/<type>/`): the visible sample tests, exactly the docstring examples and nothing more, in the track's test style; a Python test adds the folder above it (`Path(__file__).parent.parent`) to `sys.path` before importing. Check they fail against the stub. "Explain this code" has no test file.
   - Copy the untouched starter file to `mocks/<type>/.history/<problem>_<DD_MM_YYYY>_original<ext>`, so their final code can be compared with it afterwards.
   - The hidden cases (edge cases, a second shape of input) stay with you, in your scratchpad, never in `workspace/`; they are what the learner's clarifying questions would uncover. They go into the report afterwards.
+  - **Every scored rule must be knowable.** A hidden case is scored only when its expected result follows from the statement, its examples, or an answer you gave. A rule that does not (case-insensitive keys, de-duplication, a special output for bad input nobody asked about) is either written into the statement or kept as a spoken follow-up ("what if the same address appears twice?"), credited when answered, and never shown as a failure. Mark each hidden case `scored` or `follow-up` in the scratchpad before the timer starts.
   - Run `dojo.py start <problem>_<DD_MM_YYYY>`. Give the file path and the problem statement in the chat as well.
 
 ## During
@@ -25,7 +26,7 @@ Behave like a real interviewer: friendly, mostly quiet, answering clarifying que
 - If they are silent for long, prompt once: "Can you talk me through what you are thinking?"
 - If stuck for more than about 5 minutes: one small hint, as an interviewer would, and count it.
 - They may run the sample tests at any point: prediction first, then the run command in its own message (the track's test command on that file, e.g. `.venv/bin/python -m pytest -q workspace/python/mocks/<type>/tests/test_<problem>_<DD_MM_YYYY>.py`). Passing samples is not "done", as on a real platform.
-- When they say they are done, run their code on the samples and your hidden cases and show a table (input, got, expected). A failing hidden case is theirs to read and fix, as an interviewer would ask.
+- When they say they are done, run their code on the samples and your scored hidden cases and show a table (input, got, expected). A failing scored case is theirs to read and fix, as an interviewer would ask. Then ask the follow-ups one at a time, in words; code changes made for a follow-up, and the bugs they bring, are not scored.
 
 ## Feedback (after time is up)
 
