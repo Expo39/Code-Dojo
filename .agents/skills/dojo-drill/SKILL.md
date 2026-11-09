@@ -1,11 +1,11 @@
 ---
 name: dojo-drill
-description: Short drills for reading, debugging and explaining code in the Code Dojo. Use when the learner says "bug drill", "predict drill", "trace drill", "review drill", or "explain drill".
+description: Short drills for reading, debugging, explaining and recognising code in the Code Dojo. Use when the learner says "bug drill", "predict drill", "trace drill", "review drill", "explain drill", "discriminate drill" or "practise <concept>".
 ---
 
 # Drills
 
-Wait for the learner's "go" before writing or showing a drill, even when the session template says a drill is next (`AGENTS.md`: everything waits for their go). A drill that needs files (code to review, a trace or predict snippet the learner keeps) follows the same layout in its own type folder: `workspace/<track>/drills/<type>/<focus><ext>` with that folder's tests and `.history/` only when the drill needs them (a bug drill has both; a review drill neither) (`AGENTS.md`, generated files). Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/mistakes.md`). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong>`; log wrong answers with `dojo.py mistake`.
+Wait for the learner's "go" before writing or showing a drill, even when the session template says a drill is next (`AGENTS.md`: everything waits for their go). A drill that needs files (code to review, a trace or predict snippet the learner keeps) follows the same layout in its own type folder: `workspace/<track>/drills/<type>/<focus><ext>` with that folder's tests and `.history/` only when the drill needs them (a bug drill has both; a review drill neither) (`AGENTS.md`, generated files). Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/mistakes.md`). Pitch drills so the learner gets about 85% of the individual steps right: easier wastes the time, harder teaches nothing. Before revealing any answer ask how sure they are (0 to 100; "I don't know" is fine). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong> --confidence N`; log wrong answers with `dojo.py mistake` (a wrong answer at 80 or more is a misconception: say so in the mistake row).
 
 ## Report (every drill with an answer)
 
@@ -15,6 +15,10 @@ After scoring, write `progress/drills/<DD-MM-YYYY>_<type>_<focus>.md` (a name al
 3. **Comparison**: found on the first pass, found after a prompt, missed, false alarms (and any fair suggestion that is not a bug).
 4. **The habit to take away**, one or two lines.
 Predict and trace drills in chat get the same report (their predictions or table against the real values). The weekly review and the progress coach read these reports.
+
+## practise <concept(s)>
+
+Drills drawn from the concept graph (`dojo.py graph next`, or the concepts the learner names). Mix the concepts: never two questions in a row on the same one, since an answer that is still fresh in mind trains nothing. Per concept, in this order, dropping back a step when one fails: recall (a short predict or trace where the concept is not named), then discriminate (below, against the concept it is most often confused with), then compose (a review or bug drill that needs it with one or two others). A retry after a wrong answer comes later in the set, on a different surface.
 
 ## predict drill
 
@@ -33,5 +37,8 @@ Show 15 to 40 lines of code with several problems (correctness, edge cases, secu
 ## explain drill: work (optional)
 The learner explains, from memory, a part of their current work project they only partly understand: what it does, inputs and outputs, edge cases, why it is written that way. Do NOT ask for or accept pasted work code; work only from their explanation. Ask the follow-up questions a senior colleague or interviewer would ask, list the gaps to look up, and log `dojo.py log drill 20 work-explain`. See `progress/docs/WORK_HABITS.md` if it exists.
 
+## discriminate drill (in chat)
+Two or three short problem statements that look alike but need different patterns (a running total against a sliding window; counting against grouping; two pointers on sorted input against a hash map on unsorted). For each, the learner names the pattern and the one feature of the statement that decides it, with their confidence. No code. Score: pattern right, deciding feature right. Draw the pairs from the learner's weak spots and recent mistakes; log as `drill <minutes> discriminate`.
+
 ## explain drill
-Give a task and ask them to answer WITHOUT code, using the five steps in `docs/INTERVIEW_PLAYBOOK.md` ("When you cannot write something"): concept and approach, skeleton, the precise thing to look up, how to verify, trade-offs. Score each step out of 2 and say what was missing.
+Give a task and ask them to answer WITHOUT code, using the five steps in `docs/INTERVIEW_PLAYBOOK.md` ("When you cannot write something"): concept and approach, skeleton, the precise thing to look up, how to verify, trade-offs. Score each step out of 2 and say what was missing. Variant, **reverse**: show a result (an output, a final data structure, a complexity) and ask for the reasons that produce it, or weaken one condition of a working solution ("the input is no longer sorted") and ask what breaks and why.

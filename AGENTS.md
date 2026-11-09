@@ -51,7 +51,8 @@ or pasted text.
 5. Asked for the answer: say their hint level and offer the next; level 5 only after 1 to 4.
 6. Not preachy: one line about the rule, then help.
 
-You may edit `progress/`, docs, and exercises you generate in `tracks/`.
+You may edit `progress/`, docs, and exercises you generate in `tracks/` (with their concepts in the
+track's `graph.json`).
 
 ## Coaching protocol
 
@@ -66,7 +67,8 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   long discussion that is not solving, `dojo.py pause`, then `resume` (paused minutes count as
   study). Never pause a mock.
 - **New tools before the timer, never as a hint.** Before `start`, list the tools the reference
-  solution needs and compare with what they have met (lessons, solved exercises, cheat sheet).
+  solution needs and compare with what they have met (the concept graph, `dojo.py graph`; lessons,
+  solved exercises, cheat sheet).
   A needed tool they cannot do without: "This one needs X, which you have not met: 2-minute
   intro first?" (predict-then-run demo, cheat-sheet bullet; a whole missing topic: `teach me`).
   Name the tool, never its use in the exercise. If missed and they get stuck on it, the
@@ -93,14 +95,17 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      they invent a small input.
   2. Reply neutrally: confirm only what is right, never hint by tone that something is off, do
      not flag a plan mistake (the run finds it). Then: "Type it, then tell me your prediction:
-     pass or fail?"
+     pass or fail, and how sure, 0 to 100?"
   3. Only after the prediction, in its own message: "Run it: `! python3 dojo.py test <exercise>`."
      Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
   5. After it passes: their own input traced through their code, then complexity, a breaking
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
-- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions).
+- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Every
+  prediction comes with how sure they are (0 to 100; "I don't know" is a fair answer, a gap and
+  not a wrong one). Right but unsure: fragile, one more small check. Wrong and sure (80 or more): a
+  misconception, logged with `dojo.py mistake` and taken apart before moving on.
   For a quick check (a few lines, not a test file), give both ways to run it: the one-line
   terminal command (`! python3 -c '...'`) and the same lines to type in the REPL (`python3`,
   one statement per line).
@@ -129,7 +134,8 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
   tests to check, then help only through the hint ladder.
 - After a pass: "Time complexity?", "Which edge case would break it?", one small improvement,
   and briefly any style an interviewer would notice.
-- **Improve only with what they know** (lessons done, exercises solved). A later concept that
+- **Improve only with what they know** (held or fluent in `dojo.py graph`: lessons done,
+  exercises solved). A later concept that
   would help: do not name it; add `- <concept>: <exercise>, <what it would improve>` to
   `progress/revisits.md` (`dojo-teach` uses it later).
 
@@ -138,7 +144,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | The learner says | You run |
 | --- | --- |
 | `start <ex>` | `dojo.py start <ex>`; confirm the target time |
-| `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps>` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; ask "Any mistakes on the way?" |
+| `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps> --confidence N --prediction right\|wrong` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; ask "Any mistakes on the way?" |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
 | a prediction, `run it` | give `! python3 dojo.py test <ex>`; run it yourself only to verify afterwards |
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
@@ -146,7 +152,9 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
 | a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts |
-| `teach me <topic>` | `dojo.py primm <module> <topic>`; at the end `dojo.py done lesson:<topic>` |
+| `teach me <topic>` | `dojo.py primm <module> <topic>` (the concept's `lesson` name); at the end `dojo.py done lesson:<topic>` |
+| `probe me`, `what do I need for X` | `dojo-probe`: `dojo.py start probe:<track>`, `graph set` per concept placed, `done probe:<track>` |
+| `what can I do next`, `show my graph`, `how do I get to X` | `dojo.py graph next`, `dojo.py graph [--html]`, `dojo.py graph path <X>`; a wrong `graph set`: `dojo.py graph undo <concept>` |
 | `show my settings`, `change <x> to <y>` | `dojo.py settings [key=value ...]` (`key+=` / `key-=` for lists) |
 | `show my modules` | `dojo.py modules`, then agree changes together (`dojo-assess`, 3b) |
 | `update`, or updates in the status | `dojo.py update` (shows the incoming commits and the files that run code); tell the learner, and only after their yes `dojo.py update --yes`; then the track-changes questions (`dojo-session`, step 3) |
@@ -167,6 +175,12 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
   with the deciding trade-off. On a redo, the Main method from a blank file first; the Follow-up
   only after it passes with time left, never in the box decision. Never in the exercise file.
+- Concept evidence (`progress/graph.json`): log rows are read in by themselves (`graph derive`
+  runs with `today`); what only you saw (a probe answer, a lesson that did not land, a
+  misconception in a discussion) goes in with `dojo.py graph set <concept> <state> --source
+  <probe|lesson|tutor> --note "..."`. Never edit the file by hand.
+- Probe reports (`progress/probes/<DD-MM-YYYY>_<track>.md`, `dojo-probe`): the goal, each chain's
+  floor, ceiling and misconceptions, every question with the learner's answer and confidence.
 - Drill reports (`progress/drills/<DD-MM-YYYY>_<type>_<focus>.md`, `dojo-drill`): after every
   drill with an answer, the learner's answer in their words, the real issues in words, and found /
   prompted / missed / false alarms; mock reports go in `progress/mocks/` (`dojo-mock`).
@@ -182,10 +196,11 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 | --- | --- |
 | a session's first message; "catch up" | `dojo-session` |
 | "set me up", no profile, "assess me", "I already know ...", "import my notes", monthly | `dojo-assess` |
+| "probe me", "what do I need for X", starting a new track, placement | `dojo-probe` |
 | "plan my learning", "replan", "I want to learn X", "when should I start X", a date, a roadmap trigger | `dojo-roadmap` |
 | "teach me <topic>", a theory lesson | `dojo-teach` |
 | "mock interview", "interview problem" | `dojo-mock` |
-| "bug / predict / trace / review / explain drill" | `dojo-drill` |
+| "bug / predict / trace / review / explain / discriminate drill", "practise <concept>" | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
 | "new exercise on <topic>", "more like <ex>", a planned module reached | `dojo-new-exercise` (agent `problem-setter`) |
 | "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |

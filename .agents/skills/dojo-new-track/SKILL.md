@@ -41,6 +41,11 @@ than any one of them. Always in the dojo's own format, never a copy.
      milestones, Prerequisites, Theory, and a "Sources" table (what each was used for, why it is
      trusted). No time estimates.
    - `track.json` with `"reviewed": "<DD/MM/YYYY>"`.
+   - `graph.json`, the concept graph (`docs/TRACKS.md`, "Concept graph"): every concept the
+     modules teach, what each needs first (`requires`), an observable `can` statement, its
+     `lesson` (a topic of the module's `primm/README.md`; `kind: theory` for `Theory:` lines) and
+     its exercises; planned modules' concepts marked `"planned": true`. `dojo.py graph check
+     <track>` must report no errors. A review updates it with the modules.
    - Exercises are original, in the dojo format: never copy text, exercises or solutions,
      whatever the licence; structure, topic order and the *kind* of example may be borrowed,
      credited.
@@ -49,8 +54,11 @@ than any one of them. Always in the dojo's own format, never a copy.
    that already has an optional argument)? Can one exercise train two or three topics (a class
    with a class attribute that holds other objects)? Only then a new exercise, at most one per
    topic; merge or remove duplicates. More exercises are not a better course. A new track gets
-   its first module only (`dojo-new-exercise`), the rest "planned". Shared exercises are not
+   its first module only (`dojo-new-exercise`), the rest "planned". Every exercise is listed under
+   the concept it trains in `graph.json`. Shared exercises are not
    acknowledged for any learner: each is asked at their next session if the module is one they
    have started, and meets it on arrival otherwise.
 7. **Close**: the sources used and the ones rejected (one line why), the module list, and what
-   was changed (or, for a review, what is proposed).
+   was changed (or, for a review, what is proposed). For a learner about to start the track,
+   offer the probe (`dojo-probe`): their goal in it, and what they already hold, before the first
+   module.
