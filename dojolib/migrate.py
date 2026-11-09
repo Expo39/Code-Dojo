@@ -13,10 +13,16 @@ from .core import (
     SESSION, UPSTREAM_CHECK, WEEKLY, WORKSPACE, fmt_date, parse_date, read_json, write_json
 )
 from .data import read_log
-from .tracks import (
-    DRILL_TYPES, HISTORY_STAMP_RE, LEGACY_MOCKS, TRACK_SIDE_FOLDERS, discover, load_tracks,
-    test_slug
-)
+from .tracks import discover, load_tracks, test_slug
+
+
+TRACK_SIDE_FOLDERS = ("drills", "mocks")  # workspace/<track>/drills/, workspace/<track>/mocks/
+# Drills and mocks live in type folders: drills/<type>/<focus>.<ext>,
+# mocks/<type>/<problem>_<DD_MM_YYYY>.<ext>. Older flat files named <type>_... are moved into
+# the folder of their prefix; these are the drill types such files can carry.
+DRILL_TYPES = ("bug", "predict", "trace", "review", "explain")
+LEGACY_MOCKS = "earlier"  # flat mock_<date> files from before the type folders
+HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
 
 
 def migrate_workspace(verbose: bool = True) -> int:

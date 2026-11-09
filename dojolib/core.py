@@ -26,22 +26,28 @@ SEEN = PROGRESS / "tracks_seen.json"  # exercise -> content hash the learner has
 TOPICS_SEEN = PROGRESS / "topics_seen.json"  # track/module -> lesson topics already asked about
 UPSTREAM_CHECK = PROGRESS / "upstream_check.json"
 PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
+GRAPH_OVERLAY = PROGRESS / "graph.json"  # evidence per concept of each track's graph.json (dojolib/graph.py)
+PROBES = PROGRESS / "probes"  # probe reports (the dojo-probe skill)
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
 PRIMM_DIR = "primm"
 LESSON_PREFIX = "lesson:"  # timer key of a PRIMM lesson, logged as study time by `done`
+PROBE_PREFIX = "probe:"  # timer key of a probe (dojo-probe), logged as study time by `done`
 
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 # Leitner boxes: days until the next redo. Box 4+ counts as mastered.
 INTERVALS = [1, 3, 7, 14, 30, 60]
 MASTERED_BOX = 4
 TARGETS = {"tiny": 5, "easy": 15, "medium": 30, "hard": 45}
+# confidence: how sure the learner said they were (0-100) of a prediction or answer;
+# prediction: whether that prediction came true (right / wrong). Empty = not asked.
 LOG_FIELDS = ["date", "item", "kind", "module", "pattern", "level",
-              "minutes", "target", "hints", "result", "ratio", "skipped", "note"]
+              "minutes", "target", "hints", "result", "ratio", "skipped", "note",
+              "confidence", "prediction"]
 # The exercise loop (docs/CHECKLISTS.md). `done --skipped` records the steps left out.
 STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
-Before running: 4 predict (pass or fail? which test?)
+Before running: 4 predict (pass or fail? which test? how sure, 0-100?)
 After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 

@@ -10,7 +10,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from .core import (
-    CHECKLIST, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, REVIEWS,
+    CHECKLIST, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
+    REVIEWS,
     ROOT, SESSION, STEPS, TARGETS, TIMER, WORKSPACE, die, fmt_date, fmt_min, now, parse_date,
     read_json, today, write_json
 )
@@ -22,6 +23,7 @@ from .tracks import (
     debug_in_process, discover, get_exercise, modules_by_name, run_exercise, side_track, test_slug,
     warn_if_unsaved
 )
+from .planning import interleave_due
 
 
 def cmd_list(args) -> None:
@@ -51,7 +53,7 @@ def cmd_start(args) -> None:
         die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
     ex = discover().get(args.item)
     if ex:
-        due = [k for k, _ in due_items(today()) if k != args.item]
+        due = [k for k, _ in interleave_due(due_items(today())) if k != args.item]
         if args.item not in read_json(REVIEWS, {}) and due:
             print(f"Reminder: {len(due)} redo(s) due ({', '.join(due[:4])}). "
                   "Best practice: clear the redo queue before new material.")
@@ -75,6 +77,8 @@ def cmd_start(args) -> None:
         print(f"Target: {ex['target']} min ({ex['level']}). "
               f"Test with: python dojo.py test {args.item}")
         print(CHECKLIST)
+    elif args.item.startswith(PROBE_PREFIX):
+        print(f"Probe timer started. End it with: python dojo.py done {args.item}")
     else:
         print(f"Timer started for '{args.item}' (not a dojo exercise; log it with `done` as usual).")
     timers[args.item] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None}
@@ -145,13 +149,15 @@ def cmd_done(args) -> None:
     on = parse_date(args.date) if args.date else today()
     paused = paused_minutes(started) if started and args.minutes is None else 0.0
 
-    if args.item.startswith(LESSON_PREFIX):
-        # A PRIMM lesson: training time, but no target, no tests and no redo schedule.
-        topic = args.item[len(LESSON_PREFIX):]
+    if args.item.startswith((LESSON_PREFIX, PROBE_PREFIX)):
+        # A PRIMM lesson or a probe: training time, but no target, no tests and no redo schedule.
+        probe = args.item.startswith(PROBE_PREFIX)
+        topic = args.item.split(":", 1)[1]
         module = timer_of(started).get("module", "") if started else ""
-        append_log({"date": fmt_date(on), "item": topic, "kind": "study", "module": module,
-                    "minutes": round(minutes + credit + paused, 1), "note": "PRIMM lesson"})
-        print(f"Lesson '{topic}': {fmt_min(minutes + credit + paused)} logged as study.")
+        append_log({"date": fmt_date(on), "item": f"probe_{topic}" if probe else topic, "kind": "study",
+                    "module": module, "minutes": round(minutes + credit + paused, 1),
+                    "note": "probe" if probe else "PRIMM lesson"})
+        print(f"{'Probe' if probe else 'Lesson'} '{topic}': {fmt_min(minutes + credit + paused)} logged as study.")
         return
 
     ex = discover().get(args.item)
@@ -183,7 +189,8 @@ def cmd_done(args) -> None:
                 "pattern": pattern, "level": level, "minutes": round(minutes, 1),
                 "target": target or "", "hints": args.hints, "result": result,
                 "ratio": ratio if ratio is not None else "",
-                "skipped": ",".join(skipped), "note": args.note or ""})
+                "skipped": ",".join(skipped), "note": args.note or "",
+                "confidence": confidence_value(args), "prediction": args.prediction or ""})
     if credit:
         # Time lost to a tutor misunderstanding: off the solve time, still counted as training.
         append_log({"date": fmt_date(on), "item": args.item, "kind": "study",
@@ -221,12 +228,22 @@ def cmd_done(args) -> None:
         print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")
 
 
+def confidence_value(args) -> str:
+    """The learner's stated confidence (0-100) as logged, or empty when it was not asked."""
+    if args.confidence is None:
+        return ""
+    if not 0 <= args.confidence <= 100:
+        die("--confidence is a percentage from 0 to 100.")
+    return str(args.confidence)
+
+
 def cmd_log(args) -> None:
     ensure_files()
     on = parse_date(args.date) if args.date else today()
     append_log({"date": fmt_date(on), "item": args.item or args.kind, "kind": args.kind,
                 "minutes": args.minutes, "hints": args.hints, "result": args.result or "",
-                "pattern": args.pattern or "", "level": args.level or "", "note": args.note or ""})
+                "pattern": args.pattern or "", "level": args.level or "", "note": args.note or "",
+                "confidence": confidence_value(args), "prediction": args.prediction or ""})
     print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {fmt_date(on)}.")
 
 

@@ -7,7 +7,7 @@ reviews; nobody else can push to `main` directly.
 
 1. Fork the repository and create a branch.
 2. Make the change, then check it: `python tools/check.py` (no personal data, no secrets, Python
-   compiles, JSON parses, changed exercises verify). After `python dojo.py setup` or `doctor` it
+   compiles, JSON parses, changed exercises verify, changed tracks' concept graphs are valid). After `python dojo.py setup` or `doctor` it
    also runs by itself before every push. Run the commands you touched, too.
 3. Open a pull request and fill in its checklist. The same checks, plus `dojo.py verify` on every
    exercise, run on GitHub; the owner approves running them for outside contributors.
@@ -15,7 +15,8 @@ reviews; nobody else can push to `main` directly.
 ## What fits
 
 - **Tracks and exercises** in the format of `docs/TRACKS.md` (task, tests, reference solution,
-  clarify file), verified and original. Improve an existing exercise, or let one exercise train
+  clarify file), verified and original, each listed under its concept in the track's
+  `graph.json` (`python dojo.py graph check`). Improve an existing exercise, or let one exercise train
   two topics, before adding a new one: more exercises are not a better track. A new track starts from research into the best current
   free courses and docs (`dojo-new-track`) and lists its sources and review date in its README.
 - **Docs, skills and agents** that work for any learner, at any level and in any mode. A subagent
@@ -30,7 +31,8 @@ reviews; nobody else can push to `main` directly.
   | `core` | paths, constants, file headers, dates, JSON, the profile |
   | `data` | `log.csv`, the redo schedule, timers, the session clock, the personal files |
   | `tracks` | track and exercise discovery, running tests, lesson topics |
-  | `planning` | strand balance, week numbers, pattern stats, gates, modules, the mix |
+  | `planning` | strand balance, week numbers, pattern stats, gates, modules, the mix, calibration, redo order |
+  | `graph` | the concept graph: loading, checks, evidence, states, `next` and `path`, the views |
   | `updates` | shared-repo updates and track changes |
   | `migrate` | migrations of older layouts and dates |
   | `setup`, `transfer`, `practice`, `reports` | the commands, by area |

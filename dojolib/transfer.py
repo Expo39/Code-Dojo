@@ -14,10 +14,12 @@ from .core import (
     write_json
 )
 from .migrate import migrate_dates, migrate_workspace
+from .graph import graph_refresh, graph_track_names, load_graph, write_graph_views
 
 
 def cmd_export(args) -> None:
-    """Zip all personal data (progress/ and workspace/), optionally copy it over SSH."""
+    """Zip all personal data (progress/ and workspace/, including the concept-graph evidence and
+    probe reports), plus a fresh view of each concept graph in views/; optionally copy it away."""
     import zipfile
     profile = load_profile(required=False)
     target = args.to or profile.get("export_target")
@@ -29,7 +31,18 @@ def cmd_export(args) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     archive = out_dir / f"code-dojo_{name}_{now().strftime(STAMP_FMT)}.zip"
     count = 0
+    views = []
+    for track in graph_track_names(profile):
+        graph = load_graph(track)
+        _, states = graph_refresh(graph)  # the evidence in the backup is current
+        views += write_graph_views(graph, states, out_dir / f".views_{archive.stem}")
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
+        for view in views:
+            # Readable without the dojo (open the .html in a browser); never restored by import.
+            z.write(view, f"views/{view.name}")
+            view.unlink()
+        if views:
+            views[0].parent.rmdir()
         for folder in (PROGRESS, WORKSPACE):
             if not folder.exists():
                 continue
@@ -37,7 +50,7 @@ def cmd_export(args) -> None:
                 if path.is_file() and "__pycache__" not in path.parts:
                     z.write(path, path.relative_to(ROOT).as_posix())
                     count += 1
-    print(f"Exported {count} files to {archive}")
+    print(f"Exported {count} files to {archive}" + (f" (and {len(views)} concept-graph views in views/)" if views else ""))
     if target and target.startswith("rclone:"):
         remote = target[len("rclone:"):]
         print(f"Uploading to {remote} with rclone ...")
@@ -110,7 +123,8 @@ def cmd_import(args) -> None:
         die(f"No such file: {archive}")
     with zipfile.ZipFile(archive) as z:
         names = z.namelist()
-        bad = [n for n in names if not (n.startswith("progress/") or n.startswith("workspace/"))
+        restore = [n for n in names if not n.startswith("views/")]  # views/ is regenerated, not data
+        bad = [n for n in names if not (n.startswith(("progress/", "workspace/", "views/")))
                or ".." in n.replace("\\", "/").split("/") or "\\" in n or ":" in n]
         links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
         if links:
@@ -129,7 +143,7 @@ def cmd_import(args) -> None:
                 if folder.exists():
                     shutil.move(str(folder), backup / folder.name)
             print(f"Current data moved to {backup.name}/")
-        z.extractall(ROOT)
+        z.extractall(ROOT, members=restore)
     migrate_workspace(verbose=False)  # an export from an older version may use the flat layout
     migrate_dates(verbose=False)
-    print(f"Imported {len(names)} files. Run `python dojo.py today`.")
+    print(f"Imported {len(restore)} files. Run `python dojo.py today`.")

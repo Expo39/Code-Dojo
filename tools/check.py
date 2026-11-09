@@ -9,6 +9,8 @@ Looks only at what changed since the base (default: origin/main), so it stays fa
   4. changed Python files compile, changed JSON files parse
   5. changed exercises still verify: the stub fails, the reference passes
   6. each subagent says the same in .claude/agents, .codex/agents and .gemini/agents
+  7. the concept graph of every changed track is valid (ids, requires, no cycles, links to
+     modules, lessons and exercises): a renamed exercise or lesson topic must update graph.json
 Exit code 0 = all good. Skip once in an emergency with: git push --no-verify
 """
 from __future__ import annotations
@@ -134,6 +136,17 @@ def main() -> int:
             problems.append("exercises do not verify:\n" + result.stdout.strip())
 
     problems += [p + " (edit all three copies of an agent together)" for p in agent_parity()]
+
+    graph_code_changed = any(f.startswith("dojolib/graph") for f in changed)
+    tracks = sorted({f.split("/")[1] for f in changed if f.startswith("tracks/") and f.count("/") >= 2}
+                    if not graph_code_changed else
+                    {p.parent.name for p in (ROOT / "tracks").glob("*/graph.json")})
+    tracks = [t for t in tracks if (ROOT / "tracks" / t / "graph.json").exists()]
+    if tracks:
+        result = subprocess.run([sys.executable, str(ROOT / "dojo.py"), "graph", "check", "--quiet", *tracks],
+                                capture_output=True, text=True, cwd=ROOT)
+        if result.returncode:
+            problems.append("concept graph errors:\n" + result.stdout.strip())
 
     if problems:
         print("Checks failed:")

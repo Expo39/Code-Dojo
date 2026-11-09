@@ -1,5 +1,5 @@
 """Planning numbers: the strand balance, week figures, pattern stats, fluency gates, the
-module overview and the track mix."""
+module overview, the track mix, confidence calibration and the interleaved redo order."""
 
 from __future__ import annotations
 
@@ -192,3 +192,51 @@ def fluency_gates(rows: list[dict], on: date) -> list[tuple[str, bool]]:
         ("Last 8 medium: all solved, median <= 1.3x target, <= 1 hint", gate(medium, 8, 1.3, 1.0)),
         ("Last 3 mocks passed", len(mocks) == 3 and all(r["result"] in ("pass", "strong") for r in mocks)),
     ]
+def calibration(rows: list[dict]) -> list[str]:
+    """Stated confidence against how often the prediction or answer was right."""
+    items = []
+    for r in rows:
+        conf = r.get("confidence", "")
+        if conf in ("", None):
+            continue
+        outcome = r.get("prediction") or ({"right": "right", "wrong": "wrong"}.get(r.get("result", "")))
+        if outcome in ("right", "wrong"):
+            items.append((float(conf), outcome == "right"))
+    if not items:
+        return []
+    lines = []
+    for lo, hi in ((0, 49), (50, 69), (70, 89), (90, 100)):
+        band = [ok for c, ok in items if lo <= c <= hi]
+        if band:
+            said = statistics.mean(c for c, _ in items if lo <= c <= hi)
+            lines.append(f"  said {lo}-{hi}%: n={len(band):<3} average said {said:.0f}%, "
+                         f"actually right {100 * sum(band) / len(band):.0f}%")
+    sure_wrong = sum(1 for c, ok in items if c >= 80 and not ok)
+    if sure_wrong:
+        lines.append(f"  confidently wrong (80%+ and wrong): {sure_wrong}: each is a misconception "
+                     "worth a line in progress/mistakes.md")
+    return lines
+
+
+def interleave_due(due: list[tuple[str, dict]]) -> list[tuple[str, dict]]:
+    """Redo order that switches pattern and module each time (retrieval from a cold start),
+    taking the most overdue item of each group first."""
+    exercises = discover()
+    groups: dict[str, list[tuple[str, dict]]] = {}
+    for item in due:
+        ex = exercises.get(item[0], {})
+        groups.setdefault(ex.get("pattern") or ex.get("module") or item[0], []).append(item)
+    queues = sorted(groups.values(), key=lambda g: (parse_date(g[0][1]["due"]), g[0][1]["box"]))
+    out: list[tuple[str, dict]] = []
+    last_module = None
+    while queues:
+        idx = next((i for i, q in enumerate(queues)
+                    if exercises.get(q[0][0], {}).get("module") != last_module), 0)
+        queue = queues.pop(idx)
+        item = queue.pop(0)
+        last_module = exercises.get(item[0], {}).get("module")
+        out.append(item)
+        if queue:
+            queues.append(queue)  # the group goes to the back: the next redo switches pattern
+    return out
+

@@ -18,6 +18,7 @@ from .core import (
 from .data import ensure_files, minutes_on, read_log
 from .tracks import discover, find_venv_python, load_tracks, venv_python
 from .planning import effective_mix, module_overview, print_modules
+from .graph import graph_check, load_graph
 
 
 NEXT_STEPS = """
@@ -418,6 +419,13 @@ def cmd_doctor(args) -> None:
         elif (today() - parse_date(reviewed)).days > 365:
             print(f"  note: track '{name}' was last reviewed on {reviewed}: over a year ago, "
                   "worth a review against current courses and versions (dojo-new-track)")
+    for name in load_tracks(active_only=False):
+        graph = load_graph(name)
+        if graph:
+            errors, _ = graph_check(graph)
+            for e in errors:
+                print(f"  ! concept graph of '{name}': {e}")
+            ok = ok and not errors
     skills = ensure_claude_skills()
     print(skills)
     print(ensure_git_hooks())

@@ -229,12 +229,3 @@ def modules_by_name() -> dict:
         rel = ex["stub"].parent.relative_to(ex["track_config"]["dir"])
         found.setdefault(ex["module"], (ex["track"], rel, ex["track_config"]))
     return found
-
-
-TRACK_SIDE_FOLDERS = ("drills", "mocks")  # workspace/<track>/drills/, workspace/<track>/mocks/
-# Each drill or mock lives in a type folder with its own tests/ and .history/:
-# drills/<type>/<focus>.<ext>, mocks/<type>/<problem>_<DD_MM_YYYY>.<ext>
-DRILL_TYPES = ("bug", "predict", "trace", "review", "explain")
-MOCK_TYPES = ("pattern", "practical", "bug", "explain")
-LEGACY_MOCKS = "earlier"  # flat mock_<date> files from before the type folders
-HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")

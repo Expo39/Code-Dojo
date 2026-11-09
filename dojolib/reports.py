@@ -12,9 +12,10 @@ from .core import (
 from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, timer_of
 from .tracks import discover, load_tracks
 from .planning import (
-    effective_mix, fluency_gates, next_new, print_modules, recent_stats, session_size, strand_line,
-    week_numbers
+    calibration, effective_mix, fluency_gates, interleave_due, next_new, print_modules,
+    recent_stats, session_size, strand_line, week_numbers
 )
+from .graph import graph_brief_line
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
 from .migrate import is_dated_row
 
@@ -66,7 +67,7 @@ def cmd_today(args, brief: bool = False) -> None:
     plan = planned_minutes(profile, on)
     done_today = minutes_on(rows, on)
     wk = week_numbers(profile, rows, on)
-    due = due_items(on)
+    due = interleave_due(due_items(on))
     timers = read_json(TIMER, {})
     mix = effective_mix(profile)
     upcoming = next_new(profile)
@@ -114,7 +115,7 @@ def cmd_today(args, brief: bool = False) -> None:
     if due:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in due[:8])
         more = f" and {len(due) - 8} more" if len(due) > 8 else ""
-        lines.append(f"Redo queue ({len(due)} due): {names}{more}.")
+        lines.append(f"Redo queue ({len(due)} due, in interleaved order): {names}{more}.")
     else:
         lines.append("Redo queue: nothing due.")
     if profile.get("mode") or profile.get("target_level"):
@@ -138,6 +139,9 @@ def cmd_today(args, brief: bool = False) -> None:
     if weak:
         lines.append("Weak spots (last 14 days): " + ", ".join(
             f"{p} ({s['ratio']:.1f}x, {s['hints']:.1f} hints)" for p, s in weak[:5]) + ".")
+    graph_line = graph_brief_line(profile)
+    if graph_line:
+        lines.append(graph_line)
     changes = changes_lines(track_changes())
     if changes:
         lines.append("Track changes to ask about (learn it / already know it / not for me): "
@@ -259,6 +263,10 @@ def cmd_stats(args) -> None:
     print("\nLast 28 days by pattern:")
     for p, s in sorted(recent_stats(rows, 28, on).items(), key=lambda kv: -kv[1]["ratio"]):
         print(f"  {p:28} n={s['n']:<3} median {s['ratio']:.2f}x  hints {s['hints']:.1f}  clean {s['clean']}")
+    calibrated = calibration(rows)
+    if calibrated:
+        print("\nConfidence against results (predictions and answers with a stated confidence):")
+        print("\n".join(calibrated))
     print("\nFluency gates (see the track README, section 'Milestones'):")
     for label, check in fluency_gates(rows, on):
         print(f"  [{'x' if check else ' '}] {label}")

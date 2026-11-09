@@ -14,6 +14,7 @@ from .practice import (
     cmd_pause, cmd_primm, cmd_resume, cmd_session, cmd_start, cmd_sync, cmd_test, cmd_verify
 )
 from .reports import cmd_mix, cmd_modules, cmd_stats, cmd_today, cmd_week
+from .graph import cmd_graph
 
 
 HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.py setup
@@ -36,8 +37,11 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
        --credit M                minutes lost to a tutor misunderstanding (off the solve time, still logged)
+       --confidence N --prediction right|wrong   how sure you said you were (0-100) and whether
+                                 the prediction came true (stats compares the two)
        mocks: done <problem>_<date> --kind mock --result strong|pass|fail --no-review
   log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
+                           (--confidence N --prediction right|wrong, as for done)
   pause / resume [item]    stop the clock while talking something through, then continue
   session start|pause|resume|status|end
                            the session clock: at `end`, training time outside exercise
@@ -52,7 +56,17 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
   import <zip> [--force]         restore an export on this machine
   week [--write]           weekly report (writes progress/weekly/week_<Monday DD-MM-YYYY>.md)
-  stats                    modules, patterns, fluency gates (and time by track)
+  stats                    modules, patterns, confidence against results, fluency gates
+                           (and time by track)
+  graph [track] [--html] [--mermaid]   the concept graph: each concept's state from your
+                           evidence and redo boxes (--html / --mermaid also write exports/graph_<track>.*)
+  graph next [--goal X]    what you can do now, ranked (towards a concept, module or exercise)
+  graph path <X> ...       the shortest list of concepts still to learn to reach X
+  graph set <concept> <gap|misconception|fragile|held> [--confidence N] [--source probe] [--note ..]
+                           record evidence (the tutor does this after a probe or a lesson)
+  graph undo <concept>     remove the last evidence recorded with `graph set` (a correction)
+  graph derive [track]     read new log rows into your evidence (also automatic)
+  graph check [track]      (maintainers) the graph is valid: ids, requires, no cycles, links
   modules                  your modules: assigned, excluded, before your start, or planned
   update [--yes]           show what the shared repo changed (and which files run code), apply it
                            after a yes, then list the new or changed exercises in your tracks
@@ -67,6 +81,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file);
                            with a topic, starts a lesson timer: end it with `done lesson:<topic>`
                            for a teach-me lesson
+  start probe:<track>      timer for a probe (the goal-first mini test); end it with `done probe:<track>`
   migrate                  move older layouts into the current one: module folders, drills/<type>/
                            and mocks/<type>/ (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
@@ -109,6 +124,8 @@ def main() -> None:
     p.add_argument("--date")
     p.add_argument("--no-review", action="store_true")
     p.add_argument("--skipped", help="comma-separated process steps left out: " + ",".join(STEPS))
+    p.add_argument("--confidence", type=int, help="how sure the learner said they were, 0-100")
+    p.add_argument("--prediction", choices=["right", "wrong"], help="whether the prediction came true")
     p = sub.add_parser("log")
     p.add_argument("kind", choices=KINDS)
     p.add_argument("minutes", type=float)
@@ -119,6 +136,8 @@ def main() -> None:
     p.add_argument("--level")
     p.add_argument("--note")
     p.add_argument("--date")
+    p.add_argument("--confidence", type=int)
+    p.add_argument("--prediction", choices=["right", "wrong"])
     p = sub.add_parser("cancel"); p.add_argument("item")
     p = sub.add_parser("pause"); p.add_argument("item", nargs="?")
     p = sub.add_parser("resume"); p.add_argument("item", nargs="?")
@@ -141,6 +160,20 @@ def main() -> None:
     p = sub.add_parser("verify"); p.add_argument("items", nargs="*")
     p = sub.add_parser("primm"); p.add_argument("module"); p.add_argument("topic", nargs="?")
     sub.add_parser("migrate")
+    p = sub.add_parser("graph")
+    p.add_argument("action", nargs="?", help="show (default), next, path, set, undo, derive, check, or a track")
+    p.add_argument("args", nargs="*")
+    p.add_argument("--track")
+    p.add_argument("--goal", nargs="+")
+    p.add_argument("--limit", type=int, default=8)
+    p.add_argument("--html", action="store_true")
+    p.add_argument("--mermaid", action="store_true")
+    p.add_argument("--out")
+    p.add_argument("--confidence", type=int)
+    p.add_argument("--source")
+    p.add_argument("--note")
+    p.add_argument("--ref")
+    p.add_argument("--quiet", action="store_true", help="check: errors only")
     sub.add_parser("help")
 
     args = parser.parse_args()
@@ -148,7 +181,7 @@ def main() -> None:
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
         "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
-        "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate,
+        "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate, "graph": cmd_graph,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
         migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder

@@ -9,8 +9,8 @@ from datetime import date, datetime, timedelta
 
 from .core import (
     CHEATSHEET, CHEATSHEET_HEADER, INTERVALS, LOG, LOG_FIELDS, MISTAKES, MISTAKES_HEADER,
-    PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, WEEKLY, die, fmt_date, now, parse_date,
-    read_json, write_json
+    PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROBES, PROGRESS, REVIEWS, WEEKLY, die, fmt_date, now,
+    parse_date, read_json, write_json
 )
 
 
@@ -20,6 +20,7 @@ def ensure_files() -> None:
     WEEKLY.mkdir(exist_ok=True)
     (PROGRESS / "mocks").mkdir(exist_ok=True)
     (PROGRESS / "drills").mkdir(exist_ok=True)
+    PROBES.mkdir(exist_ok=True)
     if not LOG.exists():
         with LOG.open("w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerow(LOG_FIELDS)
