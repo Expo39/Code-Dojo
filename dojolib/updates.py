@@ -187,7 +187,8 @@ def cmd_update(args) -> None:
         return
     files = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", incoming],
                            capture_output=True, text=True).stdout.split()
-    runs = [f for f in files if f.endswith((".py", ".sh", "track.json")) or f.startswith((".claude/", ".githooks/", ".github/"))]
+    runs = [f for f in files if f.endswith((".py", ".sh", "track.json"))
+            or f.startswith((".claude/", ".githooks/", ".github/", "dojolib/"))]  # graph_view.html runs in your browser
     print(f"Incoming from {remote}/{branch}:\n" + "\n".join("  " + line for line in log.splitlines()))
     print(f"{len(files)} file(s) change" + (f"; these run on your machine, so they are worth a look "
           f"(git diff {incoming} -- <file>):\n  " + "\n  ".join(runs) if runs else "."))

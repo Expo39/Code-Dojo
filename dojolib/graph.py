@@ -15,7 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from .core import (
-    GRAPH_OVERLAY, PRIMM_DIR, REVIEWS, ROOT, active_track_names, die, fmt_date, load_profile,
+    GRAPH_OVERLAY, PRIMM_DIR, REVIEWS, active_track_names, die, fmt_date, load_profile,
     parse_date, read_json, today, write_json
 )
 from .data import ensure_files, read_log
@@ -570,153 +570,60 @@ def mermaid_text(graph: dict, states: dict) -> str:
     return "\n".join(lines)
 
 
-def graph_layout(graph: dict) -> dict[str, tuple[int, int]]:
-    """Layered layout: column = longest prerequisite chain below the concept; rows ordered by
-    module, then nudged towards their prerequisites' rows (one barycentre pass)."""
-    concepts = graph["concepts"]
-    depth: dict[str, int] = {}
-    for cid in graph["order"]:
-        reqs = [depth[r] for r in concepts[cid]["requires"] if r in depth]
-        depth[cid] = 1 + max(reqs) if reqs else 0
-    columns: dict[int, list[str]] = {}
-    for cid in graph["order"]:
-        columns.setdefault(depth[cid], []).append(cid)
-    module_rank = {m: i for i, m in enumerate(dict.fromkeys(concepts[c]["module"] for c in graph["order"]))}
-    row: dict[str, float] = {}
-    for col in sorted(columns):
-        cids = columns[col]
-        def key(cid: str) -> tuple:
-            parents = [row[r] for r in concepts[cid]["requires"] if r in row]
-            centre = sum(parents) / len(parents) if parents else module_rank[concepts[cid]["module"]]
-            return (centre, module_rank[concepts[cid]["module"]], graph["rank"][cid])
-        cids.sort(key=key)
-        for i, cid in enumerate(cids):
-            row[cid] = i
-    return {cid: (depth[cid], int(row[cid])) for cid in concepts}
+VIEW_TEMPLATE = Path(__file__).with_name("graph_view.html")  # the interactive page, data embedded
 
 
-HTML_TEMPLATE = """<!doctype html>
-<html lang="en-GB"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Concept graph: __TRACK__</title>
-<style>
-:root{--bg:#fafaf7;--fg:#1d1d1b;--muted:#6b6b66;--panel:#ffffff;--line:#c9c9c2;--edge:#b5b5ad;--hi:#1f6feb;
---fluent:#2e7d32;--held:#00838f;--due:#b8860b;--fragile:#ef6c00;--misconception:#c62828;--gap:#ad1457;--ready:#6a1b9a;--unknown:#8d8d86;--planned:#c4c4bc}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#151514;--fg:#ecece6;--muted:#a3a39b;--panel:#1f1f1d;--line:#3a3a36;--edge:#4b4b46;--hi:#58a6ff;--planned:#4a4a45;--unknown:#77776f}}
-:root[data-theme="dark"]{--bg:#151514;--fg:#ecece6;--muted:#a3a39b;--panel:#1f1f1d;--line:#3a3a36;--edge:#4b4b46;--hi:#58a6ff;--planned:#4a4a45;--unknown:#77776f}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{padding:16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;border-bottom:1px solid var(--line)}
-h1{font-size:18px;margin:0}.sum{color:var(--muted);font-size:13px}
-.controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:100%}
-.chip{border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;padding:3px 10px;font-size:13px;cursor:pointer}
-.chip[aria-pressed="false"]{opacity:.45}.chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
-input[type=search]{flex:1;min-width:140px;max-width:280px;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg)}
-main{display:flex;flex-wrap:wrap;min-height:calc(100vh - 110px)}
-#wrap{flex:1 1 600px;min-width:0;overflow:auto;max-height:calc(100vh - 110px)}
-aside{flex:0 1 340px;min-width:0;width:100%;max-width:100%;border-left:1px solid var(--line);background:var(--panel);padding:16px;overflow:auto;max-height:calc(100vh - 110px)}
-@media (max-width:800px){aside{border-left:0;border-top:1px solid var(--line);flex-basis:100%;max-height:none}#wrap{max-height:70vh}}
-svg text{font-size:12px;fill:#fff;pointer-events:none}.node rect{rx:7;stroke-width:2;stroke:transparent;cursor:pointer}
-.node.sel rect{stroke:var(--hi);stroke-width:3}.node.dim,.edge.dim{opacity:.13}.edge{fill:none;stroke:var(--edge);stroke-width:1.3}
-.edge.hi{stroke:var(--hi);stroke-width:2.2;opacity:1}.node.planned text,.node.unknown text{fill:var(--fg)}
-a{color:var(--hi)}aside h2{font-size:16px;margin:0 0 4px}aside .st{font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-aside ul{padding-left:18px;margin:4px 0 10px}aside .k{color:var(--muted);font-size:12px;margin-top:10px}
-.ev{font-size:13px;border-left:3px solid var(--line);padding-left:8px;margin:6px 0}
-#theme{margin-left:auto}
-</style></head><body>
-<header><h1>Concept graph: __TRACK__</h1><span class="sum">__SUMMARY__ · generated __DATE__</span>
-<button class="chip" id="theme" type="button">Theme</button>
-<div class="controls" id="filters"><input type="search" id="q" placeholder="Search concepts" aria-label="Search concepts"></div></header>
-<main><div id="wrap">__SVG__</div>
-<aside id="panel"><h2>Click a concept</h2><p class="sum">Its prerequisites and dependents light up; the panel shows what it lets you do, where it is taught and practised, and your dated evidence.</p>
-<p class="sum">Ready = every prerequisite is solid. Due = a redo of one of its exercises is due.</p></aside></main>
-<script>
-const D=__DATA__;
-const states=["fluent","held","due","fragile","misconception","gap","ready","unknown","planned"];
-const on=new Set(states);let sel=null;const f=document.getElementById('filters');
-states.forEach(s=>{if(!D.counts[s])return;const b=document.createElement('button');b.className='chip';b.type='button';b.setAttribute('aria-pressed','true');
-b.innerHTML='<i style="background:var(--'+s+')"></i>'+s+' '+D.counts[s];b.onclick=()=>{on.has(s)?on.delete(s):on.add(s);b.setAttribute('aria-pressed',on.has(s));paint()};f.appendChild(b)});
-const q=document.getElementById('q');q.oninput=paint;
-function rel(id){const up=new Set(),down=new Set(),walk=(x,k,set)=>{(D.c[x][k]||[]).forEach(y=>{if(!set.has(y)){set.add(y);walk(y,k,set)}})};walk(id,'requires',up);walk(id,'dependents',down);return [up,down]}
-function paint(){const t=q.value.trim().toLowerCase();let lit=null;if(sel){const [u,d]=rel(sel);lit=new Set([sel,...u,...d])}
-document.querySelectorAll('.node').forEach(n=>{const c=D.c[n.dataset.id];const ok=on.has(c.state)&&(!t||(c.name+' '+n.dataset.id+' '+c.module).toLowerCase().includes(t))&&(!lit||lit.has(n.dataset.id));n.classList.toggle('dim',!ok);n.classList.toggle('sel',n.dataset.id===sel)});
-document.querySelectorAll('.edge').forEach(e=>{const a=e.dataset.a,b=e.dataset.b;const hi=lit&&lit.has(a)&&lit.has(b);e.classList.toggle('hi',!!hi);e.classList.toggle('dim',!!lit&&!hi)})}
-function esc(s){return String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))}
-function list(xs,fmt){return xs&&xs.length?'<ul>'+xs.map(fmt).join('')+'</ul>':'<p class="sum">none</p>'}
-function show(id){sel=sel===id?null:id;paint();if(!sel)return;const c=D.c[id];const p=document.getElementById('panel');
-p.innerHTML='<div class="st" style="color:var(--'+c.state+')">'+esc(c.state)+(c.unlocks?' · unlocks '+c.unlocks:'')+'</div><h2>'+esc(c.name)+'</h2><div class="sum">'+esc(c.module)+(c.planned?' (planned)':'')+' · '+esc(c.kind)+'</div>'
-+'<div class="k">Can</div><div>'+esc(c.can||'-')+'</div>'+(c.action?'<div class="k">Next step</div><div>'+esc(c.action)+'</div>':'')
-+'<div class="k">Needs first</div>'+list(c.requires,x=>'<li><a href="#" data-go="'+x+'">'+esc(D.c[x].name)+'</a> ('+D.c[x].state+')</li>')
-+'<div class="k">Leads to</div>'+list(c.dependents,x=>'<li><a href="#" data-go="'+x+'">'+esc(D.c[x].name)+'</a> ('+D.c[x].state+')</li>')
-+'<div class="k">Lesson</div><div>'+esc(c.lesson||'-')+'</div><div class="k">Exercises</div>'+list(c.exercises,x=>'<li>'+esc(x)+(c.due.includes(x)?' (redo due)':'')+'</li>')
-+'<div class="k">Evidence</div>'+(c.evidence.length?c.evidence.slice().reverse().map(e=>'<div class="ev">'+esc(e.date||'')+' · '+esc(e.state)+' · '+esc(e.source||'')+(e.confidence!==undefined?' · '+esc(e.confidence)+'% sure':'')+(e.note?'<br>'+esc(e.note):'')+'</div>').join(''):'<p class="sum">none yet</p>');
-if(innerWidth<=800)p.scrollIntoView({behavior:'smooth',block:'start'});p.querySelectorAll('[data-go]').forEach(a=>a.onclick=ev=>{ev.preventDefault();sel=null;show(a.dataset.go);document.querySelector('.node[data-id="'+a.dataset.go+'"]').scrollIntoView({block:'center',inline:'center',behavior:'smooth'})})}
-document.querySelectorAll('.node').forEach(n=>{n.onclick=()=>show(n.dataset.id);n.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(n.dataset.id)}}});
-document.getElementById('theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'};
-</script></body></html>
-"""
-
-
-def html_text(graph: dict, states: dict) -> str:
-    import html as html_mod
-    pos = graph_layout(graph)
-    w, h, gx, gy, pad = 178, 30, 56, 12, 16
-    cols = max((c for c, _ in pos.values()), default=0) + 1
-    rows = max((r for _, r in pos.values()), default=0) + 1
-    width, height = pad * 2 + cols * w + (cols - 1) * gx, pad * 2 + rows * (h + gy)
-    xy = {cid: (pad + c * (w + gx), pad + r * (h + gy)) for cid, (c, r) in pos.items()}
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
-             f'viewBox="0 0 {width} {height}" role="img" aria-label="Concept graph of {graph["track"]}">']
-    for cid in graph["order"]:
-        x2, y2 = xy[cid]
-        for r in graph["concepts"][cid]["requires"]:
-            if r not in xy:
-                continue
-            x1, y1 = xy[r]
-            sx, sy, ex_, ey = x1 + w, y1 + h / 2, x2, y2 + h / 2
-            mid = (sx + ex_) / 2
-            parts.append(f'<path class="edge" data-a="{r}" data-b="{cid}" '
-                         f'd="M{sx:.0f},{sy:.0f} C{mid:.0f},{sy:.0f} {mid:.0f},{ey:.0f} {ex_:.0f},{ey:.0f}"/>')
-    for cid in graph["order"]:
-        x, y = xy[cid]
-        c = graph["concepts"][cid]
-        st = states[cid]["state"]
-        name = c["name"] if len(c["name"]) <= 26 else c["name"][:25] + "…"
-        parts.append(f'<g class="node {st}" data-id="{cid}" tabindex="0" role="button" '
-                     f'aria-label="{html_mod.escape(c["name"])}: {st}">'
-                     f'<title>{html_mod.escape(c["name"])} ({st})</title>'
-                     f'<rect x="{x}" y="{y}" width="{w}" height="{h}" style="fill:var(--{st})"/>'
-                     f'<text x="{x + 9}" y="{y + 19}">{html_mod.escape(name)}</text></g>')
-    parts.append("</svg>")
+def view_data(graph: dict, states: dict) -> dict:
+    """One view of the page: every concept with its state, links, evidence and next step."""
+    several = len(graph["parts"]) > 1
     done_lessons = {slugify(r["item"]) for r in read_log() if r["kind"] == "study"}
-    counts: dict[str, int] = {}
-    data = {"c": {}, "counts": counts}
+    nodes = []
     for cid in graph["order"]:
         c, info = graph["concepts"][cid], states[cid]
-        counts[info["state"]] = counts.get(info["state"], 0) + 1
-        data["c"][cid] = {
-            "name": c["name"], "module": c["module"], "kind": c["kind"], "planned": c["planned"],
-            "can": c["can"], "lesson": c["lesson"], "exercises": c["exercises"], "due": info["due"],
+        nodes.append({
+            "id": cid, "name": c["name"], "track": c["track"], "module": c["module"],
+            "group": f"{c['track']}/{c['module']}" if several else c["module"],
+            "kind": c["kind"], "shared": c["shared"], "planned": c["planned"], "can": c["can"],
+            "lesson": c["lesson"], "exercises": c["exercises"], "due": info["due"],
             "requires": [r for r in c["requires"] if r in graph["concepts"]],
             "dependents": graph["dependents"][cid], "state": info["state"],
-            "unlocks": unlocks(graph, states, cid),
+            "implied": bool(info.get("implied")), "unlocks": unlocks(graph, states, cid),
             "action": concept_action(graph, cid, info, done_lessons) if info["state"] not in ("fluent", "held") else "",
             "evidence": info["evidence"],
-        }
+        })
+    return {"label": "All tracks" if several else graph["track"].capitalize(),
+            "summary": f"{graph_summary(graph, states)} · {fmt_date(today())}", "nodes": nodes}
+
+
+def html_text(views: list[tuple[dict, dict]], default: str) -> str:
+    """The interactive page (dojolib/graph_view.html) with every view embedded: one file that
+    works offline, in a browser, from an export zip."""
+    data = {"default": default, "views": {g["slug"]: view_data(g, st) for g, st in views}}
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
-    return (HTML_TEMPLATE.replace("__TRACK__", html_mod.escape(graph["track"]))
-            .replace("__SUMMARY__", html_mod.escape(graph_summary(graph, states)))
-            .replace("__DATE__", fmt_date(today()))
-            .replace("__SVG__", "".join(parts)).replace("__DATA__", payload))
+    return VIEW_TEMPLATE.read_text(encoding="utf-8").replace("__DATA__", payload)
 
 
-def write_graph_views(graph: dict, states: dict, out_dir: Path) -> list[Path]:
+def graph_views(names: list[str]) -> list[tuple[dict, dict]]:
+    """(graph, states) for every view: everything together first, then each track on its own
+    when there are several."""
+    combined = combined_graph(names)
+    graphs = [combined] + (combined["parts"] if len(combined["parts"]) > 1 else [])
+    return [(g, graph_refresh(g)[1]) for g in graphs]
+
+
+def write_graph_views(views: list[tuple[dict, dict]], default: str, out_dir: Path,
+                      mermaid: bool = True) -> list[Path]:
+    """concept_graph.html (every view in one page) and, with mermaid, one Mermaid file per view."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    md = out_dir / f"graph_{graph['slug']}.md"
-    md.write_text(f"# Concept graph: {graph['track']}\n\n{graph_summary(graph, states)}, "
-                  f"{fmt_date(today())}.\n\n```mermaid\n{mermaid_text(graph, states)}\n```\n", encoding="utf-8")
-    page = out_dir / f"graph_{graph['slug']}.html"
-    page.write_text(html_text(graph, states), encoding="utf-8")
-    return [md, page]
+    page = out_dir / "concept_graph.html"
+    page.write_text(html_text(views, default), encoding="utf-8")
+    written = [page]
+    for graph, states in views if mermaid else []:
+        md = out_dir / f"concept_graph_{graph['slug']}.md"
+        md.write_text(f"# Concept graph: {graph['track']}\n\n{graph_summary(graph, states)}, "
+                      f"{fmt_date(today())}.\n\n```mermaid\n{mermaid_text(graph, states)}\n```\n", encoding="utf-8")
+        written.append(md)
+    return written
 
 
 def print_graph(graph: dict, states: dict) -> None:
@@ -844,9 +751,20 @@ def cmd_graph(args) -> None:
         # exports/ holds only backups (whose zips carry their own views): a view on its own is
         # disposable, so it goes to the system's temporary folder unless --out says otherwise.
         out = Path(args.out).expanduser() if args.out else Path(tempfile.gettempdir()) / "code-dojo"
-        for path in write_graph_views(graph, states, out):
-            if (path.suffix == ".html" and args.html) or (path.suffix == ".md" and args.mermaid):
-                print(f"\nWrote {path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path}")
+        views = graph_views(graph_track_names())
+        if graph["slug"] not in [g["slug"] for g, _ in views]:
+            views.append((graph, states))
+        written = write_graph_views(views, graph["slug"], out, mermaid=args.mermaid)
+        for path in written if args.mermaid else []:
+            if path.suffix == ".md":
+                print(f"\nWrote {path}")
+        if args.html:
+            print(f"\nWrote {written[0]}")
+            if not args.no_open:
+                import webbrowser
+                opened = webbrowser.open(written[0].as_uri())
+                print("Opened it in your browser." if opened else
+                      "Open it in your browser (double-click the file, or drag it into a browser window).")
     top = graph_next(graph, states, limit=3)
     if top:
         print("\nCan do next: " + "; ".join(f"{cid} ({a})" for cid, a in top))

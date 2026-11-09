@@ -18,7 +18,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
-with a current view of your concept graph, combined and per track (open the `.html` in a browser). Send it straight to
+with `concept_graph.html` (every view in one page: open it in a browser) and a Mermaid file per view. Send it straight to
 another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`
 (it restores the data; the views are always made fresh).
 
@@ -66,8 +66,10 @@ The skill tree in `PLAN.md` stays the plan (which goals, in what order); the gra
 one subject that the plan, the probe, lessons and drills read. `python dojo.py graph` shows
 everything you know as one graph (every track's concepts together), `graph <track>` one track,
 each with your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
-fewest concepts still to learn to reach a goal; `graph --html` writes a page you can click
-through (to the system's temporary folder, or `--out <folder>`; every export zip carries one too).
+fewest concepts still to learn to reach a goal; `graph --html` builds the interactive page and opens it
+(`concept_graph.html` in the system's temporary folder, or `--out <folder>`; every export zip
+carries one too): Map and Flow layouts, drag, zoom, search, focus on a neighbourhood, the path to
+a concept, and a panel per concept (README, "See what you know").
 
 ```json
 {"version": 1, "track": "python", "concepts": [

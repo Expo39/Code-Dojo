@@ -61,7 +61,9 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   stats                    modules, patterns, confidence against results, fluency gates
                            (and time by track)
   graph [track] [--html] [--mermaid]   the concept graph: each concept's state from your
-                           evidence and redo boxes (--html / --mermaid also write a view to the temp folder, or --out)
+                           evidence and redo boxes; --html writes the interactive page (every view
+                           in one file, to the temp folder or --out) and opens it (--no-open: don't);
+                           --mermaid writes a Mermaid diagram per view
   graph next [--goal X]    what you can do now, ranked (towards a concept, module or exercise)
   graph path <X> ...       the shortest list of concepts still to learn to reach X
   graph set <concept> <gap|misconception|fragile|held> [--confidence N] [--source probe] [--note ..]
@@ -171,6 +173,7 @@ def main() -> None:
     p.add_argument("--limit", type=int, default=8)
     p.add_argument("--html", action="store_true")
     p.add_argument("--mermaid", action="store_true")
+    p.add_argument("--no-open", action="store_true", help="--html: write the page without opening it")
     p.add_argument("--out")
     p.add_argument("--confidence", type=int)
     p.add_argument("--source")

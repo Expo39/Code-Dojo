@@ -20,6 +20,33 @@ you want them; new material in modules you have not reached yet simply waits for
 (fundamentals, reading and debugging code, data structures and algorithms, projects, interview
 practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
 
+## See what you know: the concept graph
+
+Every track maps what it teaches as a graph of concepts, each linked to what it needs first,
+and colours each one by what you have shown so far: fluent, held, due for a redo, fragile, a
+misconception, not known yet, or **ready** (everything it needs is solid, so you can start it now).
+
+```bash
+python dojo.py graph --html      # build the interactive page and open it in your browser
+python dojo.py graph next        # or, in the terminal: what you can do now, ranked
+```
+
+The page is one file that works offline (it is also inside every `export` zip):
+
+- **Map** groups concepts into one island per module; **Flow** lays them out left to right, from
+  foundations to what builds on them. Switch with the buttons, or <kbd>M</kbd> / <kbd>L</kbd>.
+- **Drag** a concept to move it (it stays where you put it), drag the background to pan, scroll or
+  pinch to zoom. Labels appear as you zoom in and never overlap.
+- **Click** a concept: what it lets you do, your next step, what it needs and what it leads to,
+  its lesson and exercises, and your dated evidence. **Path to here** lights up only the concepts
+  you still need for it; **double-click** (or **Focus here**) shows just its neighbourhood, one or
+  two steps out.
+- **Search** with <kbd>/</kbd>, filter by state in the legend, <kbd>F</kbd> fits everything,
+  <kbd>Esc</kbd> clears. With several tracks, the buttons at the top switch between everything you
+  know together and each track on its own; concepts shared by every track appear once.
+
+It works in light and dark, and on a phone.
+
 ## Why it works
 
 - **Retrieval and spacing.** Every exercise comes back from a blank file after 1, 3, 7, 14, 30
@@ -125,7 +152,8 @@ python dojo.py graph next            # what you can do now, from the concept gra
 code-dojo/
 ├── dojo.py                  the tracker's entry point: timers, tests, redo schedule, week balance,
 │                            reports, concept graph, export
-├── dojolib/                 the tracker's code, one module per area (CONTRIBUTING.md)
+├── dojolib/                 the tracker's code, one module per area (CONTRIBUTING.md), and
+│                            graph_view.html (the interactive concept-graph page)
 ├── conftest.py              lets pytest run your workspace file against the track's tests
 ├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
 ├── CLAUDE.md                imports AGENTS.md, plus notes for Claude Code only

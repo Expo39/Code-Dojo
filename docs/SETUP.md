@@ -133,8 +133,8 @@ python dojo.py export --to user@other-machine:~/
 ```
 
 The zip holds `progress/` and `workspace/` (your concept evidence and probe reports included)
-and, in the same zip, `views/` with a current page of your concept graph (everything you know,
-and each track on its own when you learn several) that opens in any browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it restores
+and, in the same zip, `views/concept_graph.html`: the interactive page of your concept graph
+(everything you know, and each track on its own when you learn several) that opens in any browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it restores
 your data; the views are made fresh whenever you ask). Set a default
 target once (`python dojo.py settings export_target=user@host:path`) to just run
 `python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,

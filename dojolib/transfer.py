@@ -14,7 +14,7 @@ from .core import (
     write_json
 )
 from .migrate import migrate_dates, migrate_progress, migrate_workspace
-from .graph import combined_graph, graph_refresh, graph_track_names, write_graph_views
+from .graph import graph_track_names, graph_views, write_graph_views
 
 
 def cmd_export(args) -> None:
@@ -33,12 +33,9 @@ def cmd_export(args) -> None:
     count = 0
     views = []
     names = graph_track_names()
-    if names:
-        combined = combined_graph(names)
-        # Everything you know as one graph, and each track on its own when there are several.
-        for graph in [combined] + (combined["parts"] if len(names) > 1 else []):
-            _, states = graph_refresh(graph)  # the evidence in the backup is current
-            views += write_graph_views(graph, states, out_dir / f".views_{archive.stem}")
+    if names:  # the evidence in the backup is brought up to date while the views are drawn
+        all_views = graph_views(names)
+        views = write_graph_views(all_views, all_views[0][0]["slug"], out_dir / f".views_{archive.stem}")
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         for view in views:
             # Readable without the dojo (open the .html in a browser); never restored by import.

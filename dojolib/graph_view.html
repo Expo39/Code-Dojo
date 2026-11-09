@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept graph</title>
+<!-- Code Dojo concept graph viewer: written by `python dojo.py graph --html` (dojolib/graph.py).
+     One file, no network: the data is embedded below, the renderer is a single canvas. -->
+<style>
+:root{
+  --bg:#f6f5f1;--surface:#ffffff;--surface-2:#efeee9;--fg:#1c1c1a;--muted:#6d6c66;--line:#dcdad3;
+  --edge:#b9b7ae;--accent:#2563eb;--shadow:0 6px 24px rgba(20,20,10,.10);
+  --fluent:#15803d;--held:#0e7490;--due:#b45309;--fragile:#ea580c;--misconception:#dc2626;
+  --gap:#be185d;--ready:#7c3aed;--unknown:#9ca3af;--planned:#d4d4d0;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121211;--surface:#1c1c1a;--surface-2:#262624;--fg:#ecebe6;--muted:#a19f97;--line:#34332f;
+  --edge:#4a4944;--accent:#60a5fa;--shadow:0 6px 24px rgba(0,0,0,.45);
+  --fluent:#22c55e;--held:#22b8cf;--due:#f59e0b;--fragile:#fb923c;--misconception:#f87171;
+  --gap:#f472b6;--ready:#a78bfa;--unknown:#6b6b66;--planned:#3a3a37;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121211;--surface:#1c1c1a;--surface-2:#262624;--fg:#ecebe6;--muted:#a19f97;--line:#34332f;
+  --edge:#4a4944;--accent:#60a5fa;--shadow:0 6px 24px rgba(0,0,0,.45);
+  --fluent:#22c55e;--held:#22b8cf;--due:#f59e0b;--fragile:#fb923c;--misconception:#f87171;
+  --gap:#f472b6;--ready:#a78bfa;--unknown:#6b6b66;--planned:#3a3a37;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+  font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+#stage{position:fixed;inset:0}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}canvas.pointing{cursor:pointer}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+/* top bar */
+#bar{position:fixed;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  padding:8px 10px;z-index:3}
+#bar h1{font-size:15px;margin:0 6px 0 2px;white-space:nowrap}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:2px}
+.seg button{border:0;background:transparent;padding:4px 10px;border-radius:7px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:4px 10px;cursor:pointer}
+.btn:hover,.seg button:hover{color:var(--fg)}
+.spacer{flex:1}
+#searchwrap{position:relative;flex:1 1 200px;max-width:340px;min-width:150px}
+#search{width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:5px 10px 5px 30px}
+#searchwrap::before{content:"⌕";position:absolute;left:10px;top:4px;color:var(--muted)}
+#results{position:absolute;top:36px;left:0;right:0;max-height:320px;overflow:auto;padding:4px;display:none}
+#results button{display:flex;gap:8px;align-items:center;width:100%;text-align:left;border:0;background:transparent;
+  padding:6px 8px;border-radius:7px;cursor:pointer}
+#results button:hover,#results button.on{background:var(--surface-2)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.sub{color:var(--muted);font-size:12px}
+/* legend */
+#legend{position:fixed;left:12px;top:84px;width:230px;padding:12px;z-index:2;max-height:calc(100% - 140px);overflow:auto}
+#legend h2,#panel h3{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+#legend h2:first-child{margin-top:0}
+.chip{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:4px 6px;border-radius:7px;
+  cursor:pointer;text-align:left}
+.chip:hover{background:var(--surface-2)}.chip[aria-pressed="false"]{opacity:.38}
+.chip .n{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip .desc{display:block;font-size:11.5px;color:var(--muted)}
+.keys{font-size:12px;color:var(--muted);line-height:1.7}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;font:11px ui-monospace,monospace;background:var(--surface-2)}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-3px;margin-right:6px}
+#legend .toggle{display:flex;gap:8px;align-items:center;font-size:13px;margin:4px 0;cursor:pointer}
+/* panel */
+#panel{position:fixed;right:12px;top:84px;width:360px;max-height:calc(100% - 100px);overflow:auto;padding:16px;z-index:2;
+  transform:translateX(calc(100% + 24px));transition:transform .22s ease}
+#panel.open{transform:none}
+#panel .state{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+#panel h2{font-size:19px;margin:2px 0 2px;line-height:1.25}
+#panel .close{position:absolute;right:10px;top:8px;border:0;background:transparent;font-size:20px;cursor:pointer;color:var(--muted)}
+#panel .can{background:var(--surface-2);border-radius:9px;padding:10px 12px;margin:10px 0}
+#panel .next{border:1px solid var(--accent);border-radius:9px;padding:8px 12px;margin:10px 0}
+#panel .next b{color:var(--accent);display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+#panel .next code{font:13px ui-monospace,monospace}
+#panel ul{list-style:none;padding:0;margin:0}
+#panel li button{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;text-align:left;padding:4px 6px;
+  border-radius:7px;cursor:pointer}
+#panel li button:hover{background:var(--surface-2)}
+#panel .actions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:0 7px;color:var(--muted);margin-left:4px}
+.ev{border-left:3px solid var(--line);padding:2px 0 2px 10px;margin:6px 0;font-size:13px}
+.ev .sub{display:block}
+#hint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;font-size:12.5px;color:var(--muted);z-index:2;white-space:nowrap}
+#focusbar{position:fixed;left:50%;top:84px;transform:translateX(-50%);padding:6px 10px;display:none;align-items:center;gap:8px;z-index:2}
+#focusbar.on{display:flex}
+#zoom{position:fixed;right:12px;bottom:14px;display:flex;flex-direction:column;z-index:2}
+#zoom button{border:0;background:transparent;width:34px;height:32px;cursor:pointer;font-size:17px}
+#zoom button+button{border-top:1px solid var(--line)}
+#legendtoggle{display:none}
+@media (max-width:760px){
+  #bar h1{display:none}
+  #legend{top:auto;bottom:60px;width:auto;right:12px;max-height:45%;display:none}
+  #legend.open{display:block}
+  #legendtoggle{display:inline-block}
+  #panel{top:auto;bottom:0;left:0;right:0;width:auto;max-height:62%;border-radius:14px 14px 0 0;transform:translateY(105%)}
+  #panel.open{transform:none}
+  #hint{display:none}
+  #focusbar{top:auto;bottom:62px}
+}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c" aria-label="Concept graph: drag to move, scroll to zoom, click a concept for details"></canvas></div>
+
+<header id="bar" class="card">
+  <h1 id="title">Concept graph</h1>
+  <div class="seg" id="views" role="group" aria-label="Which graph"></div>
+  <div class="seg" id="modes" role="group" aria-label="Layout">
+    <button data-mode="map" title="Concepts cluster by module (M)">Map</button>
+    <button data-mode="flow" title="Prerequisites flow left to right (L)">Flow</button>
+  </div>
+  <div id="searchwrap"><input id="search" type="search" placeholder="Search concepts  /" aria-label="Search concepts" autocomplete="off">
+    <div id="results" class="card" role="listbox"></div></div>
+  <span class="spacer"></span>
+  <button class="btn" id="legendtoggle" aria-expanded="false">Legend</button>
+  <button class="btn" id="fit" title="Fit everything (F)">Fit</button>
+  <button class="btn" id="relayout" title="Forget dragged positions and lay out again">Re-layout</button>
+  <button class="btn" id="theme" title="Light or dark">◐</button>
+</header>
+
+<aside id="legend" class="card" aria-label="Legend and filters">
+  <h2 id="summaryhead">Your graph</h2>
+  <div class="sub" id="summary"></div>
+  <h2>State (click to show or hide)</h2>
+  <div id="states"></div>
+  <h2>Show</h2>
+  <label class="toggle"><input type="checkbox" id="showPlanned"> planned modules</label>
+  <label class="toggle"><input type="checkbox" id="showLabels" checked> all labels when zoomed in</label>
+  <label class="toggle"><input type="checkbox" id="showRegions" checked> module regions</label>
+  <h2>How to read it</h2>
+  <div class="keys">
+    <span class="swatch" style="background:var(--muted)"></span>size = how much builds on it<br>
+    <span class="swatch" style="border:2px dashed var(--fg)"></span>dashed ring = shared by every track<br>
+    arrow = "needed for"<br>
+    <kbd>drag</kbd> move · <kbd>scroll</kbd> zoom · <kbd>double-click</kbd> focus<br>
+    <kbd>/</kbd> search · <kbd>F</kbd> fit · <kbd>M</kbd>/<kbd>L</kbd> layout · <kbd>Esc</kbd> clear
+  </div>
+</aside>
+
+<div id="focusbar" class="card">
+  <span id="focuslabel"></span>
+  <div class="seg" id="depths" role="group" aria-label="Neighbourhood depth">
+    <button data-depth="1">1 step</button><button data-depth="2">2 steps</button><button data-depth="99">all linked</button>
+  </div>
+  <button class="btn" id="unfocus">Show everything</button>
+</div>
+
+<aside id="panel" class="card" aria-live="polite"></aside>
+<div id="zoom" class="card"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button></div>
+<div id="hint" class="card">Drag to move · scroll to zoom · click a concept for details · double-click to focus on it</div>
+
+<script>
+"use strict";
+const DATA = __DATA__;
+const STATES = [
+  ["fluent","fluent","every exercise in box 2 or higher"],
+  ["held","held","understood; lesson or clean solve"],
+  ["due","due","held, a redo is due"],
+  ["fragile","fragile","shaky: one more check"],
+  ["misconception","misconception","sure but wrong: repair first"],
+  ["gap","gap","not known yet"],
+  ["ready","ready","you can start it now"],
+  ["unknown","not met","waits on something first"],
+  ["planned","planned","module not built yet"]];
+const SOLID = new Set(["fluent","held","due"]);
+const $ = s => document.querySelector(s);
+const store = {get(k,d){try{const v=localStorage.getItem("dojo-graph:"+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+               set(k,v){try{localStorage.setItem("dojo-graph:"+k,JSON.stringify(v))}catch(e){}}};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// ---------------------------------------------------------------- state
+const canvas = $("#c"), ctx = canvas.getContext("2d");
+let W = 0, H = 0, DPR = 1;
+let view = null;                 // the current view: nodes, links, modules
+let cam = {k:1, x:0, y:0};       // screen = world * k + (x, y)
+let mode = store.get("mode", "map");
+let hidden = new Set(store.get("hidden", []));
+let showPlanned = store.get("planned", false), showLabels = true, showRegions = true;
+let hover = null, selected = null, focus = null, focusDepth = 1, pathTo = null;
+let alpha = 0, dirty = true, colours = {};
+
+function readColours(){
+  const cs = getComputedStyle(document.documentElement);
+  for (const v of ["bg","surface","fg","muted","line","edge","accent",...STATES.map(s=>s[0])]) colours[v] = cs.getPropertyValue("--"+v).trim();
+  dirty = true;
+}
+
+// ---------------------------------------------------------------- data → view
+function hashString(s){let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0)/4294967295}
+function buildView(key){
+  const src = DATA.views[key];
+  const byId = new Map();
+  const nodes = src.nodes.map(n => ({...n, x:0, y:0, vx:0, vy:0, fx:null, fy:null}));
+  nodes.forEach(n => byId.set(n.id, n));
+  const links = [];
+  for (const n of nodes){ n.out=[]; n.in=[]; }
+  for (const n of nodes) for (const r of n.requires){ const s = byId.get(r); if (s){ links.push({s, t:n}); s.out.push(n); n.in.push(s); } }
+  // depth = longest chain of prerequisites below (prerequisites sit to the left in Flow)
+  const depth = new Map(), visiting = new Set();
+  const d = n => { if (depth.has(n.id)) return depth.get(n.id); if (visiting.has(n.id)) return 0; visiting.add(n.id);
+    const v = n.in.length ? 1 + Math.max(...n.in.map(d)) : 0; visiting.delete(n.id); depth.set(n.id, v); return v; };
+  nodes.forEach(n => n.depth = d(n));
+  const modules = [...new Set(nodes.map(n => n.group))];
+  const hue = new Map(modules.map((m,i) => [m, Math.round((i * 137.508) % 360)]));
+  // Map: each module gets its own island, laid out on a grid in syllabus order
+  const size = new Map(); for (const n of nodes) size.set(n.group, (size.get(n.group) || 0) + 1);
+  const cols = Math.max(1, Math.round(Math.sqrt(modules.length * 1.5)));
+  const cell = 70 + 34 * Math.sqrt(Math.max(...size.values()));
+  const anchor = new Map(modules.map((m, i) => [m, {x: (i % cols) * cell * 1.25, y: Math.floor(i / cols) * cell}]));
+  const saved = store.get("pos:"+key, {});
+  nodes.forEach(n => {
+    n.r = 6 + 2.4 * Math.sqrt(n.out.length);
+    n.mi = modules.indexOf(n.group);
+    n.hue = hue.get(n.group);
+    const p = saved[n.id];
+    if (p){ n.x = p[0]; n.y = p[1]; n.fx = p[0]; n.fy = p[1]; n.pinned = true; }
+    else { const a = anchor.get(n.group); n.x = a.x + (hashString(n.id) - .5) * 80; n.y = a.y + (hashString(n.id + "y") - .5) * 80; }
+    n.ax = anchor.get(n.group).x; n.ay = anchor.get(n.group).y;
+  });
+  return {key, label: src.label, summary: src.summary, nodes, links, byId, modules, hue};
+}
+
+// ---------------------------------------------------------------- force layout
+function visible(n){
+  if (!showPlanned && n.state === "planned") return false;
+  if (hidden.has(n.state)) return false;
+  if (focus && !focus.set.has(n.id)) return false;
+  return true;
+}
+const COL = 240;  // Flow: horizontal distance between prerequisite levels
+function tick(){
+  const ns = view.nodes.filter(visible), a = alpha;
+  if (mode === "flow") tickFlow(ns, a); else tickMap(ns, a);
+  alpha *= .985; if (alpha < .004) alpha = 0;
+  dirty = true;
+}
+function tickMap(ns, a){
+  for (let i = 0; i < ns.length; i++){
+    const p = ns[i];
+    for (let j = i + 1; j < ns.length; j++){
+      const q = ns[j]; let dx = q.x - p.x, dy = q.y - p.y; let d2 = dx*dx + dy*dy;
+      if (d2 === 0){ dx = .1; dy = .1; d2 = .02; }
+      if (d2 > 90000) continue;                          // far apart: no push
+      const d = Math.sqrt(d2), min = p.r + q.r + 16, same = p.group === q.group;
+      let f = (same ? 650 : 1400) * a / d2;              // repulsion, stronger between modules
+      if (d < min) f += (min - d) / d * .5;              // collision
+      const fx = dx * f, fy = dy * f; p.vx -= fx; p.vy -= fy; q.vx += fx; q.vy += fy;
+    }
+  }
+  for (const {s, t} of view.links){
+    if (!visible(s) || !visible(t)) continue;
+    const dx = t.x - s.x, dy = t.y - s.y, d = Math.sqrt(dx*dx + dy*dy) || 1, same = s.group === t.group;
+    const k = (d - (same ? 58 : 200)) / d * (same ? .07 : .004) * a;  // islands stay apart
+    t.vx -= dx * k; t.vy -= dy * k; s.vx += dx * k; s.vy += dy * k;
+  }
+  for (const n of ns){
+    n.vx += (n.ax - n.x) * .045 * a; n.vy += (n.ay - n.y) * .045 * a;
+    if (n.fx !== null){ n.x = n.fx; n.y = n.fy; n.vx = n.vy = 0; continue; }
+    n.vx *= .58; n.vy *= .58; n.x += n.vx; n.y += n.vy;
+  }
+}
+function tickFlow(ns, a){
+  // each concept sits in the column of its depth; only its height moves: links pull it level
+  // with what it needs and what needs it, neighbours in the same column keep their distance
+  for (const {s, t} of view.links){
+    if (!visible(s) || !visible(t)) continue;
+    const dy = t.y - s.y, k = .06 * a; t.vy -= dy * k; s.vy += dy * k;
+  }
+  const cols = new Map(); for (const n of ns){ if (!cols.has(n.depth)) cols.set(n.depth, []); cols.get(n.depth).push(n); }
+  for (const col of cols.values()){
+    col.sort((p, q) => p.y - q.y);
+    for (let i = 1; i < col.length; i++){
+      const p = col[i-1], q = col[i], min = p.r + q.r + 30, d = q.y - p.y;
+      if (d < min){ const push = (min - d) / 2; p.y -= push; q.y += push; }
+    }
+  }
+  for (const n of ns){
+    n.vy += -n.y * .002 * a;
+    if (n.fx !== null){ n.x = n.fx; n.y = n.fy; n.vy = 0; continue; }
+    n.x += (n.depth * COL - n.x) * .35;
+    n.vy *= .55; n.y += n.vy;
+  }
+}
+function settle(){ alpha = 1; while (alpha > 0) tick(); }  // to rest, before the camera fits
+
+// ---------------------------------------------------------------- camera
+function toWorld(px, py){ return [(px - cam.x) / cam.k, (py - cam.y) / cam.k]; }
+function fit(nodes, animate = true){
+  const ns = (nodes || view.nodes).filter(visible); if (!ns.length) return;
+  let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for (const n of ns){ x0=Math.min(x0,n.x-n.r-70); y0=Math.min(y0,n.y-n.r); x1=Math.max(x1,n.x+n.r+70); y1=Math.max(y1,n.y+n.r+18); }  // room for labels
+  const wide = W > 760, padL = wide ? 260 : 20, padR = wide && $("#panel").classList.contains("open") ? 390 : 20;
+  const padT = 90, padB = 50, aw = Math.max(100, W - padL - padR), ah = Math.max(100, H - padT - padB);
+  const k = Math.min(2.2, Math.max(.12, Math.min(aw / (x1 - x0 + 80), ah / (y1 - y0 + 80))));
+  const target = {k, x: padL + aw/2 - (x0 + x1)/2 * k, y: padT + ah/2 - (y0 + y1)/2 * k};
+  animateTo(target, animate ? 380 : 0);
+}
+let anim = null;
+function animateTo(target, ms){
+  if (!ms){ cam = target; dirty = true; return; }
+  const from = {...cam}; let t0 = null;  // timed from the first frame, on the frames' own clock
+  anim = t => { if (t0 === null) t0 = t; const u = Math.max(0, Math.min(1, (t - t0) / ms)), e = 1 - Math.pow(1 - u, 3);
+    cam = {k: from.k + (target.k - from.k)*e, x: from.x + (target.x - from.x)*e, y: from.y + (target.y - from.y)*e};
+    dirty = true; if (u >= 1) anim = null; };
+}
+function zoomAt(px, py, factor){
+  const k = Math.min(4, Math.max(.1, cam.k * factor)); const f = k / cam.k;
+  cam = {k, x: px - (px - cam.x) * f, y: py - (py - cam.y) * f}; dirty = true;
+}
+
+// ---------------------------------------------------------------- highlight sets
+function neighbourhood(n, depth){
+  const set = new Set([n.id]); let frontier = [n];
+  for (let i = 0; i < depth && frontier.length; i++){
+    const next = [];
+    for (const m of frontier) for (const o of [...m.in, ...m.out]) if (!set.has(o.id)){ set.add(o.id); next.push(o); }
+    frontier = next;
+  }
+  return set;
+}
+function ancestors(n){ const set = new Set([n.id]), st=[n]; while (st.length){ const m = st.pop(); for (const p of m.in) if (!set.has(p.id)){ set.add(p.id); st.push(p); } } return set; }
+function lit(){
+  if (pathTo) return pathTo;
+  const n = hover || selected; if (!n) return null;
+  return neighbourhood(n, 1);
+}
+
+// ---------------------------------------------------------------- drawing
+function hull(points){
+  if (points.length < 3) return points;
+  points = points.slice().sort((a,b) => a[0]-b[0] || a[1]-b[1]);
+  const cross = (o,a,b) => (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0]);
+  const lo = [], hi = [];
+  for (const p of points){ while (lo.length >= 2 && cross(lo[lo.length-2], lo[lo.length-1], p) <= 0) lo.pop(); lo.push(p); }
+  for (const p of points.slice().reverse()){ while (hi.length >= 2 && cross(hi[hi.length-2], hi[hi.length-1], p) <= 0) hi.pop(); hi.push(p); }
+  return lo.slice(0,-1).concat(hi.slice(0,-1));
+}
+function draw(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle = colours.bg; ctx.fillRect(0,0,W,H);
+  ctx.setTransform(DPR*cam.k,0,0,DPR*cam.k,DPR*cam.x,DPR*cam.y);
+  const L = lit(), k = cam.k;
+  const ns = view.nodes.filter(visible);
+  const regionLabels = [];
+  const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  // module regions (Map layout only): a soft blob around each module's concepts
+  if (showRegions && mode === "map"){
+    const groups = new Map(); for (const n of ns){ if (!groups.has(n.group)) groups.set(n.group, []); groups.get(n.group).push(n); }
+    for (const [g, members] of groups){
+      const pts = []; for (const n of members) for (let a = 0; a < 6.28; a += .785) pts.push([n.x + Math.cos(a)*(n.r+22), n.y + Math.sin(a)*(n.r+22)]);
+      const h = hull(pts); if (h.length < 3) continue;
+      const hueV = view.hue.get(g);
+      ctx.beginPath(); ctx.moveTo((h[0][0]+h[1][0])/2, (h[0][1]+h[1][1])/2);
+      for (let i = 1; i <= h.length; i++){ const p = h[i % h.length], q = h[(i+1) % h.length]; ctx.quadraticCurveTo(p[0], p[1], (p[0]+q[0])/2, (p[1]+q[1])/2); }
+      ctx.closePath();
+      const dim = L && !members.some(n => L.has(n.id));
+      ctx.fillStyle = `hsla(${hueV},55%,${dark?40:60}%,${dim ? .025 : (dark ? .10 : .09)})`; ctx.fill();
+      ctx.strokeStyle = `hsla(${hueV},50%,${dark?55:45}%,${dim ? .05 : .28})`; ctx.lineWidth = 1.2 / k; ctx.stroke();
+      // the region's name, readable when zoomed out (fades as concept labels take over)
+      const fade = Math.max(.35, Math.min(1, (1.3 - k) / .5));
+      if (fade > .02){
+        let top = h[0]; for (const p of h) if (p[1] < top[1]) top = p;
+        const cxm = members.reduce((s,n) => s + n.x, 0) / members.length;
+        const name = g.replace(/^.*\//,"").replace(/^m\d\d_/,"").replace(/_/g," ");
+        ctx.font = `600 ${13 / k}px ui-sans-serif,system-ui,sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = `hsla(${hueV},45%,${dark?70:32}%,${fade * (dim ? .25 : .9)})`;
+        ctx.fillText(name, cxm, top[1] - 6 / k);
+        const w = ctx.measureText(name).width * k, sx = cxm * k + cam.x, sy = (top[1] - 6 / k) * k + cam.y;
+        regionLabels.push([sx - w/2 - 4, sy - 15, sx + w/2 + 4, sy + 3]);
+      }
+    }
+  }
+  // edges, with a small arrowhead at the concept that needs the other
+  for (const {s, t} of view.links){
+    if (!visible(s) || !visible(t)) continue;
+    const on = L && L.has(s.id) && L.has(t.id);
+    const dim = L && !on;
+    const dx = t.x - s.x, dy = t.y - s.y, d = Math.sqrt(dx*dx + dy*dy) || 1, ux = dx/d, uy = dy/d;
+    const x1 = s.x + ux * s.r, y1 = s.y + uy * s.r, x2 = t.x - ux * (t.r + 3), y2 = t.y - uy * (t.r + 3);
+    const cross = s.group !== t.group && mode === "map";
+    ctx.globalAlpha = dim ? .06 : (on ? .95 : (cross ? .16 : .5));
+    ctx.strokeStyle = on ? colours.accent : colours.edge; ctx.lineWidth = (on ? 2 : 1.1) / k;
+    let ax = ux, ay = uy, ex = x2, ey = y2;
+    ctx.beginPath();
+    if (mode === "flow" && dx > 1){  // a smooth S from the prerequisite's right to the concept's left
+      const sx = s.x + s.r, ex2 = t.x - t.r - 3, mx = (sx + ex2) / 2;
+      ctx.moveTo(sx, s.y); ctx.bezierCurveTo(mx, s.y, mx, t.y, ex2, t.y); ax = 1; ay = 0; ex = ex2; ey = t.y;
+    } else { ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); }
+    ctx.stroke();
+    if (k > .45 || on){ const a = 6 / Math.max(k,.6), x2 = ex, y2 = ey, ux = ax, uy = ay;
+      ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - ux*a - uy*a*.55, y2 - uy*a + ux*a*.55); ctx.lineTo(x2 - ux*a + uy*a*.55, y2 - uy*a - ux*a*.55); ctx.closePath(); ctx.fill(); }
+  }
+  ctx.globalAlpha = 1;
+  // nodes
+  for (const n of ns){
+    const dim = L && !L.has(n.id);
+    ctx.globalAlpha = dim ? .16 : 1;
+    const col = colours[n.state] || colours.unknown;
+    if (n === hover || n === selected){ ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 7, 0, 6.283); ctx.fillStyle = col; ctx.globalAlpha = .22; ctx.fill(); ctx.globalAlpha = dim ? .16 : 1; }
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.283);
+    if (n.state === "planned"){ ctx.fillStyle = colours.surface; ctx.fill(); ctx.strokeStyle = colours.muted; ctx.lineWidth = 1.4 / k; ctx.stroke(); }
+    else { ctx.fillStyle = col; ctx.fill(); }
+    if (n.shared){ ctx.setLineDash([3/k, 2.5/k]); ctx.strokeStyle = colours.fg; ctx.lineWidth = 1.3/k; ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 3.2, 0, 6.283); ctx.stroke(); ctx.setLineDash([]); }
+    if (n === selected){ ctx.strokeStyle = colours.accent; ctx.lineWidth = 2.6 / k; ctx.beginPath(); ctx.arc(n.x, n.y, n.r + (n.shared ? 6 : 3.5), 0, 6.283); ctx.stroke(); }
+  }
+  // labels, in screen space so they stay crisp: zoom-gated like a map, and a label that would
+  // overlap one already placed is skipped (most important first), so nothing sits on top of anything
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.lineJoin = "round";
+  const placed = [];
+  const free = (x0, y0, x1, y1) => { for (const b of placed) if (x0 < b[2] && x1 > b[0] && y0 < b[3] && y1 > b[1]) return false; return true; };
+  for (const r of regionLabels) placed.push(r);
+  const rank = n => (n === selected ? 0 : n === hover ? 1 : (L && L.has(n.id)) ? 2 : (focus && focus.set.has(n.id)) ? 3 : 4) * 1000
+                    - n.r * 10 - (["ready","due","misconception","fragile"].includes(n.state) ? 30 : 0);
+  const cands = ns.slice().sort((a, b) => rank(a) - rank(b));
+  for (const n of cands){
+    const important = n === hover || n === selected || (L && L.has(n.id)) || (focus && focus.set.has(n.id));
+    let a;
+    if (important) a = 1;
+    else if (showLabels && k >= .8) a = 1;
+    else if (showLabels && k >= .45) a = (k - .45) / .35;
+    else a = n.r >= 11 && k > .25 ? .85 : 0;
+    if (L && !L.has(n.id)) a *= .35;
+    if (a < .05) continue;
+    const big = n === hover || n === selected;
+    ctx.font = `${big ? 600 : 400} ${big ? 13.5 : 12}px ui-sans-serif,system-ui,sans-serif`;
+    const label = n.name.length > 34 ? n.name.slice(0, 33) + "…" : n.name;
+    const w = ctx.measureText(label).width, sx = n.x * k + cam.x, sy = (n.y + n.r) * k + cam.y + 4;
+    const box = [sx - w/2 - 3, sy - 1, sx + w/2 + 3, sy + 16];
+    if (!important && !free(...box)) continue;
+    placed.push(box);
+    ctx.globalAlpha = a;
+    ctx.strokeStyle = colours.bg; ctx.lineWidth = 4; ctx.strokeText(label, sx, sy);
+    ctx.fillStyle = colours.fg; ctx.fillText(label, sx, sy);
+  }
+  ctx.globalAlpha = 1;
+}
+function loop(t){
+  if (anim) anim(t);
+  if (alpha > 0) tick();
+  if (dirty){ dirty = false; draw(); }
+  requestAnimationFrame(loop);
+}
+
+// ---------------------------------------------------------------- picking and input
+function pick(px, py){
+  const [x, y] = toWorld(px, py); let best = null, bd = Infinity;
+  for (const n of view.nodes){ if (!visible(n)) continue; const d = Math.hypot(n.x - x, n.y - y); if (d < n.r + 6 / cam.k && d < bd){ bd = d; best = n; } }
+  return best;
+}
+const pointers = new Map(); let drag = null, pinch = null, downAt = null;
+let hinted = false;
+function interacted(){ if (!hinted){ hinted = true; const h = $("#hint"); h.style.transition = "opacity .6s"; setTimeout(() => h.style.opacity = "0", 2500); setTimeout(() => h.remove(), 3200); } }
+canvas.addEventListener("pointerdown", e => { interacted();
+  canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, [e.offsetX, e.offsetY]);
+  if (pointers.size === 2){ const [a, b] = [...pointers.values()]; pinch = {d: Math.hypot(a[0]-b[0], a[1]-b[1]), k: cam.k}; drag = null; return; }
+  downAt = [e.offsetX, e.offsetY, performance.now()];
+  const n = pick(e.offsetX, e.offsetY);
+  drag = n ? {node: n, moved: false} : {pan: [e.offsetX - cam.x, e.offsetY - cam.y], moved: false};
+  canvas.classList.add("dragging");
+});
+canvas.addEventListener("pointermove", e => {
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, [e.offsetX, e.offsetY]);
+  if (pinch && pointers.size === 2){ const [a, b] = [...pointers.values()]; const d = Math.hypot(a[0]-b[0], a[1]-b[1]);
+    zoomAt((a[0]+b[0])/2, (a[1]+b[1])/2, (pinch.k * d / pinch.d) / cam.k); return; }
+  if (drag){
+    if (downAt && Math.hypot(e.offsetX - downAt[0], e.offsetY - downAt[1]) > 4) drag.moved = true;
+    if (drag.node && drag.moved){ const [x, y] = toWorld(e.offsetX, e.offsetY); drag.node.fx = x; drag.node.fy = y; alpha = Math.max(alpha, .25); }
+    else if (drag.pan && drag.moved){ cam.x = e.offsetX - drag.pan[0]; cam.y = e.offsetY - drag.pan[1]; dirty = true; }
+    return;
+  }
+  const n = pick(e.offsetX, e.offsetY);
+  if (n !== hover){ hover = n; canvas.classList.toggle("pointing", !!n); dirty = true; }
+});
+function endPointer(e){
+  pointers.delete(e.pointerId); if (pointers.size < 2) pinch = null;
+  canvas.classList.remove("dragging");
+  if (!drag) return;
+  if (drag.node && drag.moved){ drag.node.pinned = true; savePositions(); }
+  if (!drag.moved){ const n = drag.node; if (n) select(n); else { select(null); } }
+  drag = null;
+}
+canvas.addEventListener("pointerup", endPointer); canvas.addEventListener("pointercancel", endPointer);
+canvas.addEventListener("pointerleave", () => { if (!drag && hover){ hover = null; dirty = true; } });
+canvas.addEventListener("dblclick", e => { const n = pick(e.offsetX, e.offsetY); if (n) setFocus(n, focusDepth); else fit(); });
+canvas.addEventListener("wheel", e => { e.preventDefault(); interacted(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * (e.ctrlKey ? .01 : .0016))); }, {passive: false});
+
+function savePositions(){
+  const saved = {}; for (const n of view.nodes) if (n.pinned) saved[n.id] = [Math.round(n.x), Math.round(n.y)];
+  store.set("pos:" + view.key, saved);
+}
+
+// ---------------------------------------------------------------- selection, focus, panel
+function select(n, centre = false){
+  selected = n; pathTo = null; dirty = true;
+  const panel = $("#panel");
+  if (!n){ panel.classList.remove("open"); return; }
+  panel.innerHTML = panelHtml(n); panel.classList.add("open");
+  panel.querySelector(".close").onclick = () => select(null);
+  panel.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { const m = view.byId.get(b.dataset.go); if (m){ ensureVisible(m); select(m, true); } });
+  panel.querySelector("[data-act=focus]").onclick = () => setFocus(n, focusDepth);
+  panel.querySelector("[data-act=path]").onclick = () => { const set = ancestors(n);
+    pathTo = new Set([...set].filter(id => id === n.id || !SOLID.has(view.byId.get(id).state))); dirty = true; };
+  panel.querySelector("[data-act=centre]").onclick = () => centreOn(n);
+  if (centre) centreOn(n);
+}
+function centreOn(n){
+  const k = Math.max(cam.k, 1.1), wide = W > 760, open = $("#panel").classList.contains("open");
+  const sx = wide ? (260 + (W - 260 - (open ? 390 : 0)) / 2) : W / 2, sy = wide ? H / 2 : H * .3;
+  animateTo({k, x: sx - n.x * k, y: sy - n.y * k}, 420);
+}
+function ensureVisible(n){
+  if (!visible(n)){ hidden.delete(n.state); if (n.state === "planned"){ showPlanned = true; $("#showPlanned").checked = true; }
+    if (focus && !focus.set.has(n.id)) setFocus(null); renderStates(); }
+}
+function setFocus(n, depth){
+  focus = n ? {node: n, set: neighbourhood(n, depth)} : null; focusDepth = depth || focusDepth;
+  $("#focusbar").classList.toggle("on", !!n);
+  if (n){ $("#focuslabel").innerHTML = `Around <b>${esc(n.name)}</b>`;
+    document.querySelectorAll("#depths button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.depth === focusDepth)));
+    select(n); }
+  settle();
+  fit(n ? view.nodes.filter(m => focus.set.has(m.id)) : null);
+}
+function stateInfo(s){ return STATES.find(x => x[0] === s) || [s, s, ""]; }
+function panelHtml(n){
+  const [, label, desc] = stateInfo(n.state);
+  const item = id => { const m = view.byId.get(id); if (!m) return "";
+    return `<li><button data-go="${esc(id)}"><span class="dot" style="background:var(--${m.state})"></span>${esc(m.name)}<span class="sub" style="margin-left:auto">${esc(stateInfo(m.state)[1])}</span></button></li>`; };
+  const list = (ids, empty) => ids.length ? `<ul>${ids.map(item).join("")}</ul>` : `<div class="sub">${empty}</div>`;
+  const ev = n.evidence.length ? n.evidence.slice().reverse().map(e =>
+    `<div class="ev" style="border-color:var(--${e.state})"><b>${esc(stateInfo(e.state)[1])}</b> · ${esc(e.source || "")}${e.confidence !== undefined ? ` · ${esc(e.confidence)}% sure` : ""}<span class="sub">${esc(e.date || "")}${e.note ? " · " + esc(e.note) : ""}</span></div>`).join("")
+    : `<div class="sub">${n.implied ? "No direct evidence: held because concepts built on it are solid." : "No evidence yet."}</div>`;
+  return `<button class="close" aria-label="Close">×</button>
+    <div class="state" style="color:var(--${n.state})">${esc(label)}${n.unlocks ? ` · unlocks ${n.unlocks}` : ""}</div>
+    <h2>${esc(n.name)}</h2>
+    <div class="sub">${esc(n.track)} · ${esc(n.module)}${n.kind === "theory" ? " · theory" : ""}${n.shared ? '<span class="tag">shared by every track</span>' : ""}${n.planned ? '<span class="tag">planned</span>' : ""}</div>
+    <div class="sub" style="margin-top:4px">${esc(desc)}</div>
+    ${n.can ? `<div class="can">${esc(n.can)}</div>` : ""}
+    ${n.action ? `<div class="next"><b>Next step</b><code>${esc(n.action)}</code></div>` : ""}
+    <div class="actions"><button class="btn" data-act="focus">Focus here</button><button class="btn" data-act="path">Path to here</button><button class="btn" data-act="centre">Centre</button></div>
+    <h3>Needs first (${n.requires.length})</h3>${list(n.requires, "Nothing: a starting point.")}
+    <h3>Leads to (${n.dependents.length})</h3>${list(n.dependents, "Nothing builds on it yet.")}
+    <h3>Lesson</h3><div>${n.lesson ? `<code>teach me ${esc(n.lesson)}</code>` : '<span class="sub">none</span>'}</div>
+    <h3>Exercises (${n.exercises.length})</h3>${n.exercises.length ? "<ul>" + n.exercises.map(x => `<li style="padding:3px 6px">${esc(x)}${n.due.includes(x) ? ' <span class="tag" style="color:var(--due);border-color:var(--due)">redo due</span>' : ""}</li>`).join("") + "</ul>" : '<div class="sub">none</div>'}
+    <h3>Evidence</h3>${ev}`;
+}
+
+// ---------------------------------------------------------------- search
+const search = $("#search"), results = $("#results"); let hits = [], hit = 0;
+function runSearch(){
+  const q = search.value.trim().toLowerCase();
+  if (!q){ results.style.display = "none"; hits = []; return; }
+  hits = view.nodes.map(n => { const hay = (n.name + " " + n.id + " " + n.module + " " + (n.can || "")).toLowerCase();
+      const i = n.name.toLowerCase().indexOf(q); return {n, s: i === 0 ? 0 : i > 0 ? 1 : hay.includes(q) ? 2 : 9}; })
+    .filter(h => h.s < 9).sort((a, b) => a.s - b.s || a.n.name.localeCompare(b.n.name)).slice(0, 12).map(h => h.n);
+  hit = 0; renderHits();
+}
+function renderHits(){
+  results.innerHTML = hits.length ? hits.map((n, i) => `<button role="option" class="${i === hit ? "on" : ""}" data-i="${i}"><span class="dot" style="background:var(--${n.state})"></span><span>${esc(n.name)}<br><span class="sub">${esc(n.module)} · ${esc(stateInfo(n.state)[1])}</span></span></button>`).join("")
+    : '<div class="sub" style="padding:8px">No concept matches.</div>';
+  results.style.display = "block";
+  results.querySelectorAll("button").forEach(b => b.onclick = () => choose(hits[+b.dataset.i]));
+}
+function choose(n){ if (!n) return; results.style.display = "none"; search.blur(); ensureVisible(n); select(n, true); }
+search.addEventListener("input", runSearch);
+search.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown"){ hit = Math.min(hits.length - 1, hit + 1); renderHits(); e.preventDefault(); }
+  else if (e.key === "ArrowUp"){ hit = Math.max(0, hit - 1); renderHits(); e.preventDefault(); }
+  else if (e.key === "Enter"){ choose(hits[hit]); }
+  else if (e.key === "Escape"){ search.value = ""; runSearch(); search.blur(); }
+});
+document.addEventListener("click", e => { if (!$("#searchwrap").contains(e.target)) results.style.display = "none"; });
+
+// ---------------------------------------------------------------- controls
+function renderStates(){
+  const counts = {}; for (const n of view.nodes) counts[n.state] = (counts[n.state] || 0) + 1;
+  $("#states").innerHTML = STATES.filter(s => counts[s[0]]).map(([s, label, desc]) =>
+    `<button class="chip" data-s="${s}" aria-pressed="${!(hidden.has(s) || (s === "planned" && !showPlanned))}"><span class="dot" style="background:var(--${s})${s === "planned" ? ";border:1px solid var(--muted)" : ""}"></span><span>${label}<span class="desc">${desc}</span></span><span class="n">${counts[s]}</span></button>`).join("");
+  document.querySelectorAll("#states .chip").forEach(b => b.onclick = () => {
+    const s = b.dataset.s;
+    if (s === "planned"){ showPlanned = !showPlanned; $("#showPlanned").checked = showPlanned; store.set("planned", showPlanned); }
+    else { hidden.has(s) ? hidden.delete(s) : hidden.add(s); store.set("hidden", [...hidden]); }
+    renderStates(); alpha = Math.max(alpha, .3); dirty = true; });
+}
+function setMode(m){
+  mode = m; store.set("mode", m);
+  document.querySelectorAll("#modes button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+  for (const n of view.nodes) if (!n.pinned){ n.fx = n.fy = null;
+    if (m === "flow"){ n.x = n.depth * COL; n.y = n.mi * 30 + (hashString(n.id) - .5) * 20; }
+    else { n.x = n.ax + (hashString(n.id) - .5) * 80; n.y = n.ay + (hashString(n.id + "y") - .5) * 80; } }
+  anim = null; settle(); fit(focus ? view.nodes.filter(n => focus.set.has(n.id)) : null, false);
+}
+function setView(key){
+  store.set("view", key); view = buildView(key); selected = hover = focus = pathTo = null;
+  $("#panel").classList.remove("open"); $("#focusbar").classList.remove("on");
+  document.querySelectorAll("#views button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === key)));
+  $("#title").textContent = "Concept graph"; $("#summaryhead").textContent = view.label;
+  $("#summary").textContent = view.summary; document.title = `Concept graph · ${view.label}`;
+  renderStates(); settle(); fit(null, false); setMode(mode);
+}
+$("#views").innerHTML = Object.entries(DATA.views).map(([k, v]) => `<button data-view="${k}" title="${esc(v.summary)}">${esc(v.label)}</button>`).join("");
+if (Object.keys(DATA.views).length < 2) $("#views").style.display = "none";
+document.querySelectorAll("#views button").forEach(b => b.onclick = () => setView(b.dataset.view));
+document.querySelectorAll("#modes button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+document.querySelectorAll("#depths button").forEach(b => b.onclick = () => focus && setFocus(focus.node, +b.dataset.depth));
+$("#unfocus").onclick = () => setFocus(null);
+$("#fit").onclick = () => fit(focus ? view.nodes.filter(n => focus.set.has(n.id)) : null);
+$("#relayout").onclick = () => { store.set("pos:" + view.key, {}); for (const n of view.nodes){ n.pinned = false; n.fx = n.fy = null; } settle(); fit(); };
+$("#zin").onclick = () => zoomAt(W/2, H/2, 1.3); $("#zout").onclick = () => zoomAt(W/2, H/2, 1/1.3);
+$("#showPlanned").checked = showPlanned;
+$("#showPlanned").onchange = e => { showPlanned = e.target.checked; store.set("planned", showPlanned); renderStates(); alpha = Math.max(alpha,.3); dirty = true; };
+$("#showLabels").onchange = e => { showLabels = e.target.checked; dirty = true; };
+$("#showRegions").onchange = e => { showRegions = e.target.checked; dirty = true; };
+$("#legendtoggle").onclick = () => { const o = $("#legend").classList.toggle("open"); $("#legendtoggle").setAttribute("aria-expanded", String(o)); };
+$("#theme").onclick = () => { const r = document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark"; store.set("theme", r.dataset.theme); readColours(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColours);
+document.addEventListener("keydown", e => {
+  if (e.target === search) return;
+  if (e.key === "/"){ e.preventDefault(); search.focus(); }
+  else if (e.key === "Escape"){ if (pathTo){ pathTo = null; dirty = true; } else if (focus) setFocus(null); else select(null); }
+  else if (e.key === "f" || e.key === "F") $("#fit").click();
+  else if (e.key === "m" || e.key === "M") setMode("map");
+  else if (e.key === "l" || e.key === "L") setMode("flow");
+  else if (e.key === "+" || e.key === "=") zoomAt(W/2, H/2, 1.25);
+  else if (e.key === "-") zoomAt(W/2, H/2, 0.8);
+});
+function resize(){
+  DPR = window.devicePixelRatio || 1; W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR); dirty = true;
+  if (view && !hinted) fit(focus ? view.nodes.filter(n => focus.set.has(n.id)) : null, false);  // until the learner moves it
+}
+new ResizeObserver(resize).observe(canvas);
+
+// ---------------------------------------------------------------- start
+const savedTheme = store.get("theme", null); if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+readColours(); resize();
+const startView = DATA.views[store.get("view", DATA.default)] ? store.get("view", DATA.default) : DATA.default;
+setView(startView);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

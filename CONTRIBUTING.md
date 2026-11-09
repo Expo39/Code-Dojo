@@ -32,7 +32,7 @@ reviews; nobody else can push to `main` directly.
   | `data` | `log.csv`, the redo schedule, timers, the session clock, the personal files |
   | `tracks` | track and exercise discovery, running tests, lesson topics |
   | `planning` | strand balance, week numbers, pattern stats, gates, modules, the mix, calibration, redo order |
-  | `graph` | the concept graph: loading, checks, evidence, states, `next` and `path`, the views |
+  | `graph` | the concept graph: loading, checks, evidence, states, `next` and `path`, the views (`graph_view.html` is the page they fill in) |
   | `updates` | shared-repo updates and track changes |
   | `migrate` | migrations of older layouts and dates |
   | `setup`, `transfer`, `practice`, `reports` | the commands, by area |
