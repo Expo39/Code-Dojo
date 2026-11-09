@@ -26,7 +26,7 @@ dictated code does not count as typing it yourself.
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
 | `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
-| (your prediction) | Say how sure you are too (0 to 100; "I don't know" is fine). The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
+| (your prediction) | Hedge it if you are unsure ("I think it passes"); a plain answer counts as sure, and "I don't know" is fine. The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
@@ -39,7 +39,7 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `probe me` / `what do I need for <X>?` | A 10 to 15 minute mini test in the chat: what you want to be able to do, then a few questions (predict, choose, explain in a few words, each with how sure you are) that find where your understanding ends; then the shortest path to your goal, agreed with you. A report goes in `progress/<track>/probes/` |
+| `probe me` / `what do I need for <X>?` | A 10 to 15 minute mini test in the chat: what you want to be able to do, then a few questions (predict, choose, explain in a few words; say when you are unsure) that find where your understanding ends; then the shortest path to your goal, agreed with you. A report goes in `progress/<track>/probes/` |
 | `what can I do next` / `show my graph` / `how do I get to <X>?` | The concept graph: what you can start now, your state on every concept (`python dojo.py graph --html` opens an interactive page: drag, zoom, search, focus, the path to a concept), or the fewest concepts still to learn for a goal |
 | `teach me <topic>` | A PRIMM lesson that starts from what you already hold: idea (one step at a time, with a quick check after each), predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>`; the lesson is timed and counts as study time |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
@@ -53,7 +53,7 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `predict drill` | "What does this print?", and how sure you are, three in a row |
+| `predict drill` | "What does this print?", three in a row |
 | `discriminate drill` | Two or three problems that look alike but need different patterns: name each pattern and the detail that decides it |
 | `practise <concept>` | A mixed set of drills on concepts from the graph: recall first, then telling it apart from a look-alike, then using it with others |
 | `trace drill` | Fill in a trace table of variables, iteration by iteration |

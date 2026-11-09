@@ -69,10 +69,10 @@ experienced engineers' advice; sources are at the bottom.
     a time to something you already hold, with a check after each step, so a gap shows the
     moment it is stepped on, not three lessons later.
 
-12. **Say how sure you are.** Every prediction and probe answer comes with a confidence from 0 to
-    100. A wrong answer you were sure of is a misconception, the most useful thing a check can
+12. **Say when you are unsure.** Nobody asks for a number: a plain prediction or probe answer
+    counts as sure, a hedged one ("I think", "maybe") as unsure. A wrong answer you were sure of is a misconception, the most useful thing a check can
     find, and it is repaired before anything builds on it; a right answer you were unsure of is
-    fragile and gets one more check. Comparing your stated confidence with your results
+    fragile and gets one more check. Comparing how sure you sounded with your results
     (`stats`) trains you to know what you know, which is what an interviewer is probing too.
 
 ## Checklists

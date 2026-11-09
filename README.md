@@ -62,7 +62,7 @@ It works in light and dark and on a phone, and keeps still if your system asks f
   and 60 days, sooner if it went badly, in a mixed order so you have to recognise each pattern.
 - **Start from what you hold.** Each track has a concept graph; a new goal starts with a short
   probe that finds where your understanding ends, so you learn the shortest path to the goal and
-  nothing you already know. Every prediction comes with how sure you are, and a confident wrong
+  nothing you already know. A prediction you make without hedging counts as sure, and a confident wrong
   answer is repaired before anything builds on it.
 - **Deliberate practice with instant feedback.** Every exercise has tests and a target time;
   time, hints and skipped steps are logged for every attempt.
@@ -121,7 +121,7 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | 1. Understand | The task in your own words with the exact condition; clarifying questions |
 | 2. Example | A trace by hand of the task's `Trace by hand:` input (no answer printed), plus an edge case of your own |
 | 3. Plan | The steps, and the time and space complexity |
-| 4. Predict | "Pass" or "test X fails because ...", and how sure you are (0 to 100), then you run the tests yourself |
+| 4. Predict | "Pass" or "test X fails because ..." (hedge it if unsure), then you run the tests yourself |
 | 5. Test | Your example and an edge case traced through the finished code |
 | 6. Reflect | What would break it, one improvement, names an interviewer would notice |
 

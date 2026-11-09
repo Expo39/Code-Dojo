@@ -95,16 +95,17 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      they invent a small input.
   2. Reply neutrally: confirm only what is right, never hint by tone that something is off, do
      not flag a plan mistake (the run finds it). Then: "Type it, then tell me your prediction:
-     pass or fail, and how sure, 0 to 100?"
+     pass or fail?"
   3. Only after the prediction, in its own message: "Run it: `! python3 dojo.py test <exercise>`."
      Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
   5. After it passes: their own input traced through their code, then complexity, a breaking
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
-- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Every
-  prediction comes with how sure they are (0 to 100; "I don't know" is a fair answer, a gap and
-  not a wrong one). Right but unsure: fragile, one more small check. Wrong and sure (80 or more): a
+- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
+  how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
+  90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"
+  is a gap, not a wrong answer. Right but unsure: fragile, one more small check. Wrong and sure: a
   misconception, logged with `dojo.py mistake` and taken apart before moving on.
   For a quick check (a few lines, not a test file), give both ways to run it: the one-line
   terminal command (`! python3 -c '...'`) and the same lines to type in the REPL (`python3`,

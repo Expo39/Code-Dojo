@@ -49,7 +49,8 @@ question is about one concept's `can` statement, always on a problem that is not
 Before asking, write the answer and its one-line reason in your draft of the report; grade against
 that, not against how convincing their reasoning sounds. Every question asks for:
 
-- **How sure are you, 0 to 100?** "I don't know" is always a fair answer: it is a gap, not a wrong
+- **No confidence question.** Read it from the wording: a plain answer counts as sure (90), a
+  hedged one as unsure (50). "I don't know" is always a fair answer: it is a gap, not a wrong
   answer, and it carries no confidence.
 - **A few words of thinking**: what they noticed and what they were unsure of. Voice input is fine;
   read past transcription slips.

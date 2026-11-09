@@ -52,7 +52,7 @@ LOG_FIELDS = ["date", "item", "kind", "module", "pattern", "level",
 # The exercise loop (docs/CHECKLISTS.md). `done --skipped` records the steps left out.
 STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
-Before running: 4 predict (pass or fail? which test? how sure, 0-100?)
+Before running: 4 predict (pass or fail? which test? hedge it if unsure)
 After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 

@@ -32,7 +32,7 @@ this page is for looking one up on your own.
 | **Concept graph** | A map of what a track teaches: each concept and what it needs first (`tracks/<track>/graph.json`). `python dojo.py graph` shows your state on each one, worked out from your log, your redo boxes and what the tutor recorded. |
 | **Ready** | A concept you have not met yet whose prerequisites you all hold: something you can start now (`graph next`). |
 | **Probe** | A short mini test at the start of a new goal or track: it finds where your understanding ends on each chain of concepts the goal needs, so you learn the shortest path and nothing you already know. |
-| **Confidence, calibration** | How sure you said you were of an answer (0 to 100), and how well that matches how often you are right (`stats`). |
+| **Confidence, calibration** | How sure you sounded (a plain answer counts as sure, a hedged one as unsure; logged as 90 or 50), and how well that matches how often you are right (`stats`). |
 | **Misconception, fragile** | A misconception is a wrong answer you were sure of: it is fixed before anything builds on it. Fragile is a right answer you were unsure of, or a struggle: it gets one more check. |
 | **Cheat sheet** | Your own short notes, one line per concept with a self-check question: one per track (`progress/<track>/cheatsheet.md`) and one for what holds in any language (`progress/cheatsheet.md`). |
 
