@@ -12,13 +12,13 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `dojo.py` and `dojolib/` (tracker), `conftest.py` | `profile.json`: name, mode, target level, time per day, rest days, target date, level, tracks, mix (`python dojo.py settings` shows it) |
 | `tracks/<track>/`: syllabus, exercises, tests, reference solutions, `graph.json` (the concept graph) | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
-| `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/`, `drills/`, `probes/` |
+| `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), shared `mistakes.md` and `cheatsheet.md`, `weekly/`; per track `<track>/` with its own notes and its `drills/`, `mocks/` and `probes/` reports (layout: `PERSONAL_DOCS.md`) |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
 | | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `.history/` with earlier attempts, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
-with a current view of each concept graph (open the `.html` in a browser). Send it straight to
+with a current view of your concept graph, combined and per track (open the `.html` in a browser). Send it straight to
 another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`
 (it restores the data; the views are always made fresh).
 
@@ -63,8 +63,9 @@ and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the
 
 A track's `graph.json` maps what it teaches: one entry per concept, with what it needs first.
 The skill tree in `PLAN.md` stays the plan (which goals, in what order); the graph is the map of
-one subject that the plan, the probe, lessons and drills read. `python dojo.py graph` shows it with
-your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
+one subject that the plan, the probe, lessons and drills read. `python dojo.py graph` shows
+everything you know as one graph (every track's concepts together), `graph <track>` one track,
+each with your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
 fewest concepts still to learn to reach a goal; `graph --html` writes a page you can click
 through (to the system's temporary folder, or `--out <folder>`; every export zip carries one too).
 
@@ -88,6 +89,7 @@ through (to the system's temporary folder, or `--out <folder>`; every export zip
 | `aliases` | other names a logged lesson may have used (optional) |
 | `exercises` | the exercises that practise it (optional) |
 | `planned` | `true` for a concept of a module not built yet |
+| `shared` | `true` for a concept that holds in any language (Big-O, recursion, two pointers, BFS): another track's graph uses the same `id` and the same `can` statement, the combined graph shows it once, and evidence from any track counts for all of them. Language rules (how Python slices, what `std::vector` does) are never shared |
 
 Your state on each concept is computed, never typed: from your log (a solved exercise, a lesson,
 a mock with its pattern), your redo boxes, and evidence the tutor records after a probe or a
@@ -104,7 +106,7 @@ lesson (`graph set`). The states:
 | ready | not met yet, and everything it needs is solid: something you can start now |
 
 `python dojo.py graph check` validates a graph (ids, links to modules, lessons and exercises, no
-cycles); `doctor` and the pre-push checks run it.
+cycles, shared concepts that agree across tracks); `doctor` and the pre-push checks run it.
 
 ## Adding a track
 

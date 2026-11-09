@@ -153,8 +153,9 @@ code-dojo/
 │   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
-│                            schedule, concept evidence (graph.json), mistakes, cheat sheet,
-│                            weekly reports, mock, drill and probe reports, docs/
+│                            schedule, concept evidence (graph.json), shared notes, weekly/,
+│                            docs/, and one folder per track (its notes, drill, mock and probe
+│                            reports); layout in docs/PERSONAL_DOCS.md
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/ holds your attempts, .history/ (earlier
 │                            attempts) and primm/ (lesson files); <track>/drills/<type>/

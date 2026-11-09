@@ -15,8 +15,8 @@ from datetime import date
 from pathlib import Path
 
 from .core import (
-    GRAPH_OVERLAY, PRIMM_DIR, REVIEWS, ROOT, die, fmt_date, load_profile, parse_date, read_json,
-    today, write_json
+    GRAPH_OVERLAY, PRIMM_DIR, REVIEWS, ROOT, active_track_names, die, fmt_date, load_profile,
+    parse_date, read_json, today, write_json
 )
 from .data import ensure_files, read_log
 from .tracks import TOPICS_RE, discover, load_tracks
@@ -33,11 +33,35 @@ STATE_STYLE = {  # display order, label, ANSI colour
     "fragile": ("fragile", "33"), "misconception": ("misconc.", "31"), "gap": ("gap", "31"),
     "ready": ("ready", "35"), "unknown": ("-", "2"), "planned": ("planned", "2"),
 }
+SHARED_STORE = "_shared"  # overlay key for concepts marked "shared": the same in every language
 _GRAPHS: dict = {}
 
 
 def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9_]+", "_", text.lower()).strip("_")
+
+
+def build_graph(name: str, concepts: dict[str, dict], parts: list[dict], **extra) -> dict:
+    """Adjacency, order and lookups for a set of concepts (one track's, or every track's)."""
+    dependents: dict[str, list[str]] = {cid: [] for cid in concepts}
+    for c in concepts.values():
+        for r in c["requires"]:
+            if r in dependents:
+                dependents[r].append(c["id"])
+    order, cycle = topo_order(concepts)
+    by_exercise: dict[str, list[str]] = {}
+    by_lesson: dict[str, list[str]] = {}
+    for c in concepts.values():
+        for slug in c["exercises"]:
+            by_exercise.setdefault(slug, []).append(c["id"])
+        for lesson in [c["lesson"], *c["aliases"]]:
+            if lesson:
+                by_lesson.setdefault(slugify(lesson), []).append(c["id"])
+    graph = {"track": name, "concepts": concepts, "dependents": dependents, "order": order,
+             "cycle": cycle, "rank": {cid: i for i, cid in enumerate(order)},
+             "by_exercise": by_exercise, "by_lesson": by_lesson, **extra}
+    graph["parts"] = parts or [graph]
+    return graph
 
 
 def load_graph(track: str) -> dict | None:
@@ -56,29 +80,43 @@ def load_graph(track: str) -> dict | None:
     concepts: dict[str, dict] = {}
     for c in raw:
         c = {"requires": [], "exercises": [], "aliases": [], "lesson": "", "kind": "skill",
-             "planned": False, "can": "", **c}
+             "planned": False, "shared": False, "can": "", **c}
         c["name"] = c.get("name") or c["id"]
+        # Where its evidence lives: a shared concept is the same in every track (SHARED_STORE).
+        c.update(track=track, local=c["id"], store=SHARED_STORE if c["shared"] else track)
         concepts.setdefault(c["id"], c)
-    dependents: dict[str, list[str]] = {cid: [] for cid in concepts}
-    for c in concepts.values():
-        for r in c["requires"]:
-            if r in dependents:
-                dependents[r].append(c["id"])
-    order, cycle = topo_order(concepts)
-    by_exercise: dict[str, list[str]] = {}
-    by_lesson: dict[str, list[str]] = {}
-    for c in concepts.values():
-        for slug in c["exercises"]:
-            by_exercise.setdefault(slug, []).append(c["id"])
-        for name in [c["lesson"], *c["aliases"]]:
-            if name:
-                by_lesson.setdefault(slugify(name), []).append(c["id"])
-    graph = {"track": track, "path": path, "data": data, "raw": raw, "concepts": concepts,
-             "dependents": dependents, "order": order, "cycle": cycle,
-             "rank": {cid: i for i, cid in enumerate(order)},
-             "by_exercise": by_exercise, "by_lesson": by_lesson, "config": config}
+    graph = build_graph(track, concepts, [], slug=track, path=path, data=data, raw=raw, config=config)
     _GRAPHS[key] = graph
     return graph
+
+
+def combined_graph(names: list[str]) -> dict:
+    """Every track's graph as one: a shared concept appears once (its prerequisites and
+    exercises from every track joined); a concept id used by two tracks becomes <track>:<id>."""
+    parts = [g for g in (load_graph(t) for t in names) if g]
+    if len(parts) == 1:
+        return parts[0]
+    owners: dict[str, set[str]] = {}
+    for part in parts:
+        for c in part["concepts"].values():
+            owners.setdefault(c["local"], set()).add(SHARED_STORE if c["shared"] else part["track"])
+    def key(c: dict) -> str:
+        return c["local"] if c["shared"] or len(owners[c["local"]]) == 1 else f"{c['track']}:{c['local']}"
+    concepts: dict[str, dict] = {}
+    for part in parts:
+        for c in part["concepts"].values():
+            k = key(c)
+            reqs = [key(part["concepts"][r]) for r in c["requires"] if r in part["concepts"]]
+            if k in concepts:  # the same shared concept from another track
+                merged = concepts[k]
+                merged["requires"] += [r for r in reqs if r not in merged["requires"]]
+                merged["exercises"] += [x for x in c["exercises"] if x not in merged["exercises"]]
+                merged["aliases"] += [a for a in [c["lesson"], *c["aliases"]] if a and a not in merged["aliases"]]
+                merged["planned"] = merged["planned"] and c["planned"]
+            else:
+                concepts[k] = {**c, "id": k, "requires": reqs, "exercises": list(c["exercises"]),
+                               "aliases": list(c["aliases"])}
+    return build_graph("all tracks", concepts, parts, slug="all")
 
 
 def topo_order(concepts: dict) -> tuple[list[str], list[str]]:
@@ -146,11 +184,9 @@ def graph_targets(graph: dict, names: list[str]) -> list[str]:
     return out
 
 
-def graph_track_names(profile: dict | None = None) -> list[str]:
-    """Active tracks that have a concept graph, in the learner's order."""
-    profile = profile if profile is not None else load_profile(required=False)
-    active = profile.get("tracks") or list(load_tracks(active_only=False))
-    return [t for t in active if load_graph(t)]
+def graph_track_names() -> list[str]:
+    """The learner's tracks that have a concept graph, in their order."""
+    return [t for t in active_track_names() if load_graph(t)]
 
 
 def pick_graph(track: str | None) -> dict:
@@ -163,10 +199,11 @@ def pick_graph(track: str | None) -> dict:
     names = graph_track_names()
     if not names:
         die(f"None of your tracks has a {GRAPH_FILE} yet (dojo-new-track writes one).")
-    return load_graph(names[0])
+    return combined_graph(names)
 
 
-# Overlay: {"version": 1, "tracks": {track: {concept: [evidence, ...]}}, "ingested": {track: {...}}}
+# Overlay: {"version": 1, "tracks": {track or SHARED_STORE: {concept: [evidence, ...]}},
+#           "ingested": {track: {...}}}
 # Evidence: {"state", "date", "source", "ref", "confidence"?, "note"?}
 
 def read_overlay() -> dict:
@@ -177,9 +214,25 @@ def read_overlay() -> dict:
     return data
 
 
-def add_evidence(overlay: dict, track: str, cid: str, entry: dict) -> bool:
+def evidence_of(overlay: dict, c: dict) -> list[dict]:
+    """A concept's evidence list (a shared concept's is the same from every track)."""
+    return overlay["tracks"].get(c["store"], {}).get(c["local"], [])
+
+
+def settle_stores(graph: dict, overlay: dict) -> None:
+    """Move evidence to where each concept now keeps it: a concept a track update made shared
+    brings its evidence to SHARED_STORE, one no longer shared takes it back (refs stop doubles)."""
+    for part in graph["parts"]:
+        for c in part["concepts"].values():
+            wrong = part["track"] if c["store"] == SHARED_STORE else SHARED_STORE
+            stray = overlay["tracks"].get(wrong, {}).pop(c["local"], None)
+            for entry in stray or []:
+                add_evidence(overlay, c, entry)
+
+
+def add_evidence(overlay: dict, c: dict, entry: dict) -> bool:
     """Append evidence unless the same ref is already there (re-running is always safe)."""
-    entries = overlay["tracks"].setdefault(track, {}).setdefault(cid, [])
+    entries = overlay["tracks"].setdefault(c["store"], {}).setdefault(c["local"], [])
     if entry.get("ref") and any(e.get("ref") == entry["ref"] for e in entries):
         return False
     entries.append({k: v for k, v in entry.items() if v not in (None, "")})
@@ -240,6 +293,10 @@ def graph_derive(graph: dict, overlay: dict, verbose: bool = False) -> int:
     """Read new log rows into the overlay. Incremental: a checkpoint (row count and a hash of
     those rows) skips what was read before; if the log was rewritten, everything is read again
     and the refs stop duplicates. Returns the number of new evidence entries."""
+    return sum(derive_track(part, overlay, verbose) for part in graph["parts"])
+
+
+def derive_track(graph: dict, overlay: dict, verbose: bool) -> int:
     rows = read_log()
     track = graph["track"]
     mark = overlay["ingested"].get(track, {})
@@ -252,7 +309,7 @@ def graph_derive(graph: dict, overlay: dict, verbose: bool = False) -> int:
     added = 0
     for row in rows[start:]:
         for cid, entry in row_evidence(graph, row, patterns):
-            added += add_evidence(overlay, track, cid, entry)
+            added += add_evidence(overlay, graph["concepts"][cid], entry)
     overlay["ingested"][track] = {
         "rows": len(rows),
         "hash": hashlib.sha256("\n".join(log_row_ref(r) for r in rows).encode()).hexdigest()[:16],
@@ -268,6 +325,7 @@ def graph_refresh(graph: dict, verbose: bool = False) -> tuple[dict, dict]:
     (overlay, states): the one way every command gets current concept states."""
     overlay = read_overlay()
     before = json.dumps(overlay, sort_keys=True)
+    settle_stores(graph, overlay)
     graph_derive(graph, overlay, verbose=verbose)
     if json.dumps(overlay, sort_keys=True) != before:
         write_json(GRAPH_OVERLAY, overlay)
@@ -277,11 +335,10 @@ def graph_refresh(graph: dict, verbose: bool = False) -> tuple[dict, dict]:
 def concept_states(graph: dict, overlay: dict, on: date) -> dict[str, dict]:
     """State of every concept: the latest evidence, then the live redo boxes of its exercises."""
     reviews = read_json(REVIEWS, {})
-    evidence = overlay["tracks"].get(graph["track"], {})
     out: dict[str, dict] = {}
     for cid in graph["order"]:
         c = graph["concepts"][cid]
-        entries = sorted(enumerate(evidence.get(cid, [])),
+        entries = sorted(enumerate(evidence_of(overlay, c)),
                          key=lambda ie: (parse_date(ie[1]["date"]) if ie[1].get("date") else date.min, ie[0]))
         latest = entries[-1][1] if entries else None
         state = latest["state"] if latest else "unknown"
@@ -402,12 +459,12 @@ def graph_summary(graph: dict, states: dict) -> str:
     return f"{graph['track']}: {len(states)} concepts ({', '.join(parts) or 'no evidence yet'})"
 
 
-def graph_brief_line(profile: dict) -> str | None:
+def graph_brief_line() -> str | None:
     """One line for `today`/`brief`: the graph's state and the top of `graph next`."""
-    names = graph_track_names(profile)
+    names = graph_track_names()
     if not names:
         return None
-    graph = load_graph(names[0])
+    graph = combined_graph(names)
     _, states = graph_refresh(graph)
     # The redo queue and "Next new" lines already name redos and new exercises: this line adds
     # only what they cannot show, the lessons to take and the concepts to repair.
@@ -462,6 +519,17 @@ def graph_check(graph: dict) -> tuple[list[str], list[str]]:
         if c["lesson"] and c["module"] in topics and c["lesson"] not in topics[c["module"]]:
             errors.append(f"{where}: lesson '{c['lesson']}' is not a topic in "
                           f"{c['module']}/{PRIMM_DIR}/README.md")
+    for name in load_tracks(active_only=False):
+        other = load_graph(name) if name != graph["track"] else None
+        for cid, c in concepts.items():
+            o = other["concepts"].get(cid) if other else None
+            if not o or not (c["shared"] or o["shared"]):
+                continue
+            if c["shared"] != o["shared"]:
+                errors.append(f"'{cid}' is shared in one of {graph['track']} and {name} but not the other: "
+                              "a shared id means the same concept in every track")
+            elif c["can"] != o["can"] or c["name"] != o["name"]:
+                warnings.append(f"shared '{cid}' has a different name or can statement in {name}")
     if graph["cycle"]:
         errors.append("cycle in requires (A -> B: B needs A): " + " -> ".join(reversed(graph["cycle"])))
     covered_lessons = {(c["module"], c["lesson"]) for c in concepts.values() if c["lesson"]}
@@ -477,6 +545,8 @@ def graph_check(graph: dict) -> tuple[list[str], list[str]]:
 
 
 def mermaid_text(graph: dict, states: dict) -> str:
+    def node(cid: str) -> str:  # Mermaid ids cannot hold the ':' of <track>:<id>
+        return cid.replace(":", "__")
     lines = ["flowchart LR"]
     modules: dict[str, list[str]] = {}
     for cid in graph["order"]:
@@ -485,12 +555,12 @@ def mermaid_text(graph: dict, states: dict) -> str:
         lines.append(f"  subgraph {module}")
         for cid in cids:
             name = graph["concepts"][cid]["name"].replace('"', "'")
-            lines.append(f'    {cid}["{name}"]:::{states[cid]["state"]}')
+            lines.append(f'    {node(cid)}["{name}"]:::{states[cid]["state"]}')
         lines.append("  end")
     for cid in graph["order"]:
         for r in graph["concepts"][cid]["requires"]:
             if r in graph["concepts"]:
-                lines.append(f"  {r} --> {cid}")
+                lines.append(f"  {node(r)} --> {node(cid)}")
     fills = {"fluent": "#2e7d32", "held": "#00838f", "due": "#b8860b", "fragile": "#ef6c00",
              "misconception": "#c62828", "gap": "#ad1457", "ready": "#6a1b9a",
              "unknown": "#9e9e9e", "planned": "#cfcfcf"}
@@ -641,21 +711,21 @@ def html_text(graph: dict, states: dict) -> str:
 
 def write_graph_views(graph: dict, states: dict, out_dir: Path) -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    md = out_dir / f"graph_{graph['track']}.md"
+    md = out_dir / f"graph_{graph['slug']}.md"
     md.write_text(f"# Concept graph: {graph['track']}\n\n{graph_summary(graph, states)}, "
                   f"{fmt_date(today())}.\n\n```mermaid\n{mermaid_text(graph, states)}\n```\n", encoding="utf-8")
-    page = out_dir / f"graph_{graph['track']}.html"
+    page = out_dir / f"graph_{graph['slug']}.html"
     page.write_text(html_text(graph, states), encoding="utf-8")
     return [md, page]
 
 
 def print_graph(graph: dict, states: dict) -> None:
     print(graph_summary(graph, states))
+    several = len(graph["parts"]) > 1
     by_module: dict[str, list[str]] = {}
-    for cid in graph["concepts"]:  # the order the graph's authors wrote: simplest first
-        by_module.setdefault(graph["concepts"][cid]["module"], []).append(cid)
-    module_order = list(dict.fromkeys(c["module"] for c in graph["concepts"].values()))
-    for module in module_order:
+    for cid, c in graph["concepts"].items():  # the order the graph's authors wrote: simplest first
+        by_module.setdefault(f"{c['track']}/{c['module']}" if several else c["module"], []).append(cid)
+    for module in by_module:
         cids = by_module.get(module, [])
         planned = all(graph["concepts"][c]["planned"] for c in cids)
         print(f"\n{module}" + (" (planned)" if planned else ""))
@@ -667,6 +737,8 @@ def print_graph(graph: dict, states: dict) -> None:
                 extra += f"  redo due: {', '.join(info['due'])}"
             if info.get("implied"):
                 extra += "  (implied by what builds on it)"
+            if c["shared"]:
+                extra += "  [shared: counts in every track]"
             print(f"  {state_tag(info['state'])} {cid:26} {c['name']}{extra}")
 
 
@@ -701,8 +773,7 @@ def cmd_graph(args) -> None:
             die("Usage: python dojo.py graph set <concept> <" + "|".join(EVIDENCE_STATES) + "> "
                 "[--confidence N] [--source probe] [--note TEXT] [--ref FILE] [--track T]")
         cid, state = rest[0], rest[1]
-        graph = pick_graph(args.track or next((t for t in graph_track_names()
-                                               if cid in load_graph(t)["concepts"]), None))
+        graph = pick_graph(args.track)
         if cid not in graph["concepts"]:
             die(f"No concept '{cid}' in the {graph['track']} graph.")
         if state not in EVIDENCE_STATES:
@@ -713,7 +784,7 @@ def cmd_graph(args) -> None:
         overlay = read_overlay()
         entry = {"state": state, "date": fmt_date(today()), "source": source, "note": args.note,
                  "ref": args.ref, "confidence": args.confidence}
-        add_evidence(overlay, graph["track"], cid, entry)
+        add_evidence(overlay, graph["concepts"][cid], entry)
         write_json(GRAPH_OVERLAY, overlay)
         info = concept_states(graph, overlay, today())[cid]
         print(f"{cid}: {state} ({source}) recorded; state now {info['state']}.")
@@ -722,16 +793,18 @@ def cmd_graph(args) -> None:
         if not rest:
             die("Usage: python dojo.py graph undo <concept> [--track T]")
         cid = rest[0]
-        graph = pick_graph(args.track or next((t for t in graph_track_names()
-                                               if cid in load_graph(t)["concepts"]), None))
+        graph = pick_graph(args.track)
+        if cid not in graph["concepts"]:
+            die(f"No concept '{cid}' in the {graph['track']} graph.")
+        c = graph["concepts"][cid]
         overlay = read_overlay()
-        entries = overlay["tracks"].get(graph["track"], {}).get(cid, [])
+        entries = evidence_of(overlay, c)
         recorded = [i for i, e in enumerate(entries) if not str(e.get("ref", "")).startswith("log:")]
         if not recorded:
             die(f"{cid}: no recorded evidence to undo (evidence read from the log changes only with the log).")
         removed = entries.pop(recorded[-1])
         if not entries:
-            del overlay["tracks"][graph["track"]][cid]
+            del overlay["tracks"][c["store"]][c["local"]]
         write_json(GRAPH_OVERLAY, overlay)
         print(f"{cid}: removed {removed['state']} ({removed.get('source', '')}, {removed.get('date', '')}).")
         return

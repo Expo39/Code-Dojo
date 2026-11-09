@@ -6,7 +6,7 @@ import argparse
 
 from .core import KINDS, PROGRESS, STEPS, TARGETS
 from .updates import cmd_changes, cmd_update
-from .migrate import cmd_migrate, migrate_dates, migrate_workspace
+from .migrate import cmd_migrate, migrate_dates, migrate_progress, migrate_workspace
 from .setup import cmd_doctor, cmd_install, cmd_settings, cmd_setup
 from .transfer import cmd_drive_setup, cmd_export, cmd_import
 from .practice import (
@@ -50,7 +50,9 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   clarify <item>           the interviewer's answers (edge cases); list your own first
   cancel <item>            discard a running timer
   mark <items/modules> --box N   seed the redo schedule for things you already know
-  mistake <item> "what went wrong" "correct form"
+  mistake <item> "what went wrong" "correct form" [--shared | --track T]
+                           logged in progress/<track>/mistakes.md (the exercise's track, else your
+                           first); --shared for what holds in any language (progress/mistakes.md)
   export [--to user@host:path]   zip progress/ and workspace/; copy over SSH with --to
                                  (--to rclone:gdrive:CodeDojo uploads to Google Drive)
   drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
@@ -82,8 +84,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            with a topic, starts a lesson timer: end it with `done lesson:<topic>`
                            for a teach-me lesson
   start probe:<track>      timer for a probe (the goal-first mini test); end it with `done probe:<track>`
-  migrate                  move older layouts into the current one: module folders, drills/<type>/
-                           and mocks/<type>/ (also automatic)
+  migrate                  move older layouts into the current one: progress/ per track, module
+                           folders, drills/<type>/ and mocks/<type>/ (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
 """
 
@@ -145,6 +147,7 @@ def main() -> None:
     p = sub.add_parser("session"); p.add_argument("action", choices=["start", "pause", "resume", "status", "end"])
     p = sub.add_parser("mark"); p.add_argument("items", nargs="+"); p.add_argument("--box", type=int, default=2)
     p = sub.add_parser("mistake"); p.add_argument("item"); p.add_argument("what"); p.add_argument("fix")
+    p.add_argument("--track"); p.add_argument("--shared", action="store_true")
     p = sub.add_parser("week"); p.add_argument("--write", action="store_true")
     p.add_argument("--force", action="store_true"); p.add_argument("--date")
     p = sub.add_parser("export"); p.add_argument("--to"); p.add_argument("--out")
@@ -186,6 +189,7 @@ def main() -> None:
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
         migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder
     if args.cmd not in ("help", "migrate") and PROGRESS.exists():
+        migrate_progress(verbose=False)  # older copies kept everything flat in progress/
         migrate_dates(verbose=False)  # older data used ISO dates (YYYY-MM-DD)
     if args.cmd == "brief":
         cmd_today(args, brief=True)

@@ -6,7 +6,7 @@ tools: Read, Bash, Glob, Grep
 
 You analyse a learner's training data in Code Dojo and report facts and recommendations. You do not talk to the learner; the tutor relays your findings.
 
-Read: `progress/profile.json`, `progress/PLAN.md` (milestones, estimates), `progress/BASELINE.md`, all `progress/weekly/*.md`, `progress/mocks/*.md`, `progress/drills/*.md`, `progress/probes/*.md`, `progress/mistakes.md`, and run `python3 dojo.py stats` and `python3 dojo.py graph next` (use `python` on Windows). For detail, read `progress/log.csv` (columns: date, item, kind, module, pattern, level, minutes, target, hints, result, ratio, skipped, note, confidence, prediction), `progress/reviews.json` and `progress/graph.json` (dated evidence per concept of each track's `graph.json`) directly.
+Read: `progress/profile.json`, `progress/PLAN.md` (milestones, estimates), `progress/BASELINE.md`, all `progress/weekly/*.md`, and per track `progress/<track>/mocks/*.md`, `progress/<track>/drills/*.md`, `progress/<track>/probes/*.md`, the mistakes logs (`progress/mistakes.md` for what holds in any language, `progress/<track>/mistakes.md`), and run `python3 dojo.py stats` and `python3 dojo.py graph next` (use `python` on Windows). For detail, read `progress/log.csv` (columns: date, item, kind, module, pattern, level, minutes, target, hints, result, ratio, skipped, note, confidence, prediction), `progress/reviews.json` and `progress/graph.json` (dated evidence per concept of each track's `graph.json`) directly.
 
 Report:
 

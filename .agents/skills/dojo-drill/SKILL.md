@@ -5,11 +5,11 @@ description: Short drills for reading, debugging, explaining and recognising cod
 
 # Drills
 
-Wait for the learner's "go" before writing or showing a drill, even when the session template says a drill is next (`AGENTS.md`: everything waits for their go). A drill that needs files (code to review, a trace or predict snippet the learner keeps) follows the same layout in its own type folder: `workspace/<track>/drills/<type>/<focus><ext>` with that folder's tests and `.history/` only when the drill needs them (a bug drill has both; a review drill neither) (`AGENTS.md`, generated files). Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/mistakes.md`). Pitch drills so the learner gets about 85% of the individual steps right: easier wastes the time, harder teaches nothing. Before revealing any answer ask how sure they are (0 to 100; "I don't know" is fine). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong> --confidence N`; log wrong answers with `dojo.py mistake` (a wrong answer at 80 or more is a misconception: say so in the mistake row).
+Wait for the learner's "go" before writing or showing a drill, even when the session template says a drill is next (`AGENTS.md`: everything waits for their go). A drill that needs files (code to review, a trace or predict snippet the learner keeps) follows the same layout in its own type folder: `workspace/<track>/drills/<type>/<focus><ext>` with that folder's tests and `.history/` only when the drill needs them (a bug drill has both; a review drill neither) (`AGENTS.md`, generated files). Always NEW material, written for the drill: never reuse exercise files or reveal anything from `.solutions/`. Match the learner's current level (`progress/PLAN.md`) and target their recurring mistakes (`progress/BASELINE.md`, `progress/<track>/mistakes.md`, `progress/mistakes.md`). Pitch drills so the learner gets about 85% of the individual steps right: easier wastes the time, harder teaches nothing. Before revealing any answer ask how sure they are (0 to 100; "I don't know" is fine). Log each drill: `dojo.py log drill <minutes> <type> --result <right|wrong> --confidence N`; log wrong answers with `dojo.py mistake` (a wrong answer at 80 or more is a misconception: say so in the mistake row).
 
 ## Report (every drill with an answer)
 
-After scoring, write `progress/drills/<DD-MM-YYYY>_<type>_<focus>.md` (a name already taken gets `_2`): a header (the drill file, and its `.history/` original if it has one; the task in one line; the minutes), then
+After scoring, write `progress/<track>/drills/<DD-MM-YYYY>_<type>_<focus>.md` (a name already taken gets `_2`): a header (the drill file, and its `.history/` original if it has one; the task in one line; the minutes), then
 1. **My answer**: what the learner said, in their words, close to verbatim; for a second pass after a prompt, a separate list, saying what prompted it.
 2. **The real issues** (or the right answers): a table with the line, the problem and why it is wrong, in words; never the fixed code.
 3. **Comparison**: found on the first pass, found after a prompt, missed, false alarms (and any fair suggestion that is not a bug).
@@ -23,7 +23,7 @@ Drills drawn from the concept graph (`dojo.py graph next`, or the concepts the l
 ## predict drill
 
 Ask for the prediction and wait; give the run command only in the next message, never in the same one.
-Show a 5 to 12 line snippet (a language gotcha or a small algorithm). Ask what it prints (draw first from the learner's own traps in `progress/docs/PITFALLS.md` and recent rows of `progress/mistakes.md`). After their answer, reveal and explain, and name the concept. Do 3 in a row unless asked otherwise.
+Show a 5 to 12 line snippet (a language gotcha or a small algorithm). Ask what it prints (draw first from the learner's own traps in `progress/docs/PITFALLS.md` and recent rows of the mistakes logs). After their answer, reveal and explain, and name the concept. Do 3 in a row unless asked otherwise.
 
 ## trace drill
 A 10 to 20 line function and one input. The learner writes the value of each variable after each loop iteration (a trace table). Check the table row by row.

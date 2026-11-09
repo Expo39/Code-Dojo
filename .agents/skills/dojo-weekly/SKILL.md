@@ -6,7 +6,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
 # Weekly review (about 20 minutes)
 
 1. Run `dojo.py week --write` (add `--date DD/MM/YYYY` for a past week) and `dojo.py stats`.
-2. Read: the report, `progress/PLAN.md`, last week's coach notes, this week's `progress/mocks/`, `progress/drills/` (what was missed and the false alarms) and `progress/probes/`, the week's rows in `progress/mistakes.md`, and `dojo.py graph next`.
+2. Read: the report, `progress/PLAN.md`, last week's coach notes, this week's `progress/<track>/mocks/`, `progress/<track>/drills/` (what was missed and the false alarms) and `progress/<track>/probes/` for each track, the week's rows in `progress/mistakes.md` and each `progress/<track>/mistakes.md`, and `dojo.py graph next`.
 3. Analyse honestly, with numbers:
    - Time against the plan, and why (ask; do not assume). If short, adjust the plan or the profile's hours rather than piling up debt; a capped catch-up of at most an hour a day is fine.
    - Speed and hints per pattern: anything with a median above 1.5x or more than 1.5 hints is a weak spot.
@@ -18,7 +18,11 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
      update its row in `progress/docs/PITFALLS.md` (last seen date; retire rows unseen for 6
      weeks; spec in `docs/PERSONAL_DOCS.md`).
    - Mock result and the two habits from it, if the mode had one this week.
-   - Follow-up methods in `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
+   - Notes in the right place: a row or bullet in a track's `mistakes.md` or `cheatsheet.md` that
+     holds in any language (reading the task, complexity, a pattern, interview technique) moves to
+     the shared file at the top of `progress/`, and a language rule in a shared file moves to its
+     track's (`docs/PERSONAL_DOCS.md`).
+   - Follow-up methods in `progress/<track>/approaches.md` and `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
    - Process: the report's "Process" line (how often every step was followed, the most skipped step). A step skipped 3 or more times becomes next week's habit focus, with a one-line reminder the tutor gives at every exercise.
    - Balance across strands (learn, write, read and debug, build, perform) against the shares for
      their mode (`docs/METHOD.md`); a missed mock counts only if the mode had one due.

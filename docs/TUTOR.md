@@ -32,14 +32,14 @@ dictated code does not count as typing it yourself.
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |
-| `log mistake: ...` | Added to `progress/mistakes.md` |
+| `log mistake: ...` | Added to the track's `progress/<track>/mistakes.md`, or to `progress/mistakes.md` when it holds in any language |
 | `end of day` / `how am I doing` | Today, the week, weak spots, and concrete advice for tomorrow; at the end of the day the session clock stops and the training outside exercise timers is logged as study |
 
 ## Learning
 
 | Say | What happens |
 | --- | --- |
-| `probe me` / `what do I need for <X>?` | A 10 to 15 minute mini test in the chat: what you want to be able to do, then a few questions (predict, choose, explain in a few words, each with how sure you are) that find where your understanding ends; then the shortest path to your goal, agreed with you. A report goes in `progress/probes/` |
+| `probe me` / `what do I need for <X>?` | A 10 to 15 minute mini test in the chat: what you want to be able to do, then a few questions (predict, choose, explain in a few words, each with how sure you are) that find where your understanding ends; then the shortest path to your goal, agreed with you. A report goes in `progress/<track>/probes/` |
 | `what can I do next` / `show my graph` / `how do I get to <X>?` | The concept graph: what you can start now, your state on every concept (`python dojo.py graph --html` for a page you can click through), or the fewest concepts still to learn for a goal |
 | `teach me <topic>` | A PRIMM lesson that starts from what you already hold: idea (one step at a time, with a quick check after each), predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>`; the lesson is timed and counts as study time |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
@@ -47,7 +47,7 @@ dictated code does not count as typing it yourself.
 | `more like <exercise>` | Same pattern, different story |
 | `review my code` | Senior-engineer feedback on passing code, as questions and pointers |
 | `review my project` | Design, tests and structure feedback on a project |
-| `review the cheat sheet` | Self-check questions from `progress/cheatsheet.md`, oldest first |
+| `review the cheat sheet` | Self-check questions from your cheat sheets (`progress/<track>/cheatsheet.md` and `progress/cheatsheet.md`), oldest first |
 
 ## Reading, debugging, performing
 
@@ -60,11 +60,11 @@ dictated code does not count as typing it yourself.
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
 | `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/bug/`, named after the function; find it with the debugger |
 | `review drill` | Code (often "written by an AI") in `workspace/<track>/drills/review/` with several problems: list them all, then compare your list with the real issues in the report (no fixing: that is what bug drills train) |
-| (after any drill) | A report in `progress/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
+| (after any drill) | A report in `progress/<track>/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
 | `explain drill` | Solve without code in five steps, scored |
 | `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
-| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/<type>/` (pattern, practical, bug or explain), named after the problem and the date; the interviewer keeps hidden cases for the end |
+| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/<track>/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/<type>/` (pattern, practical, bug or explain), named after the problem and the date; the interviewer keeps hidden cases for the end |
 
 ## Planning
 

@@ -44,7 +44,10 @@ than any one of them. Always in the dojo's own format, never a copy.
    - `graph.json`, the concept graph (`docs/TRACKS.md`, "Concept graph"): every concept the
      modules teach, what each needs first (`requires`), an observable `can` statement, its
      `lesson` (a topic of the module's `primm/README.md`; `kind: theory` for `Theory:` lines) and
-     its exercises; planned modules' concepts marked `"planned": true`. `dojo.py graph check
+     its exercises; planned modules' concepts marked `"planned": true`. A concept that holds in any
+     language and already exists in another track's graph (Big-O, recursion, two pointers, BFS)
+     reuses that `id`, `name` and `can` with `"shared": true`, so what the learner knows from the
+     other track counts here too; language rules are never shared. `dojo.py graph check
      <track>` must report no errors. A review updates it with the modules.
    - Exercises are original, in the dojo format: never copy text, exercises or solutions,
      whatever the licence; structure, topic order and the *kind* of example may be borrowed,

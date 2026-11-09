@@ -1,5 +1,5 @@
-"""One-off migrations of older layouts: per-module workspace folders, drill and mock type
-folders, and European dates."""
+"""One-off migrations of older layouts: the progress/ layout, per-module workspace folders, drill
+and mock type folders, and European dates."""
 
 from __future__ import annotations
 
@@ -9,10 +9,11 @@ import shutil
 from datetime import date
 
 from .core import (
-    FILE_DATE_FMT, HISTORY_DIR, LOG, LOG_FIELDS, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT,
-    SESSION, UPSTREAM_CHECK, WEEKLY, WORKSPACE, fmt_date, parse_date, read_json, write_json
+    FILE_DATE_FMT, HISTORY_DIR, LAYOUT, LOG, LOG_FIELDS, MISTAKES, PERSONAL_DOCS, PROFILE, PROGRESS,
+    REVIEWS, ROOT, SESSION, TRACK_REPORT_DIRS, TRACKER, UPSTREAM_CHECK, WEEKLY, WORKSPACE,
+    active_track_names, fmt_date, parse_date, read_json, track_progress, write_json
 )
-from .data import read_log
+from .data import ensure_files, read_log
 from .tracks import discover, load_tracks, test_slug
 
 
@@ -169,6 +170,57 @@ def migrate_side_folders(verbose: bool = True) -> int:
     return moved
 
 
+OLD_TRACKER_FILES = ("timer.json", "session.json", "tracks_seen.json", "topics_seen.json",
+                     "upstream_check.json")  # at the top of progress/ before progress/tracker/
+PROGRESS_LAYOUT = 2  # 2 = shared notes at the top, one folder per track, tracker/ for bookkeeping
+
+
+def migrate_progress(verbose: bool = True) -> int:
+    """Move an older flat progress/ into the current layout (docs/PERSONAL_DOCS.md). Idempotent.
+
+    The tracker's bookkeeping goes to progress/tracker/; drill, mock and probe reports, the
+    revisits list and the old notes go to the first track's folder (everything before this
+    layout was written for one track); fresh shared notes are created by ensure_files. The
+    tutor then moves what holds in any language back to the shared notes (dojo-weekly)."""
+    if not PROGRESS.is_dir() or read_json(LAYOUT, {}).get("progress") == PROGRESS_LAYOUT:
+        return 0
+    moved = []
+    TRACKER.mkdir(exist_ok=True)
+    for name in OLD_TRACKER_FILES:
+        if (PROGRESS / name).exists() and not (TRACKER / name).exists():
+            moved.append((PROGRESS / name, TRACKER / name))
+    old_habits = PROGRESS / "WORK_HABITS.md"  # older checkouts kept it at the top of progress/
+    if old_habits.exists() and not (PERSONAL_DOCS / "WORK_HABITS.md").exists():
+        moved.append((old_habits, PERSONAL_DOCS / "WORK_HABITS.md"))
+    tracks = active_track_names()
+    if tracks:
+        home = track_progress(tracks[0])
+        for kind in TRACK_REPORT_DIRS:
+            if (PROGRESS / kind).is_dir():
+                moved += [(f, home / kind / f.name) for f in sorted((PROGRESS / kind).iterdir())]
+        old_layout = not (home / "mistakes.md").exists()
+        for name in ("revisits.md", *(("mistakes.md", "cheatsheet.md", "approaches.md") if old_layout else ())):
+            if (PROGRESS / name).exists() and not (home / name).exists():
+                moved.append((PROGRESS / name, home / name))
+    for src, dest in moved:
+        if dest.exists():
+            print(f"  layout: kept {src.relative_to(ROOT).as_posix()} ({dest.relative_to(ROOT).as_posix()} already exists)")
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), dest)
+        if verbose:
+            print(f"  moved {src.relative_to(ROOT).as_posix()} -> {dest.relative_to(ROOT).as_posix()}")
+    for kind in TRACK_REPORT_DIRS:
+        if (PROGRESS / kind).is_dir() and not any((PROGRESS / kind).iterdir()):
+            (PROGRESS / kind).rmdir()
+    write_json(LAYOUT, {"progress": PROGRESS_LAYOUT})
+    ensure_files()  # the shared notes and every track's folder
+    if moved and verbose:
+        print(f"progress/ reorganised: {len(moved)} file(s) moved (shared notes at the top, "
+              "one folder per track, tracker/ for bookkeeping).")
+    return len(moved)
+
+
 ISO_DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
 ISO_IN_NAME_RE = re.compile(r"(?<!\d)(20\d{2})[-_](0[1-9]|1[0-2])[-_](0[1-9]|[12]\d|3[01])(?!\d)")
 ISO_STAMP_RE = re.compile(r"(?<!\d)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])_(\d{4,6})(?!\d)")
@@ -224,15 +276,16 @@ def migrate_dates(verbose: bool = True) -> int:
             if new != data:
                 write_json(path, new)
                 changes += 1
-    if MISTAKES.exists():
-        text = MISTAKES.read_text(encoding="utf-8")
-        new = re.sub(r"^\| (\d{4}-\d{2}-\d{2}) \|", lambda m: f"| {euro_date(m[1])} |", text, flags=re.M)
-        if new != text:
-            MISTAKES.write_text(new, encoding="utf-8")
-            changes += 1
+    for log in [MISTAKES, *PROGRESS.glob("*/mistakes.md")]:
+        if log.exists():
+            text = log.read_text(encoding="utf-8")
+            new = re.sub(r"^\| (\d{4}-\d{2}-\d{2}) \|", lambda m: f"| {euro_date(m[1])} |", text, flags=re.M)
+            if new != text:
+                log.write_text(new, encoding="utf-8")
+                changes += 1
     renames = []
-    if (PROGRESS / "mocks").is_dir():
-        renames += [(p, p.with_name(euro_name(p.name, "-"))) for p in (PROGRESS / "mocks").iterdir()]
+    for mocks in PROGRESS.glob("*/mocks"):
+        renames += [(p, p.with_name(euro_name(p.name, "-"))) for p in mocks.iterdir()]
     if WEEKLY.is_dir():
         for p in WEEKLY.glob("*-W*.md"):
             m = re.fullmatch(r"(\d{4})-W(\d{2})\.md", p.name)
@@ -264,6 +317,8 @@ def migrate_dates(verbose: bool = True) -> int:
 
 
 def cmd_migrate(args) -> None:
+    if not migrate_progress(verbose=True):
+        print("progress/ already in the current layout.")
     if not migrate_workspace(verbose=True):
         print("Workspace already in the per-module layout.")
     if not migrate_dates(verbose=True):

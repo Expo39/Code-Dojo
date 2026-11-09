@@ -63,5 +63,5 @@ can be faked on the day, and both build steadily.
 | --- | --- |
 | 14 to 4 days before | Stop new modules. Daily: 1 unseen easy-to-medium problem out loud with a timer, the redo queue, one `explain drill`. Mocks every other day. Read the company's stack and prepare 3 stories about your work (problem, what you did, result, what you learned) in `progress/docs/INTERVIEW_PREP.md` |
 | 3 days before | Redo your 10 worst problems from blank files. Prepare questions for them |
-| The day before | Light: two easy problems you know, review `progress/mistakes.md` and the cheat sheet. Sleep |
+| The day before | Light: two easy problems you know, review your mistakes logs and cheat sheets (`progress/` and `progress/<track>/`). Sleep |
 | The day | One easy warm-up problem 90 minutes before. Check the editor, camera and microphone. Then stop |

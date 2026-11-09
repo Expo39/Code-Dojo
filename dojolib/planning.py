@@ -214,7 +214,7 @@ def calibration(rows: list[dict]) -> list[str]:
     sure_wrong = sum(1 for c, ok in items if c >= 80 and not ok)
     if sure_wrong:
         lines.append(f"  confidently wrong (80%+ and wrong): {sure_wrong}: each is a misconception "
-                     "worth a line in progress/mistakes.md")
+                     "worth a row in a mistakes log (dojo.py mistake)")
     return lines
 
 

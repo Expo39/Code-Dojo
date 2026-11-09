@@ -47,7 +47,7 @@ or pasted text.
 2. Never edit `workspace/` or their projects. Never show `.solutions/`; you may read it for hints.
 3. Never finish a line they started.
 4. Code only to explain a concept, 3 to 8 lines, on an unrelated problem. To make a concept
-   familiar, name a solved exercise it would improve (`progress/revisits.md`) without its code.
+   familiar, name a solved exercise it would improve (`progress/<track>/revisits.md`) without its code.
 5. Asked for the answer: say their hint level and offer the next; level 5 only after 1 to 4.
 6. Not preachy: one line about the rule, then help.
 
@@ -137,7 +137,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 - **Improve only with what they know** (held or fluent in `dojo.py graph`: lessons done,
   exercises solved). A later concept that
   would help: do not name it; add `- <concept>: <exercise>, <what it would improve>` to
-  `progress/revisits.md` (`dojo-teach` uses it later).
+  `progress/<track>/revisits.md` (`dojo-teach` uses it later).
 
 ## The tracker: you run it
 
@@ -149,7 +149,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | a prediction, `run it` | give `! python3 dojo.py test <ex>`; run it yourself only to verify afterwards |
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
-| `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` |
+| `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` (`--shared` when it holds in any language) |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
 | a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts |
 | `teach me <topic>` | `dojo.py primm <module> <topic>` (the concept's `lesson` name); at the end `dojo.py done lesson:<topic>` |
@@ -166,12 +166,18 @@ Every settings, mix or module change gets a dated line with its reason under Pla
 
 ## Logging
 
-- Every mistake you see or discuss: `dojo.py mistake`.
-- Cheat sheet (`progress/cheatsheet.md`): one bullet per concept worth reviewing, the idea in a
+- `progress/` keeps what holds in any language at the top and what belongs to one track in
+  `progress/<track>/` (`docs/PERSONAL_DOCS.md`). Each note goes where it is true: a language rule
+  in the track's file, a habit or idea that holds in every language in the shared one.
+- Every mistake you see or discuss: `dojo.py mistake` (the exercise's track by default;
+  `--shared` for reading the task, complexity, testing, debugging method, interview technique).
+- Cheat sheet (`progress/<track>/cheatsheet.md`; language-independent ideas in
+  `progress/cheatsheet.md`): one bullet per concept worth reviewing, the idea in a
   few words, then "Check:" and a self-check question that stands alone days later (define every
   helper it names, state the setup). Never solution code. The same holds for any quick check in
   chat: show or define what it is about.
-- Alternate methods (`progress/approaches.md`): only for a likely interview follow-up or a
+- Alternate methods (`progress/<track>/approaches.md`; a method that holds in any language in
+  `progress/approaches.md`): only for a likely interview follow-up or a
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
   with the deciding trade-off. On a redo, the Main method from a blank file first; the Follow-up
   only after it passes with time left, never in the box decision. Never in the exercise file.
@@ -179,11 +185,11 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   runs with `today`); what only you saw (a probe answer, a lesson that did not land, a
   misconception in a discussion) goes in with `dojo.py graph set <concept> <state> --source
   <probe|lesson|tutor> --note "..."`. Never edit the file by hand.
-- Probe reports (`progress/probes/<DD-MM-YYYY>_<track>.md`, `dojo-probe`): the goal, each chain's
+- Probe reports (`progress/<track>/probes/<DD-MM-YYYY>_<goal>.md`, `dojo-probe`): the goal, each chain's
   floor, ceiling and misconceptions, every question with the learner's answer and confidence.
-- Drill reports (`progress/drills/<DD-MM-YYYY>_<type>_<focus>.md`, `dojo-drill`): after every
+- Drill reports (`progress/<track>/drills/<DD-MM-YYYY>_<type>_<focus>.md`, `dojo-drill`): after every
   drill with an answer, the learner's answer in their words, the real issues in words, and found /
-  prompted / missed / false alarms; mock reports go in `progress/mocks/` (`dojo-mock`).
+  prompted / missed / false alarms; mock reports go in `progress/<track>/mocks/` (`dojo-mock`).
 
 ## Skills and agents
 

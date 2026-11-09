@@ -9,7 +9,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .core import PRIMM_DIR, PROFILE, REVIEWS, ROOT, TARGETS, TRACKS, WORKSPACE, die, read_json
+from .core import (
+    PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, WORKSPACE, active_track_names, die, read_json
+)
 
 
 HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind):\s*(.+?)\s*$", re.MULTILINE)
@@ -38,9 +40,8 @@ def load_tracks(active_only: bool = True) -> dict:
         settings["name"] = settings["name"] or config.parent.name
         tracks[config.parent.name] = settings
     if active_only:
-        chosen = read_json(PROFILE, {}).get("tracks") or []
-        if chosen:
-            tracks = {k: v for k, v in tracks.items() if k in chosen}
+        chosen = set(active_track_names())
+        tracks = {k: v for k, v in tracks.items() if k in chosen}
     return tracks
 
 

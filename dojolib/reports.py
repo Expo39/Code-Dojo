@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 from .core import (
-    FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
+    FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
     fmt_date, fmt_min, load_profile, parse_date, planned_minutes, read_json, today, week_start,
     weekly_target, write_json
 )
@@ -139,7 +139,7 @@ def cmd_today(args, brief: bool = False) -> None:
     if weak:
         lines.append("Weak spots (last 14 days): " + ", ".join(
             f"{p} ({s['ratio']:.1f}x, {s['hints']:.1f} hints)" for p, s in weak[:5]) + ".")
-    graph_line = graph_brief_line(profile)
+    graph_line = graph_brief_line()
     if graph_line:
         lines.append(graph_line)
     changes = changes_lines(track_changes())
@@ -177,7 +177,8 @@ def cmd_week(args) -> None:
     clean = [r for r in solved if int(r["hints"] or 0) == 0 and r["ratio"] and float(r["ratio"]) <= 1.0]
     reviews = read_json(REVIEWS, {})
     mastered = sum(1 for c in reviews.values() if c["box"] >= MASTERED_BOX)
-    mistakes = [line for line in (MISTAKES.read_text(encoding="utf-8").splitlines() if MISTAKES.exists() else [])
+    mistakes = [line for log in [MISTAKES, *sorted(PROGRESS.glob("*/mistakes.md"))] if log.exists()
+                for line in log.read_text(encoding="utf-8").splitlines()
                 if is_dated_row(line) and start <= parse_date(line.split("|")[1]) <= end]
 
     iso = on.isocalendar()

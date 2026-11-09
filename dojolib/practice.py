@@ -11,17 +11,16 @@ from pathlib import Path
 
 from .core import (
     CHECKLIST, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
-    REVIEWS,
-    ROOT, SESSION, STEPS, TARGETS, TIMER, WORKSPACE, die, fmt_date, fmt_min, now, parse_date,
-    read_json, today, write_json
+    REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, WORKSPACE, active_track_names, die, fmt_date,
+    fmt_min, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
 )
 from .data import (
     append_log, due_items, ensure_files, minutes_on, paused_minutes, pick_timer, read_log,
     schedule, session_gap, timer_minutes, timer_of
 )
 from .tracks import (
-    debug_in_process, discover, get_exercise, modules_by_name, run_exercise, side_track, test_slug,
-    warn_if_unsaved
+    debug_in_process, discover, get_exercise, load_tracks, modules_by_name, run_exercise, side_track,
+    test_slug, warn_if_unsaved
 )
 from .planning import interleave_due
 
@@ -361,11 +360,25 @@ def cmd_mark(args) -> None:
 
 
 def cmd_mistake(args) -> None:
+    """Log a mistake in the shared log (--shared: holds in any language) or a track's log: the
+    exercise's track when the item is one, else --track, else the learner's first track."""
     ensure_files()
+    if args.shared:
+        path = MISTAKES
+    else:
+        ex = discover(active_only=False).get(args.item)
+        track = args.track or (ex["track"] if ex else active_track_names()[0])
+        if track not in load_tracks(active_only=False):
+            die(f"No track called '{track}'.")
+        folder = track_progress(track)
+        folder.mkdir(exist_ok=True)
+        path = folder / "mistakes.md"
+        if not path.exists():
+            path.write_text(mistakes_header(track), encoding="utf-8")
     clean = [s.replace("|", "/").replace("\n", " ") for s in (args.item, args.what, args.fix)]
-    with MISTAKES.open("a", encoding="utf-8") as f:
+    with path.open("a", encoding="utf-8") as f:
         f.write(f"| {fmt_date(today())} | {clean[0]} | {clean[1]} | {clean[2]} |\n")
-    print("Mistake logged.")
+    print(f"Mistake logged in {path.relative_to(ROOT).as_posix()}.")
 
 
 def cmd_sync(args) -> None:

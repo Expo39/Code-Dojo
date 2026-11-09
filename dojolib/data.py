@@ -4,36 +4,36 @@ session clock, and the personal files every command expects."""
 from __future__ import annotations
 
 import csv
-import shutil
 from datetime import date, datetime, timedelta
 
 from .core import (
-    CHEATSHEET, CHEATSHEET_HEADER, INTERVALS, LOG, LOG_FIELDS, MISTAKES, MISTAKES_HEADER,
-    PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROBES, PROGRESS, REVIEWS, WEEKLY, die, fmt_date, now,
-    parse_date, read_json, write_json
+    INTERVALS, LOG, LOG_FIELDS, PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, TRACK_REPORT_DIRS,
+    TRACKER, WEEKLY, active_track_names, cheatsheet_header, die, fmt_date, mistakes_header, now,
+    parse_date, read_json, track_progress, write_json
 )
 
 
 def ensure_files() -> None:
+    """Create the personal files every command expects (layout: docs/PERSONAL_DOCS.md)."""
     PROGRESS.mkdir(exist_ok=True)
+    TRACKER.mkdir(exist_ok=True)
     migrate_log()
     WEEKLY.mkdir(exist_ok=True)
-    (PROGRESS / "mocks").mkdir(exist_ok=True)
-    (PROGRESS / "drills").mkdir(exist_ok=True)
-    PROBES.mkdir(exist_ok=True)
     if not LOG.exists():
         with LOG.open("w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerow(LOG_FIELDS)
-    if not MISTAKES.exists():
-        MISTAKES.write_text(MISTAKES_HEADER, encoding="utf-8")
-    if not CHEATSHEET.exists():
-        CHEATSHEET.write_text(CHEATSHEET_HEADER, encoding="utf-8")
     if not REVIEWS.exists():
         write_json(REVIEWS, {})
+    for track in ["", *active_track_names()]:  # "" = the shared notes at the top of progress/
+        folder = track_progress(track) if track else PROGRESS
+        folder.mkdir(exist_ok=True)
+        if not (folder / "mistakes.md").exists():
+            (folder / "mistakes.md").write_text(mistakes_header(track), encoding="utf-8")
+        if not (folder / "cheatsheet.md").exists():
+            (folder / "cheatsheet.md").write_text(cheatsheet_header(track), encoding="utf-8")
+        for kind in TRACK_REPORT_DIRS if track else ():
+            (folder / kind).mkdir(exist_ok=True)
     PERSONAL_DOCS.mkdir(exist_ok=True)
-    old_habits = PROGRESS / "WORK_HABITS.md"  # older checkouts kept it at the top of progress/
-    if old_habits.exists() and not (PERSONAL_DOCS / "WORK_HABITS.md").exists():
-        shutil.move(str(old_habits), PERSONAL_DOCS / "WORK_HABITS.md")
     index = PERSONAL_DOCS / "README.md"
     if not index.exists():
         index.write_text(PERSONAL_DOCS_INDEX, encoding="utf-8")

@@ -17,17 +17,22 @@ PROGRESS = ROOT / "progress"
 PROFILE = PROGRESS / "profile.json"
 LOG = PROGRESS / "log.csv"
 REVIEWS = PROGRESS / "reviews.json"
-TIMER = PROGRESS / "timer.json"
-SESSION = PROGRESS / "session.json"  # the session clock: training time between timers
+# progress/ layout (docs/PERSONAL_DOCS.md): what is about the learner and every track at the top,
+# what belongs to one track in progress/<track>/, the tracker's bookkeeping in progress/tracker/.
+TRACKER = PROGRESS / "tracker"  # files only the tracker reads
+TIMER = TRACKER / "timer.json"
+SESSION = TRACKER / "session.json"  # the session clock: training time between timers
+SEEN = TRACKER / "tracks_seen.json"  # exercise -> content hash the learner has already been asked about
+TOPICS_SEEN = TRACKER / "topics_seen.json"  # track/module -> lesson topics already asked about
+UPSTREAM_CHECK = TRACKER / "upstream_check.json"
+LAYOUT = TRACKER / "layout.json"  # which progress/ layout this copy has been migrated to
+# Shared notes: what holds in any language. Each track has its own beside its reports.
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
-SEEN = PROGRESS / "tracks_seen.json"  # exercise -> content hash the learner has already been asked about
-TOPICS_SEEN = PROGRESS / "topics_seen.json"  # track/module -> lesson topics already asked about
-UPSTREAM_CHECK = PROGRESS / "upstream_check.json"
 PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
-GRAPH_OVERLAY = PROGRESS / "graph.json"  # evidence per concept of each track's graph.json (dojolib/graph.py)
-PROBES = PROGRESS / "probes"  # probe reports (the dojo-probe skill)
+GRAPH_OVERLAY = PROGRESS / "graph.json"  # evidence per concept, every track (dojolib/graph.py)
+TRACK_REPORT_DIRS = ("drills", "mocks", "probes")  # progress/<track>/<kind>/: one report per drill, mock, probe
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
 PRIMM_DIR = "primm"
@@ -88,9 +93,18 @@ DEFAULT_PROFILE = {
     "export_target": "",
 }
 
-MISTAKES_HEADER = """# Mistakes log
+def mistakes_header(track: str = "") -> str:
+    """Header of a mistakes log: the shared one (any language) or one track's."""
+    if track:
+        scope = f"about {track} itself (its syntax, built-ins and tools)"
+        command = f"python dojo.py mistake <item> ... --track {track}"
+    else:
+        scope = ("about what holds in any language: reading the task, complexity, testing, "
+                 "debugging method, interview technique")
+        command = "python dojo.py mistake <item> ... --shared"
+    return f"""# Mistakes log{f': {track}' if track else ': shared'}
 
-One row per mistake. The tutor fills this in (`python dojo.py mistake ...`).
+One row per mistake {scope}. The tutor fills this in (`{command}`).
 Read it at the end of each week; the weekly review turns repeats into drills.
 
 | Date | Item | What went wrong | Correct form |
@@ -105,28 +119,34 @@ these apply it to you. The tutor writes and updates them from your own data, fol
 
 | File | What it holds | Updated |
 | --- | --- | --- |
-| `PITFALLS.md` | Your own recurring traps, from `progress/mistakes.md` | weekly review |
+| `PITFALLS.md` | Your own recurring traps, from your mistakes logs | weekly review |
 | `WEEK.md` | Your weekly rhythm: which day is for what, from your hours | placement, when hours change |
 | `INTERVIEW_PREP.md` | Your interview goal: date, run-up plan, stories, questions | when an interview is a goal |
 | `WORK_HABITS.md` | How training relates to your job, if you work in the field | placement, on request |
 """
 
-CHEATSHEET_HEADER = """# Cheat sheet
+def cheatsheet_header(track: str = "") -> str:
+    """Header of a cheat sheet: the shared one (any language) or one track's."""
+    sections = (["Syntax and built-ins", "Data structures", "Gotchas"] if track else
+                ["Patterns and algorithms", "Complexity", "Debugging", "Interview technique"])
+    scope = (f"what is specific to {track}" if track else
+             "what holds in any language (each track has its own cheat sheet for its syntax)")
+    return (f"# Cheat sheet{f': {track}' if track else ': shared'}\n\n"
+            f"Concepts worth reviewing, kept short by the tutor: {scope}. One bullet per concept:\n"
+            "the idea in a few words, then \"Check:\" with a self-check question.\n"
+            "Mark mastered bullets with \"(mastered DD/MM/YYYY)\".\n\n"
+            + "".join(f"## {name}\n\n" for name in sections)).rstrip("\n") + "\n"
 
-Concepts worth reviewing, kept short by the tutor. One bullet per concept:
-the idea in a few words, then "Check:" with a self-check question.
-Mark mastered bullets with "(mastered DD/MM/YYYY)".
 
-## Python syntax and built-ins
+def active_track_names() -> list[str]:
+    """The learner's tracks (profile `tracks`), or every track when none is chosen yet."""
+    chosen = read_json(PROFILE, {}).get("tracks") or []
+    return list(chosen) or sorted(p.parent.name for p in TRACKS.glob("*/track.json"))
 
-## Data structures
 
-## Patterns and algorithms
-
-## Debugging
-
-## Interview technique
-"""
+def track_progress(track: str) -> Path:
+    """progress/<track>/: that track's notes and reports."""
+    return PROGRESS / track
 
 
 def today() -> date:

@@ -12,8 +12,8 @@ Everything waits for their "go" (`AGENTS.md`). Start the clock with `dojo.py sta
 ## 1. Read the map first
 
 Run `dojo.py graph <track>` (it also reads new log rows into the evidence). Concepts that are
-fluent, held or due are not probed again. Read `progress/BASELINE.md` and recent
-`progress/mistakes.md` rows: a known trap is the first place to look. With a prose record that has
+fluent, held or due are not probed again. Read `progress/BASELINE.md` and recent rows
+of `progress/<track>/mistakes.md` and `progress/mistakes.md`: a known trap is the first place to look. With a prose record that has
 not been read into the graph yet (`mistakes.md`, drill and mock reports, imported notes), propose
 `graph set` lines from it as one list, with a `--ref` to the source, and write only the ones the
 learner agrees with.
@@ -73,7 +73,8 @@ hint that something is off. The verdicts come at the end.
   --note "<their words, short>"` for each concept the probe placed.
 - `dojo.py mistake` for each misconception, with the correct form.
 - `dojo.py done probe:<track>` (logged as study).
-- The report, `progress/probes/<DD-MM-YYYY>_<track>.md` (a name already taken gets `_2`):
+- The report, `progress/<track>/probes/<DD-MM-YYYY>_<goal>.md` (the goal in snake_case; a name
+  already taken gets `_2`):
   1. **Goal**: in their words, and the goal concepts.
   2. **Chains**: per chain the floor (highest held), the ceiling (lowest missed), misconceptions,
      and where to build from.

@@ -15,7 +15,7 @@ job, their estimates). When something written for one learner turns up in `docs/
 
 ## PITFALLS.md: your own traps
 
-- **From**: `progress/mistakes.md`. A theme that comes back 2 or more times becomes an entry.
+- **From**: the mistakes logs (`progress/mistakes.md` and `progress/<track>/mistakes.md`). A theme that comes back 2 or more times becomes an entry.
   There is no shared list of pitfalls: what trips one learner does not trip another, so each
   learner's list is built only from their own mistakes.
 - **Written by**: `dojo-weekly` (step 3, repeated mistakes); seeded by `dojo-assess` from the
@@ -62,11 +62,33 @@ job, their estimates). When something written for one learner turns up in `docs/
 - **Shape**: the principle (work and the dojo stay separate), at most three habits that make AI
   use at work build understanding, and how to tell they are working.
 
-## Other personal files (not in `progress/docs/`)
+## The rest of `progress/`
 
-`PLAN.md` (goals, roadmap, milestones, estimates), `BASELINE.md`, `cheatsheet.md`,
-`mistakes.md`, `approaches.md`, `revisits.md`, `graph.json` (your evidence on each concept of a
-track's concept graph), `weekly/`, `mocks/`, `drills/` (one report per drill: your answer against
-the real issues) and `probes/` (one report per probe: your goal, where your understanding ends,
-every question with your answer and confidence) stay at the top of
-`progress/`: the tracker and the skills read them there.
+What is about you and every track sits at the top; what belongs to one track sits in its own
+folder, so the layout stays the same however many tracks you learn. The tracker and the skills
+read the files where they are listed here; `dojo.py` creates the folders, and moves an older
+flat layout into this one by itself.
+
+```text
+progress/
+├── profile.json PLAN.md BASELINE.md   you, your goals and plan, across every track
+├── log.csv reviews.json               every attempt and the redo schedule, every track
+├── graph.json                         your evidence on each concept; a shared concept once
+├── mistakes.md cheatsheet.md          what holds in any language: reading the task,
+│   approaches.md                      complexity, patterns, debugging, interview technique
+├── weekly/                            one report per week
+├── docs/                              your docs (this spec)
+├── <track>/                           one folder per track you learn
+│   ├── mistakes.md cheatsheet.md      what is specific to that language or tool
+│   ├── approaches.md revisits.md      alternate methods; exercises to redo with a later concept
+│   ├── drills/                        one report per drill: your answer against the real issues
+│   ├── mocks/                         one report per mock interview
+│   └── probes/                        one report per probe: your goal, where your understanding
+│                                      ends, every question with your answer and confidence
+└── tracker/                           the tracker's bookkeeping (timers, session clock, what you
+                                       have been asked about, update checks): nothing to read
+```
+
+A note goes where it is true: "`range` stops before its end" in `python/cheatsheet.md`, "name
+Big-O with the input's own variable" in the shared one. The weekly review moves a note that turns
+out to hold in every language up to the shared file.

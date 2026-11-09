@@ -13,8 +13,8 @@ from .core import (
     LOG, PROFILE, PROGRESS, ROOT, STAMP_FMT, WORKSPACE, die, load_profile, now, read_json,
     write_json
 )
-from .migrate import migrate_dates, migrate_workspace
-from .graph import graph_refresh, graph_track_names, load_graph, write_graph_views
+from .migrate import migrate_dates, migrate_progress, migrate_workspace
+from .graph import combined_graph, graph_refresh, graph_track_names, write_graph_views
 
 
 def cmd_export(args) -> None:
@@ -32,10 +32,13 @@ def cmd_export(args) -> None:
     archive = out_dir / f"code-dojo_{name}_{now().strftime(STAMP_FMT)}.zip"
     count = 0
     views = []
-    for track in graph_track_names(profile):
-        graph = load_graph(track)
-        _, states = graph_refresh(graph)  # the evidence in the backup is current
-        views += write_graph_views(graph, states, out_dir / f".views_{archive.stem}")
+    names = graph_track_names()
+    if names:
+        combined = combined_graph(names)
+        # Everything you know as one graph, and each track on its own when there are several.
+        for graph in [combined] + (combined["parts"] if len(names) > 1 else []):
+            _, states = graph_refresh(graph)  # the evidence in the backup is current
+            views += write_graph_views(graph, states, out_dir / f".views_{archive.stem}")
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         for view in views:
             # Readable without the dojo (open the .html in a browser); never restored by import.
@@ -144,6 +147,7 @@ def cmd_import(args) -> None:
                     shutil.move(str(folder), backup / folder.name)
             print(f"Current data moved to {backup.name}/")
         z.extractall(ROOT, members=restore)
-    migrate_workspace(verbose=False)  # an export from an older version may use the flat layout
+    migrate_progress(verbose=False)  # an export from an older version may use older layouts
+    migrate_workspace(verbose=False)
     migrate_dates(verbose=False)
     print(f"Imported {len(restore)} files. Run `python dojo.py today`.")
