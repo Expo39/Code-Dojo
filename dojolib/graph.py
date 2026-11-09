@@ -591,8 +591,11 @@ def view_data(graph: dict, states: dict) -> dict:
             "action": concept_action(graph, cid, info, done_lessons) if info["state"] not in ("fluent", "held") else "",
             "evidence": info["evidence"],
         })
+    tracks = {part["track"]: part["track"].capitalize() for part in graph["parts"]}
     return {"label": "All tracks" if several else graph["track"].capitalize(),
-            "summary": f"{graph_summary(graph, states)} · {fmt_date(today())}", "nodes": nodes}
+            "summary": f"{graph_summary(graph, states)} · {fmt_date(today())}", "nodes": nodes,
+            "tracks": tracks,
+            "next": [{"id": cid, "action": action} for cid, action in graph_next(graph, states, limit=4)]}
 
 
 def html_text(views: list[tuple[dict, dict]], default: str) -> str:

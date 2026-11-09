@@ -68,8 +68,9 @@ everything you know as one graph (every track's concepts together), `graph <trac
 each with your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
 fewest concepts still to learn to reach a goal; `graph --html` builds the interactive page and opens it
 (`concept_graph.html` in the system's temporary folder, or `--out <folder>`; every export zip
-carries one too): Map and Flow layouts, drag, zoom, search, focus on a neighbourhood, the path to
-a concept, and a panel per concept (README, "See what you know").
+carries one too): an overview of modules with progress rings, Map and Flow (layered) layouts of the
+concepts, a short guide, Next up, hover cards, search, focus on a neighbourhood, what you still
+need for a concept, and a panel per concept (README, "See what you know").
 
 ```json
 {"version": 1, "track": "python", "concepts": [

@@ -31,21 +31,28 @@ python dojo.py graph --html      # build the interactive page and open it in you
 python dojo.py graph next        # or, in the terminal: what you can do now, ranked
 ```
 
-The page is one file that works offline (it is also inside every `export` zip):
+The page is one file that works offline (it is also inside every `export` zip). It follows the
+classic rule for information graphics: overview first, then zoom and filter, then details on demand.
+A four-step guide shows the way on the first visit (<kbd>?</kbd> brings it back).
 
-- **Map** groups concepts into one island per module; **Flow** lays them out left to right, from
-  foundations to what builds on them. Switch with the buttons, or <kbd>M</kbd> / <kbd>L</kbd>.
-- **Drag** a concept to move it (it stays where you put it), drag the background to pan, scroll or
-  pinch to zoom. Labels appear as you zoom in and never overlap.
-- **Click** a concept: what it lets you do, your next step, what it needs and what it leads to,
-  its lesson and exercises, and your dated evidence. **Path to here** lights up only the concepts
-  you still need for it; **double-click** (or **Focus here**) shows just its neighbourhood, one or
-  two steps out.
-- **Search** with <kbd>/</kbd>, filter by state in the legend, <kbd>F</kbd> fits everything,
-  <kbd>Esc</kbd> clears. With several tracks, the buttons at the top switch between everything you
-  know together and each track on its own; concepts shared by every track appear once.
+- **Overview** (where it opens): your track as one bubble, each module inside it as a circle whose
+  ring shows how much of it you hold (solid / total in the middle), and lines showing which
+  modules lead to which. **Next up** lists what you can do now. Click a module to open it.
+- **Map** shows the concepts, one island per module. **Flow** draws what leads to what, left to
+  right, as a layered diagram arranged so the fewest lines cross. Switch with the buttons or
+  <kbd>O</kbd> / <kbd>M</kbd> / <kbd>L</kbd>; concepts glide to their new places.
+- **Hover** for a short card (what it lets you do, your next step); **click** for the full panel:
+  what it needs and what it leads to, its lesson and exercises, your dated evidence. **What I still
+  need** lights up only the concepts left before it; **double-click** or **Focus here** shows just
+  its neighbourhood.
+- **Drag** a concept to move it, drag the background to pan, scroll or pinch to zoom; labels never
+  overlap. Search with <kbd>/</kbd>; the **Legend** button holds the state filters and the keys;
+  <kbd>F</kbd> fits, <kbd>Esc</kbd> steps back.
+- A dashed ring marks a **general idea** (Big-O, recursion, two pointers): not specific to one
+  language, so it already counts when you start another one. With several tracks, the buttons at
+  the top switch between everything together and each track on its own.
 
-It works in light and dark, and on a phone.
+It works in light and dark and on a phone, and keeps still if your system asks for reduced motion.
 
 ## Why it works
 
