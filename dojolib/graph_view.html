@@ -98,6 +98,9 @@ kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;paddi
 #tip p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
 #focusbar{position:fixed;left:50%;top:72px;transform:translateX(-50%);padding:6px 10px;display:none;align-items:center;gap:8px;z-index:3}
 #focusbar.on{display:flex}
+#modulebar{position:fixed;left:calc(50% + 140px);top:72px;transform:translateX(-50%);padding:6px 6px 6px 12px;display:none;align-items:center;gap:10px;z-index:3;white-space:nowrap}
+#modulebar.on{display:flex}
+#modulebar .btn{border-color:var(--accent);color:var(--accent)}
 #zoom{position:fixed;right:12px;bottom:14px;display:flex;flex-direction:column;z-index:3}
 #zoom button{border:0;background:transparent;width:34px;height:32px;cursor:pointer;font-size:17px}
 #zoom button+button{border-top:1px solid var(--line)}
@@ -117,6 +120,7 @@ kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;paddi
   #panel{top:auto;bottom:0;left:0;right:0;width:auto;max-height:62%;border-radius:14px 14px 0 0;transform:translateY(105%)}
   #panel.open{transform:none}
   #focusbar{top:auto;bottom:62px}
+  #modulebar{left:50%;top:auto;bottom:62px}
   #guide{left:12px!important;right:12px;width:auto;top:auto!important;bottom:16px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -159,6 +163,10 @@ kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;paddi
 <aside id="nextup" class="card fade" aria-label="Next up"></aside>
 </div>
 
+<div id="modulebar" class="card" role="status">
+  <span>Showing <b id="modulename"></b><span class="sub"> · the rest faded</span></span>
+  <button class="btn" id="closemodule" title="Show every module again (Esc, or click empty space)">Show all ×</button>
+</div>
 <div id="focusbar" class="card">
   <span id="focuslabel"></span>
   <div class="seg" id="depths" role="group" aria-label="How far around">
@@ -637,7 +645,7 @@ function endPointer(e){
   if (!drag.moved){ const h = drag.hit;
     if (h && h.kind === "module") openModule(h.item);
     else if (h) select(h.item);
-    else { select(null); if (openGroup){ openGroup = null; renderCrumbs(); dirty = true; } } }
+    else { select(null); if (openGroup) closeModule(false); } }
   drag = null;
 }
 canvas.addEventListener("pointerup", endPointer); canvas.addEventListener("pointercancel", endPointer);
@@ -697,7 +705,7 @@ function ensureVisible(n){
 }
 function setFocus(n, depth, quiet = false){
   focus = n ? {node: n, set: neighbourhood(n, depth)} : null; focusDepth = depth || focusDepth;
-  $("#focusbar").classList.toggle("on", !!n);
+  $("#focusbar").classList.toggle("on", !!n); renderCrumbs();
   if (n){ $("#focuslabel").innerHTML = `Around <b>${esc(n.name)}</b>`;
     document.querySelectorAll("#depths button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.depth === focusDepth))); }
   if (!quiet && layout !== "overview") setLayout(layout);
@@ -727,12 +735,20 @@ function panelHtml(n){
 }
 
 // ------------------------------------------------------------------ chrome: crumbs, next up, legend, search
+function closeModule(refit = true){
+  openGroup = null; renderCrumbs(); dirty = true; if (refit) fitCurrent();
+}
 function renderCrumbs(){
+  const open = openGroup && layout !== "overview";
   const parts = [`<button data-c="all" title="Back to the overview">${esc(view.label)}</button>`];
-  if (openGroup && layout !== "overview") parts.push(`<span class="sep">›</span><button data-c="group">${esc(pretty(openGroup))}</button>`);
+  if (open) parts.push(`<span class="sep">›</span><button data-c="group" title="Fit this module">${esc(pretty(openGroup))}</button><button data-c="close" title="Close the module (Esc)" aria-label="Close the module">×</button>`);
   $("#crumbs").innerHTML = parts.join("");
   $("#crumbs [data-c=all]").onclick = () => { openGroup = null; setLayout("overview"); };
   const g = $("#crumbs [data-c=group]"); if (g) g.onclick = () => fitCurrent();
+  const x = $("#crumbs [data-c=close]"); if (x) x.onclick = () => closeModule();
+  // while a module is open, say so where it cannot be missed, with the way out (not during a focus)
+  $("#modulebar").classList.toggle("on", !!open && !focus);
+  if (open) $("#modulename").textContent = pretty(openGroup);
 }
 function renderNext(){
   const box = $("#nextup"); if (store.get("nextHidden", false) || !view.next.length){ box.style.display = "none"; return; }
@@ -846,6 +862,7 @@ document.querySelectorAll("#views button").forEach(b => b.onclick = () => setVie
 document.querySelectorAll("#layouts button").forEach(b => b.onclick = () => { const l = b.dataset.layout; if (l !== "overview") store.set("conceptLayout", l); setLayout(l); });
 document.querySelectorAll("#depths button").forEach(b => b.onclick = () => focus && setFocus(focus.node, +b.dataset.depth));
 $("#unfocus").onclick = () => setFocus(null);
+$("#closemodule").onclick = () => closeModule();
 $("#fit").onclick = () => fitCurrent();
 $("#zin").onclick = () => zoomAt(W/2, H/2, 1.3); $("#zout").onclick = () => zoomAt(W/2, H/2, 1/1.3);
 $("#legendbtn").onclick = () => { const o = $("#legend").classList.toggle("open"); $("#legendbtn").setAttribute("aria-expanded", String(o)); };
@@ -857,7 +874,7 @@ document.addEventListener("keydown", e => {
   const key = e.key.toLowerCase();
   if (e.key === "/"){ e.preventDefault(); search.focus(); }
   else if (e.key === "Escape"){ if ($("#guide").classList.contains("on")) showGuide(GUIDE.length); else if (pathTo){ pathTo = null; dirty = true; }
-    else if (focus) setFocus(null); else if (selected) select(null); else if (layout !== "overview"){ openGroup = null; setLayout("overview"); } }
+    else if (focus) setFocus(null); else if (selected) select(null); else if (openGroup && layout !== "overview") closeModule(); else if (layout !== "overview") setLayout("overview"); }
   else if (key === "f") fitCurrent();
   else if (key === "o") setLayout("overview");
   else if (key === "m"){ store.set("conceptLayout", "map"); setLayout("map"); }
