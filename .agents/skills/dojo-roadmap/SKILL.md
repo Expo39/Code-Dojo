@@ -16,7 +16,9 @@ Rules: `docs/ROADMAP.md` (read it first). Everything written here is personal (`
    level, hours, constraints. Never assume a goal or its order. For a new goal or a track they
    have not started, when the track has a concept graph, run the probe (`dojo-probe`) before
    recommending: `dojo.py graph path <goal>` then gives what is really left, which the estimate
-   is built from.
+   is built from. That path crosses tracks: a concept needing `<track>:<id>` names a track that
+   must come first or run alongside (robotics needs C++ pointers); say so and plan that track's
+   concepts, not its whole syllabus, into the roadmap.
 3. **Recommend** per track: state, share, start condition (a gate) and the bar that ends it, with
    only the modules that bar needs (an interview or exam bar comes from its standard, or the safe
    side). Follow the ordering rules (section 3); one line of reason each, and the cost from their

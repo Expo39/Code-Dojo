@@ -192,8 +192,19 @@ def graph_targets(graph: dict, names: list[str]) -> list[str]:
 
 
 def graph_track_names() -> list[str]:
-    """The learner's tracks that have a concept graph, in their order."""
-    return [t for t in active_track_names() if load_graph(t)]
+    """The learner's tracks that have a concept graph, in their order, plus every track their
+    concepts build on (a requirement written <track>:<id>), even one the learner has not added:
+    otherwise those prerequisites would silently drop out of the graph."""
+    names = [t for t in active_track_names() if load_graph(t)]
+    i = 0
+    while i < len(names):
+        for c in load_graph(names[i])["concepts"].values():
+            for r in c["requires"]:
+                other = r.split(":", 1)[0] if ":" in r else None
+                if other and other not in names and load_graph(other):
+                    names.append(other)
+        i += 1
+    return names
 
 
 def pick_graph(track: str | None) -> dict:

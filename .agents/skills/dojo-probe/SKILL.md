@@ -11,7 +11,9 @@ Everything waits for their "go" (`AGENTS.md`). Start the clock with `dojo.py sta
 
 ## 1. Read the map first
 
-Run `dojo.py graph <track>` (it also reads new log rows into the evidence). Concepts that are
+Run `dojo.py graph` (every track together, including tracks the goal's concepts build on; it also
+reads new log rows into the evidence). A goal in one track can rest on another's concepts
+(robotics on C++ and Python): `graph path <goal>` lists those too, so probe them like any chain. Concepts that are
 fluent, held or due are not probed again. Read `progress/BASELINE.md` and recent rows
 of `progress/<track>/mistakes.md` and `progress/mistakes.md`: a known trap is the first place to look. With a prose record that has
 not been read into the graph yet (`mistakes.md`, drill and mock reports, imported notes), propose
