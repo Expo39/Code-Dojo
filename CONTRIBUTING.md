@@ -21,8 +21,23 @@ reviews; nobody else can push to `main` directly.
 - **Docs, skills and agents** that work for any learner, at any level and in any mode. A subagent
   exists for each tool (`.claude/agents/`, `.codex/agents/`, `.gemini/agents/`): change all three
   together; the checks compare them.
-- **Tracker fixes and features** in `dojo.py`, plain Python 3.10+, no new dependencies without a
-  reason.
+- **Tracker fixes and features**, plain Python 3.10+ standard library, no new dependencies
+  without a reason. `dojo.py` is only the entry point; the code is in `dojolib/`, one module per
+  area, each importing only from the modules listed above it:
+
+  | Module | Holds |
+  | --- | --- |
+  | `core` | paths, constants, file headers, dates, JSON, the profile |
+  | `data` | `log.csv`, the redo schedule, timers, the session clock, the personal files |
+  | `tracks` | track and exercise discovery, running tests, lesson topics |
+  | `planning` | strand balance, week numbers, pattern stats, gates, modules, the mix |
+  | `updates` | shared-repo updates and track changes |
+  | `migrate` | migrations of older layouts and dates |
+  | `setup`, `transfer`, `practice`, `reports` | the commands, by area |
+  | `cli` | help text and argument parsing |
+
+  A new feature gets its own module when it is a separate area; put each function in the lowest
+  module that has everything it needs.
 
 Everything you write follows the conventions in `AGENTS.md` (Style): British English; dates
 DD/MM/YYYY (DD-MM-YYYY in file names, DD_MM_YYYY in identifiers); 24-hour time; weeks from
@@ -37,5 +52,5 @@ folder named by its focus, with its own tests and `.history/` where the kind nee
 - Time estimates in shared files: they depend on the learner and live in their `PLAN.md`.
 - Changes that let the tutor write a learner's exercise code (`AGENTS.md`, hard rules).
 - Code that reaches the network or runs commands without the learner's say: changes to
-  `dojo.py`, `conftest.py`, tests, `track.json` test commands, hooks and workflows get the
+  `dojo.py`, `dojolib/`, `conftest.py`, tests, `track.json` test commands, hooks and workflows get the
   closest review. Report security problems privately: `SECURITY.md`.
