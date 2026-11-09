@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -462,7 +463,7 @@ def graph_check(graph: dict) -> tuple[list[str], list[str]]:
             errors.append(f"{where}: lesson '{c['lesson']}' is not a topic in "
                           f"{c['module']}/{PRIMM_DIR}/README.md")
     if graph["cycle"]:
-        errors.append("cycle in requires: " + " -> ".join(reversed(graph["cycle"])))
+        errors.append("cycle in requires (A -> B: B needs A): " + " -> ".join(reversed(graph["cycle"])))
     covered_lessons = {(c["module"], c["lesson"]) for c in concepts.values() if c["lesson"]}
     for module, names in sorted(topics.items()):
         for t in names:
@@ -767,7 +768,9 @@ def cmd_graph(args) -> None:
         return
     print_graph(graph, states)
     if args.html or args.mermaid:
-        out = Path(args.out).expanduser() if args.out else ROOT / "exports"
+        # exports/ holds only backups (whose zips carry their own views): a view on its own is
+        # disposable, so it goes to the system's temporary folder unless --out says otherwise.
+        out = Path(args.out).expanduser() if args.out else Path(tempfile.gettempdir()) / "code-dojo"
         for path in write_graph_views(graph, states, out):
             if (path.suffix == ".html" and args.html) or (path.suffix == ".md" and args.mermaid):
                 print(f"\nWrote {path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path}")

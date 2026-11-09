@@ -9,15 +9,18 @@ a track for any subject (another language, a framework, maths, even a non-coding
 
 | Shared (in git, the same for everyone) | Personal (in `progress/` and `workspace/`, gitignored, never pushed) |
 | --- | --- |
-| `dojo.py` (tracker), `conftest.py` | `profile.json`: name, mode, target level, time per day, rest days, target date, level, tracks, mix (`python dojo.py settings` shows it) |
-| `tracks/<track>/`: syllabus, exercises, tests, reference solutions | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
+| `dojo.py` and `dojolib/` (tracker), `conftest.py` | `profile.json`: name, mode, target level, time per day, rest days, target date, level, tracks, mix (`python dojo.py settings` shows it) |
+| `tracks/<track>/`: syllabus, exercises, tests, reference solutions, `graph.json` (the concept graph) | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
-| `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/`, `drills/` |
+| `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), `mistakes.md`, `cheatsheet.md`, `weekly/`, `mocks/`, `drills/`, `probes/` |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
 | | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `.history/` with earlier attempts, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
 
-Back up or move personal data with `python dojo.py export` (a zip), optionally straight to
-another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`.
+Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
+`workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
+with a current view of each concept graph (open the `.html` in a browser). Send it straight to
+another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`
+(it restores the data; the views are always made fresh).
 
 ## Starting as a new learner
 
@@ -25,7 +28,8 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
    or say "set me up" to the tutor, which asks in the chat and runs it for you.
 2. Say `assess me` (the tutor goes on to it by itself after "set me up"). The tutor asks about
    your background and goals, imports what you already have (notes, old logs, a list of topics
-   you know), gives a short diagnostic, and then writes your `BASELINE.md`, `PLAN.md` and
+   you know), runs a short probe (what you want to be able to do, then the edge of what you hold
+   on the track's concept graph), a short practical check, and then writes your `BASELINE.md`, `PLAN.md` and
    personal docs, sets your start module and seeds the redo queue for what you already know.
    Then you go through your modules together (`python dojo.py modules`): leave any out or add
    any back, each with a reason, and decide together.
@@ -54,6 +58,53 @@ The skill tree and the roadmap table in `PLAN.md` describe the same plan and cha
 Rules of thumb: one main track at a time, at most one taster of the next; measurable gates,
 not feelings or dates, decide when to move on. The full rules for ordering and mixing tracks,
 and when the plan changes, are in `ROADMAP.md`; `python dojo.py mix` records the shares.
+
+## Concept graph
+
+A track's `graph.json` maps what it teaches: one entry per concept, with what it needs first.
+The skill tree in `PLAN.md` stays the plan (which goals, in what order); the graph is the map of
+one subject that the plan, the probe, lessons and drills read. `python dojo.py graph` shows it with
+your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
+fewest concepts still to learn to reach a goal; `graph --html` writes a page you can click
+through (to the system's temporary folder, or `--out <folder>`; every export zip carries one too).
+
+```json
+{"version": 1, "track": "python", "concepts": [
+  {"id": "counting_dict", "name": "Counting with a dict", "module": "m03_dicts_sets",
+   "kind": "skill", "requires": ["dict_basics", "accumulator"],
+   "can": "Can predict the result of a loop that does d[k] = d.get(k, 0) + 1 over a list",
+   "lesson": "counting", "exercises": ["word_count", "most_common_char", "merge_counts"]}
+]}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `id` | lower_snake_case, unique in the track |
+| `module` | the module folder that teaches it |
+| `kind` | `skill`, or `theory` for background from a `Theory:` line (its lesson is named after the id, `theory_<topic>`) |
+| `requires` | concepts that must be held first; no cycles |
+| `can` | what someone who holds it can do, observable: the probe and lessons test exactly this |
+| `lesson` | a topic from the module's `primm/README.md` (optional) |
+| `aliases` | other names a logged lesson may have used (optional) |
+| `exercises` | the exercises that practise it (optional) |
+| `planned` | `true` for a concept of a module not built yet |
+
+Your state on each concept is computed, never typed: from your log (a solved exercise, a lesson,
+a mock with its pattern), your redo boxes, and evidence the tutor records after a probe or a
+lesson (`graph set`). The states:
+
+| State | Meaning |
+| --- | --- |
+| fluent | every exercise of it is in box 2 or higher |
+| held | understood: a lesson or a clean solve, or implied because something built on it is solid |
+| due | held, with a redo of one of its exercises due |
+| fragile | a struggle or a probe answer right but unsure |
+| misconception | a wrong answer given with confidence; repaired before anything builds on it |
+| gap | not known yet (a probe miss or "I don't know") |
+| ready | not met yet, and everything it needs is solid: something you can start now |
+
+`python dojo.py graph check` validates a graph (ids, links to modules, lessons and exercises, no
+cycles); `doctor` and the pre-push checks run it.
 
 ## Adding a track
 
@@ -104,7 +155,11 @@ leave without practice). Exercises are always original. The steps below are what
 3. Add modules as folders (`m01_basics/`, ...) with exercises in the format below. Ask the
    tutor (`/dojo-new-exercise`) to generate them; it verifies each one.
 
-4. Add the track to your profile (`python dojo.py mix <track>=N ...`, or ask the tutor to plan
+4. Write `tracks/<name>/graph.json` (see "Concept graph"): every concept the modules teach,
+   with each exercise listed under the concept it trains, and run `python dojo.py graph check
+   <name>`.
+
+5. Add the track to your profile (`python dojo.py mix <track>=N ...`, or ask the tutor to plan
    it with you: `plan my learning`) and to your `PLAN.md`.
 
 ## Exercise format

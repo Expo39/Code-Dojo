@@ -8,7 +8,8 @@ follows the mix that `today` shows. The Perform block follows your mode (`METHOD
 mode it becomes more Build, and in `industry` mode it alternates with Build.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini
-CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance). Say `start <exercise>` and
+CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance, the lessons and repairs the
+concept graph points to). Say `start <exercise>` and
 `done <exercise>` so the tracker can measure you. The tutor names each block and waits for your
 **go** before starting it.
 

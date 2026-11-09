@@ -132,7 +132,10 @@ you meet them there. `python dojo.py changes` shows the list again at any time. 
 python dojo.py export --to user@other-machine:~/
 ```
 
-On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip`. Set a default
+The zip holds `progress/` and `workspace/` (your concept evidence and probe reports included)
+and, in the same zip, `views/` with a current page of each concept graph that opens in any
+browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it restores
+your data; the views are made fresh whenever you ask). Set a default
 target once (`python dojo.py settings export_target=user@host:path`) to just run
 `python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,
 macOS and most Linux distributions.

@@ -29,6 +29,11 @@ this page is for looking one up on your own.
 | **Drill** | A short practice of one skill: predicting output, tracing, finding a bug, reviewing code, explaining. |
 | **Mock interview** | A practice interview: an unseen problem, a timer, the tutor acting as the interviewer, then scored feedback. |
 | **Strand** | One kind of practice: learn, write, read and debug, build, perform. Your week mixes them (`METHOD.md`). |
+| **Concept graph** | A map of what a track teaches: each concept and what it needs first (`tracks/<track>/graph.json`). `python dojo.py graph` shows your state on each one, worked out from your log, your redo boxes and what the tutor recorded. |
+| **Ready** | A concept you have not met yet whose prerequisites you all hold: something you can start now (`graph next`). |
+| **Probe** | A short mini test at the start of a new goal or track: it finds where your understanding ends on each chain of concepts the goal needs, so you learn the shortest path and nothing you already know. |
+| **Confidence, calibration** | How sure you said you were of an answer (0 to 100), and how well that matches how often you are right (`stats`). |
+| **Misconception, fragile** | A misconception is a wrong answer you were sure of: it is fixed before anything builds on it. Fragile is a right answer you were unsure of, or a struggle: it gets one more check. |
 | **Cheat sheet** | Your own short notes, one line per concept with a self-check question (`progress/cheatsheet.md`). |
 
 ## How the plan works

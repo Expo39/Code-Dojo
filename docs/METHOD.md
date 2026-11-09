@@ -4,15 +4,19 @@ The short version: **do, do not watch**. Every hour should end with code you wro
 you can explain line by line. The rules below come from learning research and from
 experienced engineers' advice; sources are at the bottom.
 
-## Ten principles
+## Twelve principles
 
 1. **Retrieval beats re-reading.** Writing a solution from a blank file, days later, is what
    builds memory. Re-reading a solution feels productive and is not. That is why every exercise
    goes into a redo queue and comes back from a *blank* file.
 
-2. **Spaced, not massed.** Redos come back after 1, 3, 7, 14, 30 and 60 days (Leitner boxes).
-   A clean solve moves an item up a box; a struggle sends it back to box 0. Aim for about
-   half new material and half redos.
+2. **Spaced, not massed, and mixed.** Redos come back after 1, 3, 7, 14, 30 and 60 days
+   (Leitner boxes). A clean solve moves an item up a box; a struggle sends it back to box 0. Aim
+   for about half new material and half redos. The redo queue switches pattern and module from
+   one redo to the next: recalling a method you used a minute ago trains nothing, while having to
+   recognise which method a problem needs is the skill an interview tests. For the same reason a
+   "more like X" exercise keeps the pattern and changes the story, and a drill pitched so that
+   you get about 85% of its steps right teaches more than one you always or never get.
 
 3. **Deliberate practice: just past your edge, with fast feedback.** Every exercise has tests,
    so feedback takes seconds. Targets are set so that you are slightly stretched. If something
@@ -56,6 +60,20 @@ experienced engineers' advice; sources are at the bottom.
     logged for every attempt. The weekly review reads the numbers, not feelings, and changes
     next week's plan. Confidence built on evidence survives a bad day; confidence built on
     hope does not.
+
+11. **Start from what you hold, and build one step at a time.** Knowledge is a structure: a new
+    idea that connects to nothing fades, one built on what you already hold stays. Each track has
+    a concept graph (what each concept needs first), and a new goal starts with a short probe
+    that finds where your understanding ends on each chain of concepts the goal depends on, so nothing you
+    hold is taught again and nothing off the path is taught at all. Lessons then add one step at
+    a time to something you already hold, with a check after each step, so a gap shows the
+    moment it is stepped on, not three lessons later.
+
+12. **Say how sure you are.** Every prediction and probe answer comes with a confidence from 0 to
+    100. A wrong answer you were sure of is a misconception, the most useful thing a check can
+    find, and it is repaired before anything builds on it; a right answer you were unsure of is
+    fragile and gets one more check. Comparing your stated confidence with your results
+    (`stats`) trains you to know what you know, which is what an interviewer is probing too.
 
 ## Checklists
 

@@ -59,7 +59,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   stats                    modules, patterns, confidence against results, fluency gates
                            (and time by track)
   graph [track] [--html] [--mermaid]   the concept graph: each concept's state from your
-                           evidence and redo boxes (--html / --mermaid also write exports/graph_<track>.*)
+                           evidence and redo boxes (--html / --mermaid also write a view to the temp folder, or --out)
   graph next [--goal X]    what you can do now, ranked (towards a concept, module or exercise)
   graph path <X> ...       the shortest list of concepts still to learn to reach X
   graph set <concept> <gap|misconception|fragile|held> [--confidence N] [--source probe] [--note ..]

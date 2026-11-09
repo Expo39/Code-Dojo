@@ -26,7 +26,7 @@ dictated code does not count as typing it yourself.
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
 | `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
-| (your prediction) | The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
+| (your prediction) | Say how sure you are too (0 to 100; "I don't know" is fine). The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
@@ -39,7 +39,9 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `teach me <topic>` | A PRIMM lesson: idea, predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>`; the lesson is timed and counts as study time |
+| `probe me` / `what do I need for <X>?` | A 10 to 15 minute mini test in the chat: what you want to be able to do, then a few questions (predict, choose, explain in a few words, each with how sure you are) that find where your understanding ends; then the shortest path to your goal, agreed with you. A report goes in `progress/probes/` |
+| `what can I do next` / `show my graph` / `how do I get to <X>?` | The concept graph: what you can start now, your state on every concept (`python dojo.py graph --html` for a page you can click through), or the fewest concepts still to learn for a goal |
+| `teach me <topic>` | A PRIMM lesson that starts from what you already hold: idea (one step at a time, with a quick check after each), predict a worked example, investigate, modify, then tiny typing tasks, typed in `workspace/<track>/<module>/primm/<topic>.<ext>`; the lesson is timed and counts as study time |
 | `new exercise on <topic> [easy/medium]` | Fresh verified exercises in the right module |
 | `design a track for <subject>` / `review the <X> track` | The tutor researches the best free courses, docs and repositories, keeps only what is good and current, and builds (or proposes changes to) the track, citing its sources |
 | `more like <exercise>` | Same pattern, different story |
@@ -51,7 +53,9 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `predict drill` | "What does this print?", three in a row |
+| `predict drill` | "What does this print?", and how sure you are, three in a row |
+| `discriminate drill` | Two or three problems that look alike but need different patterns: name each pattern and the detail that decides it |
+| `practise <concept>` | A mixed set of drills on concepts from the graph: recall first, then telling it apart from a look-alike, then using it with others |
 | `trace drill` | Fill in a trace table of variables, iteration by iteration |
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
 | `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/bug/`, named after the function; find it with the debugger |
@@ -69,14 +73,14 @@ dictated code does not count as typing it yourself.
 | `set me up` (first time) | The tutor asks your mode, target level, time and track in the chat, runs `python dojo.py setup` for you, then goes on to placement |
 | `show my modules` | Your modules (assigned, left out, planned) with your progress; say which to leave out or add, and the tutor talks it through with you: your reason, its view, then you decide together |
 | `show my settings` / `change <setting> to <value>` | Every setting at a glance (`python dojo.py settings`), or any one changed: minutes per day, mode, target level, tracks, dates, skipped modules |
-| `assess me` / `I already know ...` / `import my notes from <path>` | Placement: diagnostic, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
+| `assess me` / `I already know ...` / `import my notes from <path>` | Placement: a probe and a short practical check, then `BASELINE.md`, `PLAN.md`, start module and redo queue updated |
 | `plan my learning` / `I want to learn <X>` / `when should I start <X>?` / `replan` | Roadmap: the tutor asks what is missing about your goals, recommends the order and mix of tracks with reasons and the cost, and records your choice (`docs/ROADMAP.md`) |
 | `change my mode to <hobby/industry/...>` / `I want to be a <junior/mid/...> developer` | Mode or target level updated; the weekly balance, mocks and bars follow (`docs/ROADMAP.md`) |
 | `I have an interview on <date>` / `focus on <X>` | The priority changes: that track takes most of the time, the others keep only their redos |
 | `weekly review` | Report, coach notes, next week's focus, plan updated, and settings changes suggested from your log for you to accept or decline, one yes-or-no question each |
 | `am I on track?` | Trend analysis against your own bar and milestones, and an honest re-estimate |
 | `update` | The incoming shared changes are shown (and which files run code); after your yes they are pulled in; new or changed exercises in your tracks are listed, and for each group you say: learn it, already know it, or not for me |
-| `export` / `export to user@host:path` | Personal data zipped (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
+| `export` / `export to user@host:path` | Personal data in one zip, with a view of each concept graph inside it, (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
 
 ## Without the tutor
@@ -94,6 +98,7 @@ tutor session catches up with `sync`.
 | `python dojo.py list [module]` | Exercises and their status |
 | `python dojo.py start <ex>` / `test <ex>` / `done <ex> --hints N` | Do an exercise |
 | `python dojo.py log study 45 <topic>` | Log time that is not an exercise (study, reading, drill, mock, project) |
-| `python dojo.py week --write` / `stats` | Weekly report / modules, patterns and fluency gates |
+| `python dojo.py week --write` / `stats` | Weekly report / modules, patterns, confidence against results and fluency gates |
+| `python dojo.py graph [--html]` / `graph next` / `graph path <X>` | Your state on every concept / what you can do now / the shortest path to X |
 | `python dojo.py export --to user@host:path` | Back up or move personal data |
 | `python dojo.py drive-setup`, then `export` | Back up to Google Drive (see `SETUP.md`) |

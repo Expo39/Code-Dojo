@@ -19,7 +19,7 @@ because it is the step that trains reading.
 | 1 | **Understand** | The task in your own words, naming the exact condition (`> 0` or `>= threshold`?) and what is returned (a value, an index, a list); 1 to 3 questions about input, empty cases, duplicates, invalid data. The task text deliberately leaves edge cases out: ask the tutor, or list yours and then compare with `python dojo.py clarify <exercise>` | You could explain the task to someone who has not read it |
 | 2 | **Example** | The task's `Trace by hand:` input (printed without its output) worked through your plan, plus one edge case of your own; for an outside problem, a small input you make up. Write it down (comments in the file or paper) when indexes are involved: written slices are easier to get right than spoken ones | You know the expected output of both |
 | 3 | **Plan** | The approach in 1 or 2 sentences and its rough complexity, before typing | The plan is specific enough that someone else could code it |
-| 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ...". Only then does the tutor give the test command, and you run it yourself. On a failure, read the error and try your own fix first; ask the tutor when stuck | You said it out loud before pressing Enter |
+| 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ...", and how sure you are (0 to 100). Only then does the tutor give the test command, and you run it yourself. On a failure, read the error and try your own fix first; ask the tutor when stuck | You said it out loud before pressing Enter |
 | 5 | **Test** | Your example traced through your code line by line, then the edge case | Both give the expected output, by trace and by the tests |
 | 6 | **Reflect** | Time and space complexity; the input that would break it; one improvement using only what you have learnt so far | You could defend the solution to an interviewer |
 
@@ -36,7 +36,7 @@ Used by `teach me <topic>` and by the `r` (read and predict) exercises.
 
 | Step | You do | Why |
 | --- | --- | --- |
-| **Predict** | Read a short example and say what it will do, before running it. Commit to an answer | A committed guess makes the surprise stick |
+| **Predict** | Read a short example and say what it will do, and how sure you are, before running it. Commit to an answer | A committed guess makes the surprise stick; a sure guess that is wrong shows a misconception |
 | **Run** | Run it and compare with your prediction | Feedback in seconds |
 | **Investigate** | Explain why it behaves that way; answer "what if" questions; trace it | Turns "I saw it" into "I understand it" |
 | **Modify** | Change the working example to do something slightly different | Practise in a safe space before a blank page |

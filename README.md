@@ -23,7 +23,11 @@ practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
 ## Why it works
 
 - **Retrieval and spacing.** Every exercise comes back from a blank file after 1, 3, 7, 14, 30
-  and 60 days, sooner if it went badly.
+  and 60 days, sooner if it went badly, in a mixed order so you have to recognise each pattern.
+- **Start from what you hold.** Each track has a concept graph; a new goal starts with a short
+  probe that finds where your understanding ends, so you learn the shortest path to the goal and
+  nothing you already know. Every prediction comes with how sure you are, and a confident wrong
+  answer is repaired before anything builds on it.
 - **Deliberate practice with instant feedback.** Every exercise has tests and a target time;
   time, hints and skipped steps are logged for every attempt.
 - **You do the work.** You type every line, run the tests yourself and read the errors before
@@ -51,7 +55,8 @@ repo (`git clone <this repo> code-dojo`, then `cd code-dojo`), then do **one** o
   tutor will do next.
 - **In the AI tutor:** open `claude` (or `codex`, `gemini`) in the folder and say **set me up**.
   It asks the same questions in the chat, runs the setup for you, then goes straight on to your
-  placement: your goals, a short practical check, your plan, and your modules, which you go
+  placement: your goals, a short probe of what you already hold, a short practical check, your
+  plan, and your modules, which you go
   through together: leave any out or add any back, each with a reason, and decide together.
 
 Either way, everything can be changed later.
@@ -80,12 +85,12 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | 1. Understand | The task in your own words with the exact condition; clarifying questions |
 | 2. Example | A trace by hand of the task's `Trace by hand:` input (no answer printed), plus an edge case of your own |
 | 3. Plan | The steps, and the time and space complexity |
-| 4. Predict | "Pass" or "test X fails because ...", then you run the tests yourself |
+| 4. Predict | "Pass" or "test X fails because ...", and how sure you are (0 to 100), then you run the tests yourself |
 | 5. Test | Your example and an edge case traced through the finished code |
 | 6. Reflect | What would break it, one improvement, names an interviewer would notice |
 
 Things to say: `start <exercise>`, `done <exercise>`, `I'm stuck`, `teach me <topic>`,
-`bug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
+`probe me`, `what can I do next`, `bug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
 off until `TEACHER ON`. The full list: [docs/TUTOR.md](docs/TUTOR.md).
 
 ## The tracker
@@ -98,18 +103,19 @@ python dojo.py start parse_pairs     # timer + workspace/python/m04_parsing/pars
 python dojo.py test parse_pairs      # run the tests against your file
 python dojo.py done parse_pairs --hints 1
 python dojo.py week --write          # weekly report
+python dojo.py graph next            # what you can do now, from the concept graph
 ```
 
 | Group | Commands |
 | --- | --- |
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
-| Plan | `today`, `list [module]`, `stats`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules` |
-| Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps]`, `pause` / `resume`, `cancel`, `clarify`, `session start\|pause\|resume\|status\|end` (the session clock) |
-| Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `log study <minutes> <topic>` |
-| Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `sync` |
-| Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]`, `drive-setup`, `import`, `migrate` |
+| Plan | `today`, `list [module]`, `stats`, `graph [--html]`, `graph next [--goal X]`, `graph path <X>`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules` |
+| Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps] [--confidence N --prediction right\|wrong]`, `pause` / `resume`, `cancel`, `clarify`, `session start\|pause\|resume\|status\|end` (the session clock) |
+| Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `start probe:<track>` / `done probe:<track>`, `log study <minutes> <topic>` |
+| Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `graph set` / `graph undo` (concept evidence), `sync` |
+| Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]` (one zip: your data plus a view of each concept graph), `drive-setup`, `import`, `migrate` |
 | Updates | `update` (pull the shared tracks and docs), `changes [--ack]` (what changed in your tracks since you were last asked) |
-| Maintain | `verify` |
+| Maintain | `verify`, `graph check` |
 
 `python dojo.py help` describes every option.
 
@@ -117,13 +123,15 @@ python dojo.py week --write          # weekly report
 
 ```text
 code-dojo/
-├── dojo.py                  the tracker: timers, tests, redo schedule, week balance, reports, export
+├── dojo.py                  the tracker's entry point: timers, tests, redo schedule, week balance,
+│                            reports, concept graph, export
+├── dojolib/                 the tracker's code, one module per area (CONTRIBUTING.md)
 ├── conftest.py              lets pytest run your workspace file against the track's tests
 ├── AGENTS.md                tutor-mode rules, shared by Claude Code, Codex and Gemini CLI
 ├── CLAUDE.md                imports AGENTS.md, plus notes for Claude Code only
-├── .agents/skills/          dojo-session, dojo-assess, dojo-roadmap, dojo-teach, dojo-mock,
-│                            dojo-drill, dojo-weekly, dojo-new-exercise, dojo-new-track (one copy
-│                            for every tool)
+├── .agents/skills/          dojo-session, dojo-assess, dojo-probe, dojo-roadmap, dojo-teach,
+│                            dojo-mock, dojo-drill, dojo-weekly, dojo-new-exercise, dojo-new-track
+│                            (one copy for every tool)
 ├── .claude/                 Claude Code: settings and start hook, agents (problem-setter,
 │                            code-reviewer, progress-coach), skills -> ../.agents/skills
 ├── .gemini/, .geminiignore  Gemini CLI: reads AGENTS.md, its own agents/; skips the other tools' files
@@ -131,26 +139,28 @@ code-dojo/
 ├── .claude-plugin/          optional: the same skills and agents as a Claude Code plugin
 ├── .github/                 CODEOWNERS (the owner reviews every change), pull request template,
 │                            checks workflow, Dependabot
-├── .githooks/, tools/       pre-push checks (tools/check.py: personal data, secrets, syntax, exercises)
+├── .githooks/, tools/       pre-push checks (tools/check.py: personal data, secrets, syntax, exercises,
+│                            concept graphs)
 ├── CONTRIBUTING.md          how to propose tracks, exercises and fixes
 ├── SECURITY.md              how to report a security problem privately
 ├── .vscode/, .zed/          editor and debugger settings, AI completion off
 ├── docs/                    the method, sessions, tutor commands, setup (see below)
 ├── tracks/
-│   ├── python/              the Python track: README (phases, modules, milestones), modules
-│   │                        (stubs, tests, .clarify/, .solutions/, primm/), projects/
+│   ├── python/              the Python track: README (phases, modules, milestones), graph.json
+│   │                        (concept graph), modules (stubs, tests, .clarify/, .solutions/,
+│   │                        primm/), projects/
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
-│                            schedule, mistakes, cheat sheet, weekly reports, mock and
-│                            drill reports, docs/
+│                            schedule, concept evidence (graph.json), mistakes, cheat sheet,
+│                            weekly reports, mock, drill and probe reports, docs/
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/ holds your attempts, .history/ (earlier
 │                            attempts) and primm/ (lesson files); <track>/drills/<type>/
 │                            and <track>/mocks/<type>/ (tests/ and .history/ where needed,
 │                            files named by focus), <track>/projects/
-└── exports/                 YOUR backups from `dojo.py export` (gitignored)
+└── exports/                 YOUR backups from `dojo.py export`, one zip each (gitignored)
 ```
 
 ## Documentation
