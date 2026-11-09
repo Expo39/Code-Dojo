@@ -92,10 +92,12 @@ def load_graph(track: str) -> dict | None:
 
 def combined_graph(names: list[str]) -> dict:
     """Every track's graph as one: a shared concept appears once (its prerequisites and
-    exercises from every track joined); a concept id used by two tracks becomes <track>:<id>."""
+    exercises from every track joined); a concept id used by two tracks becomes <track>:<id>;
+    a requirement written <track>:<id> links to that track's concept (robotics needing C++)."""
     parts = [g for g in (load_graph(t) for t in names) if g]
     if len(parts) == 1:
         return parts[0]
+    by_track = {part["track"]: part for part in parts}
     owners: dict[str, set[str]] = {}
     for part in parts:
         for c in part["concepts"].values():
@@ -106,7 +108,12 @@ def combined_graph(names: list[str]) -> dict:
     for part in parts:
         for c in part["concepts"].values():
             k = key(c)
-            reqs = [key(part["concepts"][r]) for r in c["requires"] if r in part["concepts"]]
+            reqs = []
+            for r in c["requires"]:
+                owner, rid = r.split(":", 1) if ":" in r else (part["track"], r)  # <track>:<id> links tracks
+                other = by_track.get(owner)
+                if other and rid in other["concepts"]:
+                    reqs.append(key(other["concepts"][rid]))
             if k in concepts:  # the same shared concept from another track
                 merged = concepts[k]
                 merged["requires"] += [r for r in reqs if r not in merged["requires"]]
@@ -507,7 +514,16 @@ def graph_check(graph: dict) -> tuple[list[str], list[str]]:
         if not c["can"].strip():
             warnings.append(f"{where}: no 'can' statement (the probe and lessons test it)")
         for r in c["requires"]:
-            if r == cid:
+            if ":" in r:  # another track's concept: <track>:<id>
+                other_track, other_id = r.split(":", 1)
+                other_graph = load_graph(other_track)
+                if other_track not in load_tracks(active_only=False):
+                    errors.append(f"{where} requires '{r}', but there is no track '{other_track}'")
+                elif not other_graph:
+                    warnings.append(f"{where} requires '{r}': not checked, {other_track} has no graph yet")
+                elif other_id not in other_graph["concepts"]:
+                    errors.append(f"{where} requires unknown concept '{other_id}' of the {other_track} track")
+            elif r == cid:
                 errors.append(f"{where} requires itself")
             elif r not in concepts:
                 errors.append(f"{where} requires unknown concept '{r}'")

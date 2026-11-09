@@ -86,7 +86,7 @@ need for a concept, and a panel per concept (README, "See what you know").
 | `id` | lower_snake_case, unique in the track |
 | `module` | the module folder that teaches it |
 | `kind` | `skill`, or `theory` for background from a `Theory:` line (its lesson is named after the id, `theory_<topic>`) |
-| `requires` | concepts that must be held first; no cycles |
+| `requires` | concepts that must be held first; no cycles. A concept of another track is written `<track>:<id>` (a robotics concept needing `cpp:pointers` or `python:class_state`): the combined graph draws the link between the tracks, and `graph path` follows it |
 | `can` | what someone who holds it can do, observable: the probe and lessons test exactly this |
 | `lesson` | a topic from the module's `primm/README.md` (optional) |
 | `aliases` | other names a logged lesson may have used (optional) |

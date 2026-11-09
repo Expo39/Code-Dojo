@@ -33,7 +33,7 @@ python dojo.py graph next        # or, in the terminal: what you can do now, ran
 
 The page is one file that works offline (it is also inside every `export` zip). It follows the
 classic rule for information graphics: overview first, then zoom and filter, then details on demand.
-A four-step guide shows the way on the first visit (<kbd>?</kbd> brings it back).
+A five-step guide shows the way on the first visit (<kbd>?</kbd> brings it back).
 
 - **Overview** (where it opens): your track as one bubble, each module inside it as a circle whose
   ring shows how much of it you hold (solid / total in the middle), and lines showing which
@@ -46,11 +46,13 @@ A four-step guide shows the way on the first visit (<kbd>?</kbd> brings it back)
   need** lights up only the concepts left before it; **double-click** or **Focus here** shows just
   its neighbourhood.
 - **Drag** a concept to move it, drag the background to pan, scroll or pinch to zoom; labels never
-  overlap. Search with <kbd>/</kbd>; the **Legend** button holds the state filters and the keys;
-  <kbd>F</kbd> fits, <kbd>Esc</kbd> steps back.
+  overlap. Search with <kbd>/</kbd>; <kbd>F</kbd> fits, <kbd>Esc</kbd> steps back.
+- The **legend** stays on the left and changes with the view: what the shapes mean there, your
+  states with their counts (click one to hide or show it, in every view), and the keys.
 - A dashed ring marks a **general idea** (Big-O, recursion, two pointers): not specific to one
   language, so it already counts when you start another one. With several tracks, the buttons at
-  the top switch between everything together and each track on its own.
+  the top switch between everything together and each track on its own, and a track that builds on
+  another (robotics on C++ and Python) shows the links between them.
 
 It works in light and dark and on a phone, and keeps still if your system asks for reduced motion.
 

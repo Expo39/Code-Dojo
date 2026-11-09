@@ -47,7 +47,9 @@ than any one of them. Always in the dojo's own format, never a copy.
      its exercises; planned modules' concepts marked `"planned": true`. A concept that holds in any
      language and already exists in another track's graph (Big-O, recursion, two pointers, BFS)
      reuses that `id`, `name` and `can` with `"shared": true`, so what the learner knows from the
-     other track counts here too; language rules are never shared. `dojo.py graph check
+     other track counts here too; language rules are never shared. A concept that builds on
+     another track's (robotics on C++ pointers, a web framework on Python classes) names it in
+     `requires` as `<track>:<id>`, so the combined graph shows how the tracks connect. `dojo.py graph check
      <track>` must report no errors. A review updates it with the modules.
    - Exercises are original, in the dojo format: never copy text, exercises or solutions,
      whatever the licence; structure, topic order and the *kind* of example may be borrowed,
