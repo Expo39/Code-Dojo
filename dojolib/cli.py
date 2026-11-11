@@ -47,7 +47,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            the session clock: at `end`, training time outside exercise
                            timers (warm-up, explanations, feedback) is logged as study;
                            pause it for breaks and anything that is not training;
-                           `done` holds it until the next `start` or `session resume`
+                           `done` holds it until the next `start` or `session resume`;
+                           a session pause also comes off any exercise timer
   clarify <item>           the interviewer's answers (edge cases); list your own first
   cancel <item>            discard a running timer
   mark <items/modules> --box N   seed the redo schedule for things you already know

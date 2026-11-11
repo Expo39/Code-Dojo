@@ -148,6 +148,9 @@ def cmd_done(args) -> None:
     minutes -= credit
     on = parse_date(args.date) if args.date else today()
     paused = paused_minutes(started) if started and args.minutes is None else 0.0
+    if paused:
+        # Time away (a session pause) is neither solve time nor study.
+        paused = max(0.0, paused - timer_of(started).get("away_total", 0.0) / 60)
 
     if args.item.startswith((LESSON_PREFIX, PROBE_PREFIX)):
         # A PRIMM lesson or a probe: training time, but no target, no tests and no redo schedule.
@@ -287,13 +290,29 @@ def session_hold() -> None:
         print("Session clock held until the next go (`start` or `session resume` restarts it).")
 
 
+def restart_session(session: dict) -> None:
+    """Close a session pause. Time away is not training, so a timer running or paused through
+    it gets the away time off its solve time and off the paused time `done` logs as study."""
+    away = (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
+    session["paused_total"] += away
+    session["paused_at"] = None
+    write_json(SESSION, session)
+    timers = read_json(TIMER, {})
+    for item, value in timers.items():
+        t = timer_of(value)
+        t["away_total"] = t.get("away_total", 0.0) + away
+        if not t["paused_at"]:
+            t["paused_total"] += away
+        timers[item] = t
+    if timers:
+        write_json(TIMER, timers)
+
+
 def session_go() -> None:
     """Restart a held session clock: training starts again."""
     session = read_json(SESSION, None)
     if session and session["paused_at"]:
-        session["paused_total"] += (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
-        session["paused_at"] = None
-        write_json(SESSION, session)
+        restart_session(session)
         print("Session clock running again.")
 
 
@@ -326,9 +345,7 @@ def cmd_session(args) -> None:
         if not session["paused_at"]:
             print("The session clock is already running.")
             return
-        session["paused_total"] += (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
-        session["paused_at"] = None
-        write_json(SESSION, session)
+        restart_session(session)
         print(f"Session resumed ({fmt_min(timer_minutes(session))} so far).")
     elif args.action == "status":
         clock, logged, gap = session_gap(session, rows)

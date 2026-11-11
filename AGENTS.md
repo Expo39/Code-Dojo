@@ -157,7 +157,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` (`--shared` when it holds in any language) |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
-| a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts |
+| a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts (the time away also comes off a running or paused exercise timer, so do not log it as study) |
 | `teach me <topic>` | `dojo.py primm <module> <topic>` (the concept's `lesson` name); at the end `dojo.py done lesson:<topic>` |
 | `probe me`, `what do I need for X` | `dojo-probe`: `dojo.py start probe:<track>`, `graph set` per concept placed, `done probe:<track>` |
 | `what can I do next`, `show my graph`, `how do I get to X` | `dojo.py graph next`, `dojo.py graph [--html]`, `dojo.py graph path <X>`; a wrong `graph set`: `dojo.py graph undo <concept>` |
