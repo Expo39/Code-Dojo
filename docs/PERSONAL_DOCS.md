@@ -20,7 +20,7 @@ job, their estimates). When something written for one learner turns up in `docs/
   learner's list is built only from their own mistakes.
 - **Written by**: `dojo-weekly` (step 3, repeated mistakes); seeded by `dojo-assess` from the
   recurring mistakes in `BASELINE.md`.
-- **Used by**: predict and trace drills (`dojo-drill`) draw from it first; warm-up self-checks.
+- **Used by**: read drills (`dojo-drill`) draw from it first; warm-up self-checks.
 - **Shape**: one table, in the learner's track language:
 
 ```markdown
@@ -58,7 +58,7 @@ job, their estimates). When something written for one learner turns up in `docs/
 - **From**: a short conversation about their job and how they use AI there (ask; never assume
   a job).
 - **Written by**: `dojo-assess`, or on request.
-- **Used by**: `explain drill: work` (`dojo-drill`) and one no-pressure question in `dojo-weekly`.
+- **Used by**: `work drill` (`dojo-drill`) and one no-pressure question in `dojo-weekly`.
 - **Shape**: the principle (work and the dojo stay separate), at most three habits that make AI
   use at work build understanding, and how to tell they are working.
 

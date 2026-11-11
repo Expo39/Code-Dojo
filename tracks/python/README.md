@@ -139,11 +139,11 @@ Not a phase: they run through every week.
 
 | Skill | How the dojo trains it |
 | --- | --- |
-| Reading and understanding code | predict drills, `m10_reading_code`, review drills on AI-written code, reading real open-source and standard-library code |
-| Debugging | `m07`, `m08`, bug drills, always confirming a hypothesis in the debugger before fixing |
+| Reading and understanding code | read drills, `m10_reading_code`, debug drills on AI-written code, reading real open-source and standard-library code |
+| Debugging | `m07`, `m08`, debug drills, always confirming a hypothesis in the debugger before fixing |
 | Testing | every exercise has tests; from Phase 2 you write the tests yourself (`m12`, projects) |
-| Communication | talk-aloud solving, explain drills, mock interviews (as often as your mode says), explaining your projects |
-| Working with AI critically | the tutor never writes your code; review drills train spotting plausible-but-wrong code; in projects you may use AI only to *explain*, then you verify |
+| Communication | talk-aloud solving, mock interviews (as often as your mode says), explaining your projects |
+| Working with AI critically | the tutor never writes your code; debug drills train spotting plausible-but-wrong code; in projects you may use AI only to *explain*, then you verify |
 | Tools | terminal, git, a debugger, a virtual environment, pytest |
 
 

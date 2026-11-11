@@ -35,12 +35,13 @@ Say so calmly, then show you can still get to a correct result:
 4. How you would verify it: a test case, or running it on the example.
 5. The trade-offs of the alternatives.
 
-The `explain drill` scores you on these five steps.
+Use it inside a problem, for the part you are stuck on, and keep it to a minute or two;
+then write what you can. It is a move in `interview problem` and mocks, not an exercise of its own.
 
 ## Questions they may ask about code you did not write
 
 In the AI age this part matters more every year: *"What does this function do? What is wrong
-with it? How would you test it?"* Train it with predict drills, review drills (often on
+with it? How would you test it?"* Train it with read drills, debug drills (often on
 AI-written code with planted bugs) and the `m10_reading_code` exercises. Read top to bottom
 first, name the inputs and outputs, trace one example, then look for edge cases.
 
@@ -48,7 +49,7 @@ first, name the inputs and outputs, trace one example, then look for edge cases.
 
 Almost every interview asks you to walk through your current work. Be able to draw its
 architecture on paper and explain its trickiest part, and the reasons behind it, without
-notes. If AI wrote much of it, this needs deliberate effort: the `explain drill: work` trains it.
+notes. If AI wrote much of it, this needs deliberate effort: the `work drill` trains it.
 
 ## Confidence
 
@@ -61,7 +62,7 @@ can be faked on the day, and both build steadily.
 
 | When | Change |
 | --- | --- |
-| 14 to 4 days before | Stop new modules. Daily: 1 unseen easy-to-medium problem out loud with a timer, the redo queue, one `explain drill`. Mocks every other day. Read the company's stack and prepare 3 stories about your work (problem, what you did, result, what you learned) in `progress/docs/INTERVIEW_PREP.md` |
+| 14 to 4 days before | Stop new modules. Daily: 1 unseen easy-to-medium problem out loud with a timer, the redo queue. Mocks every other day. Read the company's stack and prepare 3 stories about your work (problem, what you did, result, what you learned) in `progress/docs/INTERVIEW_PREP.md` |
 | 3 days before | Redo your 10 worst problems from blank files. Prepare questions for them |
 | The day before | Light: two easy problems you know, review your mistakes logs and cheat sheets (`progress/` and `progress/<track>/`). Sleep |
 | The day | One easy warm-up problem 90 minutes before. Check the editor, camera and microphone. Then stop |

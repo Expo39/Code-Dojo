@@ -68,8 +68,8 @@ It works in light and dark and on a phone, and keeps still if your system asks f
   time, hints and skipped steps are logged for every attempt.
 - **You do the work.** You type every line, run the tests yourself and read the errors before
   the tutor points at anything. Inline AI completion and suggested replies are turned off.
-- **Read as much as you write.** Predict, trace, debug and review drills, including spotting
-  bugs in AI-written code.
+- **Read as much as you write.** Read drills (predict the output, trace the variables) and
+  debug drills, often on AI-written code with planted bugs.
 - **New concepts the PRIMM way.** Predict, run, investigate, modify, make: you commit to a
   guess before anything is explained, in a lesson file for that module.
 - **Build things.** A ladder of projects with requirements but no step-by-step guide.
@@ -106,10 +106,10 @@ Open the tutor in the repo and say hello. It catches up on what you did without 
 where you stand this week, and proposes today's session from
 [docs/DAILY_SESSION.md](docs/DAILY_SESSION.md) (templates from 30 minutes to 3 hours):
 
-1. **Warm-up:** cheat-sheet self-checks or a predict drill.
+1. **Warm-up:** cheat-sheet self-checks or a read drill.
 2. **Redo queue first:** due exercises from a blank file, no peeking at old attempts.
 3. **Learn and write:** `teach me <topic>` when a concept is new, then the next exercises.
-4. **Read, debug or build:** a bug or review drill, a code-reading exercise, or the project.
+4. **Read, debug or build:** a debug drill, a code-reading exercise, or the project.
 5. **Perform** (interview-related modes): an unseen problem under interview conditions, or a
    `mock interview`; in hobby mode this time goes to building.
 6. **Log:** mistakes and cheat-sheet lines, then `end of day` for a summary and tomorrow's plan.
@@ -126,7 +126,7 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | 6. Reflect | What would break it, one improvement, names an interviewer would notice |
 
 Things to say: `start <exercise>`, `done <exercise>`, `I'm stuck`, `teach me <topic>`,
-`probe me`, `what can I do next`, `bug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
+`probe me`, `what can I do next`, `debug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
 off until `TEACHER ON`. The full list: [docs/TUTOR.md](docs/TUTOR.md).
 
 ## The tracker

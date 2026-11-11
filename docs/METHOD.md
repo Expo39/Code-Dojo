@@ -113,9 +113,9 @@ daily templates in `DAILY_SESSION.md` follow this split.
 | --- | --- | --- | --- | --- | --- |
 | Learn | new concepts with PRIMM, teach-me lessons, first attempts at new exercises | 20% | 25% | 25% | 30% |
 | Write | the redo queue from blank files, plus new exercises | 25% | 25% | 20% | 20% |
-| Read and debug | predict drills, code reading, bug drills, reviewing AI-written code | 20% | 20% | 20% | 15% |
+| Read and debug | read drills, code reading, debug drills (often on AI-written code) | 20% | 20% | 20% | 15% |
 | Build | the current project | 10% | 15% | 25% | 35% |
-| Perform | a talk-aloud timed problem, explain drills, mock interviews | 25% | 15% | 10% | 0% |
+| Perform | a talk-aloud timed problem, mock interviews | 25% | 15% | 10% | 0% |
 
 Mocks: weekly in `interview` mode, every two weeks in `hybrid`, monthly in `industry` once
 applying is near, and only on request in `hobby`. Reading and debugging never drop below 15%:

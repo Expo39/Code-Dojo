@@ -21,7 +21,7 @@ TRACK_SIDE_FOLDERS = ("drills", "mocks")  # workspace/<track>/drills/, workspace
 # Drills and mocks live in type folders: drills/<type>/<focus>.<ext>,
 # mocks/<type>/<problem>_<DD_MM_YYYY>.<ext>. Older flat files named <type>_... are moved into
 # the folder of their prefix; these are the drill types such files can carry.
-DRILL_TYPES = ("bug", "predict", "trace", "review", "explain")
+DRILL_TYPES = ("bug", "predict", "trace", "review", "explain", "debug", "read")  # older names too
 LEGACY_MOCKS = "earlier"  # flat mock_<date> files from before the type folders
 HISTORY_STAMP_RE = re.compile(r"^(?P<slug>[a-z0-9_]+?)_\d{8}_\d{4}(?P<ext>\.[A-Za-z0-9]+)$")
 

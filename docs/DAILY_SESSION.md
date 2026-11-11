@@ -27,12 +27,12 @@ out of Read and debug or Perform.
 
 | Minutes | Block | What to do |
 | --- | --- | --- |
-| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated, or one `predict drill` |
+| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated, or one `read drill` |
 | 10 to 50 | Redo queue | Due items from blank files, in the order `today` lists them. Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
-| 120 to 150 | Read, debug or build | Alternate by day: a `bug drill` or `review drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |
-| 150 to 170 | Perform | One unseen problem under interview conditions: a timer, out loud, no hints for the first 10 minutes (`interview problem`), or an `explain drill` |
+| 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |
+| 150 to 170 | Perform | One unseen problem under interview conditions: a timer, out loud, no hints for the first 10 minutes (`interview problem`), coded while talking |
 | 170 to 180 | Log | Any mistakes, one cheat-sheet line per new concept, `end of day` to the tutor |
 
 ## Standard session (2 hours)
@@ -62,7 +62,7 @@ of logging. A minimum day counts; skipping does not.
 
 | Day | Extra |
 | --- | --- |
-| One day mid-week | Replace the Perform block with an `explain drill` and a `review drill` on AI-written code |
+| One day mid-week | Make the Read block's `debug drill` one on AI-written code ("would you merge this?") |
 | The last training day | **Mock interview** when your mode has one this week (45 to 60 minutes, `/dojo-mock`; weekly in `interview`, every two weeks in `hybrid`, monthly in `industry`, on request in `hobby`) replaces the Perform and Read blocks |
 | End of the week | **Weekly review** (`/dojo-weekly`, 20 minutes): report, coach notes, next week's focus |
 | Rest day | Rest. If the profile has a flexible rest day, training on it counts towards the week |

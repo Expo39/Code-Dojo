@@ -53,16 +53,13 @@ dictated code does not count as typing it yourself.
 
 | Say | What happens |
 | --- | --- |
-| `predict drill` | "What does this print?", three in a row |
+| `read drill` | "What does this print?" three in a row, or a trace table of the variables, iteration by iteration |
 | `discriminate drill` | Two or three problems that look alike but need different patterns: name each pattern and the detail that decides it |
 | `practise <concept>` | A mixed set of drills on concepts from the graph: recall first, then telling it apart from a look-alike, then using it with others |
-| `trace drill` | Fill in a trace table of variables, iteration by iteration |
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
-| `bug drill` | A new buggy function and a failing test in `workspace/<track>/drills/bug/`, named after the function; find it with the debugger |
-| `review drill` | Code (often "written by an AI") in `workspace/<track>/drills/review/` with several problems: list them all, then compare your list with the real issues in the report (no fixing: that is what bug drills train) |
+| `debug drill` | Code (often "written by an AI") with one to three bugs and failing tests in `workspace/<track>/drills/debug/`, named after the function: list what you think is wrong, predict the failing tests, then confirm each bug in the debugger and fix it |
 | (after any drill) | A report in `progress/<track>/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
-| `explain drill` | Solve without code in five steps, scored |
-| `explain drill: work` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
+| `work drill` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
 | `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/<track>/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/<type>/` (pattern, practical, bug or explain), named after the problem and the date; the interviewer keeps hidden cases for the end |
 

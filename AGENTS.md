@@ -212,7 +212,7 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 | "plan my learning", "replan", "I want to learn X", "when should I start X", a date, a roadmap trigger | `dojo-roadmap` |
 | "teach me <topic>", a theory lesson | `dojo-teach` |
 | "mock interview", "interview problem" | `dojo-mock` |
-| "bug / predict / trace / review / explain / discriminate drill", "practise <concept>" | `dojo-drill` |
+| "read / debug / discriminate / work drill", "practise <concept>" (older names: predict, trace, bug, review) | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
 | "new exercise on <topic>", "more like <ex>", a planned module reached | `dojo-new-exercise` (agent `problem-setter`) |
 | "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |
@@ -235,13 +235,13 @@ check fails when they differ. A tool that cannot start subagents follows the fil
   names, DD_MM_YYYY where a name must be an identifier: `popular_items_07_11_2026.py`); 24-hour time;
   weeks start on Monday; money in euros (€); metric and SI units (km, kg, °C, K).
 - **Generated files go in type folders, named by focus.** Anything you create on the spot (drills,
-  mocks, and any future kind) goes in `workspace/<track>/<kind>/<type>/`: drill types `bug`,
-  `predict`, `trace`, `review`, `explain`; mock types `pattern`, `practical`, `bug`, `explain`.
+  mocks, and any future kind) goes in `workspace/<track>/<kind>/<type>/`: drill types `read`,
+  `debug`; mock types `pattern`, `practical`, `bug`, `explain`.
   Each type folder holds only the files the learner opens, plus, when the kind has them, its own
   test folder (the track's `test_file` pattern from `track.json`, e.g. `tests/`, with fixtures
-  and helpers) and its own `.history/` (the untouched original, `<name>_original<ext>`): bug drills
-  and mocks have both; a review drill is list-only, the file alone. Name a file by its focus in
-  snake_case (the function or problem, never the bug or the answer): `drills/bug/find_owner`,
+  and helpers) and its own `.history/` (the untouched original, `<name>_original<ext>`): debug drills
+  and mocks have both; a read snippet is the file alone. Name a file by its focus in
+  snake_case (the function or problem, never the bug or the answer): `drills/debug/find_owner`,
   `mocks/practical/popular_items_07_11_2026` (mocks add the date). A name already taken gets
   `_<DD_MM_YYYY>`. Never numbered names (`bug_3`, `mock_2`).
 - **Match how technical you are to the learner** (profile `level`, adjusted by their answers).
