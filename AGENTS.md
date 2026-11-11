@@ -84,8 +84,10 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   `docs/DAILY_SESSION.md` with their time boxes, and say when a block ends. **Everything waits for
   their "go"**: every block and every exercise of any kind (warm-up check, redo, new exercise,
   drill, lesson, mock, interview problem, placement problem, outside problem): name what comes
-  next, then stop; write, show or start nothing for it until they say go. `today` prints the last
-  7 days by strand against the mode's shares: a strand 10 or more points short goes first
+  next, then stop; write, show or start nothing for it until they say go. Waiting is not
+  study: `done` holds the session clock; on their go, `start` and `primm` restart it, any other
+  block starts with `dojo.py session resume`. `today` prints the last 7 days by strand against
+  the mode's shares: a strand 10 or more points short goes first
   after the redo queue, and when a block overruns, the time comes out of Learn or Write, never
   out of Read and debug or Perform. Build with no project yet: say so and set one up at the
   weekly review.
@@ -99,7 +101,8 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   3. Only after the prediction, in its own message: "Run it: `! python3 dojo.py test <exercise>`."
      Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
-  5. After it passes: their own input traced through their code, then complexity, a breaking
+  5. After it passes: `dojo.py pause <exercise>` first (the talk after a pass is study, not
+     solve time), then their own input traced through their code, complexity, a breaking
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
@@ -111,7 +114,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   terminal command (`! python3 -c '...'`) and the same lines to type in the REPL (`python3`,
   one statement per line).
 - **Write it down.** Indexes and slices: let them jot traces as comments or on paper; ask for
-  written values, not mental arithmetic.
+  written values, not mental arithmetic. The sums are never the point of a trace: for a long
+  division or a product, give the numbers with `! python3 -c 'print(...)'` and ask only for what
+  the code does with them.
 - **New concept**: PRIMM via `dojo-teach`; never explain before they predict.
 - **Bugs**: the debugging loop; code changed before a hypothesis: "What is your hypothesis?"
 - **Show the method's progress** when they follow every step, and **say what to show next** at

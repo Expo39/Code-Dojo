@@ -82,6 +82,7 @@ def cmd_start(args) -> None:
         print(f"Timer started for '{args.item}' (not a dojo exercise; log it with `done` as usual).")
     timers[args.item] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None}
     write_json(TIMER, timers)
+    session_go()
 
 
 def cmd_test(args) -> None:
@@ -157,6 +158,8 @@ def cmd_done(args) -> None:
                     "module": module, "minutes": round(minutes + credit + paused, 1),
                     "note": "probe" if probe else "PRIMM lesson"})
         print(f"{'Probe' if probe else 'Lesson'} '{topic}': {fmt_min(minutes + credit + paused)} logged as study.")
+        if not timers:
+            session_hold()
         return
 
     ex = discover().get(args.item)
@@ -225,6 +228,8 @@ def cmd_done(args) -> None:
         label = {"clean": "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
                  "failed": "Not solved: redo tomorrow."}[card["grade"]]
         print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")
+    if not timers:
+        session_hold()
 
 
 def confidence_value(args) -> str:
@@ -272,10 +277,31 @@ def cmd_resume(args) -> None:
     print(f"Resumed '{item}' ({fmt_min(timer_minutes(t))} so far).")
 
 
+def session_hold() -> None:
+    """Hold the session clock after an item ends: waiting for the learner's next "go" is not
+    training. The next `start`, lesson or `session resume` sets it running again."""
+    session = read_json(SESSION, None)
+    if session and not session["paused_at"]:
+        session["paused_at"] = now().isoformat()
+        write_json(SESSION, session)
+        print("Session clock held until the next go (`start` or `session resume` restarts it).")
+
+
+def session_go() -> None:
+    """Restart a held session clock: training starts again."""
+    session = read_json(SESSION, None)
+    if session and session["paused_at"]:
+        session["paused_total"] += (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
+        session["paused_at"] = None
+        write_json(SESSION, session)
+        print("Session clock running again.")
+
+
 def cmd_session(args) -> None:
     """Session clock: counts the whole training session, so time outside exercise timers
     (warm-up, explanations, feedback, discussing a concept) is logged as study at the end.
-    Pause it for anything that is not training: breaks, dojo maintenance, being away."""
+    Pause it for anything that is not training: breaks, dojo maintenance, being away.
+    `done` holds it (waiting for the next "go" is not training); `start` and lessons restart it."""
     ensure_files()
     session = read_json(SESSION, None)
     rows = read_log()
@@ -291,13 +317,15 @@ def cmd_session(args) -> None:
         die("No session running: `python dojo.py session start`.")
     if args.action == "pause":
         if session["paused_at"]:
-            die("The session is already paused.")
+            print("The session is already paused.")
+            return
         session["paused_at"] = now().isoformat()
         write_json(SESSION, session)
         print(f"Session paused at {fmt_min(timer_minutes(session))}.")
     elif args.action == "resume":
         if not session["paused_at"]:
-            die("The session is not paused.")
+            print("The session clock is already running.")
+            return
         session["paused_total"] += (now() - datetime.fromisoformat(session["paused_at"])).total_seconds()
         session["paused_at"] = None
         write_json(SESSION, session)
@@ -460,3 +488,4 @@ def cmd_primm(args) -> None:
                            "module": matches[0]}
             write_json(TIMER, timers)
             print(f"Lesson timer started. End it with: python dojo.py done {key}")
+            session_go()

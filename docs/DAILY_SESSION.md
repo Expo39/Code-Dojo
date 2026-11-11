@@ -15,7 +15,8 @@ concept graph points to). Say `start <exercise>` and
 
 **The session clock** (`python dojo.py session start`, started by the tutor with the first block)
 counts the training between exercise timers too: warm-up, explanations, feedback. It is paused
-for breaks, time away and work on the dojo itself, and `end of day` logs it as study.
+for breaks, time away and work on the dojo itself, and `end of day` logs it as study. Finishing
+an item (`done`) holds it while you decide what comes next; it runs again on your **go**.
 
 **The strand balance.** `today` shows the last 7 days by strand (learn, write, read, build,
 perform) against your mode's shares (`METHOD.md`). A strand 10 or more points short goes first,
