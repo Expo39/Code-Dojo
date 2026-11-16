@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from .core import (
-    CHECKLIST, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
+    CHECKLIST, DEBT, DEBT_DAYS, DEFERRABLE, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
     REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, WORKSPACE, active_track_names, die, fmt_date,
     fmt_min, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
 )
@@ -190,11 +190,20 @@ def cmd_done(args) -> None:
     unknown = [x for x in skipped if x not in STEPS]
     if unknown:
         die(f"Unknown step(s): {', '.join(unknown)}. Steps: {', '.join(STEPS)}")
+    deferred = [x.strip().lower() for x in (args.deferred or "").split(",") if x.strip()]
+    if "predict" in deferred:
+        die("The prediction cannot be deferred: in quiet mode it is one word, pass or fail.")
+    unknown = [x for x in deferred if x not in DEFERRABLE]
+    if unknown:
+        die(f"Unknown step(s): {', '.join(unknown)}. Deferrable: {', '.join(DEFERRABLE)}")
+    note = args.note or ""
+    if deferred:
+        note = (note + "; " if note else "") + "deferred: " + ",".join(deferred)
     append_log({"date": fmt_date(on), "item": args.item, "kind": kind, "module": module,
                 "pattern": pattern, "level": level, "minutes": round(minutes, 1),
                 "target": target or "", "hints": args.hints, "result": result,
                 "ratio": ratio if ratio is not None else "",
-                "skipped": ",".join(skipped), "note": args.note or "",
+                "skipped": ",".join(skipped), "note": note,
                 "confidence": confidence_value(args), "prediction": args.prediction or ""})
     if credit:
         # Time lost to a tutor misunderstanding: off the solve time, still counted as training.
@@ -224,6 +233,13 @@ def cmd_done(args) -> None:
     if skipped:
         print(f"Process: skipped {', '.join(skipped)}. Next time do every step; it is the habit "
               "the interview tests.")
+    if deferred:
+        debt = read_json(DEBT, {})
+        owed = debt.get(args.item, {}).get("steps", [])
+        debt[args.item] = {"date": fmt_date(on), "steps": [s for s in DEFERRABLE if s in owed or s in deferred]}
+        write_json(DEBT, debt)
+        print(f"Quiet mode: {', '.join(deferred)} owed. Explain them out loud by "
+              f"{fmt_date(on + timedelta(days=DEBT_DAYS))} (`python dojo.py debt`), or it comes back as a redo.")
     if ex and result == "failed":
         print("Tests do not pass yet. Keep going (`start` again) or add --gave-up.")
     if kind in ("exercise", "external") and not args.no_review:
@@ -233,6 +249,64 @@ def cmd_done(args) -> None:
         print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")
     if not timers:
         session_hold()
+
+
+def expire_debt(on=None) -> list[str]:
+    """Owed explanations older than DEBT_DAYS: dropped from the list, the item due again today
+    from box 0 (explaining code from memory days later teaches little; solving it again does)."""
+    on = on or today()
+    debt = read_json(DEBT, {})
+    expired = [k for k, v in debt.items() if (on - parse_date(v["date"])).days > DEBT_DAYS]
+    if not expired:
+        return []
+    reviews = read_json(REVIEWS, {})
+    for item in expired:
+        debt.pop(item)
+        if item in reviews:
+            reviews[item].update(box=0, due=fmt_date(on), grade="struggled")
+    write_json(DEBT, debt)
+    write_json(REVIEWS, reviews)
+    return expired
+
+
+def debt_lines(on=None) -> list[str]:
+    """The owed explanations, oldest first, each with its steps and deadline."""
+    on = on or today()
+    debt = read_json(DEBT, {})
+    rows = sorted(debt.items(), key=lambda kv: parse_date(kv[1]["date"]))
+    return [f"{item} ({', '.join(v['steps'])}; by {fmt_date(parse_date(v['date']) + timedelta(days=DEBT_DAYS))})"
+            for item, v in rows]
+
+
+def cmd_debt(args) -> None:
+    """Quiet mode: list the explanations owed, or record the tutor's verdict on one."""
+    on = today()
+    expired = expire_debt(on)
+    if expired:
+        print(f"Expired, back in the redo queue from box 0: {', '.join(expired)}.")
+    if args.action == "clear":
+        if not args.item or not args.result:
+            die("Use: python dojo.py debt clear <item> --result good|partial|poor [--note ...]")
+        debt = read_json(DEBT, {})
+        entry = debt.pop(args.item, None)
+        if entry is None:
+            die(f"Nothing owed for {args.item}. Owed: {', '.join(debt) or 'nothing'}.")
+        write_json(DEBT, debt)
+        append_log({"date": fmt_date(on), "item": args.item, "kind": "study", "minutes": 0,
+                    "result": args.result,
+                    "note": f"explained: {','.join(entry['steps'])}" + (f"; {args.note}" if args.note else "")})
+        if args.result == "poor":
+            reviews = read_json(REVIEWS, {})
+            if args.item in reviews:
+                reviews[args.item].update(box=0, due=fmt_date(on + timedelta(days=1)), grade="struggled")
+                write_json(REVIEWS, reviews)
+            print(f"{args.item}: explanation poor. Back to box 0, redo tomorrow; log what was missing "
+                  "with `dojo.py mistake`.")
+        else:
+            print(f"{args.item}: explanation {args.result}. Cleared.")
+        return
+    lines = debt_lines(on)
+    print("Explanations owed, oldest first: " + "; ".join(lines) + "." if lines else "No explanations owed.")
 
 
 def confidence_value(args) -> str:

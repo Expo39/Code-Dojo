@@ -16,6 +16,7 @@ from .planning import (
     recent_stats, session_size, strand_line, week_numbers
 )
 from .graph import graph_brief_line
+from .practice import debt_lines, expire_debt
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
 from .migrate import is_dated_row
 
@@ -67,6 +68,7 @@ def cmd_today(args, brief: bool = False) -> None:
     plan = planned_minutes(profile, on)
     done_today = minutes_on(rows, on)
     wk = week_numbers(profile, rows, on)
+    expired = expire_debt(on)  # before the redo queue: an expired item is due again today
     due = interleave_due(due_items(on))
     timers = read_json(TIMER, {})
     mix = effective_mix(profile)
@@ -118,6 +120,12 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append(f"Redo queue ({len(due)} due, in interleaved order): {names}{more}.")
     else:
         lines.append("Redo queue: nothing due.")
+    if expired:
+        lines.append(f"Quiet mode: explanations not given in time, back in the redo queue: {', '.join(expired)}.")
+    owed = debt_lines(on)
+    if owed:
+        lines.append(f"Explanations owed ({len(owed)}, quiet mode): " + "; ".join(owed)
+                     + ". When the learner can talk: the debrief block first.")
     if profile.get("mode") or profile.get("target_level"):
         lines.append("Mode: " + (profile.get("mode") or "not set")
                      + ", target level: " + (profile.get("target_level") or "not set") + ".")

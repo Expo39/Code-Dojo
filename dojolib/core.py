@@ -26,6 +26,8 @@ SEEN = TRACKER / "tracks_seen.json"  # exercise -> content hash the learner has 
 TOPICS_SEEN = TRACKER / "topics_seen.json"  # track/module -> lesson topics already asked about
 UPSTREAM_CHECK = TRACKER / "upstream_check.json"
 LAYOUT = TRACKER / "layout.json"  # which progress/ layout this copy has been migrated to
+DEBT = TRACKER / "debt.json"  # quiet mode: explanations owed, item -> {date, steps}
+DEBT_DAYS = 2  # an explanation not given within this many days sends the item back to the redo queue
 # Shared notes: what holds in any language. Each track has its own beside its reports.
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
@@ -51,6 +53,9 @@ LOG_FIELDS = ["date", "item", "kind", "module", "pattern", "level",
               "confidence", "prediction"]
 # The exercise loop (docs/CHECKLISTS.md). `done --skipped` records the steps left out.
 STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
+# Quiet mode (`done --deferred`): the spoken steps can be owed and explained later; the
+# prediction is one word (pass or fail), so it is never deferred.
+DEFERRABLE = [s for s in STEPS if s != "predict"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
 Before running: 4 predict (pass or fail? which test? hedge it if unsure)
 After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""

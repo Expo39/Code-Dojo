@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import argparse
 
-from .core import KINDS, PROGRESS, STEPS, TARGETS
+from .core import DEFERRABLE, KINDS, PROGRESS, STEPS, TARGETS
 from .updates import cmd_changes, cmd_update
 from .migrate import cmd_migrate, migrate_dates, migrate_progress, migrate_workspace
 from .setup import cmd_doctor, cmd_install, cmd_settings, cmd_setup
 from .transfer import cmd_drive_setup, cmd_export, cmd_import
 from .practice import (
-    cmd_cancel, cmd_clarify, cmd_debug, cmd_done, cmd_list, cmd_log, cmd_mark, cmd_mistake,
+    cmd_cancel, cmd_clarify, cmd_debt, cmd_debug, cmd_done, cmd_list, cmd_log, cmd_mark, cmd_mistake,
     cmd_pause, cmd_primm, cmd_resume, cmd_session, cmd_start, cmd_sync, cmd_test, cmd_verify
 )
 from .reports import cmd_mix, cmd_modules, cmd_stats, cmd_today, cmd_week
@@ -36,6 +36,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   done <item> --hints N    stop the timer, run tests, log, schedule the next redo
        [--gave-up] [--minutes M] [--level easy --pattern hashmap]   (for LeetCode etc.)
        --skipped plan,predict    process steps left out (understand, example, plan, predict, test, reflect)
+       --deferred plan,reflect   quiet mode: steps owed, explained out loud later (`debt`); every
+                                 step but predict
        --credit M                minutes lost to a tutor misunderstanding (off the solve time, still logged)
        --confidence N --prediction right|wrong   how sure you said you were (0-100) and whether
                                  the prediction came true (stats compares the two)
@@ -50,6 +52,11 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            `done` holds it until the next `start` or `session resume`;
                            a session pause also comes off any exercise timer
   clarify <item>           the interviewer's answers (edge cases); list your own first
+  debt                     quiet mode: explanations owed (oldest first, with their deadline);
+                           any older than 2 days go back to the redo queue
+  debt clear <item> --result good|partial|poor [--note ..]
+                           the tutor's verdict on the explanation: poor sends the item back to
+                           box 0, due tomorrow
   cancel <item>            discard a running timer
   mark <items/modules> --box N   seed the redo schedule for things you already know
   mistake <item> "what went wrong" "correct form" [--shared | --track T]
@@ -130,6 +137,7 @@ def main() -> None:
     p.add_argument("--date")
     p.add_argument("--no-review", action="store_true")
     p.add_argument("--skipped", help="comma-separated process steps left out: " + ",".join(STEPS))
+    p.add_argument("--deferred", help="quiet mode, steps owed and explained later: " + ",".join(DEFERRABLE))
     p.add_argument("--confidence", type=int, help="how sure the learner said they were, 0-100")
     p.add_argument("--prediction", choices=["right", "wrong"], help="whether the prediction came true")
     p = sub.add_parser("log")
@@ -145,6 +153,9 @@ def main() -> None:
     p.add_argument("--confidence", type=int)
     p.add_argument("--prediction", choices=["right", "wrong"])
     p = sub.add_parser("cancel"); p.add_argument("item")
+    p = sub.add_parser("debt"); p.add_argument("action", nargs="?", choices=["list", "clear"], default="list")
+    p.add_argument("item", nargs="?"); p.add_argument("--result", choices=["good", "partial", "poor"])
+    p.add_argument("--note")
     p = sub.add_parser("pause"); p.add_argument("item", nargs="?")
     p = sub.add_parser("resume"); p.add_argument("item", nargs="?")
     p = sub.add_parser("clarify"); p.add_argument("item")
@@ -188,7 +199,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
+        "cancel": cmd_cancel, "debt": cmd_debt, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate, "graph": cmd_graph,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
