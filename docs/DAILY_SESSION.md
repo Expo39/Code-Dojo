@@ -53,6 +53,14 @@ out of Read and debug or Perform.
 | 25 to 55 | One new exercise, or one talk-aloud timed problem |
 | 55 to 60 | Log |
 
+## Quiet days
+
+When you cannot type much or speak, tell the tutor you want quiet mode: the redo queue, Write
+exercises and drills run on short directions and replies as brief as you like (no keys to learn),
+and the steps you would say out loud are owed. Perform is not done
+quiet. The next day you can talk, the **debrief** (explaining the owed steps on your own code,
+about 3 minutes per item) comes straight after the redo queue.
+
 ## Minimum day (30 minutes)
 
 For bad days. It keeps the habit and the redo queue alive: 25 minutes of redo queue, 5 minutes

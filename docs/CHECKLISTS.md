@@ -25,6 +25,11 @@ because it is the step that trains reading.
 
 Code (between steps 3 and 4) happens in small pieces, narrated: "now I collect the counts".
 
+**Quiet mode** (ask for it in your own words when you cannot type much or speak): steps 1 to 3,
+5 and 6 can be owed instead of shown (`done --deferred`); step 4 stays, as one word (pass or fail). The owed steps
+are explained out loud within 2 days in a debrief, on the code you wrote, and the tutor judges
+each; otherwise the exercise comes back as a redo. Never in a mock or the Perform block.
+
 Typing your thinking to the tutor is slower than saying it: keep answers short (a few words,
 bullets). For a longer discussion that is not solving, the tutor pauses the clock
 (`python dojo.py pause`, then `resume`), so the time against target stays fair. Mocks are never

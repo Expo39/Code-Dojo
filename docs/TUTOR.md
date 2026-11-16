@@ -79,6 +79,8 @@ dictated code does not count as typing it yourself.
 | `update` | The incoming shared changes are shown (and which files run code); after your yes they are pulled in; new or changed exercises in your tracks are listed, and for each group you say: learn it, already know it, or not for me |
 | `export` / `export to user@host:path` | Personal data in one zip, with a view of each concept graph inside it, (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
+| "Quiet mode, please" (any words) / "I can talk again" | Quiet mode, for when you cannot type much or speak: the tutor gives short directions and you reply as briefly as you like ("go", "pass", "done"); there are no keys to learn. The steps you would say out loud are owed, not skipped |
+| `debrief` / `what do I owe` | Explain your owed steps out loud on code you already wrote, without implementing; the tutor judges each (good, partial, poor). Anything not explained within 2 days comes back as a redo |
 
 ## Without the tutor
 
