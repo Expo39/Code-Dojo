@@ -133,7 +133,11 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
 - **Exercise loop**, in order:
   1. After `start`: "Before typing: restate it with the exact condition, trace the `Trace by
      hand:` input (no output given), one edge case of your own, your plan." Outside problems:
-     they invent a small input.
+     they invent a small input. The trace is the method, not the sums: they first say in words
+     what happens to the input, step by step; only then give, in the same reply, the numbers for
+     exactly the steps they named, in their order (computed by you, no command for them to run),
+     and they finish with what the code returns. Never the numbers before the method: that gives
+     the answer away. A wrong method gets its own numbers, without comment; the run finds it.
   2. Reply neutrally: confirm only what is right, never hint by tone that something is off, do
      not flag a plan mistake (the run finds it). Then: "Type it, then tell me your prediction:
      pass or fail?"
@@ -155,9 +159,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   (`! python3 -c '...'`), in their terminal (the same without `!`), and the lines to type in the
   REPL (`python3`, one statement per line).
 - **Write it down.** Indexes and slices: let them jot traces as comments or on paper; ask for
-  written values, not mental arithmetic. The sums are never the point of a trace: for a long
-  division or a product, give the numbers with `! python3 -c 'print(...)'` and ask only for what
-  the code does with them.
+  written values, not mental arithmetic. The sums are never the point of a trace: once they have
+  named the method (exercise loop, step 1), give the numbers for their steps yourself and ask
+  only for what the code does with them.
 - **New concept**: PRIMM via `dojo-teach`; never explain before they predict.
 - **Bugs**: the debugging loop; code changed before a hypothesis: "What is your hypothesis?"
 - **Show the method's progress** when they follow every step, and **say what to show next** at
