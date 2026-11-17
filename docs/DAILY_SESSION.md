@@ -28,25 +28,31 @@ out of Read and debug or Perform.
 Three or more days since your last training day count as time away (illness, a holiday, a busy
 stretch), not as missed time: those days plan nothing, so there is no catch-up and nothing is
 owed. The tracker reads this from your log by itself; to record a reason, or a holiday in
-advance, the tutor runs `python dojo.py away <from> <to> --reason <word>`. On the first day back
-the status opens with "Back after N days" and today follows a re-entry instead of the usual
-template:
+advance, the tutor runs `python dojo.py away <from> <to> --reason <word>`.
 
-| Away | Re-entry on the first day back |
+Coming back, the status opens with "Back after N days" (then "Re-entry day N of M"), and the
+re-entry is worked out from how long you were away and how you used to work before it (your
+median minutes per exercise and per training day, from the log):
+
+| What | How it is set |
 | --- | --- |
-| 3 to 6 days | The redo queue first, capped at 6 items, lowest boxes first; the rest over the coming days |
-| 7 to 20 days | As above, plus a short session (the half-length template) and no new material that day |
-| 21 days or more | As above, plus a short probe on the concepts marked held before new material starts again; overdue items in box 3 or higher drop one box; with a target date, the roadmap is checked |
+| Length of the ramp | One day per week away, at most 4 days; a short break is a 1-day re-entry |
+| Today's length | Your usual day (or the plan, if shorter), from about 80% after 6 days down to half after 2 weeks or more, growing back to full over the ramp |
+| Redos today | About 40% of today's length divided by your usual minutes per exercise, lowest boxes first; the rest over the coming days |
+| Targets (rust) | Stretched from x1.0 up to x1.5 after 4 weeks, for the box decision only: time is judged against the stretched target, while hints and failures count as usual |
+| New material | None on the first day back after 7 days or more |
+| Long absence (21+ days) | A short probe on the concepts marked held before new material; overdue items in box 3 or higher drop one box; with a target date, the roadmap is checked |
 
 The strand balance and the weak spots look at the last days you could train, with the time away
 left out. A weekly review or a mock missed while away becomes a 5-minute review and the next
-mock day.
+mock day. A wrong answer on a re-entry day that you correct at once is rust, not a
+misconception.
 
 ## Full session (3 hours)
 
 | Minutes | Block | What to do |
 | --- | --- | --- |
-| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated, or one `read drill` |
+| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated in the question (never "remember exercise X"), or one `read drill` |
 | 10 to 50 | Redo queue | Due items from blank files, in the order `today` lists them. Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |

@@ -21,15 +21,16 @@ Keep the whole catch-up to a few minutes. Use `python3 dojo.py` on Linux/macOS, 
      changed, then redo it, already know it, or leave it out. Removals: one line each.
    - "Later": ask again next session, never twice in one. Otherwise `dojo.py changes --ack`; log
      exclusions under Plan changes. A new module or track touching a goal is a roadmap trigger.
-4. **A first day back.** If the status opens with "Back after N days", the learner has been away
-   (3 or more days since the last training day). Ask in one line how they are (never why they were
-   away); if they name a reason or dates, record them (`dojo.py away <from> <to> --reason <word>`).
-   Today follows the re-entry the status lists instead of the full template: the redo queue capped
-   at the items it names (the rest over the coming days, a few extra a day), and from 7 days a
-   short session (the half-length template `today` names) and no new material. From 21 days, offer
-   a short probe (`dojo-probe`) on the concepts marked held before new material starts again, and
-   the roadmap trigger when it prints one. A missed weekly review becomes a 5-minute version; a
-   missed mock moves to the next mock day. Never a catch-up for the time away.
+4. **Coming back.** If the status opens with "Back after N days" or "Re-entry day N of M", the
+   learner is ramping back after time away (3 or more days since the last training day). On the
+   first day, ask in one line how they are (never why they were away); if they name a reason or
+   dates, record them (`dojo.py away <from> <to> --reason <word>`). Today follows the re-entry the
+   status lists, sized from the days away and their pace before the break, instead of the full
+   template: its length, the redo items it names (the rest over the coming days), the rust
+   allowance on targets (`start` and `done` apply it), and, when listed, no new material and the
+   probe (`dojo-probe`) and roadmap trigger. Warm-up checks state their setup; nothing assumes they
+   remember an exercise. A missed weekly review becomes a 5-minute version; a missed mock moves to
+   the next mock day. Never a catch-up for the time away.
 5. Run `dojo.py today` (its concept-graph line lists the lessons to take and the concepts to repair, besides the redo queue and the next new exercises). Read `progress/PLAN.md` ("Current focus"), the newest `progress/weekly/*.md` coach notes, and the last rows of `progress/<track>/mistakes.md` and `progress/mistakes.md`.
 6. Ask: "Anything you practised without me, or anything that felt shaky?" Log mistakes with `dojo.py mistake` and add cheat-sheet bullets for the concepts involved.
 7. Check the roadmap triggers (`docs/ROADMAP.md`, section 7) against `today`, `stats` when a gate may have moved, and what they just told you. If one fires, say it in one line and offer `dojo-roadmap` now (5 minutes) or at the weekly review; otherwise say nothing about it.

@@ -26,10 +26,10 @@ dictated code does not count as typing it yourself.
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
 | `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`) |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
-| (your prediction) | Hedge it if you are unsure ("I think it passes"); a plain answer counts as sure, and "I don't know" is fine. The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
+| (your prediction) | Hedge it if you are unsure ("I think it passes"); a plain answer counts as sure, and "I don't know" is fine. The tutor gives you the command in the chat form, `! python dojo.py test <exercise>`, and the terminal form (the same without `!`); quick checks also come as lines for the REPL. You run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
-| `I was ill` / `I'm on holiday from ... to ...` | The days are recorded as time away (`dojo.py away`): they plan nothing, so nothing is owed. The first day back, a short re-entry instead of a catch-up (`DAILY_SESSION.md`) |
+| `I was ill` / `I'm on holiday from ... to ...` | The days are recorded as time away (`dojo.py away`): they plan nothing, so nothing is owed. Coming back, a re-entry sized from how long you were away and your usual pace, instead of a catch-up (`DAILY_SESSION.md`) |
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |

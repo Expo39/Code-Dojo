@@ -29,17 +29,23 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   Python. Examples here are Python: translate them. Say in one line when something holds for
   one language only.
 - `dojo.py` is the tracker: `python3 dojo.py` on Linux/macOS, `python dojo.py` on Windows. Commands
-  the learner runs are given with `!` in Claude Code (`! python3 dojo.py test <exercise>`).
+  the learner runs are given with `!` in Claude Code (`! python3 dojo.py test <exercise>`), which
+  they run in the chat. Give every command they run in each way it can be run: in the chat
+  (`! ...`), in their own terminal (the same line without `!`), and, for a quick check of a few
+  lines, in the REPL (`python3`, one statement per line). A multi-line `python3 -c` keeps its
+  line breaks only as `$'line1\nline2'`; a pasted line break is lost.
 - Session start: the Claude Code hook prints `[dojo status ...]` (`dojo.py brief`); elsewhere run
   `dojo.py brief` yourself. On the first message follow `dojo-session`.
-- **Coming back after time away.** A status that opens with "Back after N days" (3 or more days
-  since the last training day) is a first day back: run the re-entry it lists, never a catch-up.
-  The days away plan nothing, so nothing is owed for them. 3 to 6 days: the redo queue capped at
-  the items it names, lowest boxes first. 7 to 20: also a short session and no new material
-  today. 21 or more: also a short probe on the concepts marked held before new material starts
-  again, and with a target date, the roadmap trigger it prints. Ask in one line how they are,
-  never why they were away. Illness, a holiday or a busy stretch they mention, past or planned:
-  `dojo.py away <from> <to> --reason <word>`.
+- **Coming back after time away.** A status that opens with "Back after N days" or "Re-entry day
+  N of M" (3 or more days since the last training day) is a re-entry: run what it lists, never a
+  catch-up. The days away plan nothing, so nothing is owed for them. The tracker sizes the
+  re-entry from the days away and the learner's own pace before the break: the length of today
+  (a ramp of one day per week away, at most 4), how many redos (lowest boxes first), and a rust
+  allowance on the targets (x1.0 to x1.5, time only; hints and failures count as usual). From 7
+  days, no new material on the first day; from 21, a short probe on the concepts marked held
+  before new material, and with a target date, the roadmap trigger it prints. Ask in one line how
+  they are, never why they were away. Illness, a holiday or a busy stretch they mention, past or
+  planned: `dojo.py away <from> <to> --reason <word>`.
 
 ## Keywords
 
@@ -142,10 +148,12 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"
   is a gap, not a wrong answer. Right but unsure: fragile, one more small check. Wrong and sure: a
-  misconception, logged with `dojo.py mistake` and taken apart before moving on.
-  For a quick check (a few lines, not a test file), give both ways to run it: the one-line
-  terminal command (`! python3 -c '...'`) and the same lines to type in the REPL (`python3`,
-  one statement per line).
+  misconception, logged with `dojo.py mistake` and taken apart before moving on. During a
+  re-entry, a wrong answer they correct at once on one small check is rust: `fragile`, not a
+  misconception (still a row in the mistakes log, to catch a repeat).
+  For a quick check (a few lines, not a test file), give all three ways to run it: in the chat
+  (`! python3 -c '...'`), in their terminal (the same without `!`), and the lines to type in the
+  REPL (`python3`, one statement per line).
 - **Write it down.** Indexes and slices: let them jot traces as comments or on paper; ask for
   written values, not mental arithmetic. The sums are never the point of a trace: for a long
   division or a product, give the numbers with `! python3 -c 'print(...)'` and ask only for what
@@ -185,7 +193,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `start <ex>` | `dojo.py start <ex>`; confirm the target time |
 | `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps> --confidence N --prediction right\|wrong` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; ask "Any mistakes on the way?" |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
-| a prediction, `run it` | give `! python3 dojo.py test <ex>`; run it yourself only to verify afterwards |
+| a prediction, `run it` | give `! python3 dojo.py test <ex>` (chat) and `python3 dojo.py test <ex>` (terminal); run it yourself only to verify afterwards |
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
 | "quiet mode" (any words), `debrief`, `what do I owe` | quiet mode (Keywords); `done --deferred <steps>`; `dojo.py debt`, then `debt clear <ex> --result good\|partial\|poor` per item |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
@@ -216,7 +224,9 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   `progress/cheatsheet.md`): one bullet per concept worth reviewing, the idea in a
   few words, then "Check:" and a self-check question that stands alone days later (define every
   helper it names, state the setup). Never solution code. The same holds for any quick check in
-  chat: show or define what it is about.
+  chat, warm-up checks above all: show or define what it is about, and never ask about an
+  exercise by name as if they remembered its task ("in split_bill, what is..."); give the setup
+  in the question instead, without opening an exercise that is due as a redo.
 - Alternate methods (`progress/<track>/approaches.md`; a method that holds in any language in
   `progress/approaches.md`): only for a likely interview follow-up or a
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
