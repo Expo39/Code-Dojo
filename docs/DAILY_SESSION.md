@@ -40,13 +40,14 @@ median minutes per exercise and per training day, from the log):
 | Today's length | Your usual day (or the plan, if shorter), from about 80% after 6 days down to half after 2 weeks or more, growing back to full over the ramp |
 | Redos today | About 40% of today's length divided by your usual minutes per exercise, lowest boxes first; the rest over the coming days |
 | Targets (rust) | Stretched from x1.0 up to x1.5 after 4 weeks, for the box decision only: time is judged against the stretched target, while hints and failures count as usual |
+| Easing off | Your progress decides how long it lasts: once 2 attempts since coming back are solved with no hints and a median time within the plain target, the rust allowance and the redo cap go, the ramp ends, and the next day is an ordinary one (today's shorter plan stays, so nothing becomes owed) |
 | New material | None on the first day back after 7 days or more |
 | Long absence (21+ days) | A short probe on the concepts marked held before new material; overdue items in box 3 or higher drop one box; with a target date, the roadmap is checked |
 
 The strand balance and the weak spots look at the last days you could train, with the time away
 left out. A weekly review or a mock missed while away becomes a 5-minute review and the next
-mock day. A wrong answer on a re-entry day that you correct at once is rust, not a
-misconception.
+mock day. A slip you correct at once on one small check is rust: a row in your mistakes log,
+never a mark on the concept graph.
 
 ## Full session (3 hours)
 

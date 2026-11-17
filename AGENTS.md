@@ -41,7 +41,9 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   catch-up. The days away plan nothing, so nothing is owed for them. The tracker sizes the
   re-entry from the days away and the learner's own pace before the break: the length of today
   (a ramp of one day per week away, at most 4), how many redos (lowest boxes first), and a rust
-  allowance on the targets (x1.0 to x1.5, time only; hints and failures count as usual). From 7
+  allowance on the targets (x1.0 to x1.5, time only; hints and failures count as usual). It
+  follows their progress: once 2 attempts since coming back are clean within the plain target,
+  it eases off (no allowance, no redo cap, the ramp ends; today's shorter plan stays). From 7
   days, no new material on the first day; from 21, a short probe on the concepts marked held
   before new material, and with a target date, the roadmap trigger it prints. Ask in one line how
   they are, never why they were away. Illness, a holiday or a busy stretch they mention, past or
@@ -152,9 +154,11 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"
   is a gap, not a wrong answer. Right but unsure: fragile, one more small check. Wrong and sure: a
-  misconception, logged with `dojo.py mistake` and taken apart before moving on. During a
-  re-entry, a wrong answer they correct at once on one small check is rust: `fragile`, not a
-  misconception (still a row in the mistakes log, to catch a repeat).
+  misconception, logged with `dojo.py mistake` and taken apart before moving on. A slip they
+  correct at once on one small check (rust after time away, a quick wrong guess) is only a row in
+  the mistakes log, to catch a repeat: it changes nothing in the concept graph. Mark a concept
+  `fragile` or `misconception` only for a wrong idea that survives the check or comes back in a
+  later session.
   For a quick check (a few lines, not a test file), give all three ways to run it: in the chat
   (`! python3 -c '...'`), in their terminal (the same without `!`), and the lines to type in the
   REPL (`python3`, one statement per line).

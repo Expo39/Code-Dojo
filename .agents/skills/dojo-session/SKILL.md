@@ -27,7 +27,7 @@ Keep the whole catch-up to a few minutes. Use `python3 dojo.py` on Linux/macOS, 
    dates, record them (`dojo.py away <from> <to> --reason <word>`). Today follows the re-entry the
    status lists, sized from the days away and their pace before the break, instead of the full
    template: its length, the redo items it names (the rest over the coming days), the rust
-   allowance on targets (`start` and `done` apply it), and, when listed, no new material and the
+   allowance on targets (`start` and `done` apply it; it eases off by itself once their attempts since coming back are clean and fast, and the status then says so), and, when listed, no new material and the
    probe (`dojo-probe`) and roadmap trigger. Warm-up checks state their setup; nothing assumes they
    remember an exercise. A missed weekly review becomes a 5-minute version; a missed mock moves to
    the next mock day. Never a catch-up for the time away.
