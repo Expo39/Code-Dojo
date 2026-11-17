@@ -7,7 +7,7 @@ import re
 import statistics
 from datetime import date, timedelta
 
-from .core import REVIEWS, parse_date, planned_minutes, read_json, week_start, weekly_target
+from .core import REVIEWS, parse_date, planned_minutes, planned_week, read_json, training_window, week_start
 from .data import minutes_between, minutes_on
 from .tracks import discover, load_tracks
 
@@ -36,14 +36,16 @@ def strand_split(rows: list[dict], start: date, end: date) -> dict:
 def strand_line(profile: dict, rows: list[dict], on: date) -> str | None:
     """Last 7 days by strand against the mode's shares, naming the strands that are short."""
     shares = STRAND_SHARES.get(profile.get("mode") or "interview", STRAND_SHARES["interview"])
-    split = strand_split(rows, on - timedelta(days=6), on)
+    start = training_window(on, 7)  # time away is left out: the last 7 days the learner could train
+    split = strand_split(rows, start, on)
     total = sum(split.values())
     if total < 60:
         return None
     pct = {k: 100 * v / total for k, v in split.items()}
     parts = ", ".join(f"{k} {pct[k]:.0f}% ({shares[k]})" for k in shares)
     short = [k for k in shares if shares[k] - pct[k] >= 10]
-    line = f"Last 7 days by strand, % (target): {parts}."
+    span = "Last 7 days" if (on - start).days == 6 else "Last 7 days, time away left out,"
+    line = f"{span} by strand, % (target): {parts}."
     if short:
         line += f" Short: {', '.join(short)}: do those blocks first today and never cut them."
     return line
@@ -52,7 +54,7 @@ def strand_line(profile: dict, rows: list[dict], on: date) -> str | None:
 def week_numbers(profile: dict, rows: list[dict], on: date) -> dict:
     start = week_start(on)
     done = minutes_between(rows, start, on)
-    target = weekly_target(profile)
+    target = planned_week(profile, on)  # time away plans nothing
     # Days before today are due in full; today only counts once its plan is met.
     planned_before = sum(planned_minutes(profile, start + timedelta(days=i))
                          for i in range((on - start).days))

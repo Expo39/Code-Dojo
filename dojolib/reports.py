@@ -5,9 +5,9 @@ from __future__ import annotations
 from datetime import timedelta
 
 from .core import (
-    FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
-    fmt_date, fmt_min, load_profile, parse_date, planned_minutes, read_json, today, week_start,
-    weekly_target, write_json
+    AWAY_WEEK_DAYS, FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
+    fmt_date, fmt_min, load_profile, parse_date, planned_minutes, planned_week, read_json, today,
+    training_window, week_start, write_json
 )
 from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, timer_of
 from .tracks import discover, load_tracks
@@ -19,6 +19,7 @@ from .graph import graph_brief_line
 from .practice import debt_lines, expire_debt
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
 from .migrate import is_dated_row
+from .returning import days_back, reentry_queue, return_lines
 
 
 def cmd_modules(args) -> None:
@@ -74,7 +75,11 @@ def cmd_today(args, brief: bool = False) -> None:
     mix = effective_mix(profile)
     upcoming = next_new(profile)
 
+    back, last = days_back(rows, on)
+
     lines = []
+    if back:
+        lines.extend(return_lines(profile, back, last, plan, on))
     day_name = on.strftime("%A %d %B %Y")
     lines.append(f"{day_name}: {fmt_min(done_today)} of {fmt_min(plan)} planned today"
                  + (" (rest day)" if plan == 0 else "") + ".")
@@ -95,7 +100,7 @@ def cmd_today(args, brief: bool = False) -> None:
             line += (f". About {fmt_min(left)} will stay open this week: let it go, "
                      "it does not carry over.")
         lines.append(line + ("" if left > 15 else "."))
-    if wk["prev_gap"] < -60 and on.weekday() < 2:
+    if wk["prev_gap"] < -60 and on.weekday() < 2 and not back:
         lines.append(f"  Last week finished {fmt_min(-wk['prev_gap'])} short. Do not try to repay it all; "
                      "prioritise the redo queue this week.")
     if profile.get("target_date"):
@@ -114,7 +119,12 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append("Timers running: " + ", ".join(
             f"{k} ({fmt_min(timer_minutes(v))} so far{', PAUSED' if timer_of(v)['paused_at'] else ''})"
             for k, v in timers.items()))
-    if due:
+    today_due, waiting = reentry_queue(due, back)
+    if waiting:
+        names = ", ".join(f"{k} (box {v['box']})" for k, v in today_due)
+        lines.append(f"Redo queue ({len(due)} due; today, the first day back: {names}. "
+                     f"The other {waiting} over the coming days, a few extra a day).")
+    elif due:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in due[:8])
         more = f" and {len(due) - 8} more" if len(due) > 8 else ""
         lines.append(f"Redo queue ({len(due)} due, in interleaved order): {names}{more}.")
@@ -142,10 +152,11 @@ def cmd_today(args, brief: bool = False) -> None:
                 lines.append(f"Next new ({t}): " + ", ".join(f"{e['slug']} ({e['module']})" for e in items) + ".")
     elif upcoming:
         lines.append("Next new: " + ", ".join(f"{e['slug']} ({e['module']})" for e in upcoming) + ".")
-    weak = [(p, s) for p, s in recent_stats(rows, 14, on).items()
+    window = (on - training_window(on, 14)).days + 1  # time away left out
+    weak = [(p, s) for p, s in recent_stats(rows, window, on).items()
             if s["n"] >= 2 and (s["ratio"] > 1.5 or s["hints"] > 1.5)]
     if weak:
-        lines.append("Weak spots (last 14 days): " + ", ".join(
+        lines.append(f"Weak spots (last 14 days{', time away left out' if window > 14 else ''}): " + ", ".join(
             f"{p} ({s['ratio']:.1f}x, {s['hints']:.1f} hints)" for p, s in weak[:5]) + ".")
     graph_line = graph_brief_line()
     if graph_line:
@@ -162,8 +173,9 @@ def cmd_today(args, brief: bool = False) -> None:
         print("[dojo status, from `python dojo.py brief`]")
     print("\n".join(lines))
     if not brief:
-        print("\nSession plan for today: see docs/DAILY_SESSION.md "
-              f"(the {session_size(plan)} version).")
+        size = session_size(plan // 2 if back >= AWAY_WEEK_DAYS else plan)
+        print(f"\nSession plan for today: see docs/DAILY_SESSION.md (the {size} version"
+              + (", a first day back" if back else "") + ").")
 
 
 def cmd_week(args) -> None:
@@ -174,7 +186,7 @@ def cmd_week(args) -> None:
     end = start + timedelta(days=6)
     wk_rows = [r for r in rows if start <= parse_date(r["date"]) <= end]
     total = sum(float(r["minutes"] or 0) for r in wk_rows)
-    target = weekly_target(profile)
+    target = planned_week(profile, start)  # time away plans nothing
     by_kind: dict[str, float] = {}
     for r in wk_rows:
         by_kind[r["kind"]] = by_kind.get(r["kind"], 0) + float(r["minutes"] or 0)

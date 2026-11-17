@@ -3,6 +3,7 @@ minutes, prompts and the learner's profile."""
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 import sys
@@ -28,6 +29,13 @@ UPSTREAM_CHECK = TRACKER / "upstream_check.json"
 LAYOUT = TRACKER / "layout.json"  # which progress/ layout this copy has been migrated to
 DEBT = TRACKER / "debt.json"  # quiet mode: explanations owed, item -> {date, steps}
 DEBT_DAYS = 2  # an explanation not given within this many days sends the item back to the redo queue
+AWAY = TRACKER / "away.json"  # time away recorded with `dojo.py away`: [{from, to, reason}]
+RETURNS = TRACKER / "returns.json"  # re-entry steps already applied, so they run once per return
+# Coming back (docs/DAILY_SESSION.md, "Coming back after time away"): this many days or more since
+# the last training day count as time away, not as missed time. The tiers say how much re-entry.
+AWAY_MIN_DAYS = 3
+AWAY_WEEK_DAYS = 7
+AWAY_LONG_DAYS = 21
 # Shared notes: what holds in any language. Each track has its own beside its reports.
 MISTAKES = PROGRESS / "mistakes.md"
 CHEATSHEET = PROGRESS / "cheatsheet.md"
@@ -229,11 +237,91 @@ def load_profile(required: bool = True) -> dict:
     return merged
 
 
+_AWAY_CACHE: set | None = None
+
+
+def day_runs(days: set) -> list[tuple[date, date]]:
+    """Consecutive days grouped into (first, last) runs, oldest first."""
+    runs: list[list[date]] = []
+    for d in sorted(days):
+        if runs and (d - runs[-1][1]).days == 1:
+            runs[-1][1] = d
+        else:
+            runs.append([d, d])
+    return [(a, b) for a, b in runs]
+
+
+def recorded_away() -> set:
+    days = set()
+    for period in read_json(AWAY, []):
+        d, end = parse_date(period["from"]), parse_date(period["to"])
+        while d <= end:
+            days.add(d)
+            d += timedelta(days=1)
+    return days
+
+
+def inferred_away(on: date | None = None) -> set:
+    """Days inside a stretch of AWAY_MIN_DAYS or more since the last training day, read from the
+    log: the days between two training days (or between the last one and today)."""
+    on = on or today()
+    trained = set()
+    if LOG.exists():
+        with LOG.open(newline="", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                try:
+                    if float(r.get("minutes") or 0) > 0:
+                        trained.add(parse_date(r["date"]))
+                except ValueError:
+                    continue
+    days = sorted(d for d in trained if d < on)
+    out = set()
+    for a, b in zip(days, days[1:] + [on]):
+        if (b - a).days >= AWAY_MIN_DAYS:
+            out.update(a + timedelta(days=i) for i in range(1, (b - a).days))
+    return out
+
+
+def away_days() -> set:
+    """Days that count as time away: recorded with `dojo.py away`, or inferred from the log.
+    They plan zero minutes, so they are never owed."""
+    global _AWAY_CACHE
+    if _AWAY_CACHE is None:
+        _AWAY_CACHE = recorded_away() | inferred_away()
+    return _AWAY_CACHE
+
+
+def forget_away() -> None:
+    global _AWAY_CACHE
+    _AWAY_CACHE = None
+
+
 def planned_minutes(profile: dict, d: date) -> int:
     start = profile.get("start_date")
     if start and d < parse_date(start):
         return 0
+    if d in away_days():
+        return 0
     return int(profile["minutes"].get(DAYS[d.weekday()], 0))
+
+
+def planned_week(profile: dict, d: date) -> int:
+    """The week's planned minutes (Monday to Sunday around d), time away left out."""
+    start = week_start(d)
+    return sum(planned_minutes(profile, start + timedelta(days=i)) for i in range(7))
+
+
+def training_window(on: date, days: int) -> date:
+    """First day of the window ending on `on` that holds `days` days not away (at most a year back)."""
+    away = away_days()
+    d, counted = on, 0
+    while (on - d).days < 366:
+        if d not in away:
+            counted += 1
+            if counted == days:
+                return d
+        d -= timedelta(days=1)
+    return d
 
 
 def weekly_target(profile: dict) -> int:

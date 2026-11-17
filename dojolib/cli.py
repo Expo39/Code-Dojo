@@ -15,6 +15,7 @@ from .practice import (
 )
 from .reports import cmd_mix, cmd_modules, cmd_stats, cmd_today, cmd_week
 from .graph import cmd_graph
+from .returning import cmd_away
 
 
 HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.py setup
@@ -51,6 +52,10 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            pause it for breaks and anything that is not training;
                            `done` holds it until the next `start` or `session resume`;
                            a session pause also comes off any exercise timer
+  away [<from> [<to>]] [--reason ill] [--remove <from>]
+                           time away (illness, holiday): those days plan no time, so nothing is
+                           owed; 3+ days without training are also read from the log by themselves;
+                           no dates lists both. The first day back, `today` shows the re-entry
   clarify <item>           the interviewer's answers (edge cases); list your own first
   debt                     quiet mode: explanations owed (oldest first, with their deadline);
                            any older than 2 days go back to the redo queue
@@ -159,6 +164,8 @@ def main() -> None:
     p = sub.add_parser("pause"); p.add_argument("item", nargs="?")
     p = sub.add_parser("resume"); p.add_argument("item", nargs="?")
     p = sub.add_parser("clarify"); p.add_argument("item")
+    p = sub.add_parser("away"); p.add_argument("dates", nargs="*"); p.add_argument("--reason")
+    p.add_argument("--remove", metavar="FROM")
     p = sub.add_parser("session"); p.add_argument("action", choices=["start", "pause", "resume", "status", "end"])
     p = sub.add_parser("mark"); p.add_argument("items", nargs="+"); p.add_argument("--box", type=int, default=2)
     p = sub.add_parser("mistake"); p.add_argument("item"); p.add_argument("what"); p.add_argument("fix")
@@ -199,7 +206,7 @@ def main() -> None:
     commands = {
         "setup": cmd_setup, "install": cmd_install, "doctor": cmd_doctor, "today": cmd_today, "list": cmd_list,
         "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
-        "cancel": cmd_cancel, "debt": cmd_debt, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
+        "cancel": cmd_cancel, "debt": cmd_debt, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "away": cmd_away, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate, "graph": cmd_graph,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):

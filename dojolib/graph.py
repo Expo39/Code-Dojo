@@ -16,7 +16,7 @@ from pathlib import Path
 
 from .core import (
     GRAPH_OVERLAY, PRIMM_DIR, REVIEWS, active_track_names, die, fmt_date, load_profile,
-    parse_date, read_json, today, write_json
+    parse_date, read_json, today, training_window, write_json
 )
 from .data import ensure_files, read_log
 from .tracks import TOPICS_RE, discover, load_tracks
@@ -434,7 +434,7 @@ def concept_action(graph: dict, cid: str, info: dict, done_lessons: set[str]) ->
 def graph_next(graph: dict, states: dict, goal: list[str] | None = None, limit: int = 8) -> list[tuple[str, str]]:
     """Ranked list of what can be done now: (concept, action)."""
     tree = (graph_ancestors(graph, goal) | set(goal)) if goal else set()
-    weak_patterns = {p for p, s in recent_stats(read_log(), 14, today()).items()
+    weak_patterns = {p for p, s in recent_stats(read_log(), (today() - training_window(today(), 14)).days + 1, today()).items()
                      if s["n"] >= 2 and (s["ratio"] > 1.5 or s["hints"] > 1.5)}
     exercises = discover(active_only=False)
     done_lessons = {slugify(r["item"]) for r in read_log() if r["kind"] == "study"}
