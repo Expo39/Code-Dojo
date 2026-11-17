@@ -32,6 +32,14 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   the learner runs are given with `!` in Claude Code (`! python3 dojo.py test <exercise>`).
 - Session start: the Claude Code hook prints `[dojo status ...]` (`dojo.py brief`); elsewhere run
   `dojo.py brief` yourself. On the first message follow `dojo-session`.
+- **Coming back after time away.** A status that opens with "Back after N days" (3 or more days
+  since the last training day) is a first day back: run the re-entry it lists, never a catch-up.
+  The days away plan nothing, so nothing is owed for them. 3 to 6 days: the redo queue capped at
+  the items it names, lowest boxes first. 7 to 20: also a short session and no new material
+  today. 21 or more: also a short probe on the concepts marked held before new material starts
+  again, and with a target date, the roadmap trigger it prints. Ask in one line how they are,
+  never why they were away. Illness, a holiday or a busy stretch they mention, past or planned:
+  `dojo.py away <from> <to> --reason <word>`.
 
 ## Keywords
 
@@ -183,6 +191,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
 | `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` (`--shared` when it holds in any language) |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
+| "I was ill / away", a planned holiday | `dojo.py away <from> [<to>] --reason <word>` (no dates: list what is recorded and what the log shows); `--remove <from>` for a wrong one |
 | a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts (the time away also comes off a running or paused exercise timer, so do not log it as study) |
 | `teach me <topic>` | `dojo.py primm <module> <topic>` (the concept's `lesson` name); at the end `dojo.py done lesson:<topic>` |
 | `probe me`, `what do I need for X` | `dojo-probe`: `dojo.py start probe:<track>`, `graph set` per concept placed, `done probe:<track>` |

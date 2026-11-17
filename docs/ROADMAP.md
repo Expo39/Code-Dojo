@@ -141,7 +141,8 @@ that idea, offer it again (once) before a hint.
   - the learner mentioned a new goal, dropped one, or changed their hours for good;
   - progress has stalled (no gate progress, or the same weak spot, for 3 weeks);
   - the real split (`dojo.py stats`) is more than 15 points off the mix for 2 weeks;
-  - a shared update added a module or a track that touches one of their goals.
+  - a shared update added a module or a track that touches one of their goals;
+  - the learner is back after 21 days or more away and has a target date (`today` prints it).
   
   On a trigger, one line: "<what happened>: this may change the plan. Review it now (5
   minutes) or at the weekly review?" Never change the plan silently.

@@ -8,7 +8,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
 1. Run `dojo.py week --write` (add `--date DD/MM/YYYY` for a past week) and `dojo.py stats`.
 2. Read: the report, `progress/PLAN.md`, last week's coach notes, this week's `progress/<track>/mocks/`, `progress/<track>/drills/` (what was missed and the false alarms) and `progress/<track>/probes/` for each track, the week's rows in `progress/mistakes.md` and each `progress/<track>/mistakes.md`, and `dojo.py graph next`.
 3. Analyse honestly, with numbers:
-   - Time against the plan, and why (ask; do not assume). If short, adjust the plan or the profile's hours rather than piling up debt; a capped catch-up of at most an hour a day is fine.
+   - Time against the plan, and why (ask; do not assume). If short, adjust the plan or the profile's hours rather than piling up debt; a capped catch-up of at most an hour a day is fine. Time away (recorded with `dojo.py away`, or 3 or more days without training) plans nothing, so it is never counted as short; a week spent entirely away gets a 5-minute review (what is due, next week's re-entry), not the full one.
    - Speed and hints per pattern: anything with a median above 1.5x or more than 1.5 hints is a weak spot.
    - Understanding: misconceptions and fragile concepts still open in the graph, and the
      calibration lines in `stats` (stated confidence against results). Confidently wrong answers

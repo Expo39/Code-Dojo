@@ -29,6 +29,7 @@ dictated code does not count as typing it yourself.
 | (your prediction) | Hedge it if you are unsure ("I think it passes"); a plain answer counts as sure, and "I don't know" is fine. The tutor gives you the command, `! python dojo.py test <exercise>`; you run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
 | `pause` / `resume` | Stop the clock during a longer discussion (the tutor also does it for you) |
+| `I was ill` / `I'm on holiday from ... to ...` | The days are recorded as time away (`dojo.py away`): they plan nothing, so nothing is owed. The first day back, a short re-entry instead of a catch-up (`DAILY_SESSION.md`) |
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |

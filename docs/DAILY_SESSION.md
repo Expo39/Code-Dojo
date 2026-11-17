@@ -23,6 +23,25 @@ perform) against your mode's shares (`METHOD.md`). A strand 10 or more points sh
 straight after the redo queue; when a block overruns, the time comes out of Learn or Write, never
 out of Read and debug or Perform.
 
+## Coming back after time away
+
+Three or more days since your last training day count as time away (illness, a holiday, a busy
+stretch), not as missed time: those days plan nothing, so there is no catch-up and nothing is
+owed. The tracker reads this from your log by itself; to record a reason, or a holiday in
+advance, the tutor runs `python dojo.py away <from> <to> --reason <word>`. On the first day back
+the status opens with "Back after N days" and today follows a re-entry instead of the usual
+template:
+
+| Away | Re-entry on the first day back |
+| --- | --- |
+| 3 to 6 days | The redo queue first, capped at 6 items, lowest boxes first; the rest over the coming days |
+| 7 to 20 days | As above, plus a short session (the half-length template) and no new material that day |
+| 21 days or more | As above, plus a short probe on the concepts marked held before new material starts again; overdue items in box 3 or higher drop one box; with a target date, the roadmap is checked |
+
+The strand balance and the weak spots look at the last days you could train, with the time away
+left out. A weekly review or a mock missed while away becomes a 5-minute review and the next
+mock day.
+
 ## Full session (3 hours)
 
 | Minutes | Block | What to do |
