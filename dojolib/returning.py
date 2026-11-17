@@ -25,6 +25,12 @@ RAMP_MAX_DAYS = 4  # the ramp back to a full day: one day per week away, at most
 FIRST_DAY_MIN = 0.5  # the first day back is never planned shorter than half a usual day
 REDO_SHARE = 0.4  # share of a re-entry day for the redo queue (retrieval first)
 MIN_REDOS = 3
+# Easing off: once this many exercise attempts since coming back were all solved with no hints
+# and a median time within the plain target, the learner is back to pace: the rust allowance and
+# the redo cap are lifted that day (today's shorter plan stays, so nothing becomes owed), and the
+# ramp ends; the following days are ordinary days.
+EASE_ATTEMPTS = 2
+EASE_RATIO = 1.0
 LONG_DROP_BOX = 3  # after a long absence, overdue items from this box up drop one box (once)
 
 
@@ -67,9 +73,22 @@ def usual_pace(rows: list[dict], before: date) -> tuple[float, float]:
     return per_item, (statistics.median(days) if days else 0.0)
 
 
+def back_to_pace(rows: list[dict], start: date, end: date) -> dict | None:
+    """The attempts since coming back (start to end, inclusive), if they show the learner is back
+    to pace: at least EASE_ATTEMPTS, all solved, no hints, median ratio within EASE_RATIO."""
+    tries = [r for r in rows if r["kind"] in ("exercise", "external") and r["ratio"]
+             and start <= parse_date(r["date"]) <= end]
+    if len(tries) < EASE_ATTEMPTS:
+        return None
+    median = statistics.median(float(r["ratio"]) for r in tries)
+    if all(r["result"] == "solved" and int(r["hints"] or 0) == 0 for r in tries) and median <= EASE_RATIO:
+        return {"n": len(tries), "median": median}
+    return None
+
+
 def reentry(rows: list[dict], on: date, plan: int) -> dict | None:
     """Today's re-entry while the ramp lasts, else None. Keys: day, of, away, back, last, rust,
-    minutes (suggested today), redos (cap), per_item, per_day."""
+    minutes (suggested today), redos (cap, 0 = none), per_item, per_day, eased."""
     found = latest_return(rows, on)
     if not found:
         return None
@@ -78,6 +97,8 @@ def reentry(rows: list[dict], on: date, plan: int) -> dict | None:
     day = (on - back).days + 1
     if day > ramp:
         return None
+    if day > 1 and back_to_pace(rows, back, on - timedelta(days=1)):
+        return None  # eased off on an earlier day: the ramp is over
     per_item, per_day = usual_pace(rows, back)
     base = min(plan, per_day) if per_day else plan
     first = max(FIRST_DAY_MIN, 1 - away / RUST_FULL_DAYS)
@@ -85,17 +106,19 @@ def reentry(rows: list[dict], on: date, plan: int) -> dict | None:
     minutes = base * fraction
     factor = rust(away)
     redos = max(MIN_REDOS, int(REDO_SHARE * minutes // (per_item * factor))) if minutes else MIN_REDOS
+    eased = back_to_pace(rows, back, on)
+    if eased:
+        factor, redos = 1.0, 0
     return {"day": day, "of": ramp, "away": away, "back": back, "last": last, "rust": factor,
-            "minutes": minutes, "redos": redos, "per_item": per_item, "per_day": per_day}
+            "minutes": minutes, "redos": redos, "per_item": per_item, "per_day": per_day,
+            "eased": eased}
 
 
 def rust_allowance(rows: list[dict], on: date) -> float:
-    """The target stretch for a redo done today: above 1.0 only during a re-entry ramp."""
-    found = latest_return(rows, on)
-    if not found:
-        return 1.0
-    back, away, _ = found
-    return rust(away) if (on - back).days + 1 <= ramp_days(away) else 1.0
+    """The target stretch for an attempt done today: above 1.0 only during a re-entry ramp that
+    has not eased off yet."""
+    r = reentry(rows, on, 0)
+    return r["rust"] if r else 1.0
 
 
 def reentry_queue(due: list[tuple[str, dict]], cap: int) -> tuple[list[tuple[str, dict]], int]:
@@ -134,9 +157,17 @@ def return_lines(profile: dict, r: dict, on: date) -> list[str]:
     lines = [f"{head}. Time away is not owed: no catch-up, and the days away plan nothing."]
     pace = (f"your usual pace before the break: {fmt_min(r['per_item'])} an exercise, "
             f"{fmt_min(r['per_day'])} a day" if r["per_day"] else "no pace history yet")
+    if r["eased"]:
+        e = r["eased"]
+        lines.append(f"  Eased off: your {e['n']} attempts since coming back were all clean, median "
+                     f"{e['median']:.2f}x target, so you are back to pace. No rust allowance and no redo "
+                     f"cap from now on; today's plan stays at about {fmt_min(r['minutes'])} (more is a bonus), "
+                     "and tomorrow is an ordinary day.")
+        return lines
     steps = [f"about {fmt_min(r['minutes'])} today" + (f" (day {r['day']} of a {r['of']}-day ramp)" if r["of"] > 1 else ""),
              f"the redo queue first, at most {r['redos']} items, lowest boxes first",
-             f"targets stretched x{r['rust']} for rust (time only; hints and failures count as usual)"]
+             f"targets stretched x{r['rust']} for rust (time only; hints and failures count as usual)",
+             f"it eases off once {EASE_ATTEMPTS} attempts are clean within the plain target"]
     if r["day"] == 1 and r["away"] >= AWAY_WEEK_DAYS:
         steps.append("no new material today")
     if r["day"] == 1 and r["away"] >= AWAY_LONG_DAYS:

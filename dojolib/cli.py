@@ -57,7 +57,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            owed; 3+ days without training are also read from the log by themselves;
                            no dates lists both. Coming back, `today` shows a re-entry sized from
                            the days away and your usual pace (length, redos, a rust allowance
-                           on targets that `start` and `done` apply)
+                           on targets that `start` and `done` apply, easing off once 2
+                           attempts since coming back are clean within the plain target)
   clarify <item>           the interviewer's answers (edge cases); list your own first
   debt                     quiet mode: explanations owed (oldest first, with their deadline);
                            any older than 2 days go back to the redo queue

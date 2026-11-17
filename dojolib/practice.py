@@ -23,7 +23,7 @@ from .tracks import (
     test_slug, warn_if_unsaved
 )
 from .planning import interleave_due
-from .returning import rust_allowance
+from .returning import back_to_pace, latest_return, rust_allowance
 
 
 def cmd_list(args) -> None:
@@ -257,6 +257,13 @@ def cmd_done(args) -> None:
         label = {"clean": "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
                  "failed": "Not solved: redo tomorrow."}[card["grade"]]
         print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")
+    if allowance > 1 and kind in ("exercise", "external"):
+        rows = read_log()
+        found = latest_return(rows, on)
+        eased = back_to_pace(rows, found[0], on) if found else None
+        if eased:
+            print(f"Back to pace: {eased['n']} clean attempts since coming back (median "
+                  f"{eased['median']:.2f}x target). The re-entry eases off: no rust allowance or redo cap from now on.")
     if not timers:
         session_hold()
 
