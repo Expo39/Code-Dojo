@@ -23,6 +23,7 @@ from .tracks import (
     test_slug, warn_if_unsaved
 )
 from .planning import interleave_due
+from .returning import rust_allowance
 
 
 def cmd_list(args) -> None:
@@ -75,6 +76,10 @@ def cmd_start(args) -> None:
             print(f"Continuing your file: {shown}")
         print(f"Target: {ex['target']} min ({ex['level']}). "
               f"Test with: python dojo.py test {args.item}")
+        allowance = rust_allowance(read_log(), today())
+        if allowance > 1:
+            print(f"Re-entry after time away: judged against {round(ex['target'] * allowance)} min "
+                  f"(x{allowance} for rust; hints count as usual).")
         print(CHECKLIST)
     elif args.item.startswith(PROBE_PREFIX):
         print(f"Probe timer started. End it with: python dojo.py done {args.item}")
@@ -186,6 +191,7 @@ def cmd_done(args) -> None:
     else:
         result = "failed"
     ratio = round(minutes / target, 2) if target else None
+    allowance = rust_allowance(read_log(), on) if kind in ("exercise", "external") else 1.0
     skipped = [x.strip().lower() for x in (args.skipped or "").split(",") if x.strip()]
     unknown = [x for x in skipped if x not in STEPS]
     if unknown:
@@ -217,6 +223,8 @@ def cmd_done(args) -> None:
     verdict = f"{args.item}: {result} in {fmt_min(minutes)}"
     if ratio is not None:
         verdict += f" ({ratio}x target {target}m)"
+        if allowance > 1:
+            verdict += f" (re-entry: judged against {round(target * allowance)}m, x{allowance} for rust)"
     verdict += f", hints {args.hints}."
     if credit:
         verdict += f" ({fmt_min(credit)} credited back.)"
@@ -243,7 +251,9 @@ def cmd_done(args) -> None:
     if ex and result == "failed":
         print("Tests do not pass yet. Keep going (`start` again) or add --gave-up.")
     if kind in ("exercise", "external") and not args.no_review:
-        card = schedule(args.item, result, ratio, args.hints, on)
+        # Re-entry after time away: the time is judged against a stretched target (rust), never the hints.
+        judged = round(ratio / allowance, 2) if ratio is not None else None
+        card = schedule(args.item, result, judged, args.hints, on)
         label = {"clean": "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
                  "failed": "Not solved: redo tomorrow."}[card["grade"]]
         print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")

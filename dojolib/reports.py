@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 from .core import (
-    AWAY_WEEK_DAYS, FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
+    FILE_DATE_FMT, MASTERED_BOX, MISTAKES, PROFILE, PROGRESS, REVIEWS, ROOT, SESSION, TIMER, WEEKLY, die,
     fmt_date, fmt_min, load_profile, parse_date, planned_minutes, planned_week, read_json, today,
     training_window, week_start, write_json
 )
@@ -19,7 +19,7 @@ from .graph import graph_brief_line
 from .practice import debt_lines, expire_debt
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
 from .migrate import is_dated_row
-from .returning import days_back, reentry_queue, return_lines
+from .returning import reentry, reentry_queue, return_lines
 
 
 def cmd_modules(args) -> None:
@@ -75,14 +75,14 @@ def cmd_today(args, brief: bool = False) -> None:
     mix = effective_mix(profile)
     upcoming = next_new(profile)
 
-    back, last = days_back(rows, on)
+    ramp = reentry(rows, on, plan)
 
     lines = []
-    if back:
-        lines.extend(return_lines(profile, back, last, plan, on))
+    if ramp:
+        lines.extend(return_lines(profile, ramp, on))
     day_name = on.strftime("%A %d %B %Y")
-    lines.append(f"{day_name}: {fmt_min(done_today)} of {fmt_min(plan)} planned today"
-                 + (" (rest day)" if plan == 0 else "") + ".")
+    lines.append(f"{day_name}: {fmt_min(done_today)} of {fmt_min(ramp['minutes'] if ramp else plan)} planned today"
+                 + (" (rest day)" if plan == 0 else "") + (f" (re-entry; usually {fmt_min(plan)})" if ramp else "") + ".")
     gap = wk["gap"]
     status = "on track" if gap >= -15 else f"behind by {fmt_min(-gap)}"
     if gap > 15:
@@ -100,7 +100,7 @@ def cmd_today(args, brief: bool = False) -> None:
             line += (f". About {fmt_min(left)} will stay open this week: let it go, "
                      "it does not carry over.")
         lines.append(line + ("" if left > 15 else "."))
-    if wk["prev_gap"] < -60 and on.weekday() < 2 and not back:
+    if wk["prev_gap"] < -60 and on.weekday() < 2 and not ramp:
         lines.append(f"  Last week finished {fmt_min(-wk['prev_gap'])} short. Do not try to repay it all; "
                      "prioritise the redo queue this week.")
     if profile.get("target_date"):
@@ -119,10 +119,10 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append("Timers running: " + ", ".join(
             f"{k} ({fmt_min(timer_minutes(v))} so far{', PAUSED' if timer_of(v)['paused_at'] else ''})"
             for k, v in timers.items()))
-    today_due, waiting = reentry_queue(due, back)
+    today_due, waiting = reentry_queue(due, ramp["redos"] if ramp else 0)
     if waiting:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in today_due)
-        lines.append(f"Redo queue ({len(due)} due; today, the first day back: {names}. "
+        lines.append(f"Redo queue ({len(due)} due; today, re-entry: {names}. "
                      f"The other {waiting} over the coming days, a few extra a day).")
     elif due:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in due[:8])
@@ -173,9 +173,9 @@ def cmd_today(args, brief: bool = False) -> None:
         print("[dojo status, from `python dojo.py brief`]")
     print("\n".join(lines))
     if not brief:
-        size = session_size(plan // 2 if back >= AWAY_WEEK_DAYS else plan)
+        size = session_size(int(ramp["minutes"]) if ramp else plan)
         print(f"\nSession plan for today: see docs/DAILY_SESSION.md (the {size} version"
-              + (", a first day back" if back else "") + ").")
+              + (", re-entry" if ramp else "") + ").")
 
 
 def cmd_week(args) -> None:

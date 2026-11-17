@@ -55,7 +55,9 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   away [<from> [<to>]] [--reason ill] [--remove <from>]
                            time away (illness, holiday): those days plan no time, so nothing is
                            owed; 3+ days without training are also read from the log by themselves;
-                           no dates lists both. The first day back, `today` shows the re-entry
+                           no dates lists both. Coming back, `today` shows a re-entry sized from
+                           the days away and your usual pace (length, redos, a rust allowance
+                           on targets that `start` and `done` apply)
   clarify <item>           the interviewer's answers (edge cases); list your own first
   debt                     quiet mode: explanations owed (oldest first, with their deadline);
                            any older than 2 days go back to the redo queue

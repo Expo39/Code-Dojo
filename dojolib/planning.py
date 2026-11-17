@@ -10,6 +10,7 @@ from datetime import date, timedelta
 from .core import REVIEWS, parse_date, planned_minutes, planned_week, read_json, training_window, week_start
 from .data import minutes_between, minutes_on
 from .tracks import discover, load_tracks
+from .returning import reentry
 
 
 # Target share of training time per strand, by mode (docs/METHOD.md, "The five strands").
@@ -51,15 +52,26 @@ def strand_line(profile: dict, rows: list[dict], on: date) -> str | None:
     return line
 
 
+def day_plan(profile: dict, rows: list[dict], d: date) -> float:
+    """A day's planned minutes, up to today: a re-entry day after time away plans the shorter
+    re-entry length, so it is never counted as behind."""
+    plan = planned_minutes(profile, d)
+    ramp = reentry(rows, d, plan) if plan else None
+    return min(plan, ramp["minutes"]) if ramp else plan
+
+
 def week_numbers(profile: dict, rows: list[dict], on: date) -> dict:
     start = week_start(on)
     done = minutes_between(rows, start, on)
-    target = planned_week(profile, on)  # time away plans nothing
+    # Time away plans nothing; re-entry days so far plan their shorter length.
+    target = planned_week(profile, on) - sum(
+        planned_minutes(profile, start + timedelta(days=i)) - day_plan(profile, rows, start + timedelta(days=i))
+        for i in range((on - start).days + 1))
     # Days before today are due in full; today only counts once its plan is met.
-    planned_before = sum(planned_minutes(profile, start + timedelta(days=i))
+    planned_before = sum(day_plan(profile, rows, start + timedelta(days=i))
                          for i in range((on - start).days))
     done_today = minutes_on(rows, on)
-    planned_today = planned_minutes(profile, on)
+    planned_today = day_plan(profile, rows, on)
     gap = (done - done_today) - planned_before + max(0.0, done_today - planned_today)
     remaining_days = [start + timedelta(days=i) for i in range((on - start).days, 7)]
     planned_left = sum(planned_minutes(profile, d) for d in remaining_days)

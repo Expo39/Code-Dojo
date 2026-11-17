@@ -1,8 +1,14 @@
-"""Coming back after time away: the `away` command, and the re-entry the brief shows on the
-first day back (docs/DAILY_SESSION.md, "Coming back after time away")."""
+"""Coming back after time away: the `away` command, and the re-entry the brief shows while the
+learner ramps back up (docs/DAILY_SESSION.md, "Coming back after time away").
+
+The re-entry is worked out from two things: how long the learner was away, and how they used
+to work before it (their own minutes per exercise and minutes per training day, from the log).
+"""
 
 from __future__ import annotations
 
+import math
+import statistics
 from datetime import date, timedelta
 
 from .core import (
@@ -10,32 +16,95 @@ from .core import (
     fmt_min, forget_away, inferred_away, parse_date, read_json, today, write_json
 )
 
-REENTRY_REDOS = 6  # redo items on the first day back, lowest boxes first; the rest follow over the week
+PACE_ITEMS = 20  # exercise attempts before the absence that set the usual minutes per item
+PACE_DAYS = 28  # training days before the absence that set the usual minutes per day
+DEFAULT_ITEM_MINUTES = 12.0  # no history yet
+RUST_MAX = 1.5  # the most the targets stretch, reached at RUST_FULL_DAYS away
+RUST_FULL_DAYS = 28
+RAMP_MAX_DAYS = 4  # the ramp back to a full day: one day per week away, at most this many
+FIRST_DAY_MIN = 0.5  # the first day back is never planned shorter than half a usual day
+REDO_SHARE = 0.4  # share of a re-entry day for the redo queue (retrieval first)
+MIN_REDOS = 3
 LONG_DROP_BOX = 3  # after a long absence, overdue items from this box up drop one box (once)
 
 
-def last_training_day(rows: list[dict], on: date) -> date | None:
-    days = [parse_date(r["date"]) for r in rows if float(r["minutes"] or 0) > 0]
-    days = [d for d in days if d < on]
-    return max(days) if days else None
+def training_days(rows: list[dict]) -> list[date]:
+    return sorted({parse_date(r["date"]) for r in rows if float(r["minutes"] or 0) > 0})
 
 
-def days_back(rows: list[dict], on: date) -> tuple[int, date | None]:
-    """Days since the last training day before today, when that counts as a return (else 0)."""
-    last = last_training_day(rows, on)
-    if last is None:
-        return 0, None
-    gap = (on - last).days
-    return (gap, last) if gap >= AWAY_MIN_DAYS else (0, last)
+def latest_return(rows: list[dict], on: date) -> tuple[date, int, date] | None:
+    """The most recent return: (first day back, days away, last training day before it).
+    Today is the first day back when the last training day is AWAY_MIN_DAYS or more ago."""
+    days = [d for d in training_days(rows) if d <= on]
+    before = [d for d in days if d < on]
+    if before and (on - before[-1]).days >= AWAY_MIN_DAYS:
+        return on, (on - before[-1]).days, before[-1]
+    for a, b in reversed(list(zip(days, days[1:]))):
+        if (b - a).days >= AWAY_MIN_DAYS:
+            return b, (b - a).days, a
+    return None
 
 
-def reentry_queue(due: list[tuple[str, dict]], gap: int) -> tuple[list[tuple[str, dict]], int]:
-    """On the first day back, the redo queue capped at REENTRY_REDOS, lowest boxes first (kept in
-    the interleaved order); returns today's items and how many wait for the coming days."""
-    if not gap or len(due) <= REENTRY_REDOS:
+def rust(days_away: int) -> float:
+    """How much slower to expect: 1.0 just back, up to RUST_MAX after RUST_FULL_DAYS away."""
+    return round(1 + (RUST_MAX - 1) * min(days_away, RUST_FULL_DAYS) / RUST_FULL_DAYS, 2)
+
+
+def ramp_days(days_away: int) -> int:
+    return min(RAMP_MAX_DAYS, math.ceil(days_away / 7))
+
+
+def usual_pace(rows: list[dict], before: date) -> tuple[float, float]:
+    """Median minutes per exercise attempt and per training day, before the absence."""
+    earlier = [r for r in rows if parse_date(r["date"]) < before]
+    attempts = [float(r["minutes"]) for r in earlier
+                if r["kind"] in ("exercise", "external") and r["ratio"] and float(r["minutes"] or 0) > 0]
+    per_item = statistics.median(attempts[-PACE_ITEMS:]) if attempts else DEFAULT_ITEM_MINUTES
+    per_day: dict[date, float] = {}
+    for r in earlier:
+        per_day[parse_date(r["date"])] = per_day.get(parse_date(r["date"]), 0.0) + float(r["minutes"] or 0)
+    days = [m for _, m in sorted(per_day.items()) if m > 0][-PACE_DAYS:]
+    return per_item, (statistics.median(days) if days else 0.0)
+
+
+def reentry(rows: list[dict], on: date, plan: int) -> dict | None:
+    """Today's re-entry while the ramp lasts, else None. Keys: day, of, away, back, last, rust,
+    minutes (suggested today), redos (cap), per_item, per_day."""
+    found = latest_return(rows, on)
+    if not found:
+        return None
+    back, away, last = found
+    ramp = ramp_days(away)
+    day = (on - back).days + 1
+    if day > ramp:
+        return None
+    per_item, per_day = usual_pace(rows, back)
+    base = min(plan, per_day) if per_day else plan
+    first = max(FIRST_DAY_MIN, 1 - away / RUST_FULL_DAYS)
+    fraction = first + (1 - first) * (day - 1) / ramp
+    minutes = base * fraction
+    factor = rust(away)
+    redos = max(MIN_REDOS, int(REDO_SHARE * minutes // (per_item * factor))) if minutes else MIN_REDOS
+    return {"day": day, "of": ramp, "away": away, "back": back, "last": last, "rust": factor,
+            "minutes": minutes, "redos": redos, "per_item": per_item, "per_day": per_day}
+
+
+def rust_allowance(rows: list[dict], on: date) -> float:
+    """The target stretch for a redo done today: above 1.0 only during a re-entry ramp."""
+    found = latest_return(rows, on)
+    if not found:
+        return 1.0
+    back, away, _ = found
+    return rust(away) if (on - back).days + 1 <= ramp_days(away) else 1.0
+
+
+def reentry_queue(due: list[tuple[str, dict]], cap: int) -> tuple[list[tuple[str, dict]], int]:
+    """The redo queue capped at `cap`, lowest boxes first (kept in the interleaved order);
+    returns today's items and how many wait for the coming days."""
+    if not cap or len(due) <= cap:
         return due, 0
-    keep = {k for k, _ in sorted(due, key=lambda kv: kv[1]["box"])[:REENTRY_REDOS]}
-    return [kv for kv in due if kv[0] in keep], len(due) - REENTRY_REDOS
+    keep = {k for k, _ in sorted(due, key=lambda kv: kv[1]["box"])[:cap]}
+    return [kv for kv in due if kv[0] in keep], len(due) - cap
 
 
 def drop_overdue_boxes(on: date, last: date) -> list[str]:
@@ -58,22 +127,26 @@ def drop_overdue_boxes(on: date, last: date) -> list[str]:
     return dropped
 
 
-def return_lines(profile: dict, gap: int, last: date, plan: int, on: date) -> list[str]:
-    """The brief's re-entry block on the first day back, scaled by how long the learner was away."""
-    lines = [f"Back after {gap} days (last training {fmt_date(last)}). Time away is not owed: "
-             "no catch-up, and the days away plan nothing."]
-    steps = [f"the redo queue first, capped at {REENTRY_REDOS} items, lowest boxes first"]
-    if gap >= AWAY_WEEK_DAYS:
-        steps.append(f"a short session (about {fmt_min(plan / 2)} is enough)" if plan else "a short session")
+def return_lines(profile: dict, r: dict, on: date) -> list[str]:
+    """The brief's re-entry block, from the days away and the learner's usual pace."""
+    head = (f"Back after {r['away']} days (last training {fmt_date(r['last'])})"
+            if r["day"] == 1 else f"Re-entry day {r['day']} of {r['of']} (back after {r['away']} days)")
+    lines = [f"{head}. Time away is not owed: no catch-up, and the days away plan nothing."]
+    pace = (f"your usual pace before the break: {fmt_min(r['per_item'])} an exercise, "
+            f"{fmt_min(r['per_day'])} a day" if r["per_day"] else "no pace history yet")
+    steps = [f"about {fmt_min(r['minutes'])} today" + (f" (day {r['day']} of a {r['of']}-day ramp)" if r["of"] > 1 else ""),
+             f"the redo queue first, at most {r['redos']} items, lowest boxes first",
+             f"targets stretched x{r['rust']} for rust (time only; hints and failures count as usual)"]
+    if r["day"] == 1 and r["away"] >= AWAY_WEEK_DAYS:
         steps.append("no new material today")
-    if gap >= AWAY_LONG_DAYS:
+    if r["day"] == 1 and r["away"] >= AWAY_LONG_DAYS:
         steps.append("before new material starts again, a short probe on the concepts marked held (dojo-probe)")
-    lines.append("  Re-entry today: " + "; ".join(steps) + ".")
-    if gap >= AWAY_LONG_DAYS:
-        dropped = drop_overdue_boxes(on, last)
-        if dropped:
+    lines.append(f"  Re-entry ({pace}): " + "; ".join(steps) + ".")
+    if r["away"] >= AWAY_LONG_DAYS:
+        dropped = drop_overdue_boxes(on, r["last"])
+        if dropped and r["day"] == 1:
             lines.append(f"  Overdue items from box {LONG_DROP_BOX} up dropped one box: {', '.join(dropped)}.")
-        if profile.get("target_date"):
+        if profile.get("target_date") and r["day"] == 1:
             lines.append("  Roadmap trigger: a long absence with a target date. Check the date still "
                          "holds (dojo-roadmap).")
     return lines
