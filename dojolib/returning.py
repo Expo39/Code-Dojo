@@ -160,8 +160,8 @@ def return_lines(profile: dict, r: dict, on: date) -> list[str]:
     if r["eased"]:
         e = r["eased"]
         lines.append(f"  Eased off: your {e['n']} attempts since coming back were all clean, median "
-                     f"{e['median']:.2f}x target, so you are back to pace. No rust allowance and no redo "
-                     f"cap from now on; today's plan stays at about {fmt_min(r['minutes'])} (more is a bonus), "
+                     f"{e['median']:.2f}x target, so you are back to pace. No rust allowance, and the usual "
+                     f"daily redo cap; today's plan stays at about {fmt_min(r['minutes'])} (more is a bonus), "
                      "and tomorrow is an ordinary day.")
         return lines
     steps = [f"about {fmt_min(r['minutes'])} today" + (f" (day {r['day']} of a {r['of']}-day ramp)" if r["of"] > 1 else ""),

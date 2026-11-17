@@ -13,7 +13,8 @@ from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, t
 from .tracks import discover, load_tracks
 from .planning import (
     calibration, effective_mix, fluency_gates, interleave_due, next_new, print_modules,
-    recent_stats, session_size, strand_line, week_numbers
+    missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, strand_line,
+    week_numbers
 )
 from .graph import graph_brief_line
 from .practice import debt_lines, expire_debt
@@ -107,6 +108,10 @@ def cmd_today(args, brief: bool = False) -> None:
         days_left = (parse_date(profile["target_date"]) - on).days
         if days_left >= 0:
             lines.append(f"Target date {profile['target_date']}: {days_left} days left.")
+    drift = plan_drift_line(profile, rows, on)
+    if drift:
+        lines.append(drift)
+    lines.extend(missed_review_lines(profile, rows, on))
     balance = strand_line(profile, rows, on)
     if balance:
         lines.append(balance)
@@ -119,11 +124,24 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append("Timers running: " + ", ".join(
             f"{k} ({fmt_min(timer_minutes(v))} so far{', PAUSED' if timer_of(v)['paused_at'] else ''})"
             for k, v in timers.items()))
-    today_due, waiting = reentry_queue(due, ramp["redos"] if ramp else 0)
-    if waiting:
+    # The redos that fit today: the re-entry cap, else the redo block of today's plan at the
+    # learner's own pace, less the redos already done today. The rest wait; nothing is owed.
+    day_plan_min = ramp["minutes"] if ramp else plan
+    cap = ramp["redos"] if ramp and ramp["redos"] else redo_cap(rows, on, day_plan_min)
+    left = max(0, cap - redos_done(rows, on)) if cap else 0
+    today_due, waiting = (reentry_queue(due, left) if left else ([], len(due))) if cap else (due, 0)
+    if cap and due and not today_due:
+        lines.append(f"Redo queue: today's {cap} done; {len(due)} more due, for the coming days "
+                     "(more today is a bonus).")
+    elif waiting:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in today_due)
-        lines.append(f"Redo queue ({len(due)} due; today, re-entry: {names}. "
-                     f"The other {waiting} over the coming days, a few extra a day).")
+        later = [d for d in (on + timedelta(days=i) for i in range(1, 15)) if planned_minutes(profile, d)]
+        per_day = redo_cap(rows, on, planned_minutes(profile, later[0])) if later else 0
+        days = -(-waiting // per_day) if per_day else 0
+        lines.append(f"Redo queue ({len(due)} due; today {len(today_due)}, what fits "
+                     f"{fmt_min(day_plan_min * 0.25)} at your pace: {names}. The other {waiting} "
+                     + (f"over about the next {days} training days" if days else "later")
+                     + ", lowest boxes first; nothing is owed for them).")
     elif due:
         names = ", ".join(f"{k} (box {v['box']})" for k, v in due[:8])
         more = f" and {len(due) - 8} more" if len(due) > 8 else ""

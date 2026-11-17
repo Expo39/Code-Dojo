@@ -266,7 +266,7 @@ def cmd_done(args) -> None:
         eased = back_to_pace(rows, found[0], on) if found else None
         if eased:
             print(f"Back to pace: {eased['n']} clean attempts since coming back (median "
-                  f"{eased['median']:.2f}x target). The re-entry eases off: no rust allowance or redo cap from now on.")
+                  f"{eased['median']:.2f}x target). The re-entry eases off: no rust allowance from now on, and the usual daily redo cap.")
     if not timers:
         session_hold()
 

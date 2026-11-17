@@ -7,10 +7,10 @@ import re
 import statistics
 from datetime import date, timedelta
 
-from .core import REVIEWS, parse_date, planned_minutes, planned_week, read_json, training_window, week_start
+from .core import DAYS, FILE_DATE_FMT, REVIEWS, TRACKS, WEEKLY, fmt_date, fmt_min, parse_date, planned_minutes, planned_week, read_json, training_window, week_start, weekly_target
 from .data import minutes_between, minutes_on
 from .tracks import discover, load_tracks
-from .returning import reentry
+from .returning import reentry, usual_pace
 
 
 # Target share of training time per strand, by mode (docs/METHOD.md, "The five strands").
@@ -47,9 +47,61 @@ def strand_line(profile: dict, rows: list[dict], on: date) -> str | None:
     short = [k for k in shares if shares[k] - pct[k] >= 10]
     span = "Last 7 days" if (on - start).days == 6 else "Last 7 days, time away left out,"
     line = f"{span} by strand, % (target): {parts}."
+    project = first_project(profile)
+    if "build" in short and project and not project["ready"]:
+        short.remove("build")  # nothing to build yet: the first project waits for its module
+        line += (f" Build waits for the first project ({project['id']} {project['name']}, after "
+                 f"{project['module']}): not short until then.")
     if short:
         line += f" Short: {', '.join(short)}: do those blocks first today and never cut them."
     return line
+
+
+PROJECT_ROW_RE = re.compile(r"^\|\s*(P\d+)\s*\|\s*(.+?)\s*\|\s*after (m\d\d)\s*\|", re.MULTILINE)
+
+
+def first_project(profile: dict) -> dict | None:
+    """The first project of the learner's tracks (tracks/<track>/projects/README.md, "after mNN")
+    and whether it is due: every in-scope exercise of its module attempted at least once."""
+    reviews = read_json(REVIEWS, {})
+    exercises = discover()
+    for track in load_tracks(active_only=True):
+        readme = TRACKS / track / "projects" / "README.md"
+        if not readme.exists():
+            continue
+        found = PROJECT_ROW_RE.search(readme.read_text(encoding="utf-8"))
+        if not found:
+            continue
+        pid, name, module = found.groups()
+        slugs = [s for s, ex in exercises.items() if ex["track"] == track
+                 and ex["module"].startswith(module) and in_scope(ex, profile)]
+        return {"track": track, "id": pid, "name": name, "module": module,
+                "ready": bool(slugs) and all(s in reviews for s in slugs)}
+    return None
+
+
+DAY_REDO_SHARE = 0.25  # the redo block's share of a day's plan (the Write strand)
+MIN_DAY_REDOS = 3
+
+
+def redo_cap(rows: list[dict], on: date, plan: float) -> int:
+    """How many redos fit in a day: the redo block of its plan over the learner's own minutes per
+    exercise. 0 = no cap (a rest day: anything done is a bonus)."""
+    if plan <= 0:
+        return 0
+    per_item, _ = usual_pace(rows, on)
+    return max(MIN_DAY_REDOS, int(DAY_REDO_SHARE * plan // per_item))
+
+
+def redos_done(rows: list[dict], on: date) -> int:
+    """Redos done on a day: exercise attempts of items tried on an earlier day."""
+    key = on.strftime("%d/%m/%Y")
+    first_seen: dict[str, date] = {}
+    for r in rows:
+        if r["kind"] in ("exercise", "external") and r["item"] not in first_seen:
+            first_seen[r["item"]] = parse_date(r["date"])
+    return sum(1 for r in rows if r["date"] == key and r["kind"] in ("exercise", "external")
+               and first_seen.get(r["item"], on) < on)
 
 
 def day_plan(profile: dict, rows: list[dict], d: date) -> float:
@@ -254,3 +306,63 @@ def interleave_due(due: list[tuple[str, dict]]) -> list[tuple[str, dict]]:
             queues.append(queue)  # the group goes to the back: the next redo switches pattern
     return out
 
+
+
+# Mock frequency by mode (docs/METHOD.md): weeks between mocks; 0 = only on request.
+MOCK_WEEKS = {"interview": 1, "hybrid": 2, "industry": 0, "hobby": 0}
+
+
+def plan_drift_line(profile: dict, rows: list[dict], on: date) -> str | None:
+    """How far missed time has moved the milestone dates since they were last estimated. Time away
+    is never owed, but it still moves dates: planned here is the profile's usual hours, away or not."""
+    since = profile.get("estimate_date") or profile.get("start_date")
+    if not since:
+        return None
+    start = parse_date(since)
+    if start >= on:
+        return None
+    usual = profile["minutes"]
+    planned = 0.0
+    d = start
+    while d < on:
+        planned += int(usual.get(DAYS[d.weekday()], 0))
+        d += timedelta(days=1)
+    done = minutes_between(rows, start, on - timedelta(days=1))
+    per_day = [int(usual.get(day, 0)) for day in DAYS if int(usual.get(day, 0)) > 0]
+    if not per_day or abs(planned - done) < 120:
+        return None
+    days = abs(planned - done) / statistics.mean(per_day)
+    way = "later" if planned > done else "earlier"
+    return (f"Plan dates: since the milestone estimates of {fmt_date(start)}, {fmt_min(done)} trained of "
+            f"{fmt_min(planned)} at your usual hours (time away included: dates move, nothing is owed). "
+            f"The milestones in PLAN.md move about {days:.0f} training days {way}: update them at the "
+            f"weekly review (dojo-roadmap), then `dojo.py settings estimate_date={fmt_date(on)}`.")
+
+
+def missed_review_lines(profile: dict, rows: list[dict], on: date) -> list[str]:
+    """Last week's review and mock, when they did not happen: never repaid in full, but named, so a
+    short version or the next mock day takes their place."""
+    lines = []
+    monday = week_start(on) - timedelta(days=7)
+    sunday = monday + timedelta(days=6)
+    start = profile.get("start_date")
+    if start and parse_date(start) > sunday:
+        return lines
+    away_week = planned_week(profile, monday) == 0
+    report = WEEKLY / f"week_{monday.strftime(FILE_DATE_FMT)}.md"
+    if not report.exists():
+        lines.append(f"Weekly review for the week of {fmt_date(monday)} not written: "
+                     + ("a 5-minute version (time away that week)" if away_week or planned_week(profile, monday)
+                        <= 0.5 * weekly_target(profile) else "run it now (dojo-weekly), short if time is tight")
+                     + ".")
+    every = MOCK_WEEKS.get(profile.get("mode") or "", 0)
+    if every:
+        recent = [r for r in rows if r["kind"] == "mock"
+                  and monday - timedelta(days=7 * (every - 1)) <= parse_date(r["date"]) <= sunday]
+        if not recent:
+            days_to_sat = (5 - on.weekday()) % 7
+            lines.append(f"No mock in the week of {fmt_date(monday)}"
+                         + (" (time away)" if away_week else "")
+                         + f": it moves to the next mock day, {fmt_date(on + timedelta(days=days_to_sat))}; "
+                           "not repaid twice.")
+    return lines

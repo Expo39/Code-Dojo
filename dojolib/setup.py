@@ -59,6 +59,7 @@ SETTINGS = {
     "level": ("choice", {"beginner": "", "intermediate": "", "advanced": ""}, "where you are now"),
     "start_date": ("date", None, "first training day"),
     "target_date": ("date", None, "a date to be ready by (empty for none)"),
+    "estimate_date": ("date", None, "when the milestone dates in PLAN.md were last estimated"),
     "minutes": ("minutes", None, "minutes per day: 60 for every day, or mon=60,sat=0"),
     "flexible_rest_day": ("bool", None, "training on a rest day counts towards the week"),
     "tracks": ("list", None, "tracks you follow"),

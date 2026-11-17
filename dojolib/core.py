@@ -86,6 +86,9 @@ DEFAULT_PROFILE = {
     "learner": "",
     "start_date": "",
     "target_date": "",
+    # When the milestone dates in PLAN.md were last estimated; `today` says how far missed time
+    # has moved them since (empty = the start date).
+    "estimate_date": "",
     "goal": "",
     "minutes": {"mon": 180, "tue": 180, "wed": 180, "thu": 180,
                 "fri": 180, "sat": 180, "sun": 0},
