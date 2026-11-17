@@ -85,9 +85,12 @@ def cmd_start(args) -> None:
         print(f"Probe timer started. End it with: python dojo.py done {args.item}")
     else:
         print(f"Timer started for '{args.item}' (not a dojo exercise; log it with `done` as usual).")
+    # Restart a held session clock BEFORE the new timer exists: the hold is time away for the
+    # timers already running, never for the one starting now.
+    session_go()
+    timers = read_json(TIMER, {})
     timers[args.item] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None}
     write_json(TIMER, timers)
-    session_go()
 
 
 def cmd_test(args) -> None:
@@ -592,8 +595,9 @@ def cmd_primm(args) -> None:
         if key in timers:
             print(f"Lesson timer already running since {timer_of(timers[key])['start']}.")
         else:
+            session_go()  # before the lesson timer exists, so the hold is not taken off it
+            timers = read_json(TIMER, {})
             timers[key] = {"start": now().isoformat(), "paused_total": 0.0, "paused_at": None,
                            "module": matches[0]}
             write_json(TIMER, timers)
             print(f"Lesson timer started. End it with: python dojo.py done {key}")
-            session_go()
