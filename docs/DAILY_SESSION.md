@@ -45,7 +45,15 @@ median minutes per exercise and per training day, from the log):
 | Long absence (21+ days) | A short probe on the concepts marked held before new material; overdue items in box 3 or higher drop one box; with a target date, the roadmap is checked |
 
 The strand balance and the weak spots look at the last days you could train, with the time away
-left out. A weekly review or a mock missed while away becomes a 5-minute review and the next
+left out.
+
+**Missed time moves plans, never debts.** The same holds for a day that came out shorter than
+planned (3 hours planned, 1 done): every day's redo queue lists only what fits its redo block at
+your own pace, so a backlog spreads over the coming days instead of piling up; `today` says how
+many training days the milestone dates in `PLAN.md` have moved since they were estimated
+(`settings estimate_date`, reset at the weekly review that updates them); a missed weekly review
+or mock is named once, as a 5-minute review or the next mock day; and Build only counts as short
+once your first project is due (the module it comes after is finished). A weekly review or a mock missed while away becomes a 5-minute review and the next
 mock day. A slip you correct at once on one small check is rust: a row in your mistakes log,
 never a mark on the concept graph.
 
@@ -54,7 +62,7 @@ never a mark on the concept graph.
 | Minutes | Block | What to do |
 | --- | --- | --- |
 | 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated in the question (never "remember exercise X"), or one `read drill` |
-| 10 to 50 | Redo queue | Due items from blank files, in the order `today` lists them. Nothing due? Pull the oldest box-1 items |
+| 10 to 50 | Redo queue | The due items `today` lists, from blank files: only as many as fit this block at your own pace (the rest wait, lowest boxes first). Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
 | 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |

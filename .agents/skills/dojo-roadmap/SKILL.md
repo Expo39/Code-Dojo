@@ -28,7 +28,8 @@ Rules: `docs/ROADMAP.md` (read it first). Everything written here is personal (`
 5. **Write it down**:
    - `PLAN.md`: Roadmap table (track, state, share, start condition, why), a dated Plan changes
      line, Current focus if it changes; redraw the skill tree to match (`docs/TRACKS.md`) and keep
-     estimates consistent.
+     estimates consistent. After writing or changing the milestone dates, run `dojo.py settings
+     estimate_date=<today>` so `today` measures missed time from the new estimates.
    - `progress/docs/`: `WEEK.md` when mix or hours change; `INTERVIEW_PREP.md` when an interview
      becomes a goal or gets a date.
    - `dojo.py mix <track>=N ...` (sum 100, 0 = maintenance) and `--priority "<text>"` (`""`

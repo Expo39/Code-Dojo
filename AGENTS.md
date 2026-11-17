@@ -48,6 +48,15 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   before new material, and with a target date, the roadmap trigger it prints. Ask in one line how
   they are, never why they were away. Illness, a holiday or a busy stretch they mention, past or
   planned: `dojo.py away <from> <to> --reason <word>`.
+- **Missed time moves plans, never debts.** Everything follows the time actually trained, not
+  the time planned, whether days were missed or a day came out shorter than planned: the redo
+  queue shows only the redos that fit today's redo block at the learner's pace (the rest wait,
+  lowest boxes first); "Plan dates" says how many training days the milestones in `PLAN.md` have
+  moved since `estimate_date` (update them at the weekly review, then `settings
+  estimate_date=<today>`); a weekly review missed becomes a 5-minute version and a missed mock
+  moves to the next mock day, both named in the status; Build is not short until the first
+  project's module is finished (`tracks/<track>/projects/README.md`). Never propose a block the
+  plan has not reached yet.
 
 ## Keywords
 
