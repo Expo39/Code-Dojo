@@ -20,7 +20,7 @@ because it is the step that trains reading.
 | 2 | **Example** | The task's `Trace by hand:` input (printed without its output) worked through your plan, plus one edge case of your own; for an outside problem, a small input you make up. Say the method in words first (what happens to the input, step by step); the tutor then gives the numbers for exactly the steps you named, so the trace never needs mental arithmetic, and you say what comes out. Write it down (comments in the file or paper) when indexes are involved: written slices are easier to get right than spoken ones | You know the expected output of both |
 | 3 | **Plan** | The approach in 1 or 2 sentences and its rough complexity, before typing | The plan is specific enough that someone else could code it |
 | 4 | **Predict** | Before each test run: "it will pass" or "test X will fail because ..."; add "not sure" when you are not (nobody asks for a number). Only then does the tutor give the test command, and you run it yourself. On a failure, read the error and try your own fix first; ask the tutor when stuck | You said it out loud before pressing Enter |
-| 5 | **Test** | Your example traced through your code line by line, then the edge case | Both give the expected output, by trace and by the tests |
+| 5 | **Test** | The tests run; where your code departs from the plan you traced in step 2, trace that input through those lines (code that follows the traced plan is not traced again) | The tests pass and any departure gives the expected output by trace |
 | 6 | **Reflect** | Time and space complexity; the input that would break it; one improvement using only what you have learnt so far | You could defend the solution to an interviewer |
 
 Code (between steps 3 and 4) happens in small pieces, narrated: "now I collect the counts".
@@ -109,7 +109,7 @@ of them and gives a one-line reminder when one slips; the tracker nudges where i
 | **Your own habits to build** (from `progress/docs/PITFALLS.md` and the weekly coach notes) | Every solution | Points at the line with a question when one of them slips |
 | **Hint at twice the target, not later** | When stuck | `done` flags attempts over twice the target with no hint; the tutor offers hint 1 at 2x |
 | **Hints from the lowest level** | When stuck | Always starts at level 1 and says the level |
-| **Log every attempt, mistake and new concept** | End of each task | Runs `done`, `mistake` and adds the cheat-sheet line; asks "Any mistakes on the way?" |
+| **Log every attempt, mistake and new concept** | End of each task | Runs `done`, `mistake` and adds the cheat-sheet line; logs the mistakes it saw, never asks the learner to list them |
 | **Balance the strands** (learn, write, read and debug, build, perform) | Every week | The weekly review checks the split and moves the next week's blocks |
 | **Perform regularly** (timed problem, mock) | As often as the mode says (`METHOD.md`) | `dojo-session` reminds on mock day; the weekly review notes a missed mock |
 | **Projects: smallest working version first, commit each step, tests from the second project on** | Projects | `review my project` checks commits, structure and tests |

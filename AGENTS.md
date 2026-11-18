@@ -156,9 +156,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
   5. After it passes: `dojo.py pause <exercise>` first (the talk after a pass is study, not
-     solve time), then the `Trace by hand:` input traced through their code (never a new
-     input to invent; an outside problem reuses the one they made up), complexity, a breaking
-     input, one improvement.
+     solve time), then complexity, a breaking input, one improvement. Trace the `Trace by
+     hand:` input through their code only where it departs from the plan they traced before
+     typing (a faithful plan is confirmed by the tests; never a new input to invent).
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions), except
   warm-up self-checks: the warm-up is meant to be quick, so after their answer say right or wrong
@@ -211,7 +211,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | The learner says | You run |
 | --- | --- |
 | `start <ex>` | `dojo.py start <ex>`; confirm the target time |
-| `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps> --confidence N --prediction right\|wrong` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; ask "Any mistakes on the way?" |
+| `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps> --confidence N --prediction right\|wrong` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; log the mistakes you saw with `dojo.py mistake` (never ask the learner to list them: you were there) |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
 | a prediction, `run it` | give `! python3 dojo.py test <ex>` (chat) and `python3 dojo.py test <ex>` (terminal); run it yourself only to verify afterwards |
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |

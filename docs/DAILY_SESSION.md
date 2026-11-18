@@ -67,7 +67,7 @@ never a mark on the concept graph.
 | 110 to 120 | Break | Away from the screen |
 | 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |
 | 150 to 170 | Perform | One unseen problem under interview conditions: a timer, out loud, no hints for the first 10 minutes (`interview problem`), coded while talking |
-| 170 to 180 | Log | Any mistakes, one cheat-sheet line per new concept, `end of day` to the tutor |
+| 170 to 180 | Log | The tutor logs the mistakes it saw, one cheat-sheet line per new concept, `end of day` to the tutor |
 
 ## Standard session (2 hours)
 

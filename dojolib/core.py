@@ -66,7 +66,7 @@ STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
 DEFERRABLE = [s for s in STEPS if s != "predict"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
 Before running: 4 predict (pass or fail? which test? hedge it if unsure)
-After it runs:  5 test (trace your example, one edge case)  6 reflect (complexity, what would break it)"""
+After it runs:  5 test (trace only lines that left your plan)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 
 MODES = {
