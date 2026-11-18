@@ -13,6 +13,18 @@ defined for a beginner, concise for an advanced learner.
 Shared docs never hold anything about one learner (names, dates, hours, their mistakes, their
 job, their estimates). When something written for one learner turns up in `docs/`, move it here.
 
+## overrides.md: your own rules (in `progress/`, beside `PLAN.md`)
+
+- **From**: the learner asking for a rule to work differently for them.
+- **Written by**: the tutor, on the learner's request, one line per rule; `dojo.py overrides`
+  creates the file and lists the rules.
+- **Used by**: every tool: the brief prints each override, and it wins over the shared rule it
+  names.
+- **Shape**: newest first, `- DD/MM/YYYY | <file> > <section> | <the rule as it applies to you>`,
+  where `<file> > <section>` is the shared rule replaced (`AGENTS.md > Predict, then run`). A
+  preference with no shared rule behind it names where it applies (`AGENTS.md > Coaching
+  protocol`).
+
 ## PITFALLS.md: your own traps
 
 - **From**: the mistakes logs (`progress/mistakes.md` and `progress/<track>/mistakes.md`). A theme that comes back 2 or more times becomes an entry.

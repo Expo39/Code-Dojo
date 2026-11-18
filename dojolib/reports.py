@@ -17,6 +17,7 @@ from .planning import (
     week_numbers
 )
 from .graph import graph_brief_line
+from .overrides import overrides_line
 from .practice import debt_lines, expire_debt
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
 from .migrate import is_dated_row
@@ -179,6 +180,9 @@ def cmd_today(args, brief: bool = False) -> None:
     graph_line = graph_brief_line()
     if graph_line:
         lines.append(graph_line)
+    personal = overrides_line()
+    if personal:
+        lines.append(personal)
     changes = changes_lines(track_changes())
     if changes:
         lines.append("Track changes to ask about (learn it / already know it / not for me): "

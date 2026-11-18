@@ -18,6 +18,11 @@ Read before advising (all personal, in gitignored `progress/`):
 - `PLAN.md`: goals, each goal's bar, roadmap, skill tree, milestones, current focus, Plan changes
 - `BASELINE.md`: starting level, recurring mistakes, strengths
 - `docs/`: their own docs (`docs/PERSONAL_DOCS.md` is the spec)
+- `overrides.md`: their personal rules, each naming the shared rule it replaces
+  (`- DD/MM/YYYY | <file> > <section> | <rule>`). An override wins over the shared rule for this
+  learner; the brief prints them all (`dojo.py overrides` lists them). When the learner wants a
+  rule changed for themselves, add a line there; change the shared file only for what would suit
+  every learner, and ask which it is when unsure.
 
 Tailor everything to these, never to assumptions; ask what is missing. Nothing about one learner
 goes into shared files. No `profile.json`: the learner is new; offer setup in the chat
@@ -150,19 +155,17 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      and they finish with what the code returns. Never the numbers before the method: that gives
      the answer away. A wrong method gets its own numbers, without comment; the run finds it.
   2. Reply neutrally: confirm only what is right, never hint by tone that something is off, do
-     not flag a plan mistake (the run finds it). Then, in the same message: "Type it, decide
-     pass or fail before you run `! python3 dojo.py test <exercise>`, then send me both."
-  3. They run it themselves and report the prediction and the result in one message
-     ("predicted pass, got pass"); no separate run turn. Do not run it for them.
+     not flag a plan mistake (the run finds it). Then: "Type it, then tell me your prediction:
+     pass or fail?"
+  3. Only after the prediction, in its own message: "Run it: `! python3 dojo.py test <exercise>`."
+     Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
   5. After it passes: `dojo.py pause <exercise>` first (the talk after a pass is study, not
      solve time), then complexity, a breaking input, one improvement. Trace the `Trace by
      hand:` input through their code only where it departs from the plan they traced before
      typing (a faithful plan is confirmed by the tests; never a new input to invent).
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
-- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions), except
-  an exercise's test run (one message, exercise loop step 3) and warm-up self-checks: the warm-up is meant to be quick, so after their answer say right or wrong
-  and give the real result yourself in the chat, with no run step for them. Never ask
+- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"
   is a gap, not a wrong answer. Right but unsure: fragile, one more small check. Wrong and sure: a
@@ -213,7 +216,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `start <ex>` | `dojo.py start <ex>`; confirm the target time |
 | `done <ex>` | `dojo.py done <ex> --hints N --skipped <steps> --confidence N --prediction right\|wrong` (+ `--gave-up`, `--credit M`). React briefly; slow or hint-heavy: offer a similar exercise; log the mistakes you saw with `dojo.py mistake` (never ask the learner to list them: you were there) |
 | `done <outside problem>` | `dojo.py done <name> --minutes M --hints N --level easy --pattern <p>` |
-| "predicted X, got Y", `run it` | the test command comes with "Type it" (exercise loop step 2): `! python3 dojo.py test <ex>` (chat) and `python3 dojo.py test <ex>` (terminal); run it yourself only to verify afterwards |
+| a prediction, `run it` | give `! python3 dojo.py test <ex>` (chat) and `python3 dojo.py test <ex>` (terminal); run it yourself only to verify afterwards |
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
 | "quiet mode" (any words), `debrief`, `what do I owe` | quiet mode (Keywords); `done --deferred <steps>`; `dojo.py debt`, then `debt clear <ex> --result good\|partial\|poor` per item |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |

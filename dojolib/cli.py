@@ -15,6 +15,7 @@ from .practice import (
 )
 from .reports import cmd_mix, cmd_modules, cmd_stats, cmd_today, cmd_week
 from .graph import cmd_graph
+from .overrides import cmd_overrides
 from .returning import cmd_away
 
 
@@ -99,6 +100,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
                            no arguments shows the current mix
   sync                     find work done without logging it
+  overrides                list your personal rules (progress/overrides.md) and the shared rule each replaces
   primm <module> [topic]   create workspace/<track>/<module>/primm/ (and an empty <topic> file);
                            with a topic, starts a lesson timer: end it with `done lesson:<topic>`
                            for a teach-me lesson
@@ -123,6 +125,7 @@ def main() -> None:
     sub.add_parser("doctor")
     sub.add_parser("today")
     sub.add_parser("brief")
+    sub.add_parser("overrides")
     p = sub.add_parser("list"); p.add_argument("module", nargs="?")
     p = sub.add_parser("start"); p.add_argument("item"); p.add_argument("--fresh", action="store_true")
     p = sub.add_parser("test"); p.add_argument("item"); p.add_argument("--solution", action="store_true")
@@ -211,6 +214,7 @@ def main() -> None:
         "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
         "cancel": cmd_cancel, "debt": cmd_debt, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "away": cmd_away, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate, "graph": cmd_graph,
+        "overrides": cmd_overrides,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
         migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder
