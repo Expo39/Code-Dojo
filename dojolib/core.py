@@ -65,7 +65,7 @@ STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
 # prediction is one word (pass or fail), so it is never deferred.
 DEFERRABLE = [s for s in STEPS if s != "predict"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
-Before running: 4 predict (pass or fail? which test? hedge it if unsure)
+Before running: 4 predict (pass or fail? which test? send it with the result)
 After it runs:  5 test (trace only lines that left your plan)  6 reflect (complexity, what would break it)"""
 KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
 
