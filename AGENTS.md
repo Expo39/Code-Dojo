@@ -156,7 +156,8 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      Do not run it for them.
   4. On a failure they read the error and try a fix first; hints when they ask or stay stuck.
   5. After it passes: `dojo.py pause <exercise>` first (the talk after a pass is study, not
-     solve time), then their own input traced through their code, complexity, a breaking
+     solve time), then the `Trace by hand:` input traced through their code (never a new
+     input to invent; an outside problem reuses the one they made up), complexity, a breaking
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions), except
