@@ -159,7 +159,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      solve time), then their own input traced through their code, complexity, a breaking
      input, one improvement.
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
-- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
+- **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions), except
+  warm-up self-checks: the warm-up is meant to be quick, so after their answer say right or wrong
+  and give the real result yourself in the chat, with no run step for them. Never ask
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"
   is a gap, not a wrong answer. Right but unsure: fragile, one more small check. Wrong and sure: a

@@ -61,7 +61,7 @@ never a mark on the concept graph.
 
 | Minutes | Block | What to do |
 | --- | --- | --- |
-| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated in the question (never "remember exercise X"), or one `read drill` |
+| 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated in the question (never "remember exercise X"); the tutor says right or wrong and gives the real result in the chat, with nothing for you to run. Or one `read drill` |
 | 10 to 50 | Redo queue | The due items `today` lists, from blank files: only as many as fit this block at your own pace (the rest wait, lowest boxes first). Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
