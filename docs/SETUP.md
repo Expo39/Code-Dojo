@@ -22,18 +22,19 @@ python dojo.py setup
 need to activate it: `dojo.py` finds it), asks your name, mode (interview, hybrid, industry,
 hobby), target level, time per weekday and rest days, an optional target date, your tracks and
 your level, runs the checks (`doctor`, which also turns on the pre-push checks used when you
-change the shared files: `tools/check.py`), shows the modules assigned to you (mark any you want to
-leave out, with a reason the tutor discusses with you later), and ends with what the tutor will
-do next. Or skip the
-terminal: open the tutor and say "set me up"; it asks in the chat and runs `setup` for you.
+change the shared files: `tools/check.py`), shows the modules assigned to you (mark any you
+want to leave out, with a reason the tutor discusses with you later), and ends with what the
+tutor will do next. Or skip the terminal: open the tutor and say "set me up"; it asks in the
+chat and runs `setup` for you.
 
 ## Claude Code (the tutor)
 
 Install Claude Code (https://claude.com/claude-code), open a terminal in the repo and run
 `claude`. The tutor rules (`CLAUDE.md`, which imports `AGENTS.md`), the skills in
 `.agents/skills/` (through the `.claude/skills` link) and the agents in `.claude/agents/` load
-automatically; nothing else to install. At the start of each session a
-hook prints your status (`python dojo.py brief`) so the tutor knows where you are.
+automatically; nothing else to install. At the start of each session a hook prints your status
+(`python dojo.py brief`) so the tutor knows where you are, including any personal overrides
+(`progress/overrides.md`).
 
 Recommended: turn on voice dictation with `/voice` in Claude Code, then hold the spacebar to
 talk (the dictation language is set in `/config`). Speaking the restate, trace and plan steps
@@ -50,16 +51,17 @@ rules, `AGENTS.md`, and one copy of the skills, `.agents/skills/`, so a fix to t
 reaches every tool. Each tool is told to skip the others' files (the "Files per tool" table in
 `AGENTS.md`), so none spends time rereading the same rules.
 
-- **Codex:** run `codex` in the repo. It reads `AGENTS.md`, its subagents in `.codex/agents/`, and discovers `.agents/skills/` on
-  its own.
-- **Gemini CLI:** run `gemini` in the repo. It uses its subagents in `.gemini/agents/`; `.gemini/settings.json` points it at `AGENTS.md`
-  instead of `GEMINI.md`, and `.geminiignore` hides the Claude Code files from it.
+- **Codex:** run `codex` in the repo. It reads `AGENTS.md`, its subagents in `.codex/agents/`,
+  and discovers `.agents/skills/` on its own.
+- **Gemini CLI:** run `gemini` in the repo. It uses its subagents in `.gemini/agents/`;
+  `.gemini/settings.json` points it at `AGENTS.md` instead of `GEMINI.md`, and `.geminiignore`
+  hides the Claude Code files from it.
 
 Differences from Claude Code: there is no session-start hook, so the tutor runs
 `python dojo.py brief` itself on your first message. The three subagents (problem-setter,
 code-reviewer, progress-coach) exist for each tool, in its own folder and format, and say the
-same thing (the pre-push check compares them). Turn off any suggested
-replies or inline completions the tool offers, as Claude Code's are here.
+same thing (the pre-push check compares them). Turn off any suggested replies or inline
+completions the tool offers, as Claude Code's are here.
 
 **Symlinks on Windows.** `.claude/skills` is a link to `.agents/skills`. If your Git checkout
 does not create symlinks, `python dojo.py setup` (or `doctor`) replaces it with a link or, if
@@ -73,9 +75,9 @@ folders are hidden from the file panel. Autosave is on in both, so `python dojo.
 runs what you see on screen (the tracker also warns if your file is still the untouched stub).
 
 The debugger runs `python dojo.py debug <file>` on the file you have open, inside the debugger's
-own process, so breakpoints in your `workspace/` file are hit: an exercise runs its tests, a drill
-or mock (`drills/<module>/<type>/`, `mocks/<type>/`) the test file in its type folder, and anything else,
-such as a lesson file, runs as a script. Python tracks only; other languages use their own tools.
+own process, so breakpoints in your `workspace/` file are hit: an exercise runs its tests, a
+drill or mock (`drills/<module>/<type>/`, `mocks/<type>/`) the test file in its type folder, and
+anything else, such as a lesson file, runs as a script. Python tracks only; other languages use their own tools.
 
 ### VS Code
 
@@ -123,8 +125,9 @@ code on your machine (the tracker, tests, hooks), and applies them only after yo
 `progress/` and `workspace/` are never touched. Then it lists what changed in modules you have
 already started or finished, and you choose to learn it, mark it as already known, or leave it
 out (all at once or one by one). Changes in modules you have not reached yet need no answer:
-you meet them there. `python dojo.py changes` shows the list again at any time. If you work from a fork, add the original as a remote named `upstream`
-(`git remote add upstream <url>`); `update` pulls from it.
+you meet them there. `python dojo.py changes` shows the list again at any time. If you work
+from a fork, add the original as a remote named `upstream` (`git remote add upstream <url>`);
+`update` pulls from it.
 
 ## Moving to another machine
 
@@ -134,10 +137,10 @@ python dojo.py export --to user@other-machine:~/
 
 The zip holds `progress/` and `workspace/` (your concept evidence and probe reports included)
 and, in the same zip, `views/concept_graph.html`: the interactive page of your concept graph
-(everything you know, and each track on its own when you learn several) that opens in any browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it restores
-your data; the views are made fresh whenever you ask). Set a default
-target once (`python dojo.py settings export_target=user@host:path`) to just run
-`python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,
+(everything you know, and each track on its own when you learn several) that opens in any
+browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it
+restores your data; the views are made fresh whenever you ask). Set a default target once
+(`python dojo.py settings export_target=user@host:path`) to just run `python dojo.py export`. `scp` comes with OpenSSH, which is built into Windows 10 and later,
 macOS and most Linux distributions.
 
 ### Google Drive

@@ -1,7 +1,7 @@
 # Talking to the tutor
 
-Run `claude` in the repo (or `codex`, or `gemini`: the same rules, see `SETUP.md`). The tutor coaches the method in `CHECKLISTS.md`: it asks you to
-think out loud, asks for each step (understand, example, plan, predict, test, reflect), and
+Run `claude` in the repo (or `codex`, or `gemini`: the same rules, see `SETUP.md`). The tutor
+coaches the method in `CHECKLISTS.md`: it asks you to think out loud, asks for each step (understand, example, plan, predict, test, reflect), and
 reminds you when you skip one. Tutor mode is on at the start of every session: the tutor explains,
 asks questions, gives hints and reviews, but never writes your exercise or project code. Say
 these in plain words; the tutor runs the tracker for you, except the tests, which you run and
@@ -78,7 +78,8 @@ dictated code does not count as typing it yourself.
 | `weekly review` | Report, coach notes, next week's focus, plan updated, and settings changes suggested from your log for you to accept or decline, one yes-or-no question each |
 | `am I on track?` | Trend analysis against your own bar and milestones, and an honest re-estimate |
 | `update` | The incoming shared changes are shown (and which files run code); after your yes they are pulled in; new or changed exercises in your tracks are listed, and for each group you say: learn it, already know it, or not for me |
-| `export` / `export to user@host:path` | Personal data in one zip, with a view of each concept graph inside it, (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
+| `export` / `export to user@host:path` | Personal data in one zip, with a view of each concept graph inside it (and copied over SSH, or uploaded to Google Drive after `drive-setup`) |
+| "I want <rule> to work differently for me" | A personal override: one dated line in `progress/overrides.md` naming the shared rule it replaces; it wins for you only, and the session status lists every override (`python dojo.py overrides`) |
 | `TEACHER OFF` / `TEACHER ON` | Pause or resume tutor mode |
 | "Quiet mode, please" (any words) / "I can talk again" | Quiet mode, for when you cannot type much or speak: the tutor gives short directions and you reply as briefly as you like ("go", "pass", "done"); there are no keys to learn. The steps you would say out loud are owed, not skipped |
 | `debrief` / `what do I owe` | Explain your owed steps out loud on code you already wrote, without implementing; the tutor judges each (good, partial, poor). Anything not explained within 2 days comes back as a redo |
@@ -92,6 +93,7 @@ tutor session catches up with `sync`.
 | --- | --- |
 | `python dojo.py setup` | First time: installs, asks your settings, checks, says what comes next |
 | `python dojo.py settings [key=value ...]` | Show or change any setting; `--review` suggests changes from your log |
+| `python dojo.py overrides` | Your personal rules and the shared rule each replaces |
 | `python dojo.py today` | Today's plan |
 | `python dojo.py modules` | Your modules: assigned, excluded, before your start, planned |
 | `python dojo.py update` / `changes` | Pull shared updates / see new, changed or removed exercises since you were last asked |

@@ -18,9 +18,9 @@ a track for any subject (another language, a framework, maths, even a non-coding
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
-with `concept_graph.html` (every view in one page: open it in a browser) and a Mermaid file per view. Send it straight to
-another machine over SSH with `--to user@host:path`, and restore it with `python dojo.py import`
-(it restores the data; the views are always made fresh).
+with `concept_graph.html` (every view in one page: open it in a browser) and a Mermaid file per
+view. Send it straight to another machine over SSH with `--to user@host:path`, and restore it
+with `python dojo.py import` (it restores the data; the views are always made fresh).
 
 ## Starting as a new learner
 
@@ -29,8 +29,8 @@ another machine over SSH with `--to user@host:path`, and restore it with `python
 2. Say `assess me` (the tutor goes on to it by itself after "set me up"). The tutor asks about
    your background and goals, imports what you already have (notes, old logs, a list of topics
    you know), runs a short probe (what you want to be able to do, then the edge of what you hold
-   on the track's concept graph), a short practical check, and then writes your `BASELINE.md`, `PLAN.md` and
-   personal docs, sets your start module and seeds the redo queue for what you already know.
+   on the track's concept graph), a short practical check, and then writes your `BASELINE.md`,
+   `PLAN.md` and personal docs, sets your start module and seeds the redo queue for what you already know.
    Then you go through your modules together (`python dojo.py modules`): leave any out or add
    any back, each with a reason, and decide together.
 3. Follow `docs/DAILY_SESSION.md`. Re-run `/dojo-assess` monthly, or whenever the plan feels
@@ -65,11 +65,11 @@ A track's `graph.json` maps what it teaches: one entry per concept, with what it
 The skill tree in `PLAN.md` stays the plan (which goals, in what order); the graph is the map of
 one subject that the plan, the probe, lessons and drills read. `python dojo.py graph` shows
 everything you know as one graph (every track's concepts together), `graph <track>` one track,
-each with your state on each concept; `graph next` ranks what you can do now; `graph path <goal>` lists the
-fewest concepts still to learn to reach a goal; `graph --html` builds the interactive page and opens it
-(`concept_graph.html` in the system's temporary folder, or `--out <folder>`; every export zip
-carries one too): an overview of modules with progress rings, Map and Flow (layered) layouts of the
-concepts, a short guide, Next up, hover cards, search, focus on a neighbourhood, what you still
+each with your state on each concept; `graph next` ranks what you can do now; `graph path
+<goal>` lists the fewest concepts still to learn to reach a goal; `graph --html` builds the
+interactive page and opens it (`concept_graph.html` in the system's temporary folder, or `--out
+<folder>`; every export zip carries one too): an overview of modules with progress rings, Map
+and Flow (layered) layouts of the concepts, a short guide, Next up, hover cards, search, focus on a neighbourhood, what you still
 need for a concept, and a panel per concept (README, "See what you know").
 
 ```json
@@ -100,7 +100,7 @@ lesson (`graph set`). The states:
 
 | State | Meaning |
 | --- | --- |
-| fluent | every exercise of it is in box 2 or higher |
+| fluent | every exercise of it (not counting variants) is in box 2 or higher |
 | held | understood: a lesson or a clean solve, or implied because something built on it is solid |
 | due | held, with a redo of one of its exercises due |
 | fragile | a struggle or a probe answer right but unsure |
@@ -120,7 +120,8 @@ GitLab and Codeberg, free books), judges each source on authority, currency, dep
 and licence (stars and "free" are not proof of quality, and niche topics need extra care).
 The aim is the best possible course, not a copy of the free ones: the strongest sources are the
 starting point, and the tutor's own judgement fills their gaps (what they miss, teach badly or
-leave without practice). Exercises are always original. The steps below are what it produces; you can also follow them by hand.
+leave without practice). Exercises are always original. The steps below are what it produces;
+you can also follow them by hand.
 
 1. Create `tracks/<name>/track.json`:
 
@@ -157,8 +158,8 @@ leave without practice). Exercises are always original. The steps below are what
    source was used for, why it is trusted). No time estimates: they depend on the learner and
    live in their `PLAN.md`.
 
-3. Add modules as folders (`m01_basics/`, ...) with exercises in the format below. Ask the
-   tutor (`/dojo-new-exercise`) to generate them; it verifies each one.
+3. Add modules as folders (`m01_basics/`, ...), one folder per exercise inside, in the format
+   below. Ask the tutor (`/dojo-new-exercise`) to generate them; it verifies each one.
 
 4. Write `tracks/<name>/graph.json` (see "Concept graph"): every concept the modules teach,
    with each exercise listed under the concept it trains, and run `python dojo.py graph check
@@ -185,38 +186,52 @@ leave without practice). Exercises are always original. The steps below are what
 
 Every exercise gets its folder, with or without variants, so a variant always has a place to go.
 
-**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your
+`workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it
+resembles before you read its task. That is accepted on purpose, to keep each exercise and its
+variants together: the variant's task, data and code are still new, and you still rebuild the
+method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's
+pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in
+`workspace/`, where `start` puts the file you need.
 
-The learner's side mirrors it: `workspace/<track>/<module>/<exercise>/` holds their attempt at
-the exercise, their attempts at its variants and that exercise's own `.history/` (earlier
-attempts, moved there when a redo starts); `workspace/<track>/<module>/primm/` holds the files
-they type in a lesson (`python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
-sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
-code stays in one folder. Drills are split by module, then type (`drills/m04_parsing/debug/`,
-`drills/m02_strings_lists/read/`: the module of the main concept the drill trains); mocks span
-modules, so they sit in type folders only (`mocks/practical/`, ...). Each type folder has its own
-test folder and `.history/` where the kind needs them (debug drills and mocks; a read snippet is
-only the file), and each file is named after its focus
-(`drills/m03_dicts_sets/debug/find_owner.py`, `mocks/practical/popular_items_07_11_2026.py`), so
-they stay easy to find as they pile up. The tracker moves older layouts (the root `drills/` and
-`mocks/`, numbered `bug_<n>` and `mock_<date>` files, old drill type names) into type folders;
-drills kept in a `drills/<type>/` folder without a module are filed by the tutor into
-`drills/<module>/<type>/`. The tracker ignores
-`primm/` folders, so lesson files never count as exercises. Every new module gets a
-`primm/README.md` listing its concepts, plus a `Theory:` line when the module relies on
-background that is not code (complexity, memory, maths); the tutor offers it before the
-module's first exercise (`ROADMAP.md`, section 6).
+The learner's side, `workspace/<track>/`, keeps each track's code in one folder:
+
+```text
+workspace/<track>/
+  <module>/
+    <exercise>/              their attempt, their attempts at its variants, and .history/
+                             (earlier attempts, moved there when a redo starts)
+    primm/<topic>.<ext>      what they type in a lesson (`dojo.py primm <module> <topic>`)
+  drills/<module>/<type>/    drills by the module of the main concept trained, then type
+                             (debug, read), e.g. drills/m03_dicts_sets/debug/find_owner.py
+  mocks/<type>/              mocks span modules: type folders only (pattern, practical, bug,
+                             explain), e.g. mocks/practical/popular_items_07_11_2026.py
+  projects/
+```
+
+- Drill and mock files are named after their focus, so they stay easy to find as they pile up.
+  Each type folder has its own `tests/` and `.history/` where the kind needs them (debug drills
+  and mocks; a read snippet is only the file).
+- The tracker moves older layouts into this one by itself: flat attempts and module-level
+  `.history/` into exercise folders, the root `drills/` and `mocks/`, numbered `bug_<n>` and
+  `mock_<date>` files, and old drill type names (bug, review, predict, trace). Drills left in a
+  `drills/<type>/` folder without a module are filed by the tutor into `drills/<module>/<type>/`.
+- The tracker ignores `primm/` folders, so lesson files never count as exercises. Every new
+  module gets a `primm/README.md` listing its concepts, plus a `Theory:` line when the module
+  relies on background that is not code (complexity, memory, maths); the tutor offers it before
+  the module's first exercise (`ROADMAP.md`, section 6).
 
 - `<slug>` is unique across all tracks (it is the exercise's name in the tracker).
 - The task text contains these header lines (in a docstring or comments):
-  `Level: tiny|easy|medium|hard`, `Target: <minutes>`, and optionally `Kind: debug|predict`.
+  `Level: tiny|easy|medium|hard`, `Target: <minutes>`, optionally `Kind: debug|predict`, and for
+  a variant `Variant of: <original>`.
 - The task gives the statement, ONE main example, ONE `Trace by hand:` input printed WITHOUT its
   output (a different, ordinary input of 4 to 6 items that goes through the main path, with
   small numbers so the method is the work, never long arithmetic; never an edge case, which the
-  learner finds; write exercises only, since a `b` or `r` task is itself the
-  trace; a `b` task instead shows a `Check your fix with:` input, printed without its output,
-  that varies a parameter from the example so a fix that only repairs the example fails), and any constraint an interviewer would state
-  up front ("do not use max()", "aim for O(n)"), including the contract: return a new
+  learner finds; write exercises only, since a `b` or `r` task is itself the trace; a `b` task
+  instead shows a `Check your fix with:` input, printed without its output, that varies a
+  parameter from the example so a fix that only repairs the example fails), and any constraint
+  an interviewer would state up front ("do not use max()", "aim for O(n)"), including the contract: return a new
   object or change the input in place. No edge cases, no tips, no pattern name:
   discovering those is the learner's job. They go in `.clarify/<slug>.md`, which starts with a
   `Pattern: <short-name>` line (read by the tracker, hidden from the learner until `done`),
@@ -226,4 +241,4 @@ module's first exercise (`ROADMAP.md`, section 6).
 - Each exercise has 3 to 6 tests, including edge cases. `python dojo.py verify` must show that
   the stub fails and the reference passes.
 - Good exercises use a different story from the concept's worked example, have one clear
-  pattern, and name their edge cases in the task.
+  pattern, and keep their edge cases in `.clarify/<slug>.md`, never in the task.

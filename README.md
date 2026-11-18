@@ -14,11 +14,15 @@ It works for anyone, at any level, for any subject. You tell it:
 
 It then recommends the order of what to learn, offers the theory a topic needs right before
 it, measures every attempt, and suggests changes to your plan and settings each week for you
-to accept or decline. When the shared tracks change in modules you have already started or
-finished, it sums the changes up in a few lines at the start of a session and asks once whether
-you want them; new material in modules you have not reached yet simply waits for you there. The tutor explains at your level. A complete Python track ships with it
-(fundamentals, reading and debugging code, data structures and algorithms, projects, interview
-practice). New to the words used here? See [docs/GLOSSARY.md](docs/GLOSSARY.md).
+to accept or decline. The tutor explains at your level.
+
+When the shared tracks change in modules you have already started or finished, it sums the
+changes up in a few lines at the start of a session and asks once whether you want them; new
+material in modules you have not reached yet simply waits for you there.
+
+A complete Python track ships with it (fundamentals, reading and debugging code, data
+structures and algorithms, projects, interview practice). New to the words used here? See
+[docs/GLOSSARY.md](docs/GLOSSARY.md).
 
 ## See what you know: the concept graph
 
@@ -111,7 +115,9 @@ where you stand this week, and proposes today's session from
 1. **Warm-up:** cheat-sheet self-checks or a read drill.
 2. **Redo queue first:** due exercises from a blank file, no peeking at old attempts.
 3. **Learn and write:** `teach me <topic>` when a concept is new, then the next exercises.
-4. **Read, debug or build:** a debug drill, a code-reading exercise, or the project.
+4. **Read, debug or build:** a debug drill one day and a read drill the next, each with a
+   code-reading exercise when time allows; once your first project is due, the project on
+   alternate days.
 5. **Perform** (interview-related modes): an unseen problem under interview conditions, or a
    `mock interview`; in hobby mode this time goes to building.
 6. **Log:** mistakes and cheat-sheet lines, then `end of day` for a summary and tomorrow's plan.
@@ -128,7 +134,7 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | 6. Reflect | What would break it, one improvement, names an interviewer would notice |
 
 Things to say: `start <exercise>`, `done <exercise>`, `I'm stuck`, `teach me <topic>`,
-`probe me`, `what can I do next`, `debug drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
+`probe me`, `what can I do next`, `debug drill`, `read drill`, `mock interview`, `weekly review`, `end of day`. `TEACHER OFF` turns tutor mode
 off until `TEACHER ON`; ask for quiet mode when you cannot type much or speak: replies as brief as
 you like, and the explanations are given later in a `debrief`. The full list: [docs/TUTOR.md](docs/TUTOR.md).
 
@@ -138,7 +144,7 @@ The tutor runs `dojo.py` for you, except the tests: those you run and read yours
 
 ```bash
 python dojo.py today                 # time today and this week, redo queue, next exercises
-python dojo.py start parse_pairs     # timer + workspace/python/m04_parsing/parse_pairs.py
+python dojo.py start parse_pairs     # timer + workspace/python/m04_parsing/parse_pairs/parse_pairs.py
 python dojo.py test parse_pairs      # run the tests against your file
 python dojo.py done parse_pairs --hints 1
 python dojo.py week --write          # weekly report
@@ -150,7 +156,7 @@ python dojo.py graph next            # what you can do now, from the concept gra
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
 | Plan | `today`, `list [module]`, `stats`, `graph [--html]`, `graph next [--goal X]`, `graph path <X>`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules`, `overrides` (your personal rules, each naming the shared rule it replaces) |
 | Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps] [--deferred steps] [--confidence N --prediction right\|wrong]`, `debt [clear]` (quiet mode), `pause` / `resume`, `cancel`, `clarify`, `session start\|pause\|resume\|status\|end` (the session clock), `away <from> <to>` (time away: nothing owed; coming back, a re-entry sized from the days away and your pace) |
-| Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `start probe:<track>` / `done probe:<track>`, `log study <minutes> <topic>` |
+| Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `start probe:<track>` / `done probe:<track>`, `log study <minutes> [<topic>]` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `graph set` / `graph undo` (concept evidence), `sync` |
 | Move data | `export [--to user@host:path \| rclone:gdrive:CodeDojo]` (one zip: your data plus a view of each concept graph), `drive-setup`, `import`, `migrate` |
 | Updates | `update` (pull the shared tracks and docs), `changes [--ack]` (what changed in your tracks since you were last asked) |
@@ -205,7 +211,13 @@ code-dojo/
 └── exports/                 YOUR backups from `dojo.py export`, one zip each (gitignored)
 ```
 
-**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your
+`workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it
+resembles before you read its task. That is accepted on purpose, to keep each exercise and its
+variants together: the variant's task, data and code are still new, and you still rebuild the
+method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's
+pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in
+`workspace/`, where `start` puts the file you need.
 
 ## Documentation
 

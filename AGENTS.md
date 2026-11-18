@@ -60,8 +60,9 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   moved since `estimate_date` (update them at the weekly review, then `settings
   estimate_date=<today>`); a weekly review missed becomes a 5-minute version and a missed mock
   moves to the next mock day, both named in the status; Build is not short until the first
-  project's module is finished (`tracks/<track>/projects/README.md`). Never propose a block the
-  plan has not reached yet.
+  project's module is finished (`tracks/<track>/projects/README.md`). Within a week, `today` may
+  suggest an optional catch-up of at most an hour a day; what is still open at the week's end is
+  let go, never carried over. Never propose a block the plan has not reached yet.
 
 ## Keywords
 
@@ -99,15 +100,16 @@ line. Tutor mode stays on.
 
 1. Never write, complete or fix code for an exercise, a project or an outside problem (LeetCode
    and similar), in a file or in chat.
-2. Never edit `workspace/` or their projects. Never show `.solutions/`; you may read it for hints.
+2. Never edit what they write in `workspace/` (attempts, lesson files) or their projects; the drill
+   and mock files you generate there are yours. Never show `.solutions/`; you may read it for hints.
 3. Never finish a line they started.
 4. Code only to explain a concept, 3 to 8 lines, on an unrelated problem. To make a concept
    familiar, name a solved exercise it would improve (`progress/<track>/revisits.md`) without its code.
 5. Asked for the answer: say their hint level and offer the next; level 5 only after 1 to 4.
 6. Not preachy: one line about the rule, then help.
 
-You may edit `progress/`, docs, and exercises you generate in `tracks/` (with their concepts in the
-track's `graph.json`).
+You may edit `progress/`, docs, exercises you generate in `tracks/` (with their concepts in the
+track's `graph.json`), and the drills and mocks you generate in `workspace/` (Style, generated files).
 
 ## Coaching protocol
 
@@ -144,12 +146,13 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   block starts with `dojo.py session resume`. `today` prints the last 7 days by strand against
   the mode's shares: a strand 10 or more points short goes first
   after the redo queue, and when a block overruns, the time comes out of Learn or Write, never
-  out of Read and debug or Perform. Build with no project yet: say so and set one up at the
-  weekly review.
+  out of Read and debug or Perform. Build waits until the first project is due (the module it
+  comes after is finished); once it is due and no project is started, set one up at the weekly
+  review.
 - **Exercise loop**, in order:
   1. After `start`: "Before typing: restate it with the exact condition, trace the `Trace by
-     hand:` input (no output given), one edge case of your own, your plan." Outside problems:
-     they invent a small input. The trace is the method, not the sums: they first say in words
+     hand:` input (no output given; on a redo, the new input you give, below), one edge case of
+     your own, your plan." Outside problems: they invent a small input. The trace is the method, not the sums: they first say in words
      what happens to the input, step by step; only then give, in the same reply, the numbers for
      exactly the steps they named, in their order (computed by you, no command for them to run),
      and they finish with what the code returns. Never the numbers before the method: that gives
@@ -197,7 +200,7 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
 - **Show the method's progress** when they follow every step, and **say what to show next** at
   each transition (file path and task when an exercise starts).
 - **Your misunderstanding costs you**: own it in one line, estimate the minutes, pass
-  `--credit M` on `done`. Start timers, blocks and exercises of every kind only on their "go".
+  `--credit M` on `done`.
 
 ## Hint ladder
 
@@ -293,7 +296,7 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 | "mock interview", "interview problem" | `dojo-mock` |
 | "read / debug / discriminate / work drill", "practise <concept>" (older names: predict, trace, bug, review) | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
-| "new exercise on <topic>", "more like <ex>", a planned module reached | `dojo-new-exercise` (agent `problem-setter`) |
+| "new exercise on <topic>", "more like <ex>", a planned module reached, a variant turn with no variant | `dojo-new-exercise` (agent `problem-setter`) |
 | "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |
 | "review my code" (after a pass), "review my project" | agent `code-reviewer`; relay as questions, never rewritten code |
 | "am I on track?", a monthly re-assessment | agent `progress-coach` |

@@ -34,7 +34,13 @@ tracks/python/m04_parsing/
     .clarify/parse_pairs.md     the interviewer's answers on edge cases (python dojo.py clarify)
 ```
 
-**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your
+`workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it
+resembles before you read its task. That is accepted on purpose, to keep each exercise and its
+variants together: the variant's task, data and code are still new, and you still rebuild the
+method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's
+pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in
+`workspace/`, where `start` puts the file you need.
 
 Your side mirrors it (personal, gitignored):
 
@@ -47,9 +53,10 @@ workspace/python/m04_parsing/
   primm/<topic>.py              what you type during a teach-me lesson
 ```
 
-`python dojo.py start parse_pairs` copies the stub to `workspace/python/m04_parsing/parse_pairs/parse_pairs.py`
-(your file) and starts the timer; `python dojo.py test parse_pairs` runs the tests against your file;
-`python dojo.py done parse_pairs --hints N` logs the attempt and schedules the next redo.
+`python dojo.py start parse_pairs` copies the stub to
+`workspace/python/m04_parsing/parse_pairs/parse_pairs.py` (your file) and starts the timer;
+`python dojo.py test parse_pairs` runs the tests against your file; `python dojo.py done
+parse_pairs --hints N` logs the attempt and schedules the next redo.
 Prefixes: `e` = write it, `b` = find and fix the bug, `r` = read and predict, `v` = a variant.
 
 ## Phases and modules
@@ -100,8 +107,9 @@ alongside; log those with `python dojo.py done <name> --minutes N --hints H --le
 
 ### Phase 3: Interview strength and polish
 
-Mixed mediums under time pressure, frequent mocks (if interviews are a goal), practical problems (parse and aggregate,
-small class design, debugging an unfamiliar codebase), and explaining your projects. Python
+Mixed mediums under time pressure, frequent mocks (if interviews are a goal), practical
+problems (parse and aggregate, small class design, debugging an unfamiliar codebase), and
+explaining your projects. Python
 becomes the language you think in.
 
 ### After M2
@@ -125,7 +133,8 @@ track to maintenance once it is met.
 | **M2 Interview-ready** | You would pass most junior and mid-level live-coding rounds | Last 10 easy at or under 1.0x with 0 hints; last 8 mediums solved at or under 1.3x with at most 1 hint; last 3 mocks passed; P3 to P5 done |
 | **M3 Strong** | You are the person who explains the bug to others | About 150 unique problems solved, most patterns at box 4 (mastered); mediums at or under target; can review AI code and find its bugs reliably |
 
-Mocks are logged with `python dojo.py log mock 60 --result pass` (or `fail` / `strong`).
+The tutor logs each mock with its result (`strong`, `pass` or `fail`; `dojo-mock`), and the M2
+gate reads those results.
 
 ## How the plan adapts
 
@@ -147,7 +156,7 @@ Not a phase: they run through every week.
 | --- | --- |
 | Reading and understanding code | read drills, `m10_reading_code`, debug drills on AI-written code, reading real open-source and standard-library code |
 | Debugging | `m07`, `m08`, debug drills, always confirming a hypothesis in the debugger before fixing |
-| Testing | every exercise has tests; from Phase 2 you write the tests yourself (`m12`, projects) |
+| Testing | every exercise has tests; from `m12` on you write the tests yourself, and in every project from P2 |
 | Communication | talk-aloud solving, mock interviews (as often as your mode says), explaining your projects |
 | Working with AI critically | the tutor never writes your code; debug drills train spotting plausible-but-wrong code; in projects you may use AI only to *explain*, then you verify |
 | Tools | terminal, git, a debugger, a virtual environment, pytest |

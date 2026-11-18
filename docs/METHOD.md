@@ -11,7 +11,9 @@ experienced engineers' advice; sources are at the bottom.
    goes into a redo queue and comes back from a *blank* file.
 
 2. **Spaced, not massed, and mixed.** Redos come back after 1, 3, 7, 14, 30 and 60 days
-   (Leitner boxes). A clean solve moves an item up a box; a struggle sends it back to box 0. Aim
+   (Leitner boxes). A clean solve (no hint, within the target) moves an item up a box; a solid
+   one (one hint, or up to 1.5 times the target) keeps its box; a struggle or a fail sends it
+   back to box 0. Aim
    for about half new material and half redos. The redo queue switches pattern and module from
    one redo to the next: recalling a method you used a minute ago trains nothing, while having to
    recognise which method a problem needs is the skill an interview tests. For the same reason a
@@ -67,14 +69,14 @@ experienced engineers' advice; sources are at the bottom.
 11. **Start from what you hold, and build one step at a time.** Knowledge is a structure: a new
     idea that connects to nothing fades, one built on what you already hold stays. Each track has
     a concept graph (what each concept needs first), and a new goal starts with a short probe
-    that finds where your understanding ends on each chain of concepts the goal depends on, so nothing you
-    hold is taught again and nothing off the path is taught at all. Lessons then add one step at
+    that finds where your understanding ends on each chain of concepts the goal depends on, so
+    nothing you hold is taught again and nothing off the path is taught at all. Lessons then add one step at
     a time to something you already hold, with a check after each step, so a gap shows the
     moment it is stepped on, not three lessons later.
 
 12. **Say when you are unsure.** Nobody asks for a number: a plain prediction or probe answer
-    counts as sure, a hedged one ("I think", "maybe") as unsure. A wrong answer you were sure of is a misconception, the most useful thing a check can
-    find, and it is repaired before anything builds on it; a right answer you were unsure of is
+    counts as sure, a hedged one ("I think", "maybe") as unsure. A wrong answer you were sure of
+    is a misconception, the most useful thing a check can find, and it is repaired before anything builds on it; a right answer you were unsure of is
     fragile and gets one more check. Comparing how sure you sounded with your results
     (`stats`) trains you to know what you know, which is what an interviewer is probing too.
 
@@ -114,9 +116,9 @@ daily templates in `DAILY_SESSION.md` follow this split.
 
 | Strand | What it is | interview | hybrid | industry | hobby |
 | --- | --- | --- | --- | --- | --- |
-| Learn | new concepts with PRIMM, teach-me lessons, first attempts at new exercises | 20% | 25% | 25% | 30% |
-| Write | the redo queue from blank files, plus new exercises | 25% | 25% | 20% | 20% |
-| Read and debug | read drills, code reading, debug drills (often on AI-written code) | 20% | 20% | 20% | 15% |
+| Learn | teach-me lessons, probes, and the tutor's explanations and feedback between exercises (the session clock) | 20% | 25% | 25% | 30% |
+| Write | every attempt at a write exercise, new or redo, and outside problems | 25% | 25% | 20% | 20% |
+| Read and debug | read and debug drills (often on AI-written code), code reading, and the read-and-predict and fix-the-bug exercises | 20% | 20% | 20% | 15% |
 | Build | the current project | 10% | 15% | 25% | 35% |
 | Perform | a talk-aloud timed problem, mock interviews | 25% | 15% | 10% | 0% |
 

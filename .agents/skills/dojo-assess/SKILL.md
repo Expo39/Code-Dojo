@@ -35,18 +35,20 @@ then section 1.
 ## 2. Probe, then a short practical check (30 to 50 minutes)
 
 When the track has a `graph.json`, run `dojo-probe` first (10 to 15 minutes): their goal, then the
-edge of each chain of concepts it depends on. It measures understanding; the exercises below then measure
-fluency, so pick them at the edges the probe found instead of from the start of the track.
+edge of each chain of concepts it depends on. It measures understanding; the exercises below
+then measure fluency, so pick them at the edges the probe found instead of from the start of the
+track.
 
 3 to 5 existing exercises across the main track, easy to harder (Python: m01, m03, m04, m06, and
-m21 if they claim more), each with `start` (only on their "go") / `done --hints N`, solved while talking; plus one
-predict question and one "explain this concept". Stop when it is clearly too hard. On a
+m21 if they claim more), each with `start` (only on their "go") / `done --hints N`, solved while
+talking; plus one predict question and one "explain this concept". Stop when it is clearly too hard. On a
 re-assessment, use `dojo.py stats` and the last 4 weekly reports first.
 
 ## 3. Place
 
 Level (and *understanding* vs *fluency* if they differ: the probe against the exercises);
-`start_module` = the first module with real gaps (`dojo.py graph path <goal>` lists them); modules the bar does not need go to `skip_modules`; never skip a diagnosed gap.
+`start_module` = the first module with real gaps (`dojo.py graph path <goal>` lists them);
+modules the bar does not need go to `skip_modules`; never skip a diagnosed gap.
 Mastered modules: `dojo.py mark <module> --box 3`; partly known: `--box 1`. Record with
 `dojo.py settings level=... start_module=... skip_modules=... tracks=...`.
 
@@ -73,7 +75,8 @@ This also runs on "show my modules" and when a roadmap change moves modules.
   and Plan changes log (`docs/ROADMAP.md`); a skill tree from their goals (rings in priority and
   prerequisite order, each naming its goal and unlocking gate; nothing they want marked
   optional; `docs/TRACKS.md`); the milestones that measure each bar, with dated estimate ranges
-  from their own speed and about 80% of their planned hours (never generic durations); Current
+  from their own speed and about 80% of their planned hours (never generic durations), then
+  `dojo.py settings estimate_date=<today>` so "Plan dates" in `today` measures from them; Current
   focus.
 - `progress/docs/` (`docs/PERSONAL_DOCS.md`): `PITFALLS.md` from recurring mistakes, `WEEK.md`
   from their hours and mode; `WORK_HABITS.md` only if they work in the field and want it.

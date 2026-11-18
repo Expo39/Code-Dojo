@@ -23,6 +23,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
      the shared file at the top of `progress/`, and a language rule in a shared file moves to its
      track's (`docs/PERSONAL_DOCS.md`).
    - Follow-up methods in `progress/<track>/approaches.md` and `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
+   - Variants: exercises in box 3 or higher whose next redo is a variant turn and that have no variant yet (`dojo.py list` shows `(+N variant)` beside those that have one): have `dojo-new-exercise` write them before they come due, so no redo falls back to the original.
    - Process: the report's "Process" line (how often every step was followed, the most skipped step). A step skipped 3 or more times becomes next week's habit focus, with a one-line reminder the tutor gives at every exercise.
    - Balance across strands (learn, write, read and debug, build, perform) against the shares for
      their mode (`docs/METHOD.md`); a missed mock counts only if the mode had one due.

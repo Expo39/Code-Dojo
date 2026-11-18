@@ -8,10 +8,10 @@ follows the mix that `today` shows. The Perform block follows your mode (`METHOD
 mode it becomes more Build, and in `industry` mode it alternates with Build.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini
-CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance, the lessons and repairs the
-concept graph points to). Say `start <exercise>` and
-`done <exercise>` so the tracker can measure you. The tutor names each block and waits for your
-**go** before starting it.
+CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance, the
+lessons and repairs the concept graph points to). Say `start <exercise>` and `done <exercise>`
+so the tracker can measure you. The tutor names each block and waits for your **go** before
+starting it.
 
 **The session clock** (`python dojo.py session start`, started by the tutor with the first block)
 counts the training between exercise timers too: warm-up, explanations, feedback. It is paused
@@ -47,15 +47,24 @@ median minutes per exercise and per training day, from the log):
 The strand balance and the weak spots look at the last days you could train, with the time away
 left out.
 
-**Missed time moves plans, never debts.** The same holds for a day that came out shorter than
-planned (3 hours planned, 1 done): every day's redo queue lists only what fits its redo block at
-your own pace, so a backlog spreads over the coming days instead of piling up; `today` says how
-many training days the milestone dates in `PLAN.md` have moved since they were estimated
-(`settings estimate_date`, reset at the weekly review that updates them); a missed weekly review
-or mock is named once, as a 5-minute review or the next mock day; and Build only counts as short
-once your first project is due (the module it comes after is finished). A weekly review or a mock missed while away becomes a 5-minute review and the next
-mock day. A slip you correct at once on one small check is rust: a row in your mistakes log,
-never a mark on the concept graph.
+A slip you correct at once on one small check is rust: a row in your mistakes log, never a mark
+on the concept graph.
+
+## Missed time moves plans, never debts
+
+The same holds for missed days and for a day that came out shorter than planned (3 hours
+planned, 1 done):
+
+- Every day's redo queue lists only what fits its redo block at your own pace, so a backlog
+  spreads over the coming days instead of piling up.
+- `today` says how many training days the milestone dates in `PLAN.md` have moved since they
+  were estimated (`settings estimate_date`, reset at the weekly review that updates them).
+- A missed weekly review becomes a 5-minute version, and a missed mock moves to the next mock
+  day; each is named once in the status.
+- Within a week, `today` may suggest an optional catch-up of at most an hour a day; whatever is
+  still open at the end of the week is let go, never carried over.
+- Build only counts as short once your first project is due (the module it comes after is
+  finished).
 
 ## Full session (3 hours)
 
@@ -104,7 +113,7 @@ of logging. A minimum day counts; skipping does not.
 
 | Day | Extra |
 | --- | --- |
-| One day mid-week | Make the Read block's `debug drill` one on AI-written code ("would you merge this?") |
+| One day mid-week | On a debug-drill day, make the drill one on AI-written code ("would you merge this?") |
 | The last training day | **Mock interview** when your mode has one this week (45 to 60 minutes, `/dojo-mock`; weekly in `interview`, every two weeks in `hybrid`, monthly in `industry`, on request in `hobby`) replaces the Perform and Read blocks |
 | End of the week | **Weekly review** (`/dojo-weekly`, 20 minutes): report, coach notes, next week's focus |
 | Rest day | Rest. If the profile has a flexible rest day, training on it counts towards the week |

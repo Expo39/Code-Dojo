@@ -13,7 +13,8 @@ this page is for looking one up on your own.
 | **Target time** | How long the exercise should take someone at that level working alone. Your time is compared with it (for example 1.2x = 20% longer). |
 | **Hint level** | Help comes in 5 steps, from a single question (1) to a full explanation of a solution (5). The tutor always starts at the lowest level that could help. |
 | **Redo queue** | Exercises that come back after some days, to be solved again from an empty file. Solving from memory is what makes skills stick. |
-| **Box** | Where an exercise sits in the redo queue. A clean solve moves it up a box (it comes back later); a struggle moves it to box 0 (it comes back tomorrow). Box 4 or higher counts as mastered. |
+| **Box** | Where an exercise sits in the redo queue. A clean solve moves it up a box (it comes back later); a solid one (one hint, or up to 1.5 times the target) keeps its box; a struggle or a fail moves it to box 0 (it comes back tomorrow). Box 4 or higher counts as mastered. |
+| **Variant** | From box 3, every other redo of an exercise is a variant: a new problem that needs the same method, in a different story. It opens in the exercise's own folder and counts for its box. |
 | **Clean solve** | Solved with no hints, at or under the target time. |
 | **Clarify** | Asking about details the task leaves out (empty input, ties). In the dojo, `clarify <exercise>` gives the answers an interviewer would give. |
 | **Trace** | Following code by hand, line by line, writing down the value of each variable. |
@@ -26,7 +27,9 @@ this page is for looking one up on your own.
 | --- | --- |
 | **PRIMM** | The way new ideas are taught: **P**redict what some code does, **R**un it, **I**nvestigate why, **M**odify it, then **M**ake something of your own. |
 | **Theory lesson** | A short lesson on background a topic needs (for example Big-O before hash maps), offered just before you need it. |
-| **Drill** | A short practice of one skill: predicting output, tracing, finding a bug, reviewing code, explaining. |
+| **Drill** | A short practice of one skill: predicting output or tracing variables (read drill), finding and fixing bugs (debug drill), or telling look-alike problems apart (discriminate drill). |
+| **Session clock** | Counts the training between exercise timers (warm-up, explanations, feedback) as study; paused for breaks and for work on the dojo itself. |
+| **Quiet mode** | For days you cannot type much or speak: short directions, brief replies, and the steps you would say out loud are explained later, in a debrief. |
 | **Mock interview** | A practice interview: an unseen problem, a timer, the tutor acting as the interviewer, then scored feedback. |
 | **Strand** | One kind of practice: learn, write, read and debug, build, perform. Your week mixes them (`METHOD.md`). |
 | **Concept graph** | A map of what a track teaches: each concept and what it needs first (`tracks/<track>/graph.json`). `python dojo.py graph` shows your state on each one, worked out from your log, your redo boxes and what the tutor recorded. |
@@ -51,6 +54,7 @@ this page is for looking one up on your own.
 | **Mix** | How new-material time is split between tracks (for example Python 80%, C++ 20%). |
 | **Taster** | A new track started small (10 to 20% of the time) next to your main one. |
 | **Maintenance** | A track gets no new material, only its redos, so you keep what you learnt. |
+| **Override** | A rule changed for you only, written as one line in `progress/overrides.md` that names the shared rule it replaces. |
 | **Settings** | Your profile: mode, target level, hours per day, tracks and more. `python dojo.py settings` shows them; the weekly review suggests changes for you to accept or decline. |
 | **Track changes** | New, changed or removed exercises and lesson topics in your tracks since you were last asked in modules you have started or finished, for example after `update`. The session start sums them up in a few lines and asks once what you want: all of it, one by one, or later. New material in modules you have not reached yet simply waits for you there. |
 | **Weekly review** | Once a week: your numbers, what went well, what to fix, next week's focus, and suggested settings changes. |
