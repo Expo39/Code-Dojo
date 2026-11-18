@@ -172,9 +172,10 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   not recalled. From box 3, every other redo is a **variant**, chosen by `start`: a new problem
   with the same pattern (file header `Variant of: <slug>`); its attempts count for the original's
   box. `start` says when a variant is due but none exists yet: have `dojo-new-exercise` write one
-  (variant of X) before that item next comes due. Never name a variant's original before `done`,
-  and never point the learner into `tracks/`: each folder there is named after an original and
-  holds its variants, so it gives the method away (`docs/TRACKS.md`, exercise format).
+  (variant of X) before that item next comes due. A variant opens in its original's folder, so
+  the learner knows which exercise it resembles (accepted on purpose, `docs/TRACKS.md`, the
+  disclaimer); never add the method or the pattern name to that, and never point them into
+  `tracks/` (`.clarify/` and `.solutions/` are there).
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"

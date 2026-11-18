@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from .core import (
-    HISTORY_DIR, PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, VARIANTS_DIR, WORKSPACE, active_track_names, die,
+    HISTORY_DIR, PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, WORKSPACE, active_track_names, die,
     read_json
 )
 
@@ -77,18 +77,18 @@ def discover(active_only: bool = True) -> dict:
                 meta = {**hidden, **meta}
             level = meta.get("level", "easy")
             variant_of = meta.get("variant of", "")
-            # workspace/<track>/<module>/ holds the learner's files: originals at the top, variants
-            # in variants/, and one .history/ per module for both (the method never shows in a path)
+            # workspace/<track>/<module>/<original>/ mirrors the tracks: the learner's attempt at the
+            # exercise, at its variants, and that exercise's own .history/
             module_rel = Path(path.relative_to(track["dir"]).parts[0])
-            module_ws = WORKSPACE / track_name / module_rel
+            exercise_ws = WORKSPACE / track_name / module_rel / (variant_of or slug)
             found[slug] = {
                 "slug": slug,
                 "stub": path,
                 "solution": path.parent / track["solution_file"].format(slug=slug),
                 "test": path.parent / track["test_file"].format(slug=slug),
                 "clarify": clarify,
-                "attempt": (module_ws / VARIANTS_DIR if variant_of else module_ws) / f"{slug}{ext}",
-                "history": module_ws / HISTORY_DIR,
+                "attempt": exercise_ws / f"{slug}{ext}",
+                "history": exercise_ws / HISTORY_DIR,
                 "module_rel": module_rel,
                 "track": track_name,
                 "track_config": track,

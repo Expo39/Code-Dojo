@@ -197,15 +197,15 @@ code-dojo/
 │                            docs/, and one folder per track (its notes, drill, mock and probe
 │                            reports); layout in docs/PERSONAL_DOCS.md
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
-│                            <track>/<module>/ holds your attempts, variants/ (variant
-│                            attempts), one .history/ (earlier attempts of both) and primm/
-│                            (lesson files); <track>/drills/<type>/
+│                            <track>/<module>/<exercise>/ holds your attempt, your variant
+│                            attempts and its .history/ (earlier attempts);
+│                            <track>/<module>/primm/ (lesson files); <track>/drills/<type>/
 │                            and <track>/mocks/<type>/ (tests/ and .history/ where needed,
 │                            files named by focus), <track>/projects/
 └── exports/                 YOUR backups from `dojo.py export`, one zip each (gitignored)
 ```
 
-**Spoiler warning: do not browse `tracks/`.** Each folder there is named after an original exercise and holds its variants, so opening it shows which exercise a variant resembles, and with it the method; `.clarify/` holds the pattern and `.solutions/` the answers. Work only in `workspace/`: `start` copies the file you need there, and `dojo.py list` shows how many variants an exercise has without naming them.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
 
 ## Documentation
 

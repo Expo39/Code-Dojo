@@ -45,7 +45,6 @@ GRAPH_OVERLAY = PROGRESS / "graph.json"  # evidence per concept, every track (do
 TRACK_REPORT_DIRS = ("drills", "mocks", "probes")  # progress/<track>/<kind>/: one report per drill, mock, probe
 # Inside each workspace module folder: earlier attempts, and PRIMM lesson scratch files.
 HISTORY_DIR = ".history"
-VARIANTS_DIR = "variants"  # workspace/<track>/<module>/variants/: the variant attempts
 PRIMM_DIR = "primm"
 LESSON_PREFIX = "lesson:"  # timer key of a PRIMM lesson, logged as study time by `done`
 PROBE_PREFIX = "probe:"  # timer key of a probe (dojo-probe), logged as study time by `done`

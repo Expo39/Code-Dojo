@@ -79,9 +79,8 @@ def cmd_start(args) -> None:
     ex = exercises.get(args.item)
     variant = variant_for(args.item, exercises) if ex and not ex["variant_of"] else None
     if variant:
-        # Never name the original here: which exercise it resembles would give the method away.
-        print(f"Variant today: '{variant}', a new problem in place of a due redo; it counts for that "
-              f"redo's box. Use '{variant}' in test and done.")
+        print(f"Variant today: '{variant}', a new problem in place of this redo; it counts for "
+              f"{args.item}'s box. Use '{variant}' in test and done.")
         args.item, ex = variant, exercises[variant]
         if args.item in timers:
             die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
@@ -97,7 +96,7 @@ def cmd_start(args) -> None:
         # A variant reached through its original always starts from a blank file, like a redo.
         redo = (card is not None and card.get("grade") != "failed") or bool(variant)
         if attempt.exists() and (args.fresh or redo):
-            history = ex["history"]  # one per module, for originals and variants alike
+            history = ex["history"]  # the exercise folder's own, shared with its variants
             history.mkdir(parents=True, exist_ok=True)
             stamp = now().strftime("%d%m%Y_%H%M")
             shutil.move(str(attempt), history / f"{args.item}_{stamp}{attempt.suffix}")

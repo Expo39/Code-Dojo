@@ -114,6 +114,7 @@ def migrate_workspace(verbose: bool = True) -> int:
                 shutil.rmtree(cache)
     moved += migrate_side_folders(verbose)
     moved += migrate_drill_types(verbose)
+    moved += migrate_exercise_folders(verbose)
     if moved:
         print(f"Workspace reorganised by module: {moved} file(s) moved.")
     return moved
@@ -168,6 +169,48 @@ def migrate_side_folders(verbose: bool = True) -> int:
             cache = folder / "__pycache__"
             if cache.is_dir():
                 shutil.rmtree(cache)
+    return moved
+
+
+def migrate_exercise_folders(verbose: bool = True) -> int:
+    """Move attempts kept flat in workspace/<track>/<module>/ (and an older variants/ folder) into
+    the exercise's own folder, workspace/<track>/<module>/<original>/, and each earlier attempt
+    in the module's .history/ into that folder's .history/. Idempotent; nothing is overwritten."""
+    moves = []
+    exercises = discover(active_only=False)
+    for slug, ex in exercises.items():
+        module_ws = WORKSPACE / ex["track"] / ex["module_rel"]
+        name = ex["attempt"].name
+        for old in (module_ws / name, module_ws / "variants" / name):
+            if old.is_file() and old != ex["attempt"]:
+                moves.append((old, ex["attempt"]))
+    for module_ws in sorted({WORKSPACE / ex["track"] / ex["module_rel"] for ex in exercises.values()}):
+        history = module_ws / HISTORY_DIR
+        if not history.is_dir():
+            continue
+        for path in sorted(p for p in history.iterdir() if p.is_file()):
+            m = HISTORY_STAMP_RE.match(path.name)
+            ex = exercises.get(m.group("slug")) if m else None
+            if ex:
+                moves.append((path, ex["history"] / path.name))
+    moved = 0
+    for src, dest in moves:
+        if dest.exists():
+            print(f"  migrate: kept {src.relative_to(ROOT).as_posix()} "
+                  f"({dest.relative_to(ROOT).as_posix()} already exists)")
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), dest)
+        moved += 1
+        if verbose:
+            print(f"  moved {src.relative_to(ROOT).as_posix()} -> {dest.relative_to(ROOT).as_posix()}")
+    for module_ws in {WORKSPACE / ex["track"] / ex["module_rel"] for ex in exercises.values()}:
+        for folder in (module_ws / "variants" / "__pycache__", module_ws / "__pycache__"):
+            if folder.is_dir():
+                shutil.rmtree(folder)
+        for folder in (module_ws / "variants", module_ws / HISTORY_DIR):
+            if folder.is_dir() and not any(folder.iterdir()):
+                folder.rmdir()
     return moved
 
 

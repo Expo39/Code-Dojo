@@ -34,19 +34,20 @@ tracks/python/m04_parsing/
     .clarify/parse_pairs.md     the interviewer's answers on edge cases (python dojo.py clarify)
 ```
 
-**Spoiler warning: do not browse `tracks/`.** Each folder there is named after an original exercise and holds its variants, so opening it shows which exercise a variant resembles, and with it the method; `.clarify/` holds the pattern and `.solutions/` the answers. Work only in `workspace/`: `start` copies the file you need there, and `dojo.py list` shows how many variants an exercise has without naming them.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
 
-Your side, one folder per module (personal, gitignored):
+Your side mirrors it (personal, gitignored):
 
 ```text
 workspace/python/m04_parsing/
-  parse_pairs.py                your attempt
-  variants/<slug>.py            your variant attempts
-  .history/                     earlier attempts of both, moved here when a redo starts
+  parse_pairs/
+    parse_pairs.py              your attempt
+    <slug>.py                   your attempt at a variant, when one comes up
+    .history/                   earlier attempts, moved here when a redo starts
   primm/<topic>.py              what you type during a teach-me lesson
 ```
 
-`python dojo.py start parse_pairs` copies the stub to `workspace/python/m04_parsing/parse_pairs.py`
+`python dojo.py start parse_pairs` copies the stub to `workspace/python/m04_parsing/parse_pairs/parse_pairs.py`
 (your file) and starts the timer; `python dojo.py test parse_pairs` runs the tests against your file;
 `python dojo.py done parse_pairs --hints N` logs the attempt and schedules the next redo.
 Prefixes: `e` = write it, `b` = find and fix the bug, `r` = read and predict, `v` = a variant.

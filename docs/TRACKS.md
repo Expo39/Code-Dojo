@@ -14,7 +14,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), shared `mistakes.md` and `cheatsheet.md`, `weekly/`; per track `<track>/` with its own notes and its `drills/`, `mocks/` and `probes/` reports (layout: `PERSONAL_DOCS.md`) |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
-| | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `variants/` with variant attempts, `.history/` with earlier attempts of both, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
+| | `workspace/<track>/`: everything you type for that track: `<module>/<exercise>/` (your attempt, your variant attempts and that exercise's `.history/`), `<module>/primm/` (lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
@@ -185,12 +185,12 @@ leave without practice). Exercises are always original. The steps below are what
 
 Every exercise gets its folder, with or without variants, so a variant always has a place to go.
 
-**Spoiler warning: do not browse `tracks/`.** Each folder there is named after an original exercise and holds its variants, so opening it shows which exercise a variant resembles, and with it the method; `.clarify/` holds the pattern and `.solutions/` the answers. Work only in `workspace/`: `start` copies the file you need there, and `dojo.py list` shows how many variants an exercise has without naming them.
+**Disclaimer: folders are named after the original exercise.** In `tracks/` and in your `workspace/`, a variant sits in its original's folder, so the folder tells you which exercise it resembles before you read its task. That is accepted on purpose, to keep each exercise and its variants together: the variant's task, data and code are still new, and you still rebuild the method from a blank file. Do not browse `tracks/` itself: `.clarify/` holds each exercise's pattern and the edge-case answers, and `.solutions/` the reference answers. Work only in `workspace/`, where `start` puts the file you need.
 
-The learner's side is organised by module and never names a method: `workspace/<track>/<module>/`
-holds their attempts at the originals, `variants/` their variant attempts, one `.history/` for
-both (earlier attempts, moved there when a redo starts) and `primm/` (the files they type in a
-lesson; `python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
+The learner's side mirrors it: `workspace/<track>/<module>/<exercise>/` holds their attempt at
+the exercise, their attempts at its variants and that exercise's own `.history/` (earlier
+attempts, moved there when a redo starts); `workspace/<track>/<module>/primm/` holds the files
+they type in a lesson (`python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
 sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
 code stays in one folder. Drills and mocks sit in type folders (`drills/debug/`, `drills/read/`,
 `mocks/practical/`, ...), each with its own test folder and `.history/` where the kind needs them

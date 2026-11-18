@@ -3,8 +3,8 @@
 Tests do `from parse_pairs import parse_pairs`. This finder decides which file
 answers that import:
 
-- default: your attempt in workspace/python/<module>/<slug>.py (a variant's in
-  workspace/python/<module>/variants/<slug>.py), or the blank stub if there is none
+- default: your attempt in workspace/python/<module>/<original>/<slug>.py (the folders
+  mirror tracks/python/), or the blank stub if there is none
 - DOJO_TARGET=solution: the reference in <module>/<original>/.solutions/<slug>.py (tutor and verify only)
 - DOJO_TARGET=stub: the blank stub (verify only)
 
@@ -20,7 +20,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)\.py$")
-VARIANT_RE = re.compile(r"^\s*Variant of:\s*\S+\s*$", re.MULTILINE)
 
 
 def _index():
@@ -48,11 +47,8 @@ class DojoFinder:
         elif self.target == "stub":
             source = stub
         else:
-            track, module = stub.relative_to(ROOT / "tracks").parts[:2]  # e.g. python, m01_foundations
-            folder = ROOT / "workspace" / track / module
-            if VARIANT_RE.search(stub.read_text(encoding="utf-8")):
-                folder = folder / "variants"
-            attempt = folder / f"{name}.py"
+            # e.g. python/m01_foundations/find_max: the exercise folder, shared with its variants
+            attempt = ROOT / "workspace" / stub.parent.relative_to(ROOT / "tracks") / f"{name}.py"
             source = attempt if attempt.exists() else stub
         return importlib.util.spec_from_file_location(name, source)
 

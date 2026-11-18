@@ -24,7 +24,7 @@ dictated code does not count as typing it yourself.
 | Say | What happens |
 | --- | --- |
 | (your first message) | Catch-up: work done without the tutor gets logged, then today's plan |
-| `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/` (a blank one for a redo; the old one goes to that module's `.history/`). On a variant turn it opens the variant in `variants/` instead, without naming the exercise it replaces |
+| `start <exercise>` | Timer starts; a fresh file appears in `workspace/<track>/<module>/<exercise>/` (a blank one for a redo; the old one goes to that folder's `.history/`). On a variant turn it opens the variant in the same folder instead |
 | `done <exercise>` | Tests run; time, hints and result are logged; the next redo is scheduled |
 | (your prediction) | Hedge it if you are unsure ("I think it passes"); a plain answer counts as sure, and "I don't know" is fine. The tutor gives you the command in the chat form, `! python dojo.py test <exercise>`, and the terminal form (the same without `!`); quick checks also come as lines for the REPL. You run it and read the output yourself. On a failure you read the last line of the error out loud before the tutor points at anything |
 | `clarify <exercise>` | The interviewer's answers on edge cases, after you list your own |
