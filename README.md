@@ -199,7 +199,7 @@ code-dojo/
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/<exercise>/ holds your attempt, your variant
 │                            attempts and its .history/ (earlier attempts);
-│                            <track>/<module>/primm/ (lesson files); <track>/drills/<type>/
+│                            <track>/<module>/primm/ (lesson files); <track>/drills/<module>/<type>/
 │                            and <track>/mocks/<type>/ (tests/ and .history/ where needed,
 │                            files named by focus), <track>/projects/
 └── exports/                 YOUR backups from `dojo.py export`, one zip each (gitignored)

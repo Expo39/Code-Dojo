@@ -144,7 +144,7 @@ def cmd_test(args) -> None:
 def cmd_debug(args) -> None:
     """Debug whatever file is open in the editor, so its breakpoints work.
 
-    A dojo exercise runs its tests in-process; a drill or mock (drills/<type>/,
+    A dojo exercise runs its tests in-process; a drill or mock (drills/<module>/<type>/,
     mocks/<type>/) runs its test file, found with the track's test_file pattern, as does an
     open test file; anything else (a lesson, a project file) runs as a script. Python tracks
     only: other languages debug with their own tools.

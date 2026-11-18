@@ -58,7 +58,7 @@ dictated code does not count as typing it yourself.
 | `discriminate drill` | Two or three problems that look alike but need different patterns: name each pattern and the detail that decides it |
 | `practise <concept>` | A mixed set of drills on concepts from the graph: recall first, then telling it apart from a look-alike, then using it with others |
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
-| `debug drill` | Code (often "written by an AI") with one to three bugs and failing tests in `workspace/<track>/drills/debug/`, named after the function: list what you think is wrong, predict the failing tests, then confirm each bug in the debugger and fix it |
+| `debug drill` | Code (often "written by an AI") with one to three bugs and failing tests in `workspace/<track>/drills/<module>/debug/`, named after the function: list what you think is wrong, open the test file the tutor names and read every test to predict which fail, then confirm each bug in the debugger and fix it |
 | (after any drill) | A report in `progress/<track>/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
 | `work drill` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |

@@ -14,7 +14,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), shared `mistakes.md` and `cheatsheet.md`, `weekly/`; per track `<track>/` with its own notes and its `drills/`, `mocks/` and `probes/` reports (layout: `PERSONAL_DOCS.md`) |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
-| | `workspace/<track>/`: everything you type for that track: `<module>/<exercise>/` (your attempt, your variant attempts and that exercise's `.history/`), `<module>/primm/` (lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
+| | `workspace/<track>/`: everything you type for that track: `<module>/<exercise>/` (your attempt, your variant attempts and that exercise's `.history/`), `<module>/primm/` (lesson files), `drills/<module>/<type>/`, `mocks/<type>/`, `projects/` |
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
@@ -192,12 +192,16 @@ the exercise, their attempts at its variants and that exercise's own `.history/`
 attempts, moved there when a redo starts); `workspace/<track>/<module>/primm/` holds the files
 they type in a lesson (`python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
 sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
-code stays in one folder. Drills and mocks sit in type folders (`drills/debug/`, `drills/read/`,
-`mocks/practical/`, ...), each with its own test folder and `.history/` where the kind needs them
-(debug drills and mocks; a read snippet is only the file), and each file is named
-after its focus (`drills/debug/find_owner.py`, `mocks/practical/popular_items_07_11_2026.py`), so
+code stays in one folder. Drills are split by module, then type (`drills/m04_parsing/debug/`,
+`drills/m02_strings_lists/read/`: the module of the main concept the drill trains); mocks span
+modules, so they sit in type folders only (`mocks/practical/`, ...). Each type folder has its own
+test folder and `.history/` where the kind needs them (debug drills and mocks; a read snippet is
+only the file), and each file is named after its focus
+(`drills/m03_dicts_sets/debug/find_owner.py`, `mocks/practical/popular_items_07_11_2026.py`), so
 they stay easy to find as they pile up. The tracker moves older layouts (the root `drills/` and
-`mocks/`, numbered `bug_<n>` and `mock_<date>` files) into this one. The tracker ignores
+`mocks/`, numbered `bug_<n>` and `mock_<date>` files, old drill type names) into type folders;
+drills kept in a `drills/<type>/` folder without a module are filed by the tutor into
+`drills/<module>/<type>/`. The tracker ignores
 `primm/` folders, so lesson files never count as exercises. Every new module gets a
 `primm/README.md` listing its concepts, plus a `Theory:` line when the module relies on
 background that is not code (complexity, memory, maths); the tutor offers it before the

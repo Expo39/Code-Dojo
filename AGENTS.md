@@ -315,12 +315,14 @@ check fails when they differ. A tool that cannot start subagents follows the fil
   weeks start on Monday; money in euros (€); metric and SI units (km, kg, °C, K).
 - **Generated files go in type folders, named by focus.** Anything you create on the spot (drills,
   mocks, and any future kind) goes in `workspace/<track>/<kind>/<type>/`: drill types `read`,
-  `debug`; mock types `pattern`, `practical`, `bug`, `explain`.
+  `debug`; mock types `pattern`, `practical`, `bug`, `explain`. Drills are split by module first:
+  `workspace/<track>/drills/<module>/<type>/`, the module of the main concept the drill trains
+  (its `module` in the track's `graph.json`); mocks span modules, so they stay `mocks/<type>/`.
   Each type folder holds only the files the learner opens, plus, when the kind has them, its own
   test folder (the track's `test_file` pattern from `track.json`, e.g. `tests/`, with fixtures
   and helpers) and its own `.history/` (the untouched original, `<name>_original<ext>`): debug drills
   and mocks have both; a read snippet is the file alone. Name a file by its focus in
-  snake_case (the function or problem, never the bug or the answer): `drills/debug/find_owner`,
+  snake_case (the function or problem, never the bug or the answer): `drills/m03_dicts_sets/debug/find_owner`,
   `mocks/practical/popular_items_07_11_2026` (mocks add the date). A name already taken gets
   `_<DD_MM_YYYY>`. Never numbered names (`bug_3`, `mock_2`).
 - **Match how technical you are to the learner** (profile `level`, adjusted by their answers).

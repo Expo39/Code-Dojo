@@ -74,7 +74,7 @@ runs what you see on screen (the tracker also warns if your file is still the un
 
 The debugger runs `python dojo.py debug <file>` on the file you have open, inside the debugger's
 own process, so breakpoints in your `workspace/` file are hit: an exercise runs its tests, a drill
-or mock (`drills/<type>/`, `mocks/<type>/`) the test file in its type folder, and anything else,
+or mock (`drills/<module>/<type>/`, `mocks/<type>/`) the test file in its type folder, and anything else,
 such as a lesson file, runs as a script. Python tracks only; other languages use their own tools.
 
 ### VS Code

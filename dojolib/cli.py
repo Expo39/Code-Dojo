@@ -106,7 +106,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
                            for a teach-me lesson
   start probe:<track>      timer for a probe (the goal-first mini test); end it with `done probe:<track>`
   migrate                  move older layouts into the current one: progress/ per track, module
-                           folders, drills/<type>/ and mocks/<type>/ (also automatic)
+                           folders, drill and mock type folders (also automatic)
   verify [items]           (maintainers) stubs fail, solutions pass
 """
 
