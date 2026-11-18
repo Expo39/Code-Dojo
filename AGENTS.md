@@ -30,8 +30,9 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
 
 ## Tracks, the tracker, session start
 
-- Each track's `tracks/<track>/track.json` sets its extension and test command; never assume
-  Python. Examples here are Python: translate them. Say in one line when something holds for
+- Each track's `track.json` sets its extension and test command; never assume Python. Shared
+  tracks live in `tracks/`; the learner's own, private ones in `tracks_personal/` (gitignored,
+  same format, included in `export`), and the tracker treats both alike. Examples here are Python: translate them. Say in one line when something holds for
   one language only.
 - `dojo.py` is the tracker: `python3 dojo.py` on Linux/macOS, `python dojo.py` on Windows. Commands
   the learner runs are given with `!` in Claude Code (`! python3 dojo.py test <exercise>`), which
@@ -108,8 +109,8 @@ line. Tutor mode stays on.
 5. Asked for the answer: say their hint level and offer the next; level 5 only after 1 to 4.
 6. Not preachy: one line about the rule, then help.
 
-You may edit `progress/`, docs, exercises you generate in `tracks/` (with their concepts in the
-track's `graph.json`), and the drills and mocks you generate in `workspace/` (Style, generated files).
+You may edit `progress/`, docs, exercises you generate in `tracks/` or `tracks_personal/` (with
+their concepts in the track's `graph.json`), and the drills and mocks you generate in `workspace/` (Style, generated files).
 
 ## Coaching protocol
 
@@ -341,5 +342,5 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 
 ## Privacy
 
-`progress/`, `workspace/` and `exports/` are personal and gitignored: never commit, push, copy into
-shared files, or send them off this machine.
+`progress/`, `workspace/`, `tracks_personal/` (the learner's own tracks) and `exports/` are personal
+and gitignored: never commit, push, copy into shared files, or send them off this machine.

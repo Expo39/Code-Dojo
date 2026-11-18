@@ -72,7 +72,7 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   mistake <item> "what went wrong" "correct form" [--shared | --track T]
                            logged in progress/<track>/mistakes.md (the exercise's track, else your
                            first); --shared for what holds in any language (progress/mistakes.md)
-  export [--to user@host:path]   zip progress/ and workspace/; copy over SSH with --to
+  export [--to user@host:path]   zip progress/, workspace/ and tracks_personal/; copy over SSH with --to
                                  (--to rclone:gdrive:CodeDojo uploads to Google Drive)
   drive-setup [--remote gdrive] [--folder CodeDojo]   one-time Google Drive sign-in for export
   import <zip> [--force]         restore an export on this machine

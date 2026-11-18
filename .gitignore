@@ -2,6 +2,7 @@
 progress/
 workspace/
 exports/
+tracks_personal/
 progress_archive_*/
 
 # Python

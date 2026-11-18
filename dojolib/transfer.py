@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from .core import (
-    LOG, PROFILE, PROGRESS, ROOT, STAMP_FMT, WORKSPACE, die, load_profile, now, read_json,
+    LOG, PROFILE, PROGRESS, ROOT, STAMP_FMT, TRACKS_PERSONAL, WORKSPACE, die, load_profile, now, read_json,
     write_json
 )
 from .migrate import migrate_dates, migrate_progress, migrate_workspace
@@ -18,7 +18,7 @@ from .graph import graph_track_names, graph_views, write_graph_views
 
 
 def cmd_export(args) -> None:
-    """Zip all personal data (progress/ and workspace/, including the concept-graph evidence and
+    """Zip all personal data (progress/, workspace/ and tracks_personal/, including the concept-graph evidence and
     probe reports), plus a fresh view of each concept graph in views/; optionally copy it away."""
     import zipfile
     profile = load_profile(required=False)
@@ -43,7 +43,7 @@ def cmd_export(args) -> None:
             view.unlink()
         if views:
             views[0].parent.rmdir()
-        for folder in (PROGRESS, WORKSPACE):
+        for folder in (PROGRESS, WORKSPACE, TRACKS_PERSONAL):
             if not folder.exists():
                 continue
             for path in folder.rglob("*"):
@@ -116,7 +116,7 @@ def cmd_drive_setup(args) -> None:
 
 
 def cmd_import(args) -> None:
-    """Restore progress/ and workspace/ from an export zip."""
+    """Restore progress/, workspace/ and tracks_personal/ from an export zip."""
     import zipfile
     archive = Path(args.archive).expanduser()
     if not archive.exists():
@@ -124,7 +124,7 @@ def cmd_import(args) -> None:
     with zipfile.ZipFile(archive) as z:
         names = z.namelist()
         restore = [n for n in names if not n.startswith("views/")]  # views/ is regenerated, not data
-        bad = [n for n in names if not (n.startswith(("progress/", "workspace/", "views/")))
+        bad = [n for n in names if not (n.startswith(("progress/", "workspace/", "tracks_personal/", "views/")))
                or ".." in n.replace("\\", "/").split("/") or "\\" in n or ":" in n]
         links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
         if links:
@@ -139,7 +139,7 @@ def cmd_import(args) -> None:
             stamp = now().strftime(STAMP_FMT)
             backup = ROOT / f"progress_archive_{stamp}"
             backup.mkdir()
-            for folder in (PROGRESS, WORKSPACE):
+            for folder in (PROGRESS, WORKSPACE, TRACKS_PERSONAL):
                 if folder.exists():
                     shutil.move(str(folder), backup / folder.name)
             print(f"Current data moved to {backup.name}/")

@@ -3,7 +3,7 @@
     python tools/check.py [--base <git ref>]
 
 Looks only at what changed since the base (default: origin/main), so it stays fast:
-  1. no personal data tracked (progress/, workspace/, exports/, progress_archive_*)
+  1. no personal data tracked (progress/, workspace/, exports/, tracks_personal/, progress_archive_*)
   2. no secrets in added lines (keys, tokens, private keys)
   3. no learner name from the local profile in shared files (local runs only)
   4. changed Python files compile, changed JSON files parse
@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PERSONAL = re.compile(r"^(progress|workspace|exports|progress_archive_[^/]*)/")
+PERSONAL = re.compile(r"^(progress|workspace|exports|tracks_personal|progress_archive_[^/]*)/")
 SECRETS = {
     "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "GitHub token": re.compile(r"\b(gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})\b"),

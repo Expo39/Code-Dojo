@@ -53,7 +53,7 @@ where the kind needs them.
 
 ## What does not
 
-- Personal data of any kind: `progress/`, `workspace/` and `exports/` are gitignored for a
+- Personal data of any kind: `progress/`, `workspace/`, `tracks_personal/` and `exports/` are gitignored for a
   reason. Anything about one learner belongs in their own `progress/docs/`
   (`docs/PERSONAL_DOCS.md`).
 - Time estimates in shared files: they depend on the learner and live in their `PLAN.md`.

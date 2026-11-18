@@ -68,7 +68,8 @@ def first_project(profile: dict) -> dict | None:
     reviews = read_json(REVIEWS, {})
     exercises = discover()
     for track in load_tracks(active_only=True):
-        readme = TRACKS / track / "projects" / "README.md"
+        config = load_tracks(active_only=False).get(track)
+        readme = (config["dir"] if config else TRACKS / track) / "projects" / "README.md"
         if not readme.exists():
             continue
         found = PROJECT_ROW_RE.search(readme.read_text(encoding="utf-8"))

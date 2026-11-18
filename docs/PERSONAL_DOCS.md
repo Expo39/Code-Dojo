@@ -63,7 +63,8 @@ job, their estimates). When something written for one learner turns up in `docs/
 
 ## The rest of `progress/`
 
-What is about you and every track sits at the top; what belongs to one track sits in its own
+Your own tracks, if you make any, sit outside it in `tracks_personal/` (`docs/TRACKS.md`,
+"Personal tracks"); `export` backs up both. What is about you and every track sits at the top; what belongs to one track sits in its own
 folder, so the layout stays the same however many tracks you learn. The tracker and the skills
 read the files where they are listed here; `dojo.py` creates the folders, and moves an older
 flat layout into this one by itself.

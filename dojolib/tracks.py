@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from .core import (
-    HISTORY_DIR, PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, WORKSPACE, active_track_names, die,
+    HISTORY_DIR, PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, TRACKS_PERSONAL, WORKSPACE, active_track_names, die,
     read_json
 )
 
@@ -35,14 +35,20 @@ DEFAULT_TRACK = {
 
 
 def load_tracks(active_only: bool = True) -> dict:
-    """Map track folder name -> its track.json settings."""
+    """Map track folder name -> its track.json settings, from tracks/ (shared) and
+    tracks_personal/ (the learner's own, gitignored). A personal track with the name of a shared
+    one is left out (doctor reports it)."""
     tracks = {}
-    for config in sorted(TRACKS.glob("*/track.json")):
-        settings = dict(DEFAULT_TRACK)
-        settings.update(read_json(config, {}))
-        settings["dir"] = config.parent
-        settings["name"] = settings["name"] or config.parent.name
-        tracks[config.parent.name] = settings
+    for root, personal in ((TRACKS, False), (TRACKS_PERSONAL, True)):
+        for config in sorted(root.glob("*/track.json")):
+            if config.parent.name in tracks:
+                continue
+            settings = dict(DEFAULT_TRACK)
+            settings.update(read_json(config, {}))
+            settings["dir"] = config.parent
+            settings["name"] = settings["name"] or config.parent.name
+            settings["personal"] = personal
+            tracks[config.parent.name] = settings
     if active_only:
         chosen = set(active_track_names())
         tracks = {k: v for k, v in tracks.items() if k in chosen}
@@ -54,7 +60,8 @@ def track_heading(name: str, track: dict | None = None) -> str:
     if track is None:
         track = load_tracks(active_only=False).get(name, {})
     parents = track.get("builds_on") or []
-    return f"{name} (builds on {', '.join(parents)})" if parents else name
+    label = f"{name} (personal)" if track.get("personal") else name
+    return f"{label} (builds on {', '.join(parents)})" if parents else label
 
 
 def discover(active_only: bool = True) -> dict:

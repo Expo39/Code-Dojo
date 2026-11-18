@@ -135,7 +135,8 @@ from a fork, add the original as a remote named `upstream` (`git remote add upst
 python dojo.py export --to user@other-machine:~/
 ```
 
-The zip holds `progress/` and `workspace/` (your concept evidence and probe reports included)
+The zip holds `progress/`, `workspace/` and `tracks_personal/` (your concept evidence, probe
+reports and your own tracks included)
 and, in the same zip, `views/concept_graph.html`: the interactive page of your concept graph
 (everything you know, and each track on its own when you learn several) that opens in any
 browser. On the other machine: `python dojo.py import ~/code-dojo_<name>_<date>.zip` (it

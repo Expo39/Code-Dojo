@@ -8,8 +8,9 @@ answers that import:
 - DOJO_TARGET=solution: the reference in <module>/<original>/.solutions/<slug>.py (tutor and verify only)
 - DOJO_TARGET=stub: the blank stub (verify only)
 
-The stubs live in tracks/python/<module>/<original>/: one folder per exercise, holding
-the exercise and its variants (docs/TRACKS.md).
+The stubs live in tracks/python/<module>/<original>/ (or the same layout in the learner's
+own tracks_personal/): one folder per exercise, holding the exercise and its variants
+(docs/TRACKS.md).
 """
 
 import importlib.util
@@ -24,12 +25,13 @@ STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)\.py$")
 
 def _index():
     stubs = {}
-    for path in (ROOT / "tracks").rglob("*.py"):
-        if ".solutions" in path.parts or "tests" in path.parts or "primm" in path.parts:
-            continue
-        m = STUB_RE.match(path.name)
-        if m:
-            stubs[m.group(1)] = path
+    for root in (ROOT / "tracks", ROOT / "tracks_personal"):
+        for path in root.rglob("*.py"):
+            if ".solutions" in path.parts or "tests" in path.parts or "primm" in path.parts:
+                continue
+            m = STUB_RE.match(path.name)
+            if m:
+                stubs.setdefault(m.group(1), (root, path))
     return stubs
 
 
@@ -39,16 +41,17 @@ class DojoFinder:
         self.target = os.environ.get("DOJO_TARGET", "")
 
     def find_spec(self, name, path=None, target=None):
-        stub = self.stubs.get(name)
-        if stub is None:
+        found = self.stubs.get(name)
+        if found is None:
             return None
+        root, stub = found
         if self.target == "solution":
             source = stub.parent / ".solutions" / f"{name}.py"
         elif self.target == "stub":
             source = stub
         else:
             # e.g. python/m01_foundations/find_max: the exercise folder, shared with its variants
-            attempt = ROOT / "workspace" / stub.parent.relative_to(ROOT / "tracks") / f"{name}.py"
+            attempt = ROOT / "workspace" / stub.parent.relative_to(root) / f"{name}.py"
             source = attempt if attempt.exists() else stub
         return importlib.util.spec_from_file_location(name, source)
 

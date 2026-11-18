@@ -7,17 +7,18 @@ a track for any subject (another language, a framework, maths, even a non-coding
 
 ## What is shared and what is personal
 
-| Shared (in git, the same for everyone) | Personal (in `progress/` and `workspace/`, gitignored, never pushed) |
+| Shared (in git, the same for everyone) | Personal (in `progress/`, `workspace/` and `tracks_personal/`, gitignored, never pushed) |
 | --- | --- |
 | `dojo.py` and `dojolib/` (tracker), `conftest.py` | `profile.json`: name, mode, target level, time per day, rest days, target date, level, tracks, mix (`python dojo.py settings` shows it) |
 | `tracks/<track>/`: syllabus, exercises, tests, reference solutions, `graph.json` (the concept graph) | `PLAN.md`: goals, roadmap (track order and mix), skill tree, milestones, estimates, current focus |
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), shared `mistakes.md` and `cheatsheet.md`, `weekly/`; per track `<track>/` with its own notes and its `drills/`, `mocks/` and `probes/` reports (layout: `PERSONAL_DOCS.md`) |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
+| | `tracks_personal/<track>/`: your own tracks, in the same format as `tracks/` ("Personal tracks" below) |
 | | `workspace/<track>/`: everything you type for that track: `<module>/<exercise>/` (your attempt, your variant attempts and that exercise's `.history/`), `<module>/primm/` (lesson files), `drills/<module>/<type>/`, `mocks/<type>/`, `projects/` |
 
-Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
-`workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
+Back up or move personal data with `python dojo.py export`: one zip with `progress/`,
+`workspace/` and `tracks_personal/` (concept evidence, probe reports and your own tracks included) and, inside the same zip, `views/`
 with `concept_graph.html` (every view in one page: open it in a browser) and a Mermaid file per
 view. Send it straight to another machine over SSH with `--to user@host:path`, and restore it
 with `python dojo.py import` (it restores the data; the views are always made fresh).
@@ -116,10 +117,23 @@ lesson (`graph set`). The states:
 `python dojo.py graph check` validates a graph (ids, links to modules, lessons and exercises, no
 cycles, shared concepts that agree across tracks); `doctor` and the pre-push checks run it.
 
+## Personal tracks
+
+A track only for you (material from work, a private course, a subject you would rather not
+share) goes in `tracks_personal/<track>/`, in exactly the format below. It is gitignored, so it
+is never pushed, and `export` puts it in your backup zip with `progress/` and `workspace/`
+(`import` restores it). The tracker treats it like any other track (exercises, tests, redos,
+the concept graph, `builds_on` a shared track such as `python`), and `today`, `modules` and
+`stats` mark it "(personal)". Two rules: its name must differ from every shared track's (a
+clash is ignored and `doctor` flags it), and its exercise names must be unique across both
+folders. To share it later, move its folder into `tracks/`. Add it to your profile like any
+track (`python dojo.py settings tracks+=<name>`, or `plan my learning`).
+
 ## Adding a track
 
 Start with research, not a blank page: say "design a track for <subject>" (skill
-`dojo-new-track`). It surveys the best free material (university courses such as MIT, Stanford,
+`dojo-new-track`); it asks first whether the track is shared (`tracks/`) or only yours
+(`tracks_personal/`). It surveys the best free material (university courses such as MIT, Stanford,
 Harvard, Helsinki and Oxford, official documentation, well-regarded repositories on GitHub,
 GitLab and Codeberg, free books), judges each source on authority, currency, depth, exercises
 and licence (stars and "free" are not proof of quality, and niche topics need extra care).

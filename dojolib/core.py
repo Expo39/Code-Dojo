@@ -13,6 +13,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # the repository: dojolib/ sits next to dojo.py
 TRACKS = ROOT / "tracks"
+# The learner's own tracks: same format as tracks/, gitignored, never shared (docs/TRACKS.md).
+TRACKS_PERSONAL = ROOT / "tracks_personal"
 WORKSPACE = ROOT / "workspace"
 PROGRESS = ROOT / "progress"
 PROFILE = PROGRESS / "profile.json"
@@ -161,7 +163,8 @@ def cheatsheet_header(track: str = "") -> str:
 def active_track_names() -> list[str]:
     """The learner's tracks (profile `tracks`), or every track when none is chosen yet."""
     chosen = read_json(PROFILE, {}).get("tracks") or []
-    return list(chosen) or sorted(p.parent.name for p in TRACKS.glob("*/track.json"))
+    return list(chosen) or sorted({p.parent.name for root in (TRACKS, TRACKS_PERSONAL)
+                                   for p in root.glob("*/track.json")})
 
 
 def track_progress(track: str) -> Path:

@@ -11,7 +11,11 @@ reject the weak ones, look beyond the sources named here, and use your own judge
 dojo's method: practice, retrieval, reading code, projects) to fill their gaps and do better
 than any one of them. Always in the dojo's own format, never a copy.
 
-1. **Scope.** The subject, who it is for (the roadmap's goal and bar, or "any learner"), the
+1. **Scope.** Ask first: shared (`tracks/`, in git for everyone) or personal
+   (`tracks_personal/`, gitignored, the learner's own: work material, a private course)? Its
+   name must differ from every shared track's. A personal track is written in the same format
+   and, when built for one learner, may target their goal directly; it never goes into git, and
+   `export` backs it up. Then the subject, who it is for (the roadmap's goal and bar, or "any learner"), the
    language or tool version that is current today (check the official site), and for a review,
    the existing `README.md`, `track.json` and module list.
 2. **Search** (several searches in one turn, by keyword: "<topic> course syllabus", "<topic>

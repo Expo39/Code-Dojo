@@ -198,6 +198,7 @@ code-dojo/
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
+├── tracks_personal/         YOUR own tracks (gitignored, same format as tracks/, in every export)
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
 │                            schedule, concept evidence (graph.json), shared notes, weekly/,
 │                            docs/, and one folder per track (its notes, drill, mock and probe
@@ -237,15 +238,16 @@ pattern and the edge-case answers, and `.solutions/` the reference answers. Work
 
 ## Your data stays yours
 
-`progress/`, `workspace/` and `exports/` never go into git. Back them up or move them with
-`python dojo.py export` (a zip), straight to another machine over SSH
+`progress/`, `workspace/`, `tracks_personal/` (your own tracks) and `exports/` never go into git.
+Back them up or move them with `python dojo.py export` (one zip with all three data folders), straight to another machine over SSH
 (`--to user@host:path`), or to Google Drive (`drive-setup` once, then `export`). Restore with
 `python dojo.py import <zip>`.
 
 ## Make it yours, or share it
 
 - **Tracks are optional.** Add any subject with a `track.json` and modules; see
-  [docs/TRACKS.md](docs/TRACKS.md). Say "design a track for <subject>": the tutor researches the
+  [docs/TRACKS.md](docs/TRACKS.md). A track only for you (work material, a private course) goes
+  in `tracks_personal/`: same format, never pushed, always in your backups. Say "design a track for <subject>": the tutor researches the
   best free university courses, official docs and repositories, judges them critically, and
   builds the best course it can: the strongest material as a base, its own judgement for what
   they all miss, and verified, original exercises.

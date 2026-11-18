@@ -413,7 +413,13 @@ def cmd_doctor(args) -> None:
         print("  ! No profile: python dojo.py setup")
         ok = False
     print(f"Exercises found: {len(discover())}")
-    track_dirs = {p.name for p in (ROOT / "tracks").iterdir() if p.is_dir()}  # placeholders count
+    shared_dirs = {p.name for p in (ROOT / "tracks").iterdir() if p.is_dir()}  # placeholders count
+    personal_root = ROOT / "tracks_personal"
+    personal_dirs = {p.name for p in personal_root.iterdir() if p.is_dir()} if personal_root.is_dir() else set()
+    for clash in sorted(shared_dirs & personal_dirs):
+        print(f"  ! tracks_personal/{clash} has the name of a shared track and is ignored: rename it")
+        ok = False
+    track_dirs = shared_dirs | personal_dirs
     for name, track in load_tracks(active_only=False).items():
         unknown = [t for t in track.get("builds_on") or [] if t not in track_dirs]
         if unknown:
