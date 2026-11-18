@@ -94,6 +94,11 @@ need for a concept, and a panel per concept (README, "See what you know").
 | `planned` | `true` for a concept of a module not built yet |
 | `shared` | `true` for a concept that holds in any language (Big-O, recursion, two pointers, BFS): another track's graph uses the same `id` and the same `can` statement, the combined graph shows it once, and evidence from any track counts for all of them. Language rules (how Python slices, what `std::vector` does) are never shared |
 
+**A graph can miss a prerequisite.** A track is designed in advance, and a concept the exercises
+use can still be missing from its graph (unpacking was, until a lesson needed it). When the tutor
+finds one, before an exercise or a lesson, it adds the concept and its links to `graph.json` and
+the learner gets that step first; the graph improves for everyone.
+
 Your state on each concept is computed, never typed: from your log (a solved exercise, a lesson,
 a mock with its pattern), your redo boxes, and evidence the tutor records after a probe or a
 lesson (`graph set`). The states:

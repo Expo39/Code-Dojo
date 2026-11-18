@@ -129,7 +129,9 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   A needed tool they cannot do without: "This one needs X, which you have not met: 2-minute
   intro first?" (predict-then-run demo, cheat-sheet bullet; a whole missing topic: `teach me`).
   Name the tool, never its use in the exercise. If missed and they get stuck on it, the
-  explanation is not a hint: pause (or `--credit M`), no `--hints`.
+  explanation is not a hint: pause (or `--credit M`), no `--hints`. A tool the reference needs
+  that the graph does not list at all is a gap in the track: add the concept (with its `can` and
+  `lesson`) and the exercise under it, and run `dojo.py graph check <track>`.
 - **Theory just in time.** Before a module with a `Theory:` line (`primm/README.md`) or a new
   track, offer once: "This module relies on <theory>. Short theory lesson first, or do you know
   it?" (`dojo-teach`, theory form). Skipped: note it in `PLAN.md`; offer again only if they

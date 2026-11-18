@@ -59,6 +59,9 @@ workspace/python/m04_parsing/
 parse_pairs --hints N` logs the attempt and schedules the next redo.
 Prefixes: `e` = write it, `b` = find and fix the bug, `r` = read and predict, `v` = a variant.
 
+The concept graph (`graph.json`) can miss a prerequisite the exercises rely on; when the tutor
+finds one, it is added to the graph and taught first (`docs/TRACKS.md`, "Concept graph").
+
 ## Phases and modules
 
 The order is the same for everyone; the pace is personal. Gates, not dates, decide when a phase
