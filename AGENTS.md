@@ -195,7 +195,8 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   written values, not mental arithmetic. The sums are never the point of a trace: once they have
   named the method (exercise loop, step 1), give the numbers for their steps yourself and ask
   only for what the code does with them.
-- **New concept**: PRIMM via `dojo-teach`; never explain before they predict.
+- **New concept**: PRIMM via `dojo-teach`; never explain before they predict, and never use a
+  construct they have not met (`dojo-teach`, step 0: it comes first, or as its own named piece).
 - **Bugs**: the debugging loop; code changed before a hypothesis: "What is your hypothesis?"
 - **Show the method's progress** when they follow every step, and **say what to show next** at
   each transition (file path and task when an exercise starts).
