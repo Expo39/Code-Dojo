@@ -11,7 +11,9 @@ experienced engineers' advice; sources are at the bottom.
    goes into a redo queue and comes back from a *blank* file.
 
 2. **Spaced, not massed, and mixed.** Redos come back after 1, 3, 7, 14, 30 and 60 days
-   (Leitner boxes). A clean solve (no hint, within the target) moves an item up a box; a solid
+   (Leitner boxes). A clean solve (no hint, within the target) moves an item up a box, and a
+   very fast one (at most 0.6 times the target) up two, so mastered items get out of the way; a
+   solid
    one (one hint, or up to 1.5 times the target) keeps its box; a struggle or a fail sends it
    back to box 0. Aim
    for about half new material and half redos. The redo queue switches pattern and module from

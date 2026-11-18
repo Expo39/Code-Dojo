@@ -7,7 +7,7 @@ import csv
 from datetime import date, datetime, timedelta
 
 from .core import (
-    INTERVALS, LOG, LOG_FIELDS, PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, TRACK_REPORT_DIRS,
+    FAST_RATIO, INTERVALS, LOG, LOG_FIELDS, PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, TRACK_REPORT_DIRS,
     TRACKER, WEEKLY, active_track_names, cheatsheet_header, die, fmt_date, mistakes_header, now,
     parse_date, read_json, track_progress, write_json
 )
@@ -92,7 +92,10 @@ def schedule(item: str, result: str, ratio: float | None, hints: int, on: date) 
         card["box"] = 0
         grade = "failed"
     elif hints == 0 and (ratio is None or ratio <= 1.0):
-        card["box"] = min(card["box"] + 1, len(INTERVALS) - 1)
+        # A very fast clean solve shows the item is easy now: it skips a box, so the redo time
+        # goes to items that still need it.
+        step = 2 if ratio is not None and ratio <= FAST_RATIO else 1
+        card["box"] = min(card["box"] + step, len(INTERVALS) - 1)
         card["clean"] += 1
         grade = "clean"
     elif hints <= 1 and (ratio is None or ratio <= 1.5):

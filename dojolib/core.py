@@ -52,6 +52,8 @@ PROBE_PREFIX = "probe:"  # timer key of a probe (dojo-probe), logged as study ti
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 # Leitner boxes: days until the next redo. Box 4+ counts as mastered.
 INTERVALS = [1, 3, 7, 14, 30, 60]
+# A clean solve this fast (time against target, no hints) jumps two boxes instead of one.
+FAST_RATIO = 0.6
 # From this box, every other redo is a variant: a new problem with the same pattern.
 VARIANT_BOX = 3
 MASTERED_BOX = 4

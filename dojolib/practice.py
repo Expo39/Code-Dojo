@@ -11,7 +11,7 @@ from pathlib import Path
 
 from .core import (
     CHECKLIST, DEBT, DEBT_DAYS, DEFERRABLE, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
-    REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, VARIANT_BOX, WORKSPACE, active_track_names, die, fmt_date,
+    FAST_RATIO, REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, VARIANT_BOX, WORKSPACE, active_track_names, die, fmt_date,
     fmt_min, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
 )
 from .data import (
@@ -301,7 +301,8 @@ def cmd_done(args) -> None:
             if original:
                 stored["variants_done"] = stored.get("variants_done", 0) + 1
             write_json(REVIEWS, reviews)
-        label = {"clean": "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
+        fast = card["grade"] == "clean" and judged is not None and judged <= FAST_RATIO
+        label = {"clean": "Fast clean solve: up two boxes." if fast else "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
                  "failed": "Not solved: redo tomorrow."}[card["grade"]]
         whose = f" of {original} (a variant counts for it)" if original else ""
         print(f"{label} Next redo{whose} from a blank file: {card['due']} (box {card['box']}).")

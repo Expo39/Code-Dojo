@@ -63,7 +63,7 @@ It works in light and dark and on a phone, and keeps still if your system asks f
 ## Why it works
 
 - **Retrieval and spacing.** Every exercise comes back from a blank file after 1, 3, 7, 14, 30
-  and 60 days, sooner if it went badly, in a mixed order so you have to recognise each pattern;
+  and 60 days, sooner if it went badly and later if it was very fast, in a mixed order so you have to recognise each pattern;
   each redo gets a new trace input, and from box 3 every other one is a variant (same pattern,
   new problem).
 - **Start from what you hold.** Each track has a concept graph; a new goal starts with a short

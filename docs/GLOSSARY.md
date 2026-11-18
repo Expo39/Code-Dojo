@@ -13,7 +13,7 @@ this page is for looking one up on your own.
 | **Target time** | How long the exercise should take someone at that level working alone. Your time is compared with it (for example 1.2x = 20% longer). |
 | **Hint level** | Help comes in 5 steps, from a single question (1) to a full explanation of a solution (5). The tutor always starts at the lowest level that could help. |
 | **Redo queue** | Exercises that come back after some days, to be solved again from an empty file. Solving from memory is what makes skills stick. |
-| **Box** | Where an exercise sits in the redo queue. A clean solve moves it up a box (it comes back later); a solid one (one hint, or up to 1.5 times the target) keeps its box; a struggle or a fail moves it to box 0 (it comes back tomorrow). Box 4 or higher counts as mastered. |
+| **Box** | Where an exercise sits in the redo queue. A clean solve moves it up a box (it comes back later), a very fast one (at most 0.6 times the target) up two; a solid one (one hint, or up to 1.5 times the target) keeps its box; a struggle or a fail moves it to box 0 (it comes back tomorrow). Box 4 or higher counts as mastered. |
 | **Variant** | From box 3, every other redo of an exercise is a variant: a new problem that needs the same method, in a different story. It opens in the exercise's own folder and counts for its box. |
 | **Clean solve** | Solved with no hints, at or under the target time. |
 | **Clarify** | Asking about details the task leaves out (empty input, ties). In the dojo, `clarify <exercise>` gives the answers an interviewer would give. |
