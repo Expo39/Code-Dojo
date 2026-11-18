@@ -27,8 +27,10 @@ KIND_STRAND = {"study": "learn", "exercise": "write", "external": "write", "dril
 def strand_split(rows: list[dict], start: date, end: date) -> dict:
     """Minutes per strand between two dates (inclusive)."""
     split = {k: 0.0 for k in STRAND_SHARES["interview"]}
+    # Read-and-predict (r) and fix-the-bug (b) exercises train reading, not writing.
+    reading = {slug for slug, ex in discover(active_only=False).items() if ex["kind"] in ("predict", "debug")}
     for r in rows:
-        strand = KIND_STRAND.get(r["kind"])
+        strand = "read" if r["kind"] == "exercise" and r["item"] in reading else KIND_STRAND.get(r["kind"])
         if strand and start <= parse_date(r["date"]) <= end:
             split[strand] += float(r["minutes"] or 0)
     return split

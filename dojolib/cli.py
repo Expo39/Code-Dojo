@@ -30,7 +30,8 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   today                    today's plan: time, week balance, redo queue, next exercises
   list [module]            all exercises with their status
   start <item> [--fresh]   start the timer; for a dojo exercise also create
-                           workspace/<track>/<module>/<item>.py (earlier attempts go to .history/)
+                           workspace/<track>/<module>/<exercise>/<item>.py (earlier attempts go to
+                           that folder's .history/); on a variant turn it opens the variant there
   test <item> [--debug]    run that exercise's tests against your workspace file
                            (--debug: in-process, for editor breakpoints)
   debug <file>             debug any open file with editor breakpoints: an exercise runs its

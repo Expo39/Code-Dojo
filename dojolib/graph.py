@@ -353,9 +353,13 @@ def graph_refresh(graph: dict, verbose: bool = False) -> tuple[dict, dict]:
 def concept_states(graph: dict, overlay: dict, on: date) -> dict[str, dict]:
     """State of every concept: the latest evidence, then the live redo boxes of its exercises."""
     reviews = read_json(REVIEWS, {})
+    # A variant has no redo card of its own (its attempts count for its original's box), so the
+    # boxes are read from the originals only.
+    variants = {s for s, ex in discover(active_only=False).items() if ex["variant_of"]}
     out: dict[str, dict] = {}
     for cid in graph["order"]:
-        c = graph["concepts"][cid]
+        c = {**graph["concepts"][cid]}
+        c["exercises"] = [s for s in c["exercises"] if s not in variants]
         entries = sorted(enumerate(evidence_of(overlay, c)),
                          key=lambda ie: (parse_date(ie[1]["date"]) if ie[1].get("date") else date.min, ie[0]))
         latest = entries[-1][1] if entries else None
