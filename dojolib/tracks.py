@@ -28,6 +28,9 @@ DEFAULT_TRACK = {
     "requires": [],
     # When the track was last checked against current courses and the current version (DD/MM/YYYY).
     "reviewed": "",
+    # The tracks this one builds on (pandas and django on python; ros on cpp and python): shown
+    # beside its name, so a family of tracks reads together without nesting folders.
+    "builds_on": [],
 }
 
 
@@ -44,6 +47,14 @@ def load_tracks(active_only: bool = True) -> dict:
         chosen = set(active_track_names())
         tracks = {k: v for k, v in tracks.items() if k in chosen}
     return tracks
+
+
+def track_heading(name: str, track: dict | None = None) -> str:
+    """A track's name with the tracks it builds on, e.g. "pandas (builds on python)"."""
+    if track is None:
+        track = load_tracks(active_only=False).get(name, {})
+    parents = track.get("builds_on") or []
+    return f"{name} (builds on {', '.join(parents)})" if parents else name
 
 
 def discover(active_only: bool = True) -> dict:

@@ -3,6 +3,8 @@
 Last reviewed: not yet (placeholder). Before building it, research current courses and versions
 with `dojo-new-track`.
 
+Builds on: cpp and python (`builds_on` in its `track.json` when it is built).
+
 Not built yet, and not part of any plan unless a learner chooses it in their roadmap
 (`docs/ROADMAP.md`). When a plan reaches it, the tutor agrees the toolchain with the learner,
 writes `track.json` (`docs/TRACKS.md`) and generates the first module only.

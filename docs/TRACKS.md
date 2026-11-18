@@ -140,6 +140,7 @@ you can also follow them by hand.
   "clarify_file": ".clarify/{slug}.md",
   "test_command": ["cargo", "test", "--quiet", "--manifest-path", "{track_dir}/Cargo.toml", "{slug}"],
   "requires": ["Fluent in one language (first milestone of its track)"],
+  "builds_on": [],
   "reviewed": "07/11/2026"
 }
 ```
@@ -152,7 +153,13 @@ you can also follow them by hand.
    or theory track); attempts are then logged by hand and judged with the tutor.
 
    `requires` (optional) lists, in words, what a learner should have before starting the track;
-   the roadmap reads it (`ROADMAP.md`). `reviewed` is the date the track was last checked
+   the roadmap reads it (`ROADMAP.md`). `builds_on` (optional) names the tracks this one is built
+   on: a library or framework track names its language (`"builds_on": ["python"]` for pandas or
+   Django), and a track that needs several names them all (`["cpp", "python"]` for ROS). Tracks
+   stay side by side in `tracks/`, never nested, because a track can build on more than one;
+   `today`, `modules` and `stats` show the family beside the name ("pandas (builds on python)"),
+   and `doctor` checks each name is a track. The concept-level links are `<track>:<id>` in
+   `requires` (below). `reviewed` is the date the track was last checked
    against current courses and the current version; `doctor` flags a track not reviewed for
    over a year, because the field keeps changing.
 

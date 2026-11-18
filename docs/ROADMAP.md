@@ -70,7 +70,8 @@ goal looks at them again.
 
 ## 2. Tracks, prerequisites and states
 
-Each track states what it needs first: `requires` in `tracks/<track>/track.json` and a
+Each track states what it needs first: `requires` in `tracks/<track>/track.json`, the tracks it
+`builds_on` (a library or framework names its language; ROS names C++ and Python), and a
 "Prerequisites" section in its README (for example, ROS 2 needs Python and C++ basics on
 Linux). A track the learner wants that does not exist yet is built when the roadmap reaches it
 (section 8), not in advance.

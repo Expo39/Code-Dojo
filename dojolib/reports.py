@@ -10,7 +10,7 @@ from .core import (
     training_window, week_start, write_json
 )
 from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, timer_of
-from .tracks import discover, load_tracks
+from .tracks import discover, load_tracks, track_heading
 from .planning import (
     calibration, effective_mix, fluency_gates, interleave_due, next_new, print_modules,
     missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, strand_line,
@@ -162,8 +162,8 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append(f"Priority: {profile['priority']}.")
     if len(mix) > 1:
         lines.append("Mix: " + ", ".join(
-            f"{t} maintenance (redos only)" if v == 0
-            else f"{t} {v}%" + (f" (about {fmt_min(plan * v / 100)} of today)" if plan else "")
+            f"{track_heading(t)} maintenance (redos only)" if v == 0
+            else f"{track_heading(t)} {v}%" + (f" (about {fmt_min(plan * v / 100)} of today)" if plan else "")
             for t, v in mix.items()) + ".")
         for t, v in mix.items():
             items = next_new(profile, track=t) if v > 0 else []
@@ -301,7 +301,7 @@ def cmd_stats(args) -> None:
         total_t = sum(spent.values()) or 1
         print("Track time, last 28 days (exercises and lessons with a module) against the mix:")
         for t, v in mix.items():
-            print(f"  {t:12} {fmt_min(spent.get(t, 0))} ({100 * spent.get(t, 0) / total_t:.0f}%), mix {v}%")
+            print(f"  {track_heading(t):12} {fmt_min(spent.get(t, 0))} ({100 * spent.get(t, 0) / total_t:.0f}%), mix {v}%")
         print()
     print("\nLast 28 days by pattern:")
     for p, s in sorted(recent_stats(rows, 28, on).items(), key=lambda kv: -kv[1]["ratio"]):

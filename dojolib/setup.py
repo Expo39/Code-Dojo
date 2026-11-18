@@ -413,7 +413,12 @@ def cmd_doctor(args) -> None:
         print("  ! No profile: python dojo.py setup")
         ok = False
     print(f"Exercises found: {len(discover())}")
+    track_dirs = {p.name for p in (ROOT / "tracks").iterdir() if p.is_dir()}  # placeholders count
     for name, track in load_tracks(active_only=False).items():
+        unknown = [t for t in track.get("builds_on") or [] if t not in track_dirs]
+        if unknown:
+            print(f"  ! track '{name}' builds on {', '.join(unknown)}, which is not a track in tracks/")
+            ok = False
         reviewed = track.get("reviewed", "")
         if not reviewed:
             print(f"  note: track '{name}' has no review date (dojo-new-track, review)")

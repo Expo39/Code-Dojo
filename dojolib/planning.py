@@ -9,7 +9,7 @@ from datetime import date, timedelta
 
 from .core import DAYS, FILE_DATE_FMT, REVIEWS, TRACKS, WEEKLY, fmt_date, fmt_min, parse_date, planned_minutes, planned_week, read_json, training_window, week_start, weekly_target
 from .data import minutes_between, minutes_on
-from .tracks import discover, load_tracks
+from .tracks import discover, load_tracks, track_heading
 from .returning import reentry, usual_pace
 
 
@@ -171,7 +171,8 @@ def module_overview(profile: dict) -> list[dict]:
             if readme.exists() else {}
         on_disk = sorted({ex["module"] for ex in exercises.values() if ex["track"] == track_name})
         for module in sorted(set(on_disk) | set(focus)):
-            slugs = [sl for sl, ex in exercises.items() if ex["track"] == track_name and ex["module"] == module]
+            slugs = [sl for sl, ex in exercises.items()
+                     if ex["track"] == track_name and ex["module"] == module and not ex["variant_of"]]
             if any(module.startswith(x) for x in profile.get("skip_modules", [])):
                 state = "excluded"
             elif not slugs:
@@ -189,7 +190,7 @@ def module_overview(profile: dict) -> list[dict]:
 def print_modules(profile: dict) -> None:
     rows = module_overview(profile)
     for track in dict.fromkeys(r["track"] for r in rows):
-        print(f"{track}:")
+        print(f"{track_heading(track)}:")
         for r in (x for x in rows if x["track"] == track):
             count = f"{r['tried']}/{r['total']}" if r["total"] else "   "
             note = f"  [your note: {r['note']}]" if r["note"] else ""
