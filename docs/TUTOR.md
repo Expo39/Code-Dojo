@@ -55,6 +55,7 @@ dictated code does not count as typing it yourself.
 | Say | What happens |
 | --- | --- |
 | `read drill` | "What does this print?" three in a row, or a trace table of the variables, iteration by iteration |
+| `discussion drill` | For discussion-format interviews: 3 to 5 interview questions from a module's `discussion.md`, answered out loud, with follow-ups and a score per answer (accuracy, depth, example, clarity) |
 | `discriminate drill` | Two or three problems that look alike but need different patterns: name each pattern and the detail that decides it |
 | `practise <concept>` | A mixed set of drills on concepts from the graph: recall first, then telling it apart from a look-alike, then using it with others |
 | `debug this` / a breakpoint | In the editor, "Debug: this file" (Zed F4, VS Code Run and Debug) works on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `python dojo.py debug <file>` in your own terminal (`SETUP.md`) |
@@ -62,7 +63,7 @@ dictated code does not count as typing it yourself.
 | (after any drill) | A report in `progress/<track>/drills/`: your answer in your words, the real issues, and what you found, found after a prompt, missed or flagged wrongly |
 | `work drill` | Explain part of your current work project from memory; the tutor asks the hard follow-up questions (no work code is pasted) |
 | `interview problem` | One unseen problem, timed, interviewer style |
-| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/<track>/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/<type>/` (pattern, practical, bug or explain), named after the problem and the date; the interviewer keeps hidden cases: when you say done, you get the command that runs them, as a platform's submit, and you read the failures and fix them yourself |
+| `mock interview` | A full 45 to 60 minute mock with scored feedback in `progress/<track>/mocks/` (scheduled by your mode, or any time you ask). As on an interview platform you get a starter file (problem, examples, signature) and its sample tests in `workspace/<track>/mocks/<type>/` (pattern, practical, bug, explain, or design: a system with AI in it, talked through from a short brief, no code), named after the problem and the date; the interviewer keeps hidden cases: when you say done, you get the command that runs them, as a platform's submit, and you read the failures and fix them yourself |
 
 ## Planning
 

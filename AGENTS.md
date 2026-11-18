@@ -298,7 +298,7 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 | "plan my learning", "replan", "I want to learn X", "when should I start X", a date, a roadmap trigger | `dojo-roadmap` |
 | "teach me <topic>", a theory lesson | `dojo-teach` |
 | "mock interview", "interview problem" | `dojo-mock` |
-| "read / debug / discriminate / work drill", "practise <concept>" (older names: predict, trace, bug, review) | `dojo-drill` |
+| "read / debug / discriminate / discussion / work drill", "practise <concept>" (older names: predict, trace, bug, review) | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
 | "new exercise on <topic>", "more like <ex>", a planned module reached, a variant turn with no variant | `dojo-new-exercise` (agent `problem-setter`) |
 | "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |
@@ -322,7 +322,7 @@ check fails when they differ. A tool that cannot start subagents follows the fil
   weeks start on Monday; money in euros (€); metric and SI units (km, kg, °C, K).
 - **Generated files go in type folders, named by focus.** Anything you create on the spot (drills,
   mocks, and any future kind) goes in `workspace/<track>/<kind>/<type>/`: drill types `read`,
-  `debug`; mock types `pattern`, `practical`, `bug`, `explain`. Drills are split by module first:
+  `debug`; mock types `pattern`, `practical`, `bug`, `explain`, `design`. Drills are split by module first:
   `workspace/<track>/drills/<module>/<type>/`, the module of the main concept the drill trains
   (its `module` in the track's `graph.json`); mocks span modules, so they stay `mocks/<type>/`.
   Each type folder holds only the files the learner opens, plus, when the kind has them, its own

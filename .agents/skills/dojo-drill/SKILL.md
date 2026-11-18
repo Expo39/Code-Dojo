@@ -1,6 +1,6 @@
 ---
 name: dojo-drill
-description: Short drills for reading, debugging and recognising code in the Code Dojo. Use when the learner says "read drill", "debug drill", "discriminate drill", "work drill", "practise <concept>", or an older name ("predict" or "trace drill" = read drill; "bug" or "review drill" = debug drill).
+description: Short drills for reading, debugging and recognising code, and discussion practice, in the Code Dojo. Use when the learner says "read drill", "debug drill", "discriminate drill", "discussion drill", "work drill", "practise <concept>", or an older name ("predict" or "trace drill" = read drill; "bug" or "review drill" = debug drill).
 ---
 
 # Drills
@@ -39,5 +39,8 @@ Triggered by "work drill" or "explain my work". The learner explains, from memor
 ## discriminate drill (in chat)
 Two or three short problem statements that look alike but need different patterns (a running total against a sliding window; counting against grouping; two pointers on sorted input against a hash map on unsorted). For each, the learner names the pattern and the one feature of the statement that decides it, with their confidence. No code. Score: pattern right, deciding feature right. Draw the pairs from the learner's weak spots and recent mistakes; log as `drill <minutes> discriminate`.
 
-## Not a drill: explaining without code
-There is no standalone explain drill: talking through a solution with no code for 20 minutes is not how interviews run. Perform is a timed `interview problem` (or a mock) coded while talking. The fallback for a part they cannot write (`docs/INTERVIEW_PLAYBOOK.md`, "When you cannot write something") is a move inside that problem, used when they are stuck on syntax, never a separate exercise.
+## discussion drill (in chat)
+For discussion-format interviews and tracks (a module's `discussion.md`): 3 to 5 questions, mixed across modules, never two in a row on one concept. The learner answers out loud; ask one or two follow-ups an interviewer would ("why?", "when would you not?", "an example from your work?", "what changed with recent models?"), never hinting the answer. For questions on current models, prices or tools, check the live docs first (or the claude-api skill for Claude) so the judgement uses today's facts. Score each answer 1 to 4 on accuracy, depth (trade-offs, when not to), a concrete example, and clarity; say what a strong answer would have added, in two lines. Log `dojo.py log drill <minutes> discussion --result <right|wrong>`, mark concepts with `graph set` (held, fragile, misconception), log real misconceptions with `dojo.py mistake`, and write the report as for other drills (the questions, the answers in their words, the scores, what was missing).
+
+## Not a drill: explaining a coding solution without code
+In coding interviews, talking through a solution with no code for 20 minutes is not how they run. Perform is a timed `interview problem` (or a mock) coded while talking. The fallback for a part they cannot write (`docs/INTERVIEW_PLAYBOOK.md`, "When you cannot write something") is a move inside that problem, used when they are stuck on syntax, never a separate exercise.

@@ -231,7 +231,7 @@ workspace/<track>/
   drills/<module>/<type>/    drills by the module of the main concept trained, then type
                              (debug, read), e.g. drills/m03_dicts_sets/debug/find_owner.py
   mocks/<type>/              mocks span modules: type folders only (pattern, practical, bug,
-                             explain), e.g. mocks/practical/popular_items_07_11_2026.py
+                             explain, design), e.g. mocks/practical/popular_items_07_11_2026.py
   projects/
 ```
 
@@ -266,5 +266,7 @@ workspace/<track>/
   module's level working alone.
 - Each exercise has 3 to 6 tests, including edge cases. `python dojo.py verify` must show that
   the stub fails and the reference passes.
+- A module may also hold `discussion.md`: interview-style questions with no answers, for
+  discussion drills (`dojo-drill`), where the interview is a conversation rather than coding.
 - Good exercises use a different story from the concept's worked example, have one clear
   pattern, and keep their edge cases in `.clarify/<slug>.md`, never in the task.
