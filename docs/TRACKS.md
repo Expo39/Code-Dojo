@@ -171,7 +171,8 @@ leave without practice). Exercises are always original. The steps below are what
 
 ```text
 <track>/<module>/
-  e01_<slug>.<ext>           task + stub. e = write, b = fix a bug, r = read and predict
+  e01_<slug>.<ext>           task + stub. e = write, b = fix a bug, r = read and predict,
+                             v = variant (header `Variant of: <slug>`: same pattern, new problem)
   tests/test_<slug>.<ext>    tests (path set by "test_file")
   .solutions/<slug>.<ext>    reference solution (path set by "solution_file")
   .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")

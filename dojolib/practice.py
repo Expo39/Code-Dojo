@@ -11,7 +11,7 @@ from pathlib import Path
 
 from .core import (
     CHECKLIST, DEBT, DEBT_DAYS, DEFERRABLE, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
-    REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, WORKSPACE, active_track_names, die, fmt_date,
+    REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, VARIANT_BOX, WORKSPACE, active_track_names, die, fmt_date,
     fmt_min, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
 )
 from .data import (
@@ -46,22 +46,47 @@ def cmd_list(args) -> None:
         print(f"  {slug:28} {ex['level']:6} {ex['target']:>3}m  {status}")
 
 
+def variant_for(slug: str, exercises: dict) -> str | None:
+    """The variant to do instead of a redo of `slug` today, or None for the original.
+
+    From box VARIANT_BOX, redos alternate between the original and its variants (in turn), so
+    the learner meets the pattern on a new surface instead of recalling the last solution."""
+    card = read_json(REVIEWS, {}).get(slug)
+    if not card or card.get("box", 0) < VARIANT_BOX or not card.get("variant_next", True):
+        return None
+    variants = [s for s, e in exercises.items() if e["variant_of"] == slug]
+    if not variants:
+        print(f"Variant turn for '{slug}', but it has no variant yet: the tutor asks the problem-setter "
+              f"for one (dojo-new-exercise, variant of {slug}). Today: the original.")
+        return None
+    return variants[card.get("variants_done", 0) % len(variants)]
+
+
 def cmd_start(args) -> None:
     ensure_files()
     timers = read_json(TIMER, {})
     if args.item in timers:
         die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
-    ex = discover().get(args.item)
+    exercises = discover()
+    ex = exercises.get(args.item)
+    variant = variant_for(args.item, exercises) if ex and not ex["variant_of"] else None
+    if variant:
+        print(f"Variant today: '{variant}', a new problem with the same pattern as '{args.item}'; "
+              f"it counts for {args.item}'s box. Use '{variant}' in test and done.")
+        args.item, ex = variant, exercises[variant]
+        if args.item in timers:
+            die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
     if ex:
         due = [k for k, _ in interleave_due(due_items(today())) if k != args.item]
-        if args.item not in read_json(REVIEWS, {}) and due:
+        if args.item not in read_json(REVIEWS, {}) and not variant and due:
             print(f"Reminder: {len(due)} redo(s) due ({', '.join(due[:4])}). "
                   "Best practice: clear the redo queue before new material.")
         attempt = ex["attempt"]
         attempt.parent.mkdir(parents=True, exist_ok=True)
         shown = attempt.relative_to(ROOT).as_posix()
         card = read_json(REVIEWS, {}).get(args.item)
-        redo = card is not None and card.get("grade") != "failed"
+        # A variant reached through its original always starts from a blank file, like a redo.
+        redo = (card is not None and card.get("grade") != "failed") or bool(variant)
         if attempt.exists() and (args.fresh or redo):
             history = attempt.parent / HISTORY_DIR
             history.mkdir(parents=True, exist_ok=True)
@@ -72,6 +97,8 @@ def cmd_start(args) -> None:
             print(f"Fresh file: {shown}")
             if redo:
                 print(f"Redo from a blank file: do not open {HISTORY_DIR}/ or old notes.")
+                if not variant:
+                    print("Trace by hand: the tutor gives a new input for this redo, not the printed one.")
         else:
             print(f"Continuing your file: {shown}")
         print(f"Target: {ex['target']} min ({ex['level']}). "
@@ -256,10 +283,20 @@ def cmd_done(args) -> None:
     if kind in ("exercise", "external") and not args.no_review:
         # Re-entry after time away: the time is judged against a stretched target (rust), never the hints.
         judged = round(ratio / allowance, 2) if ratio is not None else None
-        card = schedule(args.item, result, judged, args.hints, on)
+        original = ex["variant_of"] if ex and ex["variant_of"] else ""
+        card = schedule(original or args.item, result, judged, args.hints, on)
+        if ex:
+            # Alternate from VARIANT_BOX: after the original, a variant; after a variant, the original.
+            reviews = read_json(REVIEWS, {})
+            stored = reviews[original or args.item]
+            stored["variant_next"] = not original
+            if original:
+                stored["variants_done"] = stored.get("variants_done", 0) + 1
+            write_json(REVIEWS, reviews)
         label = {"clean": "Clean solve.", "ok": "Solid.", "struggled": "Struggled: redo soon.",
                  "failed": "Not solved: redo tomorrow."}[card["grade"]]
-        print(f"{label} Next redo from a blank file: {card['due']} (box {card['box']}).")
+        whose = f" of {original} (a variant counts for it)" if original else ""
+        print(f"{label} Next redo{whose} from a blank file: {card['due']} (box {card['box']}).")
     if allowance > 1 and kind in ("exercise", "external"):
         rows = read_log()
         found = latest_return(rows, on)

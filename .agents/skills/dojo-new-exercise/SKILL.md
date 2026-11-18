@@ -1,6 +1,6 @@
 ---
 name: dojo-new-exercise
-description: Create new verified Code Dojo exercises. Use when the learner says "new exercise on <topic>", "more like <exercise>", "from scratch <topic>", when a planned module from a track README is reached, or when a weak spot needs more practice.
+description: Create new verified Code Dojo exercises. Use when the learner says "new exercise on <topic>", "more like <exercise>", "from scratch <topic>", when a planned module from a track README is reached, when `start` reports a variant turn with no variant, or when a weak spot needs more practice.
 ---
 
 # New exercises
@@ -9,5 +9,7 @@ description: Create new verified Code Dojo exercises. Use when the learner says 
 2. Delegate the writing to the `problem-setter` agent with that spec and the path of one existing exercise in the same track as a format example. Ask it to run `dojo.py verify <slugs>` and `dojo.py graph check <track>` and fix until both pass (each new exercise is listed under its concept in `graph.json`).
 3. Check its report: the slugs, `verify` and the graph check passing, the concept each exercise is listed under, and that the task text does not leak the solution. Do not show the learner the reference solutions.
 4. Exercises made at this learner's request: run `dojo.py changes --ack <slugs>`, so they are not asked about them. Exercises added to the shared track for everyone (a track review): do not acknowledge them; learners who started that module are asked at their next session, the others meet them there. Tell the learner the new exercise names and the first command: `dojo.py start <slug>`; start it only on their "go".
+
+**Variants** (`start` reports a variant turn for X with none yet): one exercise, prefix `v`, in X's module, with the header line `Variant of: X`. It keeps X's pattern, level and target and changes the story and the data types (find_max -> the shortest word, the coldest day), so the method has to be rebuilt, not recalled. Its `.clarify` file has X's `Pattern:` line; list it under X's concept in `graph.json`. Never acknowledge or announce it as new material: the redo schedule brings it in, and its attempts count for X's box.
 
 A brand-new module also needs its focus line marked as "seeded" in the track README (status column) and a `primm/README.md` with its concepts and, when the module relies on background theory, a `Theory:` line (the problem-setter adds it).

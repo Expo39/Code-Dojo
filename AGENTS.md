@@ -165,6 +165,13 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
      hand:` input through their code only where it departs from the plan they traced before
      typing (a faithful plan is confirmed by the tests; never a new input to invent).
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
+- **Redos change the surface, never the skill.** On every redo, replace the printed `Trace by
+  hand:` input with a new one you make up (same size and features as the printed one, never an
+  edge case; work out its result privately from the reference solution), so the trace is done,
+  not recalled. From box 3, every other redo is a **variant**, chosen by `start`: a new problem
+  with the same pattern (file header `Variant of: <slug>`); its attempts count for the original's
+  box. `start` says when a variant is due but none exists yet: have `dojo-new-exercise` write one
+  (variant of X) before that item next comes due.
 - **Predict, then run: always two turns**, everywhere (lessons, drills, "what if" questions). Never ask
   how sure they are: read it from the wording. A plain answer counts as sure (log `--confidence
   90`); a hedged one ("I think", "maybe", "not sure") as unsure (`--confidence 50`); "I don't know"

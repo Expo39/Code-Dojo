@@ -62,7 +62,7 @@ never a mark on the concept graph.
 | Minutes | Block | What to do |
 | --- | --- | --- |
 | 0 to 10 | Warm-up | 3 cheat-sheet self-checks (`review the cheat sheet`), each with its setup stated in the question (never "remember exercise X"), or one `read drill` |
-| 10 to 50 | Redo queue | The due items `today` lists, from blank files: only as many as fit this block at your own pace (the rest wait, lowest boxes first). Nothing due? Pull the oldest box-1 items |
+| 10 to 50 | Redo queue | The due items `today` lists, from blank files: only as many as fit this block at your own pace (the rest wait, lowest boxes first). Each redo gets a new trace input from the tutor; from box 3 every other one is a variant (a new problem, same pattern). Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
 | 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |

@@ -55,8 +55,9 @@ def track_changes() -> dict:
     profile = read_json(PROFILE, {})
     exercises = discover()
     started = started_modules()
+    # Variants are never asked about: the redo schedule brings them in when their turn comes.
     quiet = {sl for sl, ex in exercises.items()
-             if skipped_module(ex["module"], profile) or ex["module"] not in started}
+             if skipped_module(ex["module"], profile) or ex["module"] not in started or ex["variant_of"]}
     silent = {sl: current[sl] for sl in quiet if seen.get(sl) != current[sl]}
     if silent:  # nothing to ask: new material in an unreached module is met there
         seen.update(silent)

@@ -14,7 +14,7 @@ from .core import (
 )
 
 
-HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind):\s*(.+?)\s*$", re.MULTILINE)
+HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind|Variant of):\s*(.+?)\s*$", re.MULTILINE)
 STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)(\.[A-Za-z0-9]+)$")
 DEFAULT_TRACK = {
     "name": "",
@@ -85,6 +85,9 @@ def discover(active_only: bool = True) -> dict:
                 "target": int(meta.get("target", TARGETS.get(level, 15))),
                 "pattern": meta.get("pattern", ""),
                 "kind": meta.get("kind", "write"),
+                # A variant: a new problem with the same pattern as an exercise already met; it
+                # is never new material and its attempts count for that exercise's box.
+                "variant_of": meta.get("variant of", ""),
             }
     return found
 

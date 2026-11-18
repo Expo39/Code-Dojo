@@ -16,7 +16,10 @@ experienced engineers' advice; sources are at the bottom.
    one redo to the next: recalling a method you used a minute ago trains nothing, while having to
    recognise which method a problem needs is the skill an interview tests. For the same reason a
    "more like X" exercise keeps the pattern and changes the story, and a drill pitched so that
-   you get about 85% of its steps right teaches more than one you always or never get.
+   you get about 85% of its steps right teaches more than one you always or never get. Redos
+   change the surface too: a new trace input every time, and from box 3 every other redo is a
+   variant (a new problem with the same pattern), so you rebuild the method instead of recalling
+   the last solution.
 
 3. **Deliberate practice: just past your edge, with fast feedback.** Every exercise has tests,
    so feedback takes seconds. Targets are set so that you are slightly stretched. If something

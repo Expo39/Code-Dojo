@@ -52,6 +52,8 @@ PROBE_PREFIX = "probe:"  # timer key of a probe (dojo-probe), logged as study ti
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 # Leitner boxes: days until the next redo. Box 4+ counts as mastered.
 INTERVALS = [1, 3, 7, 14, 30, 60]
+# From this box, every other redo is a variant: a new problem with the same pattern.
+VARIANT_BOX = 3
 MASTERED_BOX = 4
 TARGETS = {"tiny": 5, "easy": 15, "medium": 30, "hard": 45}
 # confidence: how sure the learner said they were (0-100) of a prediction or answer;

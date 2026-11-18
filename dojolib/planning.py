@@ -223,7 +223,7 @@ def effective_mix(profile: dict) -> dict:
 def next_new(profile: dict, limit: int = 3, track: str | None = None) -> list[dict]:
     reviews = read_json(REVIEWS, {})
     return [ex for slug, ex in discover().items()
-            if slug not in reviews and in_scope(ex, profile)
+            if slug not in reviews and not ex["variant_of"] and in_scope(ex, profile)
             and (track is None or ex["track"] == track)][:limit]
 
 
