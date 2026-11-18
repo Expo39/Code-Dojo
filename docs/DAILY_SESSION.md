@@ -65,7 +65,7 @@ never a mark on the concept graph.
 | 10 to 50 | Redo queue | The due items `today` lists, from blank files: only as many as fit this block at your own pace (the rest wait, lowest boxes first). Each redo gets a new trace input from the tutor; from box 3 every other one is a variant (a new problem, same pattern). Nothing due? Pull the oldest box-1 items |
 | 50 to 110 | Learn and write | The next new module: `teach me <topic>` if it is new to you, then 2 or 3 new exercises |
 | 110 to 120 | Break | Away from the screen |
-| 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` + one code-reading exercise (in Python, `m10`), or 30 minutes on the current project |
+| 120 to 150 | Read, debug or build | Alternate by day: a `debug drill` one day, a `read drill` (trace or predict) the next, each with one code-reading exercise (in Python, `m10`) when time allows; once the first project is due, every other day is 30 minutes on it instead |
 | 150 to 170 | Perform | One unseen problem under interview conditions: a timer, out loud, no hints for the first 10 minutes (`interview problem`), coded while talking |
 | 170 to 180 | Log | The tutor logs the mistakes it saw, one cheat-sheet line per new concept, `end of day` to the tutor |
 
@@ -76,7 +76,7 @@ never a mark on the concept graph.
 | 0 to 5 | Warm-up: 2 self-checks |
 | 5 to 35 | Redo queue |
 | 35 to 85 | Learn and write: one new concept and 2 exercises |
-| 85 to 110 | Read/debug or project (alternate), or Perform on 2 days a week |
+| 85 to 110 | Read and debug (a debug drill and a read drill on alternate days) or project, or Perform on 2 days a week |
 | 110 to 120 | Log |
 
 ## Short session (1 hour)
