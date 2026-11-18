@@ -163,7 +163,8 @@ silently. Firm, friendly, one-line reminders. The most frequent cases:
   5. After it passes: `dojo.py pause <exercise>` first (the talk after a pass is study, not
      solve time), then complexity, a breaking input, one improvement. Trace the `Trace by
      hand:` input through their code only where it departs from the plan they traced before
-     typing (a faithful plan is confirmed by the tests; never a new input to invent).
+     typing (a faithful plan is confirmed by the tests; never a new input to invent). Mocks
+     and interview problems trace the whole example: there the trace is the test (`dojo-mock`).
   A skipped step: name it in one line; if they insist on moving on, log it (`--skipped`).
 - **Redos change the surface, never the skill.** On every redo, replace the printed `Trace by
   hand:` input with a new one you make up (same size and features as the printed one, never an

@@ -121,10 +121,10 @@ Every exercise follows the same loop. Say each step out loud (voice dictation he
 | Step | You show |
 | --- | --- |
 | 1. Understand | The task in your own words with the exact condition; clarifying questions |
-| 2. Example | A trace by hand of the task's `Trace by hand:` input (no answer printed), plus an edge case of your own |
+| 2. Example | A trace by hand of the task's `Trace by hand:` input (no answer printed; on a redo, a new input from the tutor), plus an edge case of your own |
 | 3. Plan | The steps, and the time and space complexity |
 | 4. Predict | "Pass" or "test X fails because ..." (hedge it if unsure), then you run the tests yourself |
-| 5. Test | Your example and an edge case traced through the finished code |
+| 5. Test | The tests run; only lines that left your traced plan are traced again (in a mock, the whole example: there the trace is the test) |
 | 6. Reflect | What would break it, one improvement, names an interviewer would notice |
 
 Things to say: `start <exercise>`, `done <exercise>`, `I'm stuck`, `teach me <topic>`,
