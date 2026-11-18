@@ -14,7 +14,7 @@ a track for any subject (another language, a framework, maths, even a non-coding
 | `docs/`: method, sessions, tutor commands, setup, the spec for personal docs | `BASELINE.md`: starting level and the evidence for it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/`, `.gemini/`: tutor rules, skills, agents for each tool | `log.csv`, `reviews.json` (redo schedule), `graph.json` (your evidence per concept), shared `mistakes.md` and `cheatsheet.md`, `weekly/`; per track `<track>/` with its own notes and its `drills/`, `mocks/` and `probes/` reports (layout: `PERSONAL_DOCS.md`) |
 | | `docs/`: your own docs, written by the tutor (`PERSONAL_DOCS.md`): pitfalls, weekly rhythm, interview prep and work habits when relevant |
-| | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `.history/` with earlier attempts, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
+| | `workspace/<track>/`: everything you type for that track: `<module>/` (attempts, `variants/` with variant attempts, `.history/` with earlier attempts of both, `primm/` with lesson files), `drills/<type>/`, `mocks/<type>/`, `projects/` |
 
 Back up or move personal data with `python dojo.py export`: one zip with `progress/` and
 `workspace/` (concept evidence and probe reports included) and, inside the same zip, `views/`
@@ -171,18 +171,26 @@ leave without practice). Exercises are always original. The steps below are what
 
 ```text
 <track>/<module>/
-  e01_<slug>.<ext>           task + stub. e = write, b = fix a bug, r = read and predict,
-                             v = variant (header `Variant of: <slug>`: same pattern, new problem)
-  tests/test_<slug>.<ext>    tests (path set by "test_file")
-  .solutions/<slug>.<ext>    reference solution (path set by "solution_file")
-  .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")
-  primm/README.md            the concepts a teach-me lesson can cover in this module, and an
-                             optional "Theory:" line (background offered before the module)
+  primm/README.md              the concepts a teach-me lesson can cover in this module, and an
+                               optional "Theory:" line (background offered before the module)
+  <original>/                  one folder per exercise, named after it, holding it and its variants
+    e01_<original>.<ext>       task + stub. e = write, b = fix a bug, r = read and predict;
+                               NN is the exercise's place in the module (the syllabus order)
+    v01_<slug>.<ext>           a variant (header `Variant of: <original>`): same pattern, new
+                               problem; numbered within the folder
+    tests/test_<slug>.<ext>    tests (path set by "test_file"), one per exercise and variant
+    .solutions/<slug>.<ext>    reference solutions (path set by "solution_file")
+    .clarify/<slug>.md         Pattern: line + the interviewer's answers on edge cases ("clarify_file")
 ```
 
-The learner's side mirrors it: `workspace/<track>/<module>/` holds their attempts,
-`.history/` (earlier attempts, moved there when a redo starts) and `primm/` (the files they type
-in a lesson; `python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
+Every exercise gets its folder, with or without variants, so a variant always has a place to go.
+
+**Spoiler warning: do not browse `tracks/`.** Each folder there is named after an original exercise and holds its variants, so opening it shows which exercise a variant resembles, and with it the method; `.clarify/` holds the pattern and `.solutions/` the answers. Work only in `workspace/`: `start` copies the file you need there, and `dojo.py list` shows how many variants an exercise has without naming them.
+
+The learner's side is organised by module and never names a method: `workspace/<track>/<module>/`
+holds their attempts at the originals, `variants/` their variant attempts, one `.history/` for
+both (earlier attempts, moved there when a redo starts) and `primm/` (the files they type in a
+lesson; `python dojo.py primm <module> <topic>` creates it). Drills, mock code and projects
 sit beside the modules in `workspace/<track>/drills/`, `mocks/` and `projects/`, so each track's
 code stays in one folder. Drills and mocks sit in type folders (`drills/debug/`, `drills/read/`,
 `mocks/practical/`, ...), each with its own test folder and `.history/` where the kind needs them

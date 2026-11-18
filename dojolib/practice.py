@@ -30,9 +30,15 @@ def cmd_list(args) -> None:
     exercises = discover()
     reviews = read_json(REVIEWS, {})
     module = None
+    variants: dict[str, int] = {}
+    for ex in exercises.values():
+        if ex["variant_of"]:
+            variants[ex["variant_of"]] = variants.get(ex["variant_of"], 0) + 1
     for slug, ex in exercises.items():
         if args.module and args.module not in ex["module"]:
             continue
+        if ex["variant_of"]:
+            continue  # counted on its original's line; its name and task stay unseen until its turn
         if ex["module"] != module:
             module = ex["module"]
             print(f"\n{ex['track']}/{module}")
@@ -43,7 +49,9 @@ def cmd_list(args) -> None:
             status = "mastered"
         else:
             status = f"box {card['box']}, due {card['due']}"
-        print(f"  {slug:28} {ex['level']:6} {ex['target']:>3}m  {status}")
+        n = variants.get(slug, 0)
+        extra = f"  (+{n} variant{'s' if n > 1 else ''})" if n else ""
+        print(f"  {slug:28} {ex['level']:6} {ex['target']:>3}m  {status}{extra}")
 
 
 def variant_for(slug: str, exercises: dict) -> str | None:
@@ -71,8 +79,9 @@ def cmd_start(args) -> None:
     ex = exercises.get(args.item)
     variant = variant_for(args.item, exercises) if ex and not ex["variant_of"] else None
     if variant:
-        print(f"Variant today: '{variant}', a new problem with the same pattern as '{args.item}'; "
-              f"it counts for {args.item}'s box. Use '{variant}' in test and done.")
+        # Never name the original here: which exercise it resembles would give the method away.
+        print(f"Variant today: '{variant}', a new problem in place of a due redo; it counts for that "
+              f"redo's box. Use '{variant}' in test and done.")
         args.item, ex = variant, exercises[variant]
         if args.item in timers:
             die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
@@ -88,7 +97,7 @@ def cmd_start(args) -> None:
         # A variant reached through its original always starts from a blank file, like a redo.
         redo = (card is not None and card.get("grade") != "failed") or bool(variant)
         if attempt.exists() and (args.fresh or redo):
-            history = attempt.parent / HISTORY_DIR
+            history = ex["history"]  # one per module, for originals and variants alike
             history.mkdir(parents=True, exist_ok=True)
             stamp = now().strftime("%d%m%Y_%H%M")
             shutil.move(str(attempt), history / f"{args.item}_{stamp}{attempt.suffix}")

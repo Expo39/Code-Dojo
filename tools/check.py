@@ -127,7 +127,7 @@ def main() -> int:
                 problems.append(f"invalid JSON in {f}: {e}")
 
     slugs = sorted({m.group(1) for f in changed
-                    if (m := re.search(r"(?:^|/)(?:[ebr]\d\d_|test_|\.solutions/|\.clarify/)([a-z0-9_]+)\.\w+$", f))
+                    if (m := re.search(r"(?:^|/)(?:[ebrv]\d\d_|test_|\.solutions/|\.clarify/)([a-z0-9_]+)\.\w+$", f))
                     and f.startswith("tracks/")})
     if slugs:
         result = subprocess.run([sys.executable, str(ROOT / "dojo.py"), "verify", *slugs],

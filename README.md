@@ -187,8 +187,8 @@ code-dojo/
 ├── docs/                    the method, sessions, tutor commands, setup (see below)
 ├── tracks/
 │   ├── python/              the Python track: README (phases, modules, milestones), graph.json
-│   │                        (concept graph), modules (stubs, tests, .clarify/, .solutions/,
-│   │                        primm/), projects/
+│   │                        (concept graph), modules (primm/, then one folder per exercise
+│   │                        with its variants, tests/, .clarify/, .solutions/), projects/
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
@@ -197,12 +197,15 @@ code-dojo/
 │                            docs/, and one folder per track (its notes, drill, mock and probe
 │                            reports); layout in docs/PERSONAL_DOCS.md
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
-│                            <track>/<module>/ holds your attempts, .history/ (earlier
-│                            attempts) and primm/ (lesson files); <track>/drills/<type>/
+│                            <track>/<module>/ holds your attempts, variants/ (variant
+│                            attempts), one .history/ (earlier attempts of both) and primm/
+│                            (lesson files); <track>/drills/<type>/
 │                            and <track>/mocks/<type>/ (tests/ and .history/ where needed,
 │                            files named by focus), <track>/projects/
 └── exports/                 YOUR backups from `dojo.py export`, one zip each (gitignored)
 ```
+
+**Spoiler warning: do not browse `tracks/`.** Each folder there is named after an original exercise and holds its variants, so opening it shows which exercise a variant resembles, and with it the method; `.clarify/` holds the pattern and `.solutions/` the answers. Work only in `workspace/`: `start` copies the file you need there, and `dojo.py list` shows how many variants an exercise has without naming them.
 
 ## Documentation
 

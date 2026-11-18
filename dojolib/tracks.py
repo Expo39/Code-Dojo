@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 
 from .core import (
-    PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, WORKSPACE, active_track_names, die, read_json
+    HISTORY_DIR, PRIMM_DIR, REVIEWS, ROOT, TARGETS, TRACKS, VARIANTS_DIR, WORKSPACE, active_track_names, die,
+    read_json
 )
 
 
@@ -46,11 +47,17 @@ def load_tracks(active_only: bool = True) -> dict:
 
 
 def discover(active_only: bool = True) -> dict:
-    """Map slug -> exercise metadata, in syllabus order, for the learner's tracks."""
+    """Map slug -> exercise metadata, in syllabus order, for the learner's tracks.
+
+    Layout: tracks/<track>/<module>/<original>/ holds one exercise (<prefix>NN_<slug>.<ext>) and
+    its variants (vNN_<slug>.<ext>), with their tests/, .solutions/ and .clarify/ beside them.
+    The syllabus order is the module, then the file name (the NN numbering within the module).
+    """
     found = {}
     for track_name, track in load_tracks(active_only).items():
         ext = track["extension"]
-        for path in sorted(track["dir"].rglob(f"*{ext}")):
+        paths = [p for p in track["dir"].rglob(f"*{ext}") if len(p.relative_to(track["dir"]).parts) >= 2]
+        for path in sorted(paths, key=lambda p: (p.relative_to(track["dir"]).parts[0], p.name)):
             if any(part.startswith(".") or part in ("tests", PRIMM_DIR)
                    for part in path.relative_to(track["dir"]).parts[:-1]):
                 continue
@@ -69,25 +76,30 @@ def discover(active_only: bool = True) -> dict:
                 hidden = {k.lower(): v.strip() for k, v in HEADER_RE.findall(clarify.read_text(encoding="utf-8"))}
                 meta = {**hidden, **meta}
             level = meta.get("level", "easy")
-            # workspace/<track>/<module>/ mirrors tracks/<track>/<module>/
-            module_rel = path.parent.relative_to(track["dir"])
+            variant_of = meta.get("variant of", "")
+            # workspace/<track>/<module>/ holds the learner's files: originals at the top, variants
+            # in variants/, and one .history/ per module for both (the method never shows in a path)
+            module_rel = Path(path.relative_to(track["dir"]).parts[0])
+            module_ws = WORKSPACE / track_name / module_rel
             found[slug] = {
                 "slug": slug,
                 "stub": path,
                 "solution": path.parent / track["solution_file"].format(slug=slug),
                 "test": path.parent / track["test_file"].format(slug=slug),
                 "clarify": clarify,
-                "attempt": WORKSPACE / track_name / module_rel / f"{slug}{ext}",
+                "attempt": (module_ws / VARIANTS_DIR if variant_of else module_ws) / f"{slug}{ext}",
+                "history": module_ws / HISTORY_DIR,
+                "module_rel": module_rel,
                 "track": track_name,
                 "track_config": track,
-                "module": path.parent.name,
+                "module": module_rel.name,
                 "level": level,
                 "target": int(meta.get("target", TARGETS.get(level, 15))),
                 "pattern": meta.get("pattern", ""),
                 "kind": meta.get("kind", "write"),
                 # A variant: a new problem with the same pattern as an exercise already met; it
                 # is never new material and its attempts count for that exercise's box.
-                "variant_of": meta.get("variant of", ""),
+                "variant_of": variant_of,
             }
     return found
 
@@ -230,6 +242,5 @@ def modules_by_name() -> dict:
     """Map module folder name -> (track name, module path relative to the track, track settings)."""
     found = {}
     for ex in discover().values():
-        rel = ex["stub"].parent.relative_to(ex["track_config"]["dir"])
-        found.setdefault(ex["module"], (ex["track"], rel, ex["track_config"]))
+        found.setdefault(ex["module"], (ex["track"], ex["module_rel"], ex["track_config"]))
     return found

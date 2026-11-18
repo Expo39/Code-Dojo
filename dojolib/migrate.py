@@ -74,7 +74,7 @@ def migrate_workspace(verbose: bool = True) -> int:
             m = HISTORY_STAMP_RE.match(path.name)
             ex = exercises.get(m.group("slug")) if m else None
             if ex:
-                moves.append((path, ex["attempt"].parent / HISTORY_DIR / path.name))
+                moves.append((path, ex["history"] / path.name))
     moved = 0
     for src, dest in moves:
         if dest.exists():
@@ -113,6 +113,7 @@ def migrate_workspace(verbose: bool = True) -> int:
             if cache.is_dir():
                 shutil.rmtree(cache)
     moved += migrate_side_folders(verbose)
+    moved += migrate_drill_types(verbose)
     if moved:
         print(f"Workspace reorganised by module: {moved} file(s) moved.")
     return moved
@@ -167,6 +168,40 @@ def migrate_side_folders(verbose: bool = True) -> int:
             cache = folder / "__pycache__"
             if cache.is_dir():
                 shutil.rmtree(cache)
+    return moved
+
+
+# Older drill type names and the type each became: a bug or review drill is now a debug drill,
+# a predict or trace drill a read drill (AGENTS.md, generated files).
+OLD_DRILL_TYPES = {"bug": "debug", "review": "debug", "predict": "read", "trace": "read"}
+
+
+def migrate_drill_types(verbose: bool = True) -> int:
+    """Merge drills/<old type>/ into drills/<current type>/, with its tests/ and .history/.
+    Idempotent; nothing is overwritten: a name clash is reported and left in place."""
+    moved = 0
+    for track_name in load_tracks(active_only=False):
+        drills = WORKSPACE / track_name / "drills"
+        for old, new in OLD_DRILL_TYPES.items():
+            src_dir = drills / old
+            if not src_dir.is_dir():
+                continue
+            for src in sorted(p for p in src_dir.rglob("*") if p.is_file() and "__pycache__" not in p.parts):
+                dest = drills / new / src.relative_to(src_dir)
+                if dest.exists():
+                    print(f"  migrate: kept {src.relative_to(ROOT).as_posix()} "
+                          f"({dest.relative_to(ROOT).as_posix()} already exists)")
+                    continue
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), dest)
+                moved += 1
+                if verbose:
+                    print(f"  moved {src.relative_to(ROOT).as_posix()} -> {dest.relative_to(ROOT).as_posix()}")
+            for cache in sorted(src_dir.rglob("__pycache__"), reverse=True):
+                shutil.rmtree(cache)
+            for folder in sorted((d for d in src_dir.rglob("*") if d.is_dir()), reverse=True) + [src_dir]:
+                if not any(folder.iterdir()):
+                    folder.rmdir()
     return moved
 
 
