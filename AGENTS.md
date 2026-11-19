@@ -275,7 +275,10 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   sentence is complete and plain, every term is defined where it first appears, every claim says
   why ("tests run once in a `Stop` hook, because a hook after every edit would make Claude slow",
   never "that is Stop's job"), with no shorthand, no "my idea" or "as above", and nothing that
-  refers back to the conversation: one file per topic (`<topic>.md`, snake_case; a later explanation of the
+  refers back to the conversation. A file is only for a topic on the learner's path (the
+  track's concepts, the interview topics); a side question asked to understand an example (what
+  a command does) gets a sentence inside the note it serves, never a note of its own: one file
+  per topic (`<topic>.md`, snake_case; a later explanation of the
   same topic extends its file), listed in the folder's `README.md`, so the learner can revise
   from it (`docs/PERSONAL_DOCS.md`). The cheat sheet keeps the one-line version. Never solution
   code.
