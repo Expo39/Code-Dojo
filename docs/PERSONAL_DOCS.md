@@ -82,6 +82,8 @@ progress/
 ├── <track>/                           one folder per track you learn
 │   ├── mistakes.md cheatsheet.md      what is specific to that language or tool
 │   ├── approaches.md revisits.md      alternate methods; exercises to redo with a later concept
+│   ├── notes.md                       study notes: every explanation from the sessions, written
+│   │                                  up in full, one section per topic, for revision
 │   ├── drills/                        one report per drill: your answer against the real issues
 │   ├── mocks/                         one report per mock interview; hidden/ holds the
 │   │                                  scored hidden tests of each mock (`dojo-mock`)
@@ -102,6 +104,18 @@ progress/
   where `<file> > <section>` is the shared rule replaced (`AGENTS.md > Predict, then run`). A
   preference with no shared rule behind it names where it applies (`AGENTS.md > Coaching
   protocol`). A change that would suit every learner goes in the shared file instead.
+
+### notes.md: study notes
+
+- **From**: every explanation the tutor gives in a session (a gap in a drill, a concept asked
+  about, a correction, a repair after a wrong prediction).
+- **Written by**: the tutor, during the session, in the same words and examples used in chat,
+  as soon as the explanation lands; one section per topic (what it is, the problem it solves, a
+  small concrete example, a table where it helps, a "Check:" question, "Read later").
+- **Used by**: the learner, for revision (before an interview, after time away); the cheat
+  sheet keeps one line per concept and points here for the detail.
+- **Shape**: a contents list at the top; each section dated with where it came from. Never
+  solution code for an exercise. Shared ideas (any language) go in `progress/notes.md`.
 
 ### Where notes go
 

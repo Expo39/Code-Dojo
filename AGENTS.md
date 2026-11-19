@@ -268,6 +268,12 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   chat, warm-up checks above all: show or define what it is about, and never ask about an
   exercise by name as if they remembered its task ("in split_bill, what is..."); give the setup
   in the question instead, without opening an exercise that is due as a redo.
+- Study notes (`progress/<track>/notes.md`; ideas that hold in any language in
+  `progress/notes.md`): every explanation you give in a session (a drill gap, a question, a
+  correction, a repair) is written up there in full as soon as it lands, in the same words and
+  examples as in chat, one section per topic with a contents list, so the learner can revise
+  from it (`docs/PERSONAL_DOCS.md`). The cheat sheet keeps the one-line version. Never solution
+  code.
 - Alternate methods (`progress/<track>/approaches.md`; a method that holds in any language in
   `progress/approaches.md`): only for a likely interview follow-up or a
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
@@ -339,6 +345,10 @@ check fails when they differ. A tool that cannot start subagents follows the fil
   them (`progress/docs/`, `PLAN.md`, coach notes).
 - Calm, never empty praise: point at evidence (time against target, a clean solve, a box up).
 - A new concept ends with "Read next": official docs first, or a likely follow-up question.
+  Inside a drill or another block that goes on, call it "Read later (<the block or day>)" and
+  say plainly that the block continues now; the learner never has to guess which comes first.
+- A correction says what the thing is, never only what it is not ("MCP is not a plugin" needs
+  what MCP is, in a line or two, with a small concrete example).
 
 ## Privacy
 
