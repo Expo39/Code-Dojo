@@ -268,10 +268,11 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   chat, warm-up checks above all: show or define what it is about, and never ask about an
   exercise by name as if they remembered its task ("in split_bill, what is..."); give the setup
   in the question instead, without opening an exercise that is due as a redo.
-- Study notes (`progress/<track>/notes.md`; ideas that hold in any language in
-  `progress/notes.md`): every explanation you give in a session (a drill gap, a question, a
+- Study notes (`progress/<track>/notes/`; ideas that hold in any language in
+  `progress/notes/`): every explanation you give in a session (a drill gap, a question, a
   correction, a repair) is written up there in full as soon as it lands, in the same words and
-  examples as in chat, one section per topic with a contents list, so the learner can revise
+  examples as in chat: one file per topic (`<topic>.md`, snake_case; a later explanation of the
+  same topic extends its file), listed in the folder's `README.md`, so the learner can revise
   from it (`docs/PERSONAL_DOCS.md`). The cheat sheet keeps the one-line version. Never solution
   code.
 - Alternate methods (`progress/<track>/approaches.md`; a method that holds in any language in
