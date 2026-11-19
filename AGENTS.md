@@ -270,8 +270,12 @@ Every settings, mix or module change gets a dated line with its reason under Pla
   in the question instead, without opening an exercise that is due as a redo.
 - Study notes (`progress/<track>/notes/`; ideas that hold in any language in
   `progress/notes/`): every explanation you give in a session (a drill gap, a question, a
-  correction, a repair) is written up there in full as soon as it lands, in the same words and
-  examples as in chat: one file per topic (`<topic>.md`, snake_case; a later explanation of the
+  correction, a repair) is written up there in full as soon as it lands, with the same examples
+  as in chat but written to **stand alone**: read weeks later with no memory of the chat, every
+  sentence is complete and plain, every term is defined where it first appears, every claim says
+  why ("tests run once in a `Stop` hook, because a hook after every edit would make Claude slow",
+  never "that is Stop's job"), with no shorthand, no "my idea" or "as above", and nothing that
+  refers back to the conversation: one file per topic (`<topic>.md`, snake_case; a later explanation of the
   same topic extends its file), listed in the folder's `README.md`, so the learner can revise
   from it (`docs/PERSONAL_DOCS.md`). The cheat sheet keeps the one-line version. Never solution
   code.
