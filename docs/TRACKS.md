@@ -268,5 +268,7 @@ workspace/<track>/
   the stub fails and the reference passes.
 - A module may also hold `discussion.md`: interview-style questions with no answers, for
   discussion drills (`dojo-drill`), where the interview is a conversation rather than coding.
+- A module may also hold `try_it.md`: one optional hands-on task per concept, 5 to 15 minutes,
+  for tracks that are mostly read and discussed, done when time allows and never instead of a drill.
 - Good exercises use a different story from the concept's worked example, have one clear
   pattern, and keep their edge cases in `.clarify/<slug>.md`, never in the task.
