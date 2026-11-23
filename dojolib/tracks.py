@@ -261,4 +261,9 @@ def modules_by_name() -> dict:
     found = {}
     for ex in discover().values():
         found.setdefault(ex["module"], (ex["track"], ex["module_rel"], ex["track_config"]))
+    # Read-and-discuss modules have lessons but no exercises yet: found by their primm/ folder.
+    for name, track in load_tracks(active_only=True).items():
+        for primm in sorted(track["dir"].glob("m[0-9][0-9]_*/primm")):
+            module = primm.parent.name
+            found.setdefault(module, (name, module, track))
     return found
