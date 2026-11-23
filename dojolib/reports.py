@@ -13,8 +13,8 @@ from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, t
 from .tracks import discover, load_tracks, track_heading
 from .planning import (
     calibration, effective_mix, fluency_gates, interleave_due, next_new, print_modules,
-    missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, strand_line,
-    week_numbers
+    missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, sprint_end,
+    sprint_picks, strand_line, week_numbers
 )
 from .graph import graph_brief_line
 from .overrides import overrides_line
@@ -78,6 +78,7 @@ def cmd_today(args, brief: bool = False) -> None:
     upcoming = next_new(profile)
 
     ramp = reentry(rows, on, plan)
+    sprint = sprint_end(profile, on)
 
     lines = []
     if ramp:
@@ -102,20 +103,25 @@ def cmd_today(args, brief: bool = False) -> None:
             line += (f". About {fmt_min(left)} will stay open this week: let it go, "
                      "it does not carry over.")
         lines.append(line + ("" if left > 15 else "."))
-    if wk["prev_gap"] < -60 and on.weekday() < 2 and not ramp:
+    if sprint:
+        lines.append(f"Interview sprint until {fmt_date(sprint)}: everything goes to the interview. "
+                     "Weekly reviews, the strand balance and the plan dates are left out until then; "
+                     "the redos are picked at random from everything solved, to keep it fresh.")
+    if wk["prev_gap"] < -60 and on.weekday() < 2 and not ramp and not sprint:
         lines.append(f"  Last week finished {fmt_min(-wk['prev_gap'])} short. Do not try to repay it all; "
                      "prioritise the redo queue this week.")
     if profile.get("target_date"):
         days_left = (parse_date(profile["target_date"]) - on).days
         if days_left >= 0:
             lines.append(f"Target date {profile['target_date']}: {days_left} days left.")
-    drift = plan_drift_line(profile, rows, on)
-    if drift:
-        lines.append(drift)
-    lines.extend(missed_review_lines(profile, rows, on))
-    balance = strand_line(profile, rows, on)
-    if balance:
-        lines.append(balance)
+    if not sprint:
+        drift = plan_drift_line(profile, rows, on)
+        if drift:
+            lines.append(drift)
+        lines.extend(missed_review_lines(profile, rows, on))
+        balance = strand_line(profile, rows, on)
+        if balance:
+            lines.append(balance)
     session = read_json(SESSION, None)
     if session:
         clock, logged, gap = session_gap(session, rows)
@@ -131,7 +137,11 @@ def cmd_today(args, brief: bool = False) -> None:
     cap = ramp["redos"] if ramp and ramp["redos"] else redo_cap(rows, on, day_plan_min)
     left = max(0, cap - redos_done(rows, on)) if cap else 0
     today_due, waiting = (reentry_queue(due, left) if left else ([], len(due))) if cap else (due, 0)
-    if cap and due and not today_due:
+    if sprint:
+        picks = sprint_picks(profile, rows, on)
+        lines.append(f"Sprint redos (random from everything solved): {', '.join(picks)}." if picks
+                     else "Sprint redos: today's done (more is a bonus).")
+    elif cap and due and not today_due:
         lines.append(f"Redo queue: today's {cap} done; {len(due)} more due, for the coming days "
                      "(more today is a bonus).")
     elif waiting:

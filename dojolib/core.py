@@ -109,6 +109,11 @@ DEFAULT_PROFILE = {
     "mix": {},
     # What overrides the mix right now, in words (e.g. "interview on 01/03/2027"), or empty.
     "priority": "",
+    # Interview sprint: until this date everything goes to the interview. The status leaves out
+    # the weekly review, the strand balance and the plan dates, and the redo queue becomes
+    # `sprint_redos` redos a day picked at random from everything solved, to keep it fresh.
+    "sprint_until": "",
+    "sprint_redos": 2,
     # Why they train and the programmer they want to become (docs/ROADMAP.md, section 1).
     "mode": "",
     "target_level": "",

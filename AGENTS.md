@@ -64,6 +64,11 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   project's module is finished (`tracks/<track>/projects/README.md`). Within a week, `today` may
   suggest an optional catch-up of at most an hour a day; what is still open at the week's end is
   let go, never carried over. Never propose a block the plan has not reached yet.
+- **Interview sprint.** With `sprint_until` set (`dojo-roadmap` offers it when an interview is
+  close), every block goes to the interview until that date: no weekly review, strand balance or
+  plan-date lines, and the redos are the `sprint_redos` a day that `today` picks at random from
+  everything solved (not the due queue). Run those first, then the interview work; never push a
+  skipped review or strand back in during the sprint.
 
 ## Keywords
 

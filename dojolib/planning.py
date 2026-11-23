@@ -3,6 +3,7 @@ module overview, the track mix, confidence calibration and the interleaved redo 
 
 from __future__ import annotations
 
+import random
 import re
 import statistics
 from datetime import date, timedelta
@@ -370,3 +371,26 @@ def missed_review_lines(profile: dict, rows: list[dict], on: date) -> list[str]:
                          + f": it moves to the next mock day, {fmt_date(on + timedelta(days=days_to_sat))}; "
                            "not repaid twice.")
     return lines
+
+
+def sprint_end(profile: dict, on: date) -> date | None:
+    """The last day of an interview sprint still running on this day, or None."""
+    until = profile.get("sprint_until")
+    if not until:
+        return None
+    end = parse_date(until)
+    return end if on <= end else None
+
+
+def sprint_picks(profile: dict, rows: list[dict], on: date) -> list[str]:
+    """Today's sprint redos: picked at random from every exercise solved before today, the same
+    picks all day (seeded by the date), less the redos already done today. The box schedule is
+    not consulted: during a sprint the point is that everything stays fresh, not what is due."""
+    reviews = read_json(REVIEWS, {})
+    exercises = discover(active_only=False)
+    key = on.strftime("%d/%m/%Y")
+    tried_today = {r["item"] for r in rows if r["date"] == key and r["kind"] in ("exercise", "external")}
+    pool = sorted(s for s in reviews if s in exercises and not exercises[s]["variant_of"])
+    random.Random(on.toordinal()).shuffle(pool)
+    left = max(0, int(profile.get("sprint_redos", 2)) - redos_done(rows, on))
+    return [s for s in pool if s not in tried_today][:left]

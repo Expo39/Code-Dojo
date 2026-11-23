@@ -67,6 +67,10 @@ SETTINGS = {
     "skip_modules": ("list", None, "modules not offered as new material"),
     "skip_exercises": ("list", None, "single exercises not offered as new material"),
     "export_target": ("text", None, "where `export` sends backups"),
+    "sprint_until": ("date", None, "interview sprint until this date: no weekly review, strand or "
+                                   "plan-date lines; random redos to keep everything fresh (empty = off)"),
+    "sprint_redos": ("int", None, "redos a day during an interview sprint, picked at random from "
+                                  "everything solved"),
 }
 
 
@@ -96,6 +100,10 @@ def set_setting(profile: dict, key: str, raw: str) -> None:
         profile[key] = raw
     elif kind == "minutes":
         profile[key] = parse_minutes(raw, profile["minutes"])
+    elif kind == "int":
+        if not raw.isdigit():
+            die(f"{key}: a whole number, 0 or more.")
+        profile[key] = int(raw)
     elif kind == "bool":
         profile[key] = raw.lower() in ("y", "yes", "true", "1")
     elif kind == "list":

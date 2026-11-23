@@ -12,7 +12,7 @@ from pathlib import Path
 from .core import (
     CHECKLIST, DEBT, DEBT_DAYS, DEFERRABLE, HISTORY_DIR, INTERVALS, LESSON_PREFIX, MASTERED_BOX, MISTAKES, PRIMM_DIR, PROBE_PREFIX,
     FAST_RATIO, REVIEWS, ROOT, SESSION, STEPS, TARGETS, TIMER, VARIANT_BOX, WORKSPACE, active_track_names, die, fmt_date,
-    fmt_min, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
+    fmt_min, load_profile, mistakes_header, now, parse_date, read_json, today, track_progress, write_json
 )
 from .data import (
     append_log, due_items, ensure_files, minutes_on, paused_minutes, pick_timer, read_log,
@@ -22,7 +22,7 @@ from .tracks import (
     debug_in_process, discover, get_exercise, load_tracks, modules_by_name, run_exercise, side_track,
     test_slug, warn_if_unsaved
 )
-from .planning import interleave_due
+from .planning import interleave_due, sprint_end
 from .returning import back_to_pace, latest_return, rust_allowance
 
 
@@ -86,7 +86,8 @@ def cmd_start(args) -> None:
             die(f"'{args.item}' is already running since {timer_of(timers[args.item])['start']}.")
     if ex:
         due = [k for k, _ in interleave_due(due_items(today())) if k != args.item]
-        if args.item not in read_json(REVIEWS, {}) and not variant and due:
+        if args.item not in read_json(REVIEWS, {}) and not variant and due \
+                and not sprint_end(load_profile(required=False), today()):
             print(f"Reminder: {len(due)} redo(s) due ({', '.join(due[:4])}). "
                   "Best practice: clear the redo queue before new material.")
         attempt = ex["attempt"]
