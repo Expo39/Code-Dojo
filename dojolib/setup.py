@@ -11,7 +11,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from .core import (
-    DAYS, DEFAULT_PROFILE, LEVELS, MODES, PROFILE, PROGRESS, ROOT, STAMP_FMT, WORKSPACE, ask, die,
+    DAYS, DEFAULT_PROFILE, LEVELS, MODES, PROFILE, PROGRESS, ROOT, STAMP_FMT, TRACKS, TRACKS_PERSONAL, WORKSPACE, ask, die,
     fmt_date, fmt_min, load_profile, now, parse_date, read_json, today, week_start, weekly_target,
     write_json
 )
@@ -407,6 +407,15 @@ def ensure_claude_skills() -> str:
                 "run `python dojo.py doctor` again after editing a skill.")
 
 
+def track_requirements() -> list[Path]:
+    """The requirements.txt of each track the learner follows (every track when none is chosen,
+    as in CI): a track that needs a library, such as Django, lists it there."""
+    names = read_json(PROFILE, {}).get("tracks") or sorted(
+        {p.parent.name for root in (TRACKS, TRACKS_PERSONAL) for p in root.glob("*/track.json")})
+    return [f for n in names for root in (TRACKS, TRACKS_PERSONAL)
+            if (f := root / n / "requirements.txt").exists()]
+
+
 def cmd_install(args) -> None:
     """Create .venv and install requirements, the same way on every OS."""
     print(ensure_claude_skills())
@@ -420,10 +429,12 @@ def cmd_install(args) -> None:
         die("Could not find the venv's Python. Delete .venv and try again.")
     py = str(found)
     print("Installing requirements ...")
-    result = subprocess.run([py, "-m", "pip", "install", "-q", "-r", str(ROOT / "requirements.txt")])
-    if result.returncode != 0:
-        die("pip failed; see the messages above.")
-    print("Install done.")
+    files = [ROOT / "requirements.txt", *track_requirements()]
+    for file in files:
+        result = subprocess.run([py, "-m", "pip", "install", "-q", "-r", str(file)])
+        if result.returncode != 0:
+            die(f"pip failed on {file.relative_to(ROOT).as_posix()}; see the messages above.")
+    print("Install done" + (f" (also the requirements of your tracks: {', '.join(f.parent.name for f in files[1:])})." if len(files) > 1 else "."))
 
 
 def cmd_doctor(args) -> None:
@@ -449,6 +460,8 @@ def cmd_doctor(args) -> None:
     else:
         print("  ! No profile: python dojo.py setup")
         ok = False
+    for file in track_requirements():
+        print(f"Track requirements: {file.relative_to(ROOT).as_posix()} (installed by `python dojo.py install`)")
     print(f"Exercises found: {len(discover())}")
     shared_dirs = {p.name for p in (ROOT / "tracks").iterdir() if p.is_dir()}  # placeholders count
     personal_root = ROOT / "tracks_personal"
