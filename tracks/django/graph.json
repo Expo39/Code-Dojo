@@ -1,0 +1,980 @@
+{
+  "version": 1,
+  "track": "django",
+  "about": "Concept graph of the Django track: what each concept needs first (requires; python:<id> is a concept of the Python track), what it lets you do (can), its lesson and its exercises.",
+  "concepts": [
+    {
+      "id": "theory_http",
+      "name": "HTTP in one page",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain a request and a response (method, path, headers, body, status), safe and idempotent methods, and the common status codes",
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "project_layout",
+      "name": "Project and app layout",
+      "kind": "skill",
+      "requires": [
+        "python:modules_main"
+      ],
+      "can": "Can create a project and an app, say what manage.py, settings.py, urls.py and INSTALLED_APPS each do, and run the development server",
+      "lesson": "project and app layout",
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "request_cycle",
+      "name": "The request cycle",
+      "kind": "skill",
+      "requires": [
+        "theory_http",
+        "project_layout"
+      ],
+      "can": "Can trace a request from the server through middleware and the URLconf to a view and back, naming each step",
+      "lesson": "the request cycle",
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "url_routing",
+      "name": "URL routing",
+      "kind": "skill",
+      "requires": [
+        "request_cycle"
+      ],
+      "can": "Can write path() routes with converters and names, include() other URLconfs, and build URLs with reverse() instead of hand-writing them",
+      "lesson": "URL routing",
+      "exercises": [
+        "url_patterns"
+      ],
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "function_views",
+      "name": "Function views",
+      "kind": "skill",
+      "requires": [
+        "url_routing",
+        "python:json_module"
+      ],
+      "can": "Can write a view that reads the request, returns the right response (HTML, JSON, redirect, 404) and restricts the HTTP methods",
+      "lesson": "function views",
+      "exercises": [
+        "json_greeting"
+      ],
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "middleware",
+      "name": "Middleware",
+      "kind": "skill",
+      "requires": [
+        "request_cycle",
+        "python:decorators"
+      ],
+      "can": "Can write a middleware class, say why the order in MIDDLEWARE matters, and name what runs on the way in and on the way out",
+      "lesson": "middleware",
+      "exercises": [
+        "request_id_middleware"
+      ],
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "templates_basics",
+      "name": "Templates",
+      "kind": "skill",
+      "requires": [
+        "function_views"
+      ],
+      "can": "Can render a template with context, use tags, filters and template inheritance, and explain automatic escaping",
+      "lesson": "templates",
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "static_files",
+      "name": "Static and media files",
+      "kind": "skill",
+      "requires": [
+        "project_layout"
+      ],
+      "can": "Can explain STATIC_URL, collectstatic and why user uploads (media) are different from static files",
+      "lesson": "static and media files",
+      "module": "m01_request_flow"
+    },
+    {
+      "id": "theory_relational_db",
+      "name": "Relational databases in one page",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain tables, rows, primary and foreign keys, joins, indexes and why a database enforces constraints",
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "model_fields",
+      "name": "Models and fields",
+      "kind": "skill",
+      "requires": [
+        "theory_relational_db",
+        "python:class_state"
+      ],
+      "can": "Can define a model with typed fields, constraints, default ordering and methods, and say what SQL table it becomes",
+      "lesson": "models and fields",
+      "exercises": [
+        "book_model"
+      ],
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "relations",
+      "name": "Relationships",
+      "kind": "skill",
+      "requires": [
+        "model_fields"
+      ],
+      "can": "Can model one-to-many, many-to-many and one-to-one relations, choose on_delete deliberately, and use related_name",
+      "lesson": "relationships",
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "migrations_workflow",
+      "name": "The migration workflow",
+      "kind": "skill",
+      "requires": [
+        "model_fields"
+      ],
+      "can": "Can use makemigrations, migrate, showmigrations and sqlmigrate, read a migration file, resolve two leaf migrations after a merge, and say when to squash",
+      "lesson": "migrations",
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "data_migrations",
+      "name": "Data migrations",
+      "kind": "skill",
+      "requires": [
+        "migrations_workflow"
+      ],
+      "can": "Can write a RunPython step with the historical models (apps.get_model), make it reversible and cheap on a big table, and know when RunSQL is the right tool",
+      "lesson": "data migrations",
+      "exercises": [
+        "split_names"
+      ],
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "admin_site",
+      "name": "The admin site",
+      "kind": "skill",
+      "requires": [
+        "model_fields"
+      ],
+      "can": "Can register models, configure list_display, search, filters and inlines, and say what the admin should and should not be used for",
+      "lesson": "the admin site",
+      "module": "m02_models_migrations"
+    },
+    {
+      "id": "queryset_basics",
+      "name": "QuerySets",
+      "kind": "skill",
+      "requires": [
+        "model_fields"
+      ],
+      "can": "Can explain that QuerySets are lazy and cached, chain filter and exclude, use get, order, slice and count, and say when the database is actually hit",
+      "lesson": "QuerySets",
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "lookups_q_f",
+      "name": "Lookups, Q and F",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics",
+        "relations"
+      ],
+      "can": "Can use field lookups across relations, combine conditions with Q, and use F expressions to compare or update fields in the database",
+      "lesson": "lookups and F expressions",
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "aggregation",
+      "name": "Aggregation",
+      "kind": "skill",
+      "requires": [
+        "lookups_q_f"
+      ],
+      "can": "Can use aggregate and annotate (Count, Sum, Avg), filter on annotations, and group with values()",
+      "lesson": "aggregation",
+      "exercises": [
+        "busiest_authors"
+      ],
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "related_queries",
+      "name": "Following relations",
+      "kind": "skill",
+      "requires": [
+        "relations",
+        "queryset_basics"
+      ],
+      "can": "Can reach related objects forwards and backwards, and use select_related to fetch a row and its related row in one query",
+      "lesson": "following relations",
+      "exercises": [
+        "headlines_with_reporters"
+      ],
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "bulk_operations",
+      "name": "Bulk operations",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics"
+      ],
+      "can": "Can use update, delete, bulk_create, bulk_update, get_or_create and update_or_create, and say what each skips (save, signals)",
+      "lesson": "bulk operations",
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "transactions_locking",
+      "name": "Transactions and locking",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics",
+        "python:context_managers"
+      ],
+      "can": "Can use atomic blocks and savepoints, select_for_update, and on_commit, and explain what autocommit means and what a rollback undoes",
+      "lesson": "transactions and locking",
+      "exercises": [
+        "transfer_funds"
+      ],
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "raw_sql_fallback",
+      "name": "Raw SQL and EXPLAIN",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics"
+      ],
+      "can": "Can drop to raw() or a cursor safely (parameters, never string formatting) and read an EXPLAIN plan at a basic level",
+      "lesson": "raw SQL and EXPLAIN",
+      "module": "m03_orm_queries"
+    },
+    {
+      "id": "forms_validation",
+      "name": "Forms and validation",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "templates_basics"
+      ],
+      "can": "Can define a Form with field and cross-field validation (clean_<field>, clean), show errors and render it safely",
+      "lesson": "forms and validation",
+      "module": "m04_forms_class_views"
+    },
+    {
+      "id": "model_forms",
+      "name": "Model forms",
+      "kind": "skill",
+      "requires": [
+        "forms_validation",
+        "model_fields"
+      ],
+      "can": "Can use a ModelForm, save(commit=False), and explain why form validation and database constraints are both needed",
+      "lesson": "model forms",
+      "module": "m04_forms_class_views"
+    },
+    {
+      "id": "post_redirect_get",
+      "name": "POST, redirect, messages",
+      "kind": "skill",
+      "requires": [
+        "forms_validation"
+      ],
+      "can": "Can handle a POST, redirect after success (post/redirect/get), show a one-time message, and explain why the CSRF token is there",
+      "lesson": "post redirect get",
+      "module": "m04_forms_class_views"
+    },
+    {
+      "id": "class_based_views",
+      "name": "Class-based views",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "python:inheritance_composition"
+      ],
+      "can": "Can write a View subclass, say how dispatch picks a method, and use mixins without losing track of the call order",
+      "lesson": "class-based views",
+      "module": "m04_forms_class_views"
+    },
+    {
+      "id": "generic_views",
+      "name": "Generic views",
+      "kind": "skill",
+      "requires": [
+        "class_based_views",
+        "model_forms"
+      ],
+      "can": "Can use ListView, DetailView, CreateView, UpdateView and DeleteView, override get_queryset, and paginate",
+      "lesson": "generic views",
+      "module": "m04_forms_class_views"
+    },
+    {
+      "id": "authentication_flow",
+      "name": "Authentication flow",
+      "kind": "skill",
+      "requires": [
+        "function_views"
+      ],
+      "can": "Can use login and logout, authenticate(), login_required and a login-required middleware, and explain what an authentication backend does",
+      "lesson": "authentication",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "user_model_custom",
+      "name": "A custom user model",
+      "kind": "skill",
+      "requires": [
+        "authentication_flow",
+        "model_fields"
+      ],
+      "can": "Can say why AUTH_USER_MODEL should be set before the first migration, choose between AbstractUser and AbstractBaseUser, and keep profile data separate",
+      "lesson": "custom user model",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "permissions",
+      "name": "Permissions and groups",
+      "kind": "skill",
+      "requires": [
+        "authentication_flow"
+      ],
+      "can": "Can use model permissions, groups and has_perm, protect views with mixins or decorators, and say what object-level permission needs beyond the default",
+      "lesson": "permissions",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "sessions",
+      "name": "Sessions",
+      "kind": "skill",
+      "requires": [
+        "authentication_flow"
+      ],
+      "can": "Can compare database, cache and signed-cookie session engines, set expiry, and explain session fixation and why login rotates the key",
+      "lesson": "sessions",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "web_security",
+      "name": "Web security basics",
+      "kind": "skill",
+      "requires": [
+        "templates_basics",
+        "forms_validation"
+      ],
+      "can": "Can explain and prevent XSS, CSRF, SQL injection and clickjacking in Django, and name the settings for HTTPS cookies, HSTS, host validation and a content security policy",
+      "lesson": "web security",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "rate_limiting_lockout",
+      "name": "Login limits and lockout",
+      "kind": "skill",
+      "requires": [
+        "authentication_flow"
+      ],
+      "can": "Can design limits on failed logins (per account and per address), and say what a lockout can be abused for",
+      "lesson": "login limits",
+      "module": "m05_auth_security"
+    },
+    {
+      "id": "testcase_client",
+      "name": "TestCase and the test client",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "python:testing_pytest"
+      ],
+      "can": "Can write Django tests with TestCase, the test client and RequestFactory, and assert on status, content, redirects and templates",
+      "lesson": "TestCase and the client",
+      "module": "m06_testing"
+    },
+    {
+      "id": "pytest_django",
+      "name": "pytest-django",
+      "kind": "skill",
+      "requires": [
+        "testcase_client"
+      ],
+      "can": "Can use pytest-django (the django_db mark, client, settings and urls fixtures) and build test data with fixtures or factories",
+      "lesson": "pytest-django",
+      "module": "m06_testing"
+    },
+    {
+      "id": "query_count_tests",
+      "name": "Query-count tests",
+      "kind": "skill",
+      "requires": [
+        "pytest_django",
+        "related_queries"
+      ],
+      "can": "Can assert the number of queries a view or function makes and use it to catch an N+1 regression",
+      "lesson": "query-count tests",
+      "module": "m06_testing"
+    },
+    {
+      "id": "testing_forms_models",
+      "name": "Testing forms and models",
+      "kind": "skill",
+      "requires": [
+        "pytest_django",
+        "forms_validation"
+      ],
+      "can": "Can test validation, constraints and model methods, including the database-level rules",
+      "lesson": "testing forms and models",
+      "module": "m06_testing"
+    },
+    {
+      "id": "test_isolation",
+      "name": "Isolation and slow things",
+      "kind": "skill",
+      "requires": [
+        "pytest_django"
+      ],
+      "can": "Can explain that each test runs in a transaction, when TransactionTestCase is needed, and how to isolate time, settings and outside services",
+      "lesson": "test isolation",
+      "module": "m06_testing"
+    },
+    {
+      "id": "n_plus_one",
+      "name": "The N+1 problem",
+      "kind": "skill",
+      "requires": [
+        "related_queries"
+      ],
+      "can": "Can spot an N+1 in code and in the query log, fix it with select_related or prefetch_related (and Prefetch with a custom queryset), and explain the fetch modes added in Django 6.1",
+      "lesson": "the N+1 problem",
+      "module": "m07_performance"
+    },
+    {
+      "id": "db_indexes",
+      "name": "Database indexes",
+      "kind": "skill",
+      "requires": [
+        "model_fields",
+        "raw_sql_fallback"
+      ],
+      "can": "Can add single, composite and partial indexes, say what an index costs on writes, and check with EXPLAIN that a query uses it",
+      "lesson": "indexes",
+      "module": "m07_performance"
+    },
+    {
+      "id": "caching_layers",
+      "name": "Caching",
+      "kind": "skill",
+      "requires": [
+        "function_views"
+      ],
+      "can": "Can use per-view, template-fragment and low-level caching with Redis, and design key naming, timeouts and invalidation",
+      "lesson": "caching",
+      "module": "m07_performance"
+    },
+    {
+      "id": "pagination_and_streaming",
+      "name": "Pagination and large result sets",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics"
+      ],
+      "can": "Can paginate with Paginator, explain why large offsets are slow and what keyset pagination does, and use iterator() for big loops",
+      "lesson": "pagination",
+      "module": "m07_performance"
+    },
+    {
+      "id": "rollup_tables",
+      "name": "Precomputed rollups",
+      "kind": "skill",
+      "requires": [
+        "aggregation",
+        "bulk_operations"
+      ],
+      "can": "Can decide when to store a precomputed summary instead of aggregating on every request, and design its refresh and correction",
+      "lesson": "rollups",
+      "module": "m07_performance"
+    },
+    {
+      "id": "profiling_tools",
+      "name": "Measure first",
+      "kind": "skill",
+      "requires": [
+        "n_plus_one"
+      ],
+      "can": "Can profile a slow page with a debug toolbar, the query log and timing, and follow the rule of measuring before optimising",
+      "lesson": "profiling",
+      "module": "m07_performance"
+    },
+    {
+      "id": "theory_rest",
+      "name": "REST in one page",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain resources, methods, status codes, idempotency and statelessness, and how REST differs from RPC, GraphQL and webhooks",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "drf_serializers",
+      "name": "Serializers",
+      "kind": "skill",
+      "requires": [
+        "model_fields",
+        "theory_rest"
+      ],
+      "can": "Can write Serializer and ModelSerializer classes with validation, nested and read-only fields, and explain input versus output shape",
+      "lesson": "serializers",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "drf_views",
+      "name": "API views, viewsets and routers",
+      "kind": "skill",
+      "requires": [
+        "drf_serializers",
+        "class_based_views"
+      ],
+      "can": "Can write APIView, generic views and ViewSets, register routers, and choose between them",
+      "lesson": "API views and viewsets",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "api_authentication_permissions",
+      "name": "API authentication and permissions",
+      "kind": "skill",
+      "requires": [
+        "drf_views",
+        "permissions"
+      ],
+      "can": "Can use token and session authentication and permission classes, and apply throttling",
+      "lesson": "API authentication",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "filtering_pagination",
+      "name": "Filtering, searching, pagination",
+      "kind": "skill",
+      "requires": [
+        "drf_views",
+        "lookups_q_f"
+      ],
+      "can": "Can add filtering (django-filter), search, ordering and pagination, and say what each costs the database",
+      "lesson": "filtering and pagination",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "api_errors_versioning",
+      "name": "Errors and versioning",
+      "kind": "skill",
+      "requires": [
+        "drf_views"
+      ],
+      "can": "Can return consistent errors with the right status codes, and version an API without breaking clients",
+      "lesson": "errors and versioning",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "openapi_docs",
+      "name": "OpenAPI documentation",
+      "kind": "skill",
+      "requires": [
+        "drf_serializers"
+      ],
+      "can": "Can generate an OpenAPI schema (for example with drf-spectacular), serve interactive docs, and treat the schema as the contract",
+      "lesson": "OpenAPI",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "api_testing",
+      "name": "Testing an API",
+      "kind": "skill",
+      "requires": [
+        "drf_views",
+        "pytest_django"
+      ],
+      "can": "Can test an API with APIClient, authenticated and anonymous, including validation errors and permissions",
+      "lesson": "testing an API",
+      "module": "m08_rest_apis"
+    },
+    {
+      "id": "apps_layout",
+      "name": "App boundaries",
+      "kind": "skill",
+      "requires": [
+        "project_layout"
+      ],
+      "can": "Can split a project into cohesive apps, avoid circular imports between them, and say what belongs in which app",
+      "lesson": "app boundaries",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "settings_per_environment",
+      "name": "Settings per environment",
+      "kind": "skill",
+      "requires": [
+        "project_layout"
+      ],
+      "can": "Can organise base, development, test and production settings, read configuration from the environment, and keep secrets out of the repository",
+      "lesson": "settings",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "services_selectors",
+      "name": "Services and selectors",
+      "kind": "skill",
+      "requires": [
+        "model_fields",
+        "function_views"
+      ],
+      "can": "Can keep views and serializers thin by putting business logic in service functions and reads in selectors, and explain the trade-off",
+      "lesson": "services and selectors",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "managers_querysets",
+      "name": "Managers and custom QuerySets",
+      "kind": "skill",
+      "requires": [
+        "queryset_basics"
+      ],
+      "can": "Can write reusable query logic as QuerySet methods and a manager, and chain them",
+      "lesson": "managers",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "signals_risks",
+      "name": "Signals and their risks",
+      "kind": "skill",
+      "requires": [
+        "model_fields"
+      ],
+      "can": "Can use signals and say why hidden coupling makes them risky, and when a service call or on_commit is clearer",
+      "lesson": "signals",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "management_commands",
+      "name": "Management commands",
+      "kind": "skill",
+      "requires": [
+        "project_layout",
+        "python:argparse_cli"
+      ],
+      "can": "Can write an idempotent management command with arguments and decide between a command, a scheduled task and a one-off script",
+      "lesson": "management commands",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "feature_flags",
+      "name": "Feature flags",
+      "kind": "skill",
+      "requires": [
+        "function_views"
+      ],
+      "can": "Can use flags, switches and samples (for example django-waffle) to ship dark, roll out gradually and remove the flag afterwards",
+      "lesson": "feature flags",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "audit_trails",
+      "name": "Audit trails",
+      "kind": "skill",
+      "requires": [
+        "middleware",
+        "model_fields"
+      ],
+      "can": "Can record who did what and when, including read access, and design retention and tamper-resistance",
+      "lesson": "audit trails",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "error_handling",
+      "name": "Error handling and reporting",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "python:custom_exceptions"
+      ],
+      "can": "Can turn domain exceptions into the right HTTP responses, log errors with context, and report them",
+      "lesson": "error handling",
+      "module": "m09_project_structure"
+    },
+    {
+      "id": "theory_asgi",
+      "name": "WSGI, ASGI and the event loop",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain the difference between WSGI and ASGI, what an event loop does, and why async helps for waiting but not for computing",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "async_views",
+      "name": "Async views and the async ORM",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "theory_asgi"
+      ],
+      "can": "Can write an async view, use the async ORM methods, call sync code with sync_to_async, and avoid blocking the event loop",
+      "lesson": "async views",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "channels_consumers",
+      "name": "Channels consumers and routing",
+      "kind": "skill",
+      "requires": [
+        "theory_asgi",
+        "class_based_views"
+      ],
+      "can": "Can write a WebSocket consumer, route it, and join and leave groups",
+      "lesson": "consumers and routing",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "channel_layers",
+      "name": "Channel layers",
+      "kind": "skill",
+      "requires": [
+        "channels_consumers"
+      ],
+      "can": "Can configure a Redis channel layer, send to a group from a view or a task, and explain message expiry and what happens when a consumer is slow",
+      "lesson": "channel layers",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "websocket_auth",
+      "name": "WebSocket authentication",
+      "kind": "skill",
+      "requires": [
+        "channels_consumers",
+        "authentication_flow"
+      ],
+      "can": "Can authenticate a WebSocket with the session or a token, validate the origin, and reject unauthorised connections",
+      "lesson": "WebSocket authentication",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "long_polling_vs_ws",
+      "name": "Polling, long polling, SSE, WebSockets",
+      "kind": "skill",
+      "requires": [
+        "theory_asgi"
+      ],
+      "can": "Can choose between polling, long polling, server-sent events and WebSockets for a given need",
+      "lesson": "real-time options",
+      "module": "m10_async_realtime"
+    },
+    {
+      "id": "celery_tasks",
+      "name": "Celery tasks with Django",
+      "kind": "skill",
+      "requires": [
+        "function_views",
+        "python:decorators"
+      ],
+      "can": "Can set up Celery with Django, write shared tasks, pass only serialisable arguments, and run a worker",
+      "lesson": "Celery tasks",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "task_reliability",
+      "name": "Retries and idempotency",
+      "kind": "skill",
+      "requires": [
+        "celery_tasks"
+      ],
+      "can": "Can add retries with backoff, time limits and late acknowledgement, and make a task safe to run twice",
+      "lesson": "retries and idempotency",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "on_commit_tasks",
+      "name": "Enqueue after commit",
+      "kind": "skill",
+      "requires": [
+        "celery_tasks",
+        "transactions_locking"
+      ],
+      "can": "Can explain the race between a task and an open transaction and fix it with on_commit",
+      "lesson": "enqueue after commit",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "beat_scheduling",
+      "name": "Scheduled tasks",
+      "kind": "skill",
+      "requires": [
+        "celery_tasks"
+      ],
+      "can": "Can schedule periodic tasks with Celery beat (including the database scheduler), and handle time zones and missed runs",
+      "lesson": "scheduled tasks",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "outbox_pattern",
+      "name": "The outbox pattern",
+      "kind": "skill",
+      "requires": [
+        "on_commit_tasks"
+      ],
+      "can": "Can store work in the database first and let a message carry only an id, and say why the database, not the broker, is the source of truth",
+      "lesson": "the outbox pattern",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "task_routing_workers",
+      "name": "Queues and workers",
+      "kind": "skill",
+      "requires": [
+        "celery_tasks"
+      ],
+      "can": "Can route tasks to queues, set concurrency, prefetch and memory limits, and say what each protects against",
+      "lesson": "queues and workers",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "django_tasks_framework",
+      "name": "Django's built-in Tasks",
+      "kind": "skill",
+      "requires": [
+        "celery_tasks"
+      ],
+      "can": "Can describe the Tasks framework added in Django 6.0 (definition and queueing in Django, running by an external worker) and compare it with Celery",
+      "lesson": "the Tasks framework",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "task_monitoring",
+      "name": "Monitoring tasks",
+      "kind": "skill",
+      "requires": [
+        "task_reliability"
+      ],
+      "can": "Can detect failed, stuck and piling-up tasks, expire results, and add health checks",
+      "lesson": "monitoring tasks",
+      "module": "m11_background_work"
+    },
+    {
+      "id": "compose_stack",
+      "name": "A Compose stack",
+      "kind": "skill",
+      "requires": [
+        "project_layout"
+      ],
+      "can": "Can describe and run a stack of web, worker, scheduler, database and cache containers with Compose, with health checks, networks and volumes",
+      "lesson": "a Compose stack",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "asgi_wsgi_servers",
+      "name": "Application servers",
+      "kind": "skill",
+      "requires": [
+        "theory_asgi",
+        "compose_stack"
+      ],
+      "can": "Can choose and configure an application server (gunicorn, uvicorn or daphne), its worker count and timeouts",
+      "lesson": "application servers",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "reverse_proxy_https",
+      "name": "Reverse proxy and HTTPS",
+      "kind": "skill",
+      "requires": [
+        "compose_stack",
+        "web_security"
+      ],
+      "can": "Can put a reverse proxy in front, terminate TLS, forward the right headers, and set the proxy-related settings so Django knows the request was HTTPS",
+      "lesson": "reverse proxy and HTTPS",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "static_media_serving",
+      "name": "Serving static and media in production",
+      "kind": "skill",
+      "requires": [
+        "static_files"
+      ],
+      "can": "Can serve static files (collectstatic, WhiteNoise or a proxy) and media (object storage) and use the STORAGES setting",
+      "lesson": "static and media in production",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "release_migrations",
+      "name": "Migrations in a release",
+      "kind": "skill",
+      "requires": [
+        "migrations_workflow",
+        "compose_stack"
+      ],
+      "can": "Can run migrations on deploy, write backwards-compatible migrations, and plan a rollback",
+      "lesson": "migrations in a release",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "backup_restore",
+      "name": "Backup and restore",
+      "kind": "skill",
+      "requires": [
+        "compose_stack"
+      ],
+      "can": "Can back up PostgreSQL, encrypt and rotate backups, and run a restore drill that proves they work",
+      "lesson": "backup and restore",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "logging_monitoring",
+      "name": "Logging and monitoring",
+      "kind": "skill",
+      "requires": [
+        "settings_per_environment"
+      ],
+      "can": "Can configure LOGGING, write structured logs, expose a health endpoint and watch the key metrics",
+      "lesson": "logging and monitoring",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "secrets_config",
+      "name": "Secrets and configuration",
+      "kind": "skill",
+      "requires": [
+        "settings_per_environment"
+      ],
+      "can": "Can keep secrets out of images and the repository, load them at run time and rotate them",
+      "lesson": "secrets",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "version_upgrades",
+      "name": "Upgrading Django",
+      "kind": "skill",
+      "requires": [
+        "test_isolation",
+        "migrations_workflow"
+      ],
+      "can": "Can plan an upgrade between releases (LTS to LTS), read release notes and deprecation warnings, and use the test suite as the safety net",
+      "lesson": "upgrading Django",
+      "module": "m12_operations_deployment"
+    },
+    {
+      "id": "cloud_deploy",
+      "name": "Deploying to a cloud account",
+      "kind": "skill",
+      "requires": [
+        "compose_stack",
+        "release_migrations"
+      ],
+      "can": "Can deploy the stack to a real cloud account, with a cost estimate, secrets handled, a rollback plan and a teardown",
+      "lesson": "cloud deployment",
+      "module": "m12_operations_deployment"
+    }
+  ]
+}

@@ -197,7 +197,7 @@ code-dojo/
 │   │                        with its variants, tests/, .clarify/, .solutions/), projects/
 │   ├── ai_engineering/      building products on foundation models: APIs, RAG, agents, evals, cloud (module 1 and 2 seeded)
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
-│   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
+│   ├── django/              building web applications and APIs with Django: 12 modules, exercises on a bundled test project, labs (modules 1 to 3 seeded)
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── tracks_personal/         YOUR own tracks (gitignored, same format as tracks/, in every export)
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo

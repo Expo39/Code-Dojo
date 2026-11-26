@@ -1,0 +1,13 @@
+{
+  "name": "Django",
+  "kind": "practice",
+  "description": "Building server-side web applications and APIs with Django: request flow, models and the ORM, forms, auth, testing, performance, REST APIs, project structure, real time, background work and operations.",
+  "extension": ".py",
+  "test_file": "tests/test_{slug}.py",
+  "solution_file": ".solutions/{slug}.py",
+  "clarify_file": ".clarify/{slug}.md",
+  "test_command": ["{python}", "-m", "pytest", "-q", "--no-header", "-p", "no:cacheprovider", "--ds=django_dojo.settings", "-o", "pythonpath={track_dir}/_project", "{test}"],
+  "requires": ["Python fundamentals (classes, decorators, dicts, exceptions, JSON, modules)", "A virtual environment with django and pytest-django installed"],
+  "builds_on": ["python"],
+  "reviewed": "26/11/2026"
+}

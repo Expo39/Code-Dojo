@@ -1,0 +1,4 @@
+# Installed by `python dojo.py install` when Django is one of your tracks (and in CI).
+# The exercises use Django's own test tools; Django 5.1 or newer is needed (CheckConstraint's `condition`).
+django>=5.2
+pytest-django>=4.9
