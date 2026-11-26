@@ -114,6 +114,8 @@ DEFAULT_PROFILE = {
     # `sprint_redos` redos a day picked at random from everything solved, to keep it fresh.
     "sprint_until": "",
     "sprint_redos": 2,
+    # The interview checklist now set up (progress/interviews/<stem>.md, `dojo.py interview`).
+    "interview": "",
     # Why they train and the programmer they want to become (docs/ROADMAP.md, section 1).
     "mode": "",
     "target_level": "",

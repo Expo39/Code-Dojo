@@ -7,7 +7,8 @@ import argparse
 from .core import DEFERRABLE, KINDS, PROGRESS, STEPS, TARGETS
 from .updates import cmd_changes, cmd_update
 from .migrate import cmd_migrate, migrate_dates, migrate_progress, migrate_workspace
-from .setup import cmd_doctor, cmd_install, cmd_settings, cmd_setup
+from .interview import cmd_interview
+from .setup import cmd_doctor, cmd_install, cmd_mode, cmd_settings, cmd_setup
 from .transfer import cmd_drive_setup, cmd_export, cmd_import
 from .practice import (
     cmd_cancel, cmd_clarify, cmd_debt, cmd_debug, cmd_done, cmd_list, cmd_log, cmd_mark, cmd_mistake,
@@ -98,6 +99,13 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
   settings [key=value ...] show every setting, or change any (minutes=mon=60,sat=0, mode=hobby,
                            skip_modules=m08,m09, ...; key+=value adds to a list, key-=value removes);
                            --review suggests changes from your log
+  mode [interview|hybrid|industry|hobby]
+                           show what each mode switches on, or change it (the exercise loop stays on in
+                           every mode; clarifying, time targets, mocks and Perform are interview-side)
+  interview start <name> <DD/MM/YYYY>   set up the checklist of what to prepare (progress/interviews/)
+  interview status|check <n>|park "<text>"|close
+                           the items and the parking lot; tick an item; park a tangent; close it out
+                           after the date (clears the sprint and the priority)
   mix [track=N ...] [--priority TEXT]   share of new material per track (0 = redos only);
                            no arguments shows the current mix
   sync                     find work done without logging it
@@ -188,6 +196,9 @@ def main() -> None:
     sub.add_parser("modules")
     p = sub.add_parser("settings"); p.add_argument("changes", nargs="*"); p.add_argument("--review", action="store_true")
     p = sub.add_parser("mix"); p.add_argument("shares", nargs="*"); p.add_argument("--priority")
+    p = sub.add_parser("mode"); p.add_argument("mode", nargs="?")
+    p = sub.add_parser("interview"); p.add_argument("action", nargs="?")
+    p.add_argument("rest", nargs="*")
     sub.add_parser("sync")
     p = sub.add_parser("verify"); p.add_argument("items", nargs="*")
     p = sub.add_parser("primm"); p.add_argument("module"); p.add_argument("topic", nargs="?")
@@ -215,7 +226,7 @@ def main() -> None:
         "start": cmd_start, "test": cmd_test, "debug": cmd_debug, "done": cmd_done, "log": cmd_log,
         "cancel": cmd_cancel, "debt": cmd_debt, "pause": cmd_pause, "resume": cmd_resume, "clarify": cmd_clarify, "away": cmd_away, "session": cmd_session, "mistake": cmd_mistake, "mark": cmd_mark, "export": cmd_export, "drive-setup": cmd_drive_setup, "import": cmd_import, "week": cmd_week, "stats": cmd_stats, "mix": cmd_mix, "settings": cmd_settings, "changes": cmd_changes, "update": cmd_update, "modules": cmd_modules,
         "sync": cmd_sync, "verify": cmd_verify, "primm": cmd_primm, "migrate": cmd_migrate, "graph": cmd_graph,
-        "overrides": cmd_overrides,
+        "overrides": cmd_overrides, "mode": cmd_mode, "interview": cmd_interview,
     }
     if args.cmd in ("brief", "today", "start", "test", "done", "sync", "primm"):
         migrate_workspace(verbose=False)  # older checkouts kept every attempt in one flat folder

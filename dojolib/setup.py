@@ -200,6 +200,34 @@ def cmd_settings(args) -> None:
     print("Change: python dojo.py settings key=value ...   Suggestions: python dojo.py settings --review")
 
 
+MODE_RULES = {
+    "interview": "everything applies: the exercise loop, clarifying like an interviewer, time targets, "
+                 "thinking out loud while solving, mocks and the Perform block",
+    "hybrid": "the exercise loop and mocks every second week; the interview-only rules apply in mocks and "
+              "the Perform block",
+    "industry": "the exercise loop and Build; no mocks unless asked; time targets are guides, not pressure",
+    "hobby": "the exercise loop and Build; no mocks, no Perform, no time pressure",
+}
+
+
+def cmd_mode(args) -> None:
+    """Show the mode and what it switches on, or change it (the dated Plan changes line is the tutor's)."""
+    profile = load_profile()
+    if not args.mode:
+        print(f"Mode: {profile.get('mode') or 'not set'}")
+        for name, rule in MODE_RULES.items():
+            print(f"  {name:10} {MODES[name]}\n             {rule}")
+        print("Restate, trace, plan, predict and reflect stay on in every mode.\n"
+              "Change: python3 dojo.py mode <interview|hybrid|industry|hobby>")
+        return
+    before = profile.get("mode") or "not set"
+    set_setting(profile, "mode", args.mode)
+    write_json(PROFILE, profile)
+    print(f"Mode: {before} -> {args.mode}. {MODE_RULES[args.mode][0].upper() + MODE_RULES[args.mode][1:]}.\n"
+          "Note it under 'Plan changes' in progress/PLAN.md (date and reason), then check the mix "
+          "(`dojo.py mix`).")
+
+
 def ensure_git_hooks() -> str:
     """Turn on the shared pre-push checks (.githooks/pre-push runs tools/check.py)."""
     if not (ROOT / ".git").exists() or not (ROOT / ".githooks" / "pre-push").exists():

@@ -17,6 +17,7 @@ from .planning import (
     sprint_picks, strand_line, week_numbers
 )
 from .graph import graph_brief_line
+from .interview import interview_line
 from .overrides import overrides_line
 from .practice import debt_lines, expire_debt
 from .updates import changes_lines, daily_upstream_check, track_changes, upstream_behind
@@ -107,6 +108,9 @@ def cmd_today(args, brief: bool = False) -> None:
         lines.append(f"Interview sprint until {fmt_date(sprint)}: everything goes to the interview. "
                      "Weekly reviews, the strand balance and the plan dates are left out until then; "
                      "the redos are picked at random from everything solved, to keep it fresh.")
+    interview = interview_line(profile, on)
+    if interview:
+        lines.append(interview)
     if wk["prev_gap"] < -60 and on.weekday() < 2 and not ramp and not sprint:
         lines.append(f"  Last week finished {fmt_min(-wk['prev_gap'])} short. Do not try to repay it all; "
                      "prioritise the redo queue this week.")
