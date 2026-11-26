@@ -30,7 +30,7 @@ Most concepts start from a **source you read yourself**, then a recall, then que
    example and one thing you would push back on.
 3. **Questions**: the module's `discussion.md`, answered out loud; the tutor follows up (why? when would you
    not?) and scores the answer. A gap gets one short explanation.
-4. **Build it**, in three sizes: a short exercise (module 1 and 2 have them, offline and free), the matching
+4. **Build it**, in three sizes: a short exercise (modules 1 to 6 have them, offline and free), the matching
    `try_it.md` task (5 to 15 minutes), and the module's **lab** (`labs.md`): real work on a real account, with
    your own money, a cost estimate and a teardown list.
 5. **Revise** from the module's `explainers/`, the reference notes for the topics learners ask about most.
@@ -54,17 +54,17 @@ variables or a secrets service, never in code.
 | --- | --- | --- |
 | m01_llm_apis | the AI engineering stack, how models are built, tokens, calling a chat API, the context window, sampling, cost and latency, errors and retries | seeded |
 | m02_prompts_structured_output | prompt structure, few-shot, reasoning prompts, multimodal inputs, structured output and validation, hallucination and grounding | seeded |
-| m03_embeddings_search | embeddings, similarity search, chunking, ingestion pipelines, keyword search and BM25, vector databases, hybrid search and reranking | planned |
-| m04_rag | the RAG pipeline, citations and abstaining, debugging a wrong answer, RAG against long context | planned |
-| m05_tools_agents | tool calling, workflows against agents, the agent loop, planning, tool design, MCP, agentic RAG, context engineering and memory, multi-agent systems, frameworks | planned |
-| m06_evals | error analysis, golden sets, code and LLM-judge graders, regression evals, evaluating RAG and agents, judging a new model | planned |
+| m03_embeddings_search | embeddings, similarity search, chunking, ingestion pipelines, keyword search and BM25, vector databases, hybrid search and reranking | seeded |
+| m04_rag | the RAG pipeline, citations and abstaining, debugging a wrong answer, RAG against long context | seeded |
+| m05_tools_agents | tool calling, workflows against agents, the agent loop, planning, tool design, MCP, agentic RAG, context engineering and memory, multi-agent systems, frameworks | seeded |
+| m06_evals | error analysis, golden sets, code and LLM-judge graders, regression evals, evaluating RAG and agents, judging a new model | seeded |
 | m07_models_fine_tuning | choosing models, local and hosted, quantisation, fine-tune or not, dataset engineering, LoRA | planned |
 | m08_cloud_deployment | serving behind an API, secrets and access, containers, managed cloud model services, serving open models on GPUs, inference optimisation, scaling and cost | planned |
 | m09_production_operations | reliability, caching, latency, observability, cost control, architecture of a production AI app, user feedback, orchestration | planned |
 | m10_safety_security | prompt injection, excessive agency, guardrails, sensitive data, tool-server security, responsible AI, regulation basics | planned |
 
 Every module has its concepts, lesson topics, discussion questions, try-it tasks and a `labs.md`; modules
-marked planned have no exercises yet, which are written when a learner reaches them (`dojo-new-exercise`).
+marked planned (7 to 10) have no exercises yet, which are written when a learner reaches them (`dojo-new-exercise`).
 Projects are in `projects/`; labs and their setup are in `labs/`.
 
 ## Read first, per module

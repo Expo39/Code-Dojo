@@ -11,5 +11,8 @@ README). No answers here on purpose.
 5. What is a hallucination, and which mitigations actually reduce it? Which only look like they do?
 6. How would you design a prompt for extracting invoice fields, and how would you know it works?
 7. What is the difference between asking for JSON in the prompt and using a provider's structured-output or tool-calling feature?
+8. A word-overlap check says an answer sentence is supported by the retrieved passages. What kinds of wrong claim does it miss, and what would you add (a judge model, a second retrieval, a rule for numbers and names)?
+9. How do you make a system say "I don't know" instead of guessing, and how do you measure that it does so at the right times and not too often?
+10. When is a hallucination acceptable, when is it dangerous, and how does that change the controls you build?
 8. What does chain-of-thought prompting or a reasoning model add, what does it cost, and when would you not use it?
 9. Name two uses of image or audio input in a product and the failure you would test for in each.

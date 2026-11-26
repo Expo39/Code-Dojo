@@ -146,7 +146,10 @@
       ],
       "can": "Can explain why models state false things confidently, and name three mitigations (grounding in supplied text, citations, abstaining) with their limits",
       "lesson": "hallucination",
-      "module": "m02_prompts_structured_output"
+      "module": "m02_prompts_structured_output",
+      "exercises": [
+        "unsupported_sentences"
+      ]
     },
     {
       "id": "reasoning_cot",
@@ -188,7 +191,10 @@
       ],
       "can": "Can embed texts through an embedding API or local model, compute cosine similarity and return the top k matches for a query",
       "lesson": "similarity search",
-      "module": "m03_embeddings_search"
+      "module": "m03_embeddings_search",
+      "exercises": [
+        "cosine_top_k"
+      ]
     },
     {
       "id": "chunking",
@@ -200,7 +206,10 @@
       ],
       "can": "Can split documents into chunks (by structure, size and overlap), and explain how chunk size changes retrieval quality and cost",
       "lesson": "chunking",
-      "module": "m03_embeddings_search"
+      "module": "m03_embeddings_search",
+      "exercises": [
+        "chunk_words"
+      ]
     },
     {
       "id": "keyword_search",
@@ -232,7 +241,10 @@
       ],
       "can": "Can combine keyword and vector results (for example reciprocal rank fusion) and explain what a reranker adds and costs",
       "lesson": "hybrid search and reranking",
-      "module": "m03_embeddings_search"
+      "module": "m03_embeddings_search",
+      "exercises": [
+        "fuse_rankings"
+      ]
     },
     {
       "id": "data_ingestion",
@@ -257,7 +269,10 @@
       ],
       "can": "Can build and explain a retrieve-then-generate pipeline: chunk, embed, store, retrieve, assemble the prompt, generate, and cite",
       "lesson": "the RAG pipeline",
-      "module": "m04_rag"
+      "module": "m04_rag",
+      "exercises": [
+        "build_rag_prompt"
+      ]
     },
     {
       "id": "citations_grounding",
@@ -268,7 +283,10 @@
       ],
       "can": "Can make a RAG answer cite the passages it used, and abstain when the retrieved text does not contain the answer",
       "lesson": "citations",
-      "module": "m04_rag"
+      "module": "m04_rag",
+      "exercises": [
+        "extract_citations"
+      ]
     },
     {
       "id": "rag_failures",
@@ -279,7 +297,10 @@
       ],
       "can": "Can tell a retrieval failure (the right passage was not found) from a generation failure (found but misused), and find which with a labelled set",
       "lesson": "debugging RAG",
-      "module": "m04_rag"
+      "module": "m04_rag",
+      "exercises": [
+        "retrieval_hit_rate"
+      ]
     },
     {
       "id": "rag_vs_context",
@@ -324,7 +345,10 @@
       ],
       "can": "Can write and explain an agent loop with a step limit, stop conditions and error handling, and say how a runaway agent is stopped",
       "lesson": "the agent loop",
-      "module": "m05_tools_agents"
+      "module": "m05_tools_agents",
+      "exercises": [
+        "run_tool_loop"
+      ]
     },
     {
       "id": "tool_design",
@@ -335,7 +359,10 @@
       ],
       "can": "Can design a tool with a clear name, description, small typed arguments and useful errors, and say what makes a tool easy for a model to misuse",
       "lesson": "tool design",
-      "module": "m05_tools_agents"
+      "module": "m05_tools_agents",
+      "exercises": [
+        "validate_tool_args"
+      ]
     },
     {
       "id": "mcp_protocol",
@@ -445,7 +472,10 @@
       ],
       "can": "Can choose between a code check and an LLM judge, write a judge rubric, and check a judge against human labels",
       "lesson": "graders and judges",
-      "module": "m06_evals"
+      "module": "m06_evals",
+      "exercises": [
+        "judge_agreement"
+      ]
     },
     {
       "id": "regression_evals",
@@ -457,7 +487,10 @@
       ],
       "can": "Can run an evaluation set automatically on every prompt or model change and fail the build below a threshold",
       "lesson": "regression evals",
-      "module": "m06_evals"
+      "module": "m06_evals",
+      "exercises": [
+        "regression_gate"
+      ]
     },
     {
       "id": "rag_agent_evals",
