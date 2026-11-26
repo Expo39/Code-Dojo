@@ -9,7 +9,7 @@ import shutil
 from datetime import date
 
 from .core import (
-    FILE_DATE_FMT, HISTORY_DIR, LAYOUT, LOG, LOG_FIELDS, MISTAKES, PERSONAL_DOCS, PROFILE, PROGRESS,
+    EXTRA, FILE_DATE_FMT, HISTORY_DIR, LAYOUT, LOG, LOG_FIELDS, MISTAKES, PERSONAL_DOCS, PROFILE, PROGRESS,
     REVIEWS, ROOT, SESSION, TRACK_REPORT_DIRS, TRACKER, UPSTREAM_CHECK, WEEKLY, WORKSPACE,
     active_track_names, fmt_date, parse_date, read_json, track_progress, write_json
 )
@@ -250,7 +250,9 @@ def migrate_drill_types(verbose: bool = True) -> int:
 
 OLD_TRACKER_FILES = ("timer.json", "session.json", "tracks_seen.json", "topics_seen.json",
                      "upstream_check.json")  # at the top of progress/ before progress/tracker/
-PROGRESS_LAYOUT = 2  # 2 = shared notes at the top, one folder per track, tracker/ for bookkeeping
+PROGRESS_LAYOUT = 3  # 3 = one folder per track and one, extra/, for what no track covers; tracker/ for bookkeeping
+OLD_SHARED_FILES = ("mistakes.md", "cheatsheet.md", "approaches.md")  # at the top of progress/ in layout 2
+
 
 
 def migrate_progress(verbose: bool = True) -> int:
@@ -270,8 +272,10 @@ def migrate_progress(verbose: bool = True) -> int:
     old_habits = PROGRESS / "WORK_HABITS.md"  # older checkouts kept it at the top of progress/
     if old_habits.exists() and not (PERSONAL_DOCS / "WORK_HABITS.md").exists():
         moved.append((old_habits, PERSONAL_DOCS / "WORK_HABITS.md"))
+    if read_json(LAYOUT, {}).get("progress") == 2:  # layout 2 kept the shared notes at the top
+        moved += [(PROGRESS / n, EXTRA / n) for n in (*OLD_SHARED_FILES, "notes") if (PROGRESS / n).exists()]
     tracks = active_track_names()
-    if tracks:
+    if tracks and read_json(LAYOUT, {}).get("progress") != 2:
         home = track_progress(tracks[0])
         for kind in TRACK_REPORT_DIRS:
             if (PROGRESS / kind).is_dir():
@@ -280,6 +284,10 @@ def migrate_progress(verbose: bool = True) -> int:
         for name in ("revisits.md", *(("mistakes.md", "cheatsheet.md", "approaches.md") if old_layout else ())):
             if (PROGRESS / name).exists() and not (home / name).exists():
                 moved.append((PROGRESS / name, home / name))
+    for src, dest in list(moved):
+        if src.is_dir() and dest.is_dir():  # a folder that already exists: move its files in one by one
+            moved.remove((src, dest))
+            moved += [(f, dest / f.name) for f in sorted(src.iterdir())]
     for src, dest in moved:
         if dest.exists():
             print(f"  layout: kept {src.relative_to(ROOT).as_posix()} ({dest.relative_to(ROOT).as_posix()} already exists)")

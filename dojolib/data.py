@@ -7,7 +7,7 @@ import csv
 from datetime import date, datetime, timedelta
 
 from .core import (
-    FAST_RATIO, INTERVALS, LOG, LOG_FIELDS, PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, TRACK_REPORT_DIRS,
+    EXTRA, FAST_RATIO, INTERVALS, LOG, LOG_FIELDS, PERSONAL_DOCS, PERSONAL_DOCS_INDEX, PROGRESS, REVIEWS, TRACK_REPORT_DIRS,
     TRACKER, WEEKLY, active_track_names, cheatsheet_header, die, fmt_date, mistakes_header, now,
     parse_date, read_json, track_progress, write_json
 )
@@ -24,9 +24,10 @@ def ensure_files() -> None:
             csv.writer(f).writerow(LOG_FIELDS)
     if not REVIEWS.exists():
         write_json(REVIEWS, {})
-    for track in ["", *active_track_names()]:  # "" = the shared notes at the top of progress/
-        folder = track_progress(track) if track else PROGRESS
+    for track in ["", *active_track_names()]:  # "" = progress/extra/, the lessons no track covers
+        folder = track_progress(track) if track else EXTRA
         folder.mkdir(exist_ok=True)
+        (folder / "notes").mkdir(exist_ok=True)
         if not (folder / "mistakes.md").exists():
             (folder / "mistakes.md").write_text(mistakes_header(track), encoding="utf-8")
         if not (folder / "cheatsheet.md").exists():

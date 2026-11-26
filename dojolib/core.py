@@ -38,9 +38,11 @@ RETURNS = TRACKER / "returns.json"  # re-entry steps already applied, so they ru
 AWAY_MIN_DAYS = 3
 AWAY_WEEK_DAYS = 7
 AWAY_LONG_DAYS = 21
-# Shared notes: what holds in any language. Each track has its own beside its reports.
-MISTAKES = PROGRESS / "mistakes.md"
-CHEATSHEET = PROGRESS / "cheatsheet.md"
+# Extra lessons: what no track covers, and what holds in any language. It has the same shape as a
+# track's folder (notes/, cheatsheet.md, mistakes.md); a topic moves into a track once one fits it.
+EXTRA = PROGRESS / "extra"
+MISTAKES = EXTRA / "mistakes.md"
+CHEATSHEET = EXTRA / "cheatsheet.md"
 WEEKLY = PROGRESS / "weekly"
 PERSONAL_DOCS = PROGRESS / "docs"  # the learner's own docs, written by the tutor (docs/PERSONAL_DOCS.md)
 GRAPH_OVERLAY = PROGRESS / "graph.json"  # evidence per concept, every track (dojolib/graph.py)
@@ -123,7 +125,7 @@ DEFAULT_PROFILE = {
 }
 
 def mistakes_header(track: str = "") -> str:
-    """Header of a mistakes log: the shared one (any language) or one track's."""
+    """Header of a mistakes log: the extra one (any language, any topic outside a track) or one track's."""
     if track:
         scope = f"about {track} itself (its syntax, built-ins and tools)"
         command = f"python dojo.py mistake <item> ... --track {track}"
@@ -131,7 +133,7 @@ def mistakes_header(track: str = "") -> str:
         scope = ("about what holds in any language: reading the task, complexity, testing, "
                  "debugging method, interview technique")
         command = "python dojo.py mistake <item> ... --shared"
-    return f"""# Mistakes log{f': {track}' if track else ': shared'}
+    return f"""# Mistakes log{f': {track}' if track else ': extra'}
 
 One row per mistake {scope}. The tutor fills this in (`{command}`).
 Read it at the end of each week; the weekly review turns repeats into drills.
@@ -155,12 +157,12 @@ these apply it to you. The tutor writes and updates them from your own data, fol
 """
 
 def cheatsheet_header(track: str = "") -> str:
-    """Header of a cheat sheet: the shared one (any language) or one track's."""
+    """Header of a cheat sheet: the extra one (any language, any topic outside a track) or one track's."""
     sections = (["Syntax and built-ins", "Data structures", "Gotchas"] if track else
                 ["Patterns and algorithms", "Complexity", "Debugging", "Interview technique"])
     scope = (f"what is specific to {track}" if track else
              "what holds in any language (each track has its own cheat sheet for its syntax)")
-    return (f"# Cheat sheet{f': {track}' if track else ': shared'}\n\n"
+    return (f"# Cheat sheet{f': {track}' if track else ': extra'}\n\n"
             f"Concepts worth reviewing, kept short by the tutor: {scope}. One bullet per concept:\n"
             "the idea in a few words, then \"Check:\" with a self-check question.\n"
             "Mark mastered bullets with \"(mastered DD/MM/YYYY)\".\n\n"

@@ -461,6 +461,8 @@ def cmd_doctor(args) -> None:
         if unknown:
             print(f"  ! track '{name}' builds on {', '.join(unknown)}, which is not a track in tracks/")
             ok = False
+        if track.get("kind") not in ("practice", "theory"):
+            print(f"  ! track '{name}': kind must be practice or theory (got '{track.get('kind')}')")
         reviewed = track.get("reviewed", "")
         if not reviewed:
             print(f"  note: track '{name}' has no review date (dojo-new-track, review)")

@@ -17,8 +17,15 @@ from .core import (
 
 HEADER_RE = re.compile(r"^\s*(?:#|//|--|\*|;)?\s*(Level|Target|Pattern|Kind|Variant of):\s*(.+?)\s*$", re.MULTILINE)
 STUB_RE = re.compile(r"^[a-z]\d\d_([a-z0-9_]+)(\.[A-Za-z0-9]+)$")
+TRACK_KINDS = {
+    "practice": "exercises with tests, redos, drills and mocks (Python, C)",
+    "theory": "reading, recall and discussion only: no exercises, no tests, no redos",
+}
 DEFAULT_TRACK = {
     "name": "",
+    # What the track is made of (TRACK_KINDS). A theory track has modules with lessons and
+    # discussion questions but no exercises, so nothing in it is ever scheduled as a redo.
+    "kind": "practice",
     "extension": ".py",
     "test_file": "tests/test_{slug}.py",
     "solution_file": ".solutions/{slug}.py",
@@ -61,6 +68,8 @@ def track_heading(name: str, track: dict | None = None) -> str:
         track = load_tracks(active_only=False).get(name, {})
     parents = track.get("builds_on") or []
     label = f"{name} (personal)" if track.get("personal") else name
+    if track.get("kind") == "theory":
+        label += " [theory]"
     return f"{label} (builds on {', '.join(parents)})" if parents else label
 
 
