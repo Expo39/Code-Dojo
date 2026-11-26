@@ -30,7 +30,9 @@ Most concepts start from a **source you read yourself**, then a recall, then que
    example and one thing you would push back on.
 3. **Questions**: the module's `discussion.md`, answered out loud; the tutor follows up (why? when would you
    not?) and scores the answer. A gap gets one short explanation.
-4. **Build it**: a short exercise (module 1 and 2 have them) or the matching `try_it.md` task.
+4. **Build it**, in three sizes: a short exercise (module 1 and 2 have them, offline and free), the matching
+   `try_it.md` task (5 to 15 minutes), and the module's **lab** (`labs.md`): real work on a real account, with
+   your own money, a cost estimate and a teardown list.
 5. **Revise** from the module's `explainers/`, the reference notes for the topics learners ask about most.
 
 `teach me <topic>` (PRIMM) is used where code behaviour is the point. Each block stays inside its own steps
@@ -38,10 +40,13 @@ Most concepts start from a **source you read yourself**, then a recall, then que
 
 ## Hands-on setup
 
-Exercises use deterministic fake models, so they run offline and cost nothing. For real calls use any
-provider's free tier or a few euros of credit, or a local model (for example Ollama on CPU with a small
-quantised model). For cloud tasks, **set a budget alert first**, use the free tier, and delete what you
-create. Keep keys in environment variables, never in code.
+This track is practical: you build on real services and you pay for it. `labs/README.md` is the setup (a
+secured cloud account, budget alerts, tags, infrastructure as code, the teardown routine), the list of money
+traps (a forgotten GPU instance costs about $20 a day) and the prices it was written against. Each module's
+`labs.md` has its labs with an estimated cost, and the whole track costs roughly $35 to $115 if every lab is
+torn down the same day. Exercises use deterministic fake models, so they run offline and cost nothing; try-it
+tasks use a provider's credit or a local model (for example Ollama on CPU). Keep keys in environment
+variables or a secrets service, never in code.
 
 ## Modules
 
@@ -58,8 +63,9 @@ create. Keep keys in environment variables, never in code.
 | m09_production_operations | reliability, caching, latency, observability, cost control, architecture of a production AI app, user feedback, orchestration | planned |
 | m10_safety_security | prompt injection, excessive agency, guardrails, sensitive data, tool-server security, responsible AI, regulation basics | planned |
 
-Modules marked planned have their concepts, lesson topics, discussion questions and try-it tasks; their
-exercises are written when a learner reaches them (`dojo-new-exercise`). Projects are in `projects/`.
+Every module has its concepts, lesson topics, discussion questions, try-it tasks and a `labs.md`; modules
+marked planned have no exercises yet, which are written when a learner reaches them (`dojo-new-exercise`).
+Projects are in `projects/`; labs and their setup are in `labs/`.
 
 ## Read first, per module
 
@@ -112,8 +118,10 @@ provider or model, local or hosted) with a measurement or a trade-off.
 
 ## Where this track departs from its sources
 
-- The sources need API keys or credits from lesson one; here the exercises use fake models first, so every
-  learner can practise the engineering (parsing, retries, cost, evaluation) offline.
+- The sources need API keys or credits from lesson one; here the exercises use fake models first, so the
+  engineering (parsing, retries, cost, evaluation) is practised offline, and real-account labs follow, with
+  their cost estimated and their teardown taught, because a cloud bill is part of the job and few courses
+  say what the lessons cost.
 - The sources scatter cloud and deployment; here they are one module, with a budget alert first.
 - Evaluation is taught early as a habit (error analysis in module 2's try-it tasks) as well as in its own
   module, because the sources that put it last show learners building without a way to tell better from worse.

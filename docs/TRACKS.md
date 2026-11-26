@@ -279,6 +279,10 @@ workspace/<track>/
   the stub fails and the reference passes.
 - A module may also hold `discussion.md`: questions with no answers, for discussion drills
   (`dojo-drill`): the learner answers out loud and the tutor follows up ("why?", "when would you not?").
+- A module may also hold `labs.md`: real-service tasks for tracks where the learner works on their own paid
+  accounts (cloud, model providers). Each lab states the goal, the services, an estimated cost with what drives
+  it, the time, a "done when" check and a teardown list, never the steps; the track's `labs/README.md` holds the
+  account set-up, the budget and teardown routine, the money traps, and the prices with how each was checked.
 - A module may also hold `explainers/`: one reference file per topic (what it is, the problem it solves,
   a concrete example, when not to use it, a "Check:" question), written to stand alone. The tutor teaches
   from them and the learner revises from them; they hold nothing personal and carry the date they were
