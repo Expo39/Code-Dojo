@@ -7,7 +7,7 @@
       "name": "code-dojo",
       "description": "Tutor-mode skills and agents for Code Dojo.",
       "source": "./",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "learning"
     }
   ]

@@ -8,7 +8,8 @@ Looks only at what changed since the base (default: origin/main), so it stays fa
   3. no learner name from the local profile in shared files (local runs only)
   4. changed Python files compile, changed JSON files parse
   5. changed exercises still verify: the stub fails, the reference passes
-  6. each subagent says the same in .claude/agents, .codex/agents and .gemini/agents
+  6. each subagent says the same in .claude/agents, .codex/agents and .gemini/agents, and the plugin
+     (.claude-plugin/plugin.json) lists every skill and agent
   7. the concept graph of every changed track is valid (ids, requires, no cycles, links to
      modules, lessons and exercises): a renamed exercise or lesson topic must update graph.json
 Exit code 0 = all good. Skip once in an emergency with: git push --no-verify
@@ -36,6 +37,28 @@ SKIP_SCAN = ("tools/check.py",)  # holds the patterns themselves
 
 
 READ_ONLY = "You are read-only: never create, edit or delete files."
+
+
+def plugin_sync() -> list[str]:
+    """The Claude Code plugin lists every skill and agent of the repository, and nothing else."""
+    problems = []
+    try:
+        plugin = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        return [f".claude-plugin/plugin.json unreadable: {e}"]
+    skills = {p.parent.name for p in (ROOT / ".agents" / "skills").glob("*/SKILL.md")}
+    listed = {Path(s).name for s in plugin.get("skills", [])}
+    for name in sorted(skills - listed):
+        problems.append(f".claude-plugin/plugin.json does not list the skill '{name}'")
+    for name in sorted(listed - skills):
+        problems.append(f".claude-plugin/plugin.json lists '{name}', which is not in .agents/skills")
+    agents = {p.stem for p in (ROOT / ".claude" / "agents").glob("*.md")}
+    listed_agents = {Path(a).stem for a in plugin.get("agents", [])}
+    for name in sorted(agents - listed_agents):
+        problems.append(f".claude-plugin/plugin.json does not list the agent '{name}'")
+    for name in sorted(listed_agents - agents):
+        problems.append(f".claude-plugin/plugin.json lists '{name}', which is not in .claude/agents")
+    return problems
 
 
 def agent_parity() -> list[str]:
@@ -136,6 +159,7 @@ def main() -> int:
             problems.append("exercises do not verify:\n" + result.stdout.strip())
 
     problems += [p + " (edit all three copies of an agent together)" for p in agent_parity()]
+    problems += plugin_sync()
 
     graph_code_changed = any(f.startswith("dojolib/graph") for f in changed)
     tracks = sorted({f.split("/")[1] for f in changed if f.startswith("tracks/") and f.count("/") >= 2}

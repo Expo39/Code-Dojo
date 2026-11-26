@@ -13,7 +13,7 @@ from .data import due_items, minutes_on, read_log, session_gap, timer_minutes, t
 from .tracks import discover, load_tracks, track_heading
 from .planning import (
     calibration, effective_mix, fluency_gates, interleave_due, next_new, print_modules,
-    missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, sprint_end,
+    lab_accuracy, lab_lines, missed_review_lines, plan_drift_line, recent_stats, redo_cap, redos_done, session_size, sprint_end,
     sprint_picks, strand_line, week_numbers
 )
 from .graph import graph_brief_line
@@ -126,6 +126,7 @@ def cmd_today(args, brief: bool = False) -> None:
         balance = strand_line(profile, rows, on)
         if balance:
             lines.append(balance)
+    lines.extend(lab_lines(profile, rows, on))
     session = read_json(SESSION, None)
     if session:
         clock, logged, gap = session_gap(session, rows)
@@ -295,6 +296,10 @@ def cmd_stats(args) -> None:
     reviews = read_json(REVIEWS, {})
     total = sum(float(r["minutes"] or 0) for r in rows)
     print(f"Total logged: {fmt_min(total)} over {len({r['date'] for r in rows})} days.\n")
+    for line in lab_accuracy(rows):
+        print(line)
+    if any(r["kind"] == "lab" for r in rows):
+        print()
     print("Modules (exercises tried / total, mastered):")
     modules: dict[str, list[str]] = {}
     for slug, ex in exercises.items():

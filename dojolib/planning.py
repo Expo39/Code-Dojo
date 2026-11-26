@@ -22,7 +22,7 @@ STRAND_SHARES = {
     "hobby": {"learn": 30, "write": 20, "read": 15, "build": 35, "perform": 0},
 }
 KIND_STRAND = {"study": "learn", "exercise": "write", "external": "write", "drill": "read",
-               "reading": "read", "project": "build", "mock": "perform"}
+               "reading": "read", "project": "build", "mock": "perform", "lab": "build"}
 
 
 def strand_split(rows: list[dict], start: date, end: date) -> dict:
@@ -371,6 +371,41 @@ def missed_review_lines(profile: dict, rows: list[dict], on: date) -> list[str]:
                          + f": it moves to the next mock day, {fmt_date(on + timedelta(days=days_to_sat))}; "
                            "not repaid twice.")
     return lines
+
+
+def lab_lines(profile: dict, rows: list[dict], on: date) -> list[str]:
+    """Labs run on real, paid accounts: the month's spend against the learner's own budget, and a
+    teardown reminder for a lab done in the last two days (a forgotten resource is the real risk)."""
+    labs = [r for r in rows if r["kind"] == "lab"]
+    budget = float(profile.get("lab_budget") or 0)
+    if not labs and not budget:
+        return []
+    month = [r for r in labs if (parse_date(r["date"]).year, parse_date(r["date"]).month) == (on.year, on.month)]
+    spent = sum(float(r.get("cost") or 0) for r in month)
+    if budget:
+        line = f"Lab spend this month: {spent:.2f} of {budget:.0f}" + (" (OVER the budget: stop and review before the next lab)" if spent > budget else "")
+    else:
+        line = f"Lab spend this month: {spent:.2f} (no monthly budget set: `settings lab_budget=N`)"
+    lines = [line + "."]
+    recent = [r for r in labs if 0 <= (on - parse_date(r["date"])).days <= 1]
+    if recent:
+        names = ", ".join(sorted({r["item"] for r in recent}))
+        lines.append(f"Lab teardown check ({names}): confirm everything it created is deleted (tag search), and read the bill "
+                     "tomorrow morning; the real cost goes in `log lab ... --cost C`.")
+    return lines
+
+
+def lab_accuracy(rows: list[dict]) -> list[str]:
+    """Estimate against the bill, for labs logged with both: how well the learner predicts cloud cost."""
+    both = [r for r in rows if r["kind"] == "lab" and r.get("cost") and r.get("estimate")]
+    if not both:
+        return []
+    est = sum(float(r["estimate"]) for r in both)
+    cost = sum(float(r["cost"]) for r in both)
+    worst = max(both, key=lambda r: abs(float(r["cost"]) - float(r["estimate"])))
+    ratio = cost / est if est else 0.0
+    return [f"Labs: {len(both)} with an estimate and a bill: estimated {est:.2f}, spent {cost:.2f} (x{ratio:.2f}); "
+            f"biggest miss {worst['item']}: estimated {float(worst['estimate']):.2f}, spent {float(worst['cost']):.2f}."]
 
 
 def sprint_end(profile: dict, on: date) -> date | None:

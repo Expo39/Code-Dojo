@@ -69,6 +69,7 @@ SETTINGS = {
     "export_target": ("text", None, "where `export` sends backups"),
     "sprint_until": ("date", None, "interview sprint until this date: no weekly review, strand or "
                                    "plan-date lines; random redos to keep everything fresh (empty = off)"),
+    "lab_budget": ("int", None, "most you will spend on labs (real cloud and provider accounts) in a month, in the currency of your bills; 0 = no cap"),
     "sprint_redos": ("int", None, "redos a day during an interview sprint, picked at random from "
                                   "everything solved"),
 }

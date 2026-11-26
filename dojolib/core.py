@@ -66,7 +66,7 @@ TARGETS = {"tiny": 5, "easy": 15, "medium": 30, "hard": 45}
 # prediction: whether that prediction came true (right / wrong). Empty = not asked.
 LOG_FIELDS = ["date", "item", "kind", "module", "pattern", "level",
               "minutes", "target", "hints", "result", "ratio", "skipped", "note",
-              "confidence", "prediction"]
+              "confidence", "prediction", "cost", "estimate"]
 # The exercise loop (docs/CHECKLISTS.md). `done --skipped` records the steps left out.
 STEPS = ["understand", "example", "plan", "predict", "test", "reflect"]
 # Quiet mode (`done --deferred`): the spoken steps can be owed and explained later; the
@@ -75,7 +75,7 @@ DEFERRABLE = [s for s in STEPS if s != "predict"]
 CHECKLIST = """Before typing:  1 understand (restate, ask about edge cases)  2 example (by hand)  3 plan (out loud, Big-O)
 Before running: 4 predict (pass or fail? which test? hedge it if unsure)
 After it runs:  5 test (trace only lines that left your plan)  6 reflect (complexity, what would break it)"""
-KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project"]
+KINDS = ["exercise", "external", "mock", "drill", "study", "reading", "project", "lab"]
 
 MODES = {
     "interview": "preparing for live-coding interviews (with or without a date)",
@@ -116,6 +116,9 @@ DEFAULT_PROFILE = {
     # `sprint_redos` redos a day picked at random from everything solved, to keep it fresh.
     "sprint_until": "",
     "sprint_redos": 2,
+    # What the learner is willing to spend a month on labs (real cloud and provider accounts), in the
+    # currency of their bills; 0 = no cap set. `today` shows the month so far, `stats` the estimates.
+    "lab_budget": 0,
     # The interview checklist now set up (progress/interviews/<stem>.md, `dojo.py interview`).
     "interview": "",
     # Why they train and the programmer they want to become (docs/ROADMAP.md, section 1).

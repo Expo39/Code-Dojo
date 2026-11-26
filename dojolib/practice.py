@@ -391,8 +391,17 @@ def cmd_log(args) -> None:
     append_log({"date": fmt_date(on), "item": args.item or args.kind, "kind": args.kind,
                 "minutes": args.minutes, "hints": args.hints, "result": args.result or "",
                 "pattern": args.pattern or "", "level": args.level or "", "note": args.note or "",
-                "confidence": confidence_value(args), "prediction": args.prediction or ""})
+                "confidence": confidence_value(args), "prediction": args.prediction or "",
+                "cost": "" if args.cost is None else f"{args.cost:.2f}",
+                "estimate": "" if args.estimate is None else f"{args.estimate:.2f}"})
     print(f"Logged {fmt_min(args.minutes)} of {args.kind} on {fmt_date(on)}.")
+    if args.kind == "lab":
+        if args.estimate is None:
+            print("  No estimate given: next time write the cost estimate before the lab, then compare it with the bill.")
+        if args.cost is None:
+            print("  No cost yet: check the bill tomorrow morning and log it (`log lab ... --cost C`).")
+        print("  Teardown: delete the lab's resources today, search by tag for leftovers, and look at billing tomorrow\n"
+              "  (tracks/<track>/labs/README.md).")
 
 
 def cmd_pause(args) -> None:

@@ -46,8 +46,11 @@ HELP = """Code Dojo commands (python dojo.py <command>). New here? python dojo.p
        --confidence N --prediction right|wrong   how sure you said you were (0-100) and whether
                                  the prediction came true (stats compares the two)
        mocks: done <problem>_<date> --kind mock --result strong|pass|fail --no-review
-  log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project
+  log <kind> <minutes>     log time without a timer: study, reading, drill, mock, project, lab
                            (--confidence N --prediction right|wrong, as for done)
+  log lab <minutes> <id> --estimate E --cost C --note "..."
+                           a lab on real accounts: what you estimated before, what the bill said after;
+                           `today` shows the month's spend against `settings lab_budget=N`, `stats` the estimates
   pause / resume [item]    stop the clock while talking something through, then continue
   session start|pause|resume|status|end
                            the session clock: at `end`, training time outside exercise
@@ -172,6 +175,8 @@ def main() -> None:
     p.add_argument("--date")
     p.add_argument("--confidence", type=int)
     p.add_argument("--prediction", choices=["right", "wrong"])
+    p.add_argument("--cost", type=float, help="lab: what it really cost (from the bill), in the currency of your bills")
+    p.add_argument("--estimate", type=float, help="lab: what you estimated it would cost before you started")
     p = sub.add_parser("cancel"); p.add_argument("item")
     p = sub.add_parser("debt"); p.add_argument("action", nargs="?", choices=["list", "clear"], default="list")
     p.add_argument("item", nargs="?"); p.add_argument("--result", choices=["good", "partial", "poor"])
