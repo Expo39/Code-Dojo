@@ -200,9 +200,9 @@ code-dojo/
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 ├── tracks_personal/         YOUR own tracks (gitignored, same format as tracks/, in every export)
 ├── progress/                YOUR data (gitignored): profile, PLAN, BASELINE, log, redo
-│                            schedule, concept evidence (graph.json), shared notes, weekly/,
-│                            docs/, and one folder per track (its notes, drill, mock and probe
-│                            reports); layout in docs/PERSONAL_DOCS.md
+│                            schedule, concept evidence (graph.json), weekly/, docs/,
+│                            extra/ (lessons no track covers) and one folder per track (its notes,
+│                            cheat sheet, mistakes, drill, mock and probe reports); layout in docs/PERSONAL_DOCS.md
 ├── workspace/               YOUR code (gitignored), mirroring tracks/:
 │                            <track>/<module>/<exercise>/ holds your attempt, your variant
 │                            attempts and its .history/ (earlier attempts);

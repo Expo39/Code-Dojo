@@ -15,7 +15,7 @@ job, their estimates). When something written for one learner turns up in `docs/
 
 ## PITFALLS.md: your own traps
 
-- **From**: the mistakes logs (`progress/mistakes.md` and `progress/<track>/mistakes.md`). A
+- **From**: the mistakes logs (`progress/extra/mistakes.md` and `progress/<track>/mistakes.md`). A
   theme that comes back 2 or more times becomes an entry. There is no shared list of pitfalls: what trips one learner does not trip another, so each
   learner's list is built only from their own mistakes.
 - **Written by**: `dojo-weekly` (step 3, repeated mistakes); seeded by `dojo-assess` from the
@@ -75,11 +75,13 @@ progress/
 ├── overrides.md                       your personal rules (below)
 ├── log.csv reviews.json               every attempt and the redo schedule, every track
 ├── graph.json                         your evidence on each concept; a shared concept once
-├── mistakes.md cheatsheet.md          what holds in any language: reading the task,
-│   approaches.md                      complexity, patterns, debugging, interview technique
 ├── weekly/                            one report per week
 ├── docs/                              your docs (this spec)
-├── <track>/                           one folder per track you learn
+├── extra/                             extra lessons: topics no track covers, and what holds in
+│   ├── notes/                         any language. The same shape as a track's folder: study
+│   ├── cheatsheet.md mistakes.md      notes (README index grouped by theme), cheat sheet and
+│   └── approaches.md                  mistakes (reading the task, complexity, patterns, debugging)
+├── <track>/                           one folder per track you learn (practice or theory)
 │   ├── mistakes.md cheatsheet.md      what is specific to that language or tool
 │   ├── approaches.md revisits.md      alternate methods; exercises to redo with a later concept
 │   ├── notes/                         study notes: every explanation from the sessions, written
@@ -116,8 +118,9 @@ progress/
 - **Used by**: the learner, for revision (before an interview, after time away); the cheat
   sheet keeps one line per concept and points here for the detail.
 - **Shape**: `notes/README.md` lists every topic (topic, date learnt, file); each file is dated
-  with where it came from. Never solution code for an exercise. Shared ideas (any language) go
-  in `progress/notes/`.
+  with where it came from. Never solution code for an exercise. Shared ideas (any language) and topics
+  no track covers go in `progress/extra/notes/`, grouped by theme in its README; when a track that
+  fits one exists, the note moves into that track's `notes/`.
 
 ### Where notes go
 

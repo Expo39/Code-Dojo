@@ -20,7 +20,7 @@ description: Weekly review for the Code Dojo learner. Use when the learner says 
    - Mock result and the two habits from it, if the mode had one this week.
    - Notes in the right place: a row or bullet in a track's `mistakes.md` or `cheatsheet.md` that
      holds in any language (reading the task, complexity, a pattern, interview technique) moves to
-     the shared file at the top of `progress/`, and a language rule in a shared file moves to its
+     `progress/extra/`, and a language rule in an extra file moves to its
      track's (`docs/PERSONAL_DOCS.md`).
    - Follow-up methods in `progress/<track>/approaches.md` and `progress/approaches.md` not yet tried: list them (one line each) as optional bonus work.
    - Variants: exercises in box 3 or higher whose next redo is a variant turn and that have no variant yet (`dojo.py list` shows `(+N variant)` beside those that have one): have `dojo-new-exercise` write them before they come due, so no redo falls back to the original.

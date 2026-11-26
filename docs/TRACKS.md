@@ -150,6 +150,7 @@ you can also follow them by hand.
 ```json
 {
   "name": "Rust",
+  "kind": "practice",
   "description": "Ownership, borrowing, traits, then systems projects.",
   "extension": ".rs",
   "test_file": "tests/test_{slug}.rs",
@@ -169,6 +170,10 @@ you can also follow them by hand.
    means "passed". Set `"test_command": null` for a track without automatic tests (a reading
    or theory track); attempts are then logged by hand and judged with the tutor.
 
+   `kind` is `practice` (the default: exercises with tests, redos, drills, mocks) or `theory`
+   (modules of reading, recall and discussion questions only: no exercises, no tests, nothing
+   scheduled as a redo; a probe and a discussion drill check it). Both kinds have the same
+   `progress/<track>/` folder (`notes/`, `cheatsheet.md`, `mistakes.md`).
    `requires` (optional) lists, in words, what a learner should have before starting the track;
    the roadmap reads it (`ROADMAP.md`). `builds_on` (optional) names the tracks this one is built
    on: a library or framework track names its language (`"builds_on": ["python"]` for pandas or

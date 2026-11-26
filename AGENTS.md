@@ -255,7 +255,7 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | a breakpoint, `debug this` | the editor's "Debug: this file" (Zed F4, VS Code Run and Debug) on any exercise, drill, mock or lesson; without an editor, `breakpoint()` and `dojo.py debug <file>` in their own terminal, never through `!` (it takes no typed input) |
 | "quiet mode" (any words), `debrief`, `what do I owe` | quiet mode (Keywords); `done --deferred <steps>`; `dojo.py debt`, then `debt clear <ex> --result good\|partial\|poor` per item |
 | `pause` / `resume`, `clarify <ex>` | `dojo.py pause` / `resume`; `dojo.py clarify <ex>` after they list their own edge cases |
-| `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` (`--shared` when it holds in any language) |
+| `log mistake: ...` | `dojo.py mistake <item> "<what went wrong>" "<correct form>"` (`--shared`: logged in `progress/extra/`, for what holds in any language or no track covers) |
 | `end of day`, `how am I doing` | `dojo.py session end` (end of day only), `dojo.py today`, `dojo.py stats`, an honest short assessment, tomorrow's work |
 | "I was ill / away", a planned holiday | `dojo.py away <from> [<to>] --reason <word>` (no dates: list what is recorded and what the log shows); `--remove <from>` for a wrong one |
 | a break, `I'm away`, dojo maintenance (commits, settings, exports, tooling) | `dojo.py session pause`, then `session resume` when training starts again: only training counts (the time away also comes off a running or paused exercise timer, so do not log it as study) |
@@ -275,34 +275,40 @@ Every settings, mix or module change gets a dated line with its reason under Pla
 
 ## Logging
 
-- `progress/` keeps what holds in any language at the top and what belongs to one track in
-  `progress/<track>/` (`docs/PERSONAL_DOCS.md`). Each note goes where it is true: a language rule
-  in the track's file, a habit or idea that holds in every language in the shared one.
+- `progress/` has one standard shape: `progress/<track>/` for each track and `progress/extra/` for
+  extra lessons (a topic no track covers, or an idea that holds in any language), each with
+  `notes/` (a `README.md` index, grouped), `cheatsheet.md` and `mistakes.md`; tracks add
+  `approaches.md`, `revisits.md`, `drills/`, `mocks/` and `probes/` when they use them
+  (`docs/PERSONAL_DOCS.md`). Each note goes where it is true: a language rule in the track's file,
+  a habit or idea that holds in every language, or a topic outside every track, in `extra/`. A
+  track has a `kind` (`practice`: exercises; `theory`: reading and discussion only, no exercises).
+  Asked about any topic: one short lesson, then its note in the track the topic belongs to, else
+  in `extra/notes/`; once a track that fits it exists, move the note there.
 - Every mistake you see or discuss: `dojo.py mistake` (the exercise's track by default;
   `--shared` for reading the task, complexity, testing, debugging method, interview technique).
-- Cheat sheet (`progress/<track>/cheatsheet.md`; language-independent ideas in
-  `progress/cheatsheet.md`): one bullet per concept worth reviewing, the idea in a
+- Cheat sheet (`progress/<track>/cheatsheet.md`; language-independent ideas and topics outside
+  every track in `progress/extra/cheatsheet.md`): one bullet per concept worth reviewing, the idea in a
   few words, then "Check:" and a self-check question that stands alone days later (define every
   helper it names, state the setup). Never solution code. The same holds for any quick check in
   chat, warm-up checks above all: show or define what it is about, and never ask about an
   exercise by name as if they remembered its task ("in split_bill, what is..."); give the setup
   in the question instead, without opening an exercise that is due as a redo.
-- Study notes (`progress/<track>/notes/`; ideas that hold in any language in
-  `progress/notes/`): every explanation you give in a session (a drill gap, a question, a
+- Study notes (`progress/<track>/notes/`; ideas that hold in any language, and topics no track
+  covers, in `progress/extra/notes/`): every explanation you give in a session (a drill gap, a question, a
   correction, a repair) is written up there in full as soon as it lands, with the same examples
   as in chat but written to **stand alone**: read weeks later with no memory of the chat, every
   sentence is complete and plain, every term is defined where it first appears, every claim says
   why ("tests run once in a `Stop` hook, because a hook after every edit would make Claude slow",
   never "that is Stop's job"), with no shorthand, no "my idea" or "as above", and nothing that
   refers back to the conversation. A file is only for a topic on the learner's path (the
-  track's concepts, the interview topics); a side question asked to understand an example (what
+  track's concepts, or what the learner asked to understand); a side question asked to understand an example (what
   a command does) gets a sentence inside the note it serves, never a note of its own: one file
   per topic (`<topic>.md`, snake_case; a later explanation of the
   same topic extends its file), listed in the folder's `README.md`, so the learner can revise
   from it (`docs/PERSONAL_DOCS.md`). The cheat sheet keeps the one-line version. Never solution
   code.
 - Alternate methods (`progress/<track>/approaches.md`; a method that holds in any language in
-  `progress/approaches.md`): only for a likely interview follow-up or a
+  `progress/extra/approaches.md`): only for a likely interview follow-up or a
   reusable pattern; in words, **Main** (write first) and **Follow-up** (when asked to improve)
   with the deciding trade-off. On a redo, the Main method from a blank file first; the Follow-up
   only after it passes with time left, never in the box decision. Never in the exercise file.

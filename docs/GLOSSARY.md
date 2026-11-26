@@ -37,7 +37,7 @@ this page is for looking one up on your own.
 | **Probe** | A short mini test at the start of a new goal or track: it finds where your understanding ends on each chain of concepts the goal needs, so you learn the shortest path and nothing you already know. |
 | **Confidence, calibration** | How sure you sounded (a plain answer counts as sure, a hedged one as unsure; logged as 90 or 50), and how well that matches how often you are right (`stats`). |
 | **Misconception, fragile** | A misconception is a wrong answer you were sure of: it is fixed before anything builds on it. Fragile is a right answer you were unsure of, or a struggle: it gets one more check. |
-| **Cheat sheet** | Your own short notes, one line per concept with a self-check question: one per track (`progress/<track>/cheatsheet.md`) and one for what holds in any language (`progress/cheatsheet.md`). |
+| **Cheat sheet** | Your own short notes, one line per concept with a self-check question: one per track (`progress/<track>/cheatsheet.md`) and one for extra lessons: what holds in any language, or no track covers (`progress/extra/cheatsheet.md`). |
 
 ## How the plan works
 

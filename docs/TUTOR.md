@@ -33,7 +33,7 @@ dictated code does not count as typing it yourself.
 | `break` / `I'm away` / work on the dojo itself | The session clock pauses (only training counts) and resumes when you are back |
 | `I'm stuck on ...` or paste an error | A hint at the lowest level that helps (the ladder in `METHOD.md`) |
 | `done <LeetCode problem>` | Logged with your time and hints; it joins the redo queue too |
-| `log mistake: ...` | Added to the track's `progress/<track>/mistakes.md`, or to `progress/mistakes.md` when it holds in any language |
+| `log mistake: ...` | Added to the track's `progress/<track>/mistakes.md`, or to `progress/extra/mistakes.md` when it holds in any language |
 | `end of day` / `how am I doing` | Today, the week, weak spots, and concrete advice for tomorrow; at the end of the day the session clock stops and the training outside exercise timers is logged as study |
 
 ## Learning
@@ -48,7 +48,7 @@ dictated code does not count as typing it yourself.
 | `more like <exercise>` | Same pattern, different story |
 | `review my code` | Senior-engineer feedback on passing code, as questions and pointers |
 | `review my project` | Design, tests and structure feedback on a project |
-| `review the cheat sheet` | Self-check questions from your cheat sheets (`progress/<track>/cheatsheet.md` and `progress/cheatsheet.md`), oldest first |
+| `review the cheat sheet` | Self-check questions from your cheat sheets (`progress/<track>/cheatsheet.md` and `progress/extra/cheatsheet.md`), oldest first |
 
 ## Reading, debugging, performing
 
