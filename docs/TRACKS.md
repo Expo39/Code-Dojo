@@ -136,7 +136,10 @@ track (`python dojo.py settings tracks+=<name>`, or `plan my learning`).
 
 Start with research, not a blank page: say "design a track for <subject>" (skill
 `dojo-new-track`); it asks first whether the track is shared (`tracks/`) or only yours
-(`tracks_personal/`). It surveys the best free material (university courses such as MIT, Stanford,
+(`tracks_personal/`), and what the subject means to you, before any search. It finds the best material,
+**reads each source for real** (its full syllabus or table of contents and at least one lesson, never a
+search snippet), keeps a reading log, builds a topic-by-source coverage matrix and shows you the module
+list before writing. It surveys the best free material (university courses such as MIT, Stanford,
 Harvard, Helsinki and Oxford, official documentation, well-regarded repositories on GitHub,
 GitLab and Codeberg, free books), judges each source on authority, currency, depth, exercises
 and licence (stars and "free" are not proof of quality, and niche topics need extra care).
@@ -274,8 +277,12 @@ workspace/<track>/
   module's level working alone.
 - Each exercise has 3 to 6 tests, including edge cases. `python dojo.py verify` must show that
   the stub fails and the reference passes.
-- A module may also hold `discussion.md`: interview-style questions with no answers, for
-  discussion drills (`dojo-drill`), where the interview is a conversation rather than coding.
+- A module may also hold `discussion.md`: questions with no answers, for discussion drills
+  (`dojo-drill`): the learner answers out loud and the tutor follows up ("why?", "when would you not?").
+- A module may also hold `explainers/`: one reference file per topic (what it is, the problem it solves,
+  a concrete example, when not to use it, a "Check:" question), written to stand alone. The tutor teaches
+  from them and the learner revises from them; they hold nothing personal and carry the date they were
+  checked, and the tutor re-checks live documentation for fast-changing topics before using one.
 - A module may also hold `try_it.md`: one optional hands-on task per concept, 5 to 15 minutes,
   for tracks that are mostly read and discussed, done when time allows and never instead of a drill.
 - Good exercises use a different story from the concept's worked example, have one clear
