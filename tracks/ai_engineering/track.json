@@ -1,0 +1,13 @@
+{
+  "name": "AI engineering",
+  "kind": "practice",
+  "description": "Becoming an AI engineer: calling models, prompts and structured output, embeddings and search, RAG, tools and agents, evals, open models and fine-tuning, cloud deployment, production operations, and safety.",
+  "extension": ".py",
+  "test_file": "tests/test_{slug}.py",
+  "solution_file": ".solutions/{slug}.py",
+  "clarify_file": ".clarify/{slug}.md",
+  "test_command": ["{python}", "-m", "pytest", "-q", "--no-header", "-p", "no:cacheprovider", "{test}"],
+  "requires": ["Python fundamentals (functions, dicts, exceptions, JSON, modules)"],
+  "builds_on": ["python"],
+  "reviewed": "26/11/2026"
+}

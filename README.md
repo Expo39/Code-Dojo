@@ -195,6 +195,7 @@ code-dojo/
 │   ├── python/              the Python track: README (phases, modules, milestones), graph.json
 │   │                        (concept graph), modules (primm/, then one folder per exercise
 │   │                        with its variants, tests/, .clarify/, .solutions/), projects/
+│   ├── ai_engineering/      building products on foundation models: APIs, RAG, agents, evals, cloud (module 1 and 2 seeded)
 │   ├── cpp/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   ├── django/              placeholder track: prerequisites, theory, outline; built when a plan reaches it
 │   └── ros/                 placeholder track: prerequisites, theory, outline; built when a plan reaches it

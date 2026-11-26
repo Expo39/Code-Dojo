@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "track": "ai_engineering",
+  "about": "Concept graph of the AI engineering track: what each concept needs first (requires; python:<id> is a concept of the Python track), what it lets you do (can), its lesson and its exercises.",
+  "concepts": [
+    {
+      "id": "theory_ai_stack",
+      "name": "The AI engineering stack and planning an application",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can describe the three layers of the AI stack (application, model, infrastructure), how AI engineering differs from ML engineering and from full-stack work, and how to judge a use case before building (value, risk, evaluation, maintenance)",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "theory_how_llms_work",
+      "name": "How LLMs are built",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain in plain words what pre-training, supervised fine-tuning and preference tuning do, what a transformer's attention does at a glance, and why model size and test-time compute change quality and cost",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "theory_tokens",
+      "name": "What a token is",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain tokens, why limits, cost and speed are counted in them, and estimate the tokens of a text roughly",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "chat_api_call",
+      "name": "Calling a chat model API",
+      "kind": "skill",
+      "requires": [
+        "theory_tokens",
+        "python:json_module"
+      ],
+      "can": "Can make a chat completion request (roles, messages, parameters) to any provider's API or SDK, and read the answer, the finish reason and the token usage",
+      "lesson": "calling a chat API",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "context_window",
+      "name": "Context windows and context rot",
+      "kind": "skill",
+      "requires": [
+        "theory_tokens"
+      ],
+      "can": "Can explain what is in the context window, why a model is stateless, what happens when input does not fit, and why long prompts are followed less reliably",
+      "lesson": "context windows",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "sampling_determinism",
+      "name": "Sampling and determinism",
+      "kind": "skill",
+      "requires": [
+        "theory_tokens"
+      ],
+      "can": "Can say what temperature, top-p and max tokens do, and when to use temperature 0 and why it is still not a guarantee",
+      "lesson": "sampling",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "cost_latency",
+      "name": "Cost and latency arithmetic",
+      "kind": "skill",
+      "requires": [
+        "theory_tokens"
+      ],
+      "can": "Can estimate the cost and latency of a workload from tokens in and out and per-million-token prices",
+      "lesson": "cost and latency",
+      "exercises": [
+        "estimate_cost"
+      ],
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "api_errors_retries",
+      "name": "API errors, rate limits and retries",
+      "kind": "skill",
+      "requires": [
+        "chat_api_call",
+        "python:try_except"
+      ],
+      "can": "Can tell retryable errors (rate limit, timeout, overload) from permanent ones and retry with exponential backoff and a cap",
+      "lesson": "errors and retries",
+      "module": "m01_llm_apis"
+    },
+    {
+      "id": "prompt_structure",
+      "name": "Structuring a prompt",
+      "kind": "skill",
+      "requires": [
+        "chat_api_call"
+      ],
+      "can": "Can separate instructions, context, input and output format in a prompt, use delimiters, and say why a vague prompt gives unstable output",
+      "lesson": "prompt structure",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "few_shot_prompting",
+      "name": "Few-shot examples",
+      "kind": "skill",
+      "requires": [
+        "prompt_structure"
+      ],
+      "can": "Can add well-chosen examples to a prompt, keep them out of the evaluation set, and say when examples help less than a clearer instruction",
+      "lesson": "few-shot examples",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "structured_output",
+      "name": "Structured output and validation",
+      "kind": "skill",
+      "requires": [
+        "chat_api_call",
+        "python:json_module"
+      ],
+      "can": "Can get JSON from a model reliably (schemas, validation, retry on invalid output) and say why to parse, never string-match",
+      "lesson": "structured output",
+      "exercises": [
+        "parse_with_retry"
+      ],
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "schema_validation",
+      "name": "Validating model output with a schema",
+      "kind": "skill",
+      "requires": [
+        "structured_output",
+        "python:dataclasses"
+      ],
+      "can": "Can validate a model's output against a schema (for example with Pydantic or JSON Schema), turn failures into a specific retry message, and reject what cannot be repaired",
+      "lesson": "schema validation",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "hallucination",
+      "name": "Hallucination and grounding",
+      "kind": "skill",
+      "requires": [
+        "context_window",
+        "prompt_structure"
+      ],
+      "can": "Can explain why models state false things confidently, and name three mitigations (grounding in supplied text, citations, abstaining) with their limits",
+      "lesson": "hallucination",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "reasoning_cot",
+      "name": "Reasoning prompts and test-time compute",
+      "kind": "skill",
+      "requires": [
+        "prompt_structure"
+      ],
+      "can": "Can explain chain-of-thought prompting and reasoning models, what extra thinking tokens buy and cost, and when a plain answer is better",
+      "lesson": "reasoning and chain of thought",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "multimodal_inputs",
+      "name": "Multimodal inputs and outputs",
+      "kind": "skill",
+      "requires": [
+        "chat_api_call"
+      ],
+      "can": "Can send an image or audio to a model through an API, generate an image or speech, and name the limits (cost, resolution, errors on small text)",
+      "lesson": "multimodal",
+      "module": "m02_prompts_structured_output"
+    },
+    {
+      "id": "theory_embeddings",
+      "name": "What an embedding is",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain an embedding as numbers whose distance means similarity, and cosine similarity in words",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "similarity_search",
+      "name": "Similarity search with embeddings",
+      "kind": "skill",
+      "requires": [
+        "theory_embeddings",
+        "chat_api_call"
+      ],
+      "can": "Can embed texts through an embedding API or local model, compute cosine similarity and return the top k matches for a query",
+      "lesson": "similarity search",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "chunking",
+      "name": "Chunking",
+      "kind": "skill",
+      "requires": [
+        "theory_embeddings",
+        "theory_tokens"
+      ],
+      "can": "Can split documents into chunks (by structure, size and overlap), and explain how chunk size changes retrieval quality and cost",
+      "lesson": "chunking",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "keyword_search",
+      "name": "Keyword search and BM25",
+      "kind": "skill",
+      "requires": [],
+      "can": "Can explain an inverted index and BM25, and say when keyword search beats vectors (exact codes, names, rare terms)",
+      "lesson": "keyword search",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "vector_stores",
+      "name": "Vector databases and indexes",
+      "kind": "skill",
+      "requires": [
+        "similarity_search"
+      ],
+      "can": "Can say what a vector database adds over a list (approximate nearest-neighbour indexes, filtering, persistence) and when pgvector or an in-memory index is enough",
+      "lesson": "vector databases",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "hybrid_rerank",
+      "name": "Hybrid search and reranking",
+      "kind": "skill",
+      "requires": [
+        "keyword_search",
+        "vector_stores"
+      ],
+      "can": "Can combine keyword and vector results (for example reciprocal rank fusion) and explain what a reranker adds and costs",
+      "lesson": "hybrid search and reranking",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "data_ingestion",
+      "name": "Ingestion pipelines",
+      "kind": "skill",
+      "requires": [
+        "chunking"
+      ],
+      "can": "Can load, clean, deduplicate and chunk documents, attach metadata for filtering, and re-index only what changed",
+      "lesson": "ingestion pipelines",
+      "module": "m03_embeddings_search"
+    },
+    {
+      "id": "rag_pipeline",
+      "name": "The RAG pipeline",
+      "kind": "skill",
+      "requires": [
+        "chunking",
+        "hybrid_rerank",
+        "hallucination",
+        "chat_api_call"
+      ],
+      "can": "Can build and explain a retrieve-then-generate pipeline: chunk, embed, store, retrieve, assemble the prompt, generate, and cite",
+      "lesson": "the RAG pipeline",
+      "module": "m04_rag"
+    },
+    {
+      "id": "citations_grounding",
+      "name": "Citations and grounded answers",
+      "kind": "skill",
+      "requires": [
+        "rag_pipeline"
+      ],
+      "can": "Can make a RAG answer cite the passages it used, and abstain when the retrieved text does not contain the answer",
+      "lesson": "citations",
+      "module": "m04_rag"
+    },
+    {
+      "id": "rag_failures",
+      "name": "Debugging RAG",
+      "kind": "skill",
+      "requires": [
+        "rag_pipeline"
+      ],
+      "can": "Can tell a retrieval failure (the right passage was not found) from a generation failure (found but misused), and find which with a labelled set",
+      "lesson": "debugging RAG",
+      "module": "m04_rag"
+    },
+    {
+      "id": "rag_vs_context",
+      "name": "RAG versus long context versus tools",
+      "kind": "skill",
+      "requires": [
+        "rag_pipeline",
+        "context_window"
+      ],
+      "can": "Can argue when to use RAG, a long context window or agentic retrieval with tools, on cost, freshness, accuracy and security",
+      "lesson": "RAG versus long context",
+      "module": "m04_rag"
+    },
+    {
+      "id": "tool_calling",
+      "name": "Tool (function) calling",
+      "kind": "skill",
+      "requires": [
+        "structured_output"
+      ],
+      "can": "Can describe a function to a model, handle the model's request to call it, run it in code and return the result, in a loop that ends",
+      "lesson": "tool calling",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "workflows_vs_agents",
+      "name": "Workflows versus agents",
+      "kind": "skill",
+      "requires": [
+        "tool_calling"
+      ],
+      "can": "Can say whether a task needs a fixed workflow or an agent, and name the common workflow patterns (chaining, routing, parallelisation, orchestrator-workers, evaluator-optimiser)",
+      "lesson": "workflows versus agents",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "agent_loop",
+      "name": "The agent loop",
+      "kind": "skill",
+      "requires": [
+        "workflows_vs_agents"
+      ],
+      "can": "Can write and explain an agent loop with a step limit, stop conditions and error handling, and say how a runaway agent is stopped",
+      "lesson": "the agent loop",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "tool_design",
+      "name": "Designing tools for agents",
+      "kind": "skill",
+      "requires": [
+        "agent_loop"
+      ],
+      "can": "Can design a tool with a clear name, description, small typed arguments and useful errors, and say what makes a tool easy for a model to misuse",
+      "lesson": "tool design",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "mcp_protocol",
+      "name": "The Model Context Protocol",
+      "kind": "skill",
+      "requires": [
+        "tool_design"
+      ],
+      "can": "Can explain MCP (hosts, clients, servers; tools, resources, prompts), the problem it solves, and when a plain function or CLI is simpler",
+      "lesson": "MCP",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "context_engineering",
+      "name": "Context engineering and memory",
+      "kind": "skill",
+      "requires": [
+        "agent_loop",
+        "context_window"
+      ],
+      "can": "Can decide what goes into an agent's context each turn (instructions, tool results, memory, retrieved facts) and how to keep it small",
+      "lesson": "context engineering",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "agent_frameworks",
+      "name": "Agent frameworks and when to skip them",
+      "kind": "skill",
+      "requires": [
+        "agent_loop"
+      ],
+      "can": "Can compare plain API calls with an agent framework (for example LangGraph or a vendor agent SDK) on control, debugging, lock-in and what the framework gives",
+      "lesson": "agent frameworks",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "multi_agent",
+      "name": "Multi-agent systems",
+      "kind": "skill",
+      "requires": [
+        "agent_loop",
+        "tool_design"
+      ],
+      "can": "Can say when several agents (orchestrator and workers, hand-offs, debate) beat one, what they cost in tokens and complexity, and how they share state",
+      "lesson": "multi-agent systems",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "agentic_rag",
+      "name": "Agentic RAG",
+      "kind": "skill",
+      "requires": [
+        "rag_pipeline",
+        "agent_loop"
+      ],
+      "can": "Can turn a fixed retrieve-then-generate pipeline into an agent that decides when and what to search (search as a tool, several queries, stop when enough), and say when the fixed pipeline is better",
+      "lesson": "agentic RAG",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "agent_planning",
+      "name": "Planning and reflection in agents",
+      "kind": "skill",
+      "requires": [
+        "agent_loop"
+      ],
+      "can": "Can explain planning (decomposing a goal into steps), ReAct-style reasoning between actions and reflection on results, and where plans go wrong (drift, loops, over-planning)",
+      "lesson": "planning and reflection",
+      "module": "m05_tools_agents"
+    },
+    {
+      "id": "theory_evals",
+      "name": "Why evaluate",
+      "kind": "theory",
+      "requires": [],
+      "can": "Can explain why a few good-looking examples is not an evaluation, and what a test set, a metric and a baseline are",
+      "module": "m06_evals"
+    },
+    {
+      "id": "error_analysis",
+      "name": "Error analysis",
+      "kind": "skill",
+      "requires": [
+        "theory_evals"
+      ],
+      "can": "Can read a sample of real outputs, label what went wrong, group the failures and rank them, before building any metric",
+      "lesson": "error analysis",
+      "module": "m06_evals"
+    },
+    {
+      "id": "golden_sets",
+      "name": "Building a golden set",
+      "kind": "skill",
+      "requires": [
+        "error_analysis"
+      ],
+      "can": "Can build a labelled test set from real inputs, keep it separate from prompt examples, and grow it from production failures",
+      "lesson": "golden sets",
+      "module": "m06_evals"
+    },
+    {
+      "id": "graders",
+      "name": "Graders: code checks and LLM judges",
+      "kind": "skill",
+      "requires": [
+        "golden_sets"
+      ],
+      "can": "Can choose between a code check and an LLM judge, write a judge rubric, and check a judge against human labels",
+      "lesson": "graders and judges",
+      "module": "m06_evals"
+    },
+    {
+      "id": "regression_evals",
+      "name": "Regression evals in CI",
+      "kind": "skill",
+      "requires": [
+        "graders",
+        "python:testing_pytest"
+      ],
+      "can": "Can run an evaluation set automatically on every prompt or model change and fail the build below a threshold",
+      "lesson": "regression evals",
+      "module": "m06_evals"
+    },
+    {
+      "id": "rag_agent_evals",
+      "name": "Evaluating RAG and agents",
+      "kind": "skill",
+      "requires": [
+        "regression_evals",
+        "rag_pipeline",
+        "agent_loop"
+      ],
+      "can": "Can evaluate retrieval and generation separately for RAG, and an agent's trajectory and outcome, not only its final answer",
+      "lesson": "evaluating RAG and agents",
+      "module": "m06_evals"
+    },
+    {
+      "id": "judging_releases",
+      "name": "Judging a new model release",
+      "kind": "skill",
+      "requires": [
+        "regression_evals"
+      ],
+      "can": "Can decide whether to switch to a new model by running your own evaluation set, cost and latency, instead of a public benchmark",
+      "lesson": "judging a new model",
+      "module": "m06_evals"
+    },
+    {
+      "id": "model_landscape",
+      "name": "The model landscape and choosing a model",
+      "kind": "skill",
+      "requires": [
+        "cost_latency"
+      ],
+      "can": "Can compare model families and sizes (closed and open-weight, general and small), read a model card, and shortlist models for a task by capability, cost, latency, licence and context length",
+      "lesson": "choosing a model",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "local_vs_hosted",
+      "name": "Local versus hosted models",
+      "kind": "skill",
+      "requires": [
+        "model_landscape"
+      ],
+      "can": "Can argue when to use a hosted API, a self-hosted open-weight model or a hybrid, on quality, data control, cost and operations",
+      "lesson": "local versus hosted",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "quantisation_local_inference",
+      "name": "Quantisation and local inference",
+      "kind": "skill",
+      "requires": [
+        "local_vs_hosted"
+      ],
+      "can": "Can explain quantisation and what it trades, estimate the memory a model needs, and run a small model locally (for example with Ollama or llama.cpp)",
+      "lesson": "quantisation and local inference",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "fine_tune_or_not",
+      "name": "Fine-tune or not",
+      "kind": "skill",
+      "requires": [
+        "model_landscape",
+        "rag_pipeline"
+      ],
+      "can": "Can say when prompting, RAG or fine-tuning is the right tool (style and format against knowledge), and what fine-tuning costs to do and to keep",
+      "lesson": "fine-tune or not",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "training_data_prep",
+      "name": "Preparing fine-tuning data",
+      "kind": "skill",
+      "requires": [
+        "fine_tune_or_not",
+        "golden_sets"
+      ],
+      "can": "Can build, clean and split a fine-tuning dataset, keep the test set apart, and check for leakage and bias",
+      "lesson": "fine-tuning data",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "lora_peft",
+      "name": "LoRA and parameter-efficient fine-tuning",
+      "kind": "skill",
+      "requires": [
+        "training_data_prep"
+      ],
+      "can": "Can explain LoRA and why it needs far less memory than full fine-tuning, and run or read a small LoRA fine-tune with a library such as Hugging Face PEFT",
+      "lesson": "LoRA",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "synthetic_data",
+      "name": "Dataset engineering and synthetic data",
+      "kind": "skill",
+      "requires": [
+        "training_data_prep"
+      ],
+      "can": "Can curate, deduplicate and augment a dataset, generate synthetic examples with a model, and check them for errors, bias and leakage before training or evaluation",
+      "lesson": "dataset engineering",
+      "module": "m07_models_fine_tuning"
+    },
+    {
+      "id": "api_service",
+      "name": "Serving a model behind an API",
+      "kind": "skill",
+      "requires": [
+        "chat_api_call",
+        "python:modules_main"
+      ],
+      "can": "Can wrap a model call in a web service (for example FastAPI) with validation, streaming responses and clear error codes",
+      "lesson": "serving behind an API",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "secrets_config_iam",
+      "name": "Secrets, configuration and access control",
+      "kind": "skill",
+      "requires": [
+        "api_service"
+      ],
+      "can": "Can keep API keys out of code and images, load them from the environment or a secret store, and give a service the least cloud permissions it needs",
+      "lesson": "secrets and access",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "containers_for_ml",
+      "name": "Containers for AI services",
+      "kind": "skill",
+      "requires": [
+        "api_service"
+      ],
+      "can": "Can package a model-calling service in a Docker image, with pinned dependencies, and explain what changes when a GPU is needed",
+      "lesson": "containers",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "managed_model_services",
+      "name": "Managed model services in the cloud",
+      "kind": "skill",
+      "requires": [
+        "model_landscape",
+        "secrets_config_iam"
+      ],
+      "can": "Can compare calling a provider directly with a cloud's managed service (for example Amazon Bedrock, Azure AI Foundry, Google Vertex AI): models offered, regions, quotas, identity, billing and data terms",
+      "lesson": "managed model services",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "gpu_inference_serving",
+      "name": "Serving open models on GPUs",
+      "kind": "skill",
+      "requires": [
+        "quantisation_local_inference",
+        "containers_for_ml"
+      ],
+      "can": "Can explain what an inference server such as vLLM does (batching, KV cache), size a GPU for a model, and choose between an endpoint and self-hosting",
+      "lesson": "GPU serving",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "cloud_cost_scaling",
+      "name": "Scaling and cloud cost",
+      "kind": "skill",
+      "requires": [
+        "managed_model_services",
+        "cost_latency"
+      ],
+      "can": "Can reason about autoscaling, serverless against dedicated capacity, quotas, spot instances and budgets, and set a spending alert before experimenting",
+      "lesson": "scaling and cost",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "inference_optimisation",
+      "name": "Inference optimisation",
+      "kind": "skill",
+      "requires": [
+        "gpu_inference_serving"
+      ],
+      "can": "Can explain the main levers for faster, cheaper inference (quantisation, KV cache, continuous batching, speculative decoding, smaller or distilled models) and their trade-offs",
+      "lesson": "inference optimisation",
+      "module": "m08_cloud_deployment"
+    },
+    {
+      "id": "reliability",
+      "name": "Reliability: timeouts, fallbacks and budgets",
+      "kind": "skill",
+      "requires": [
+        "api_errors_retries"
+      ],
+      "can": "Can set timeouts, retries, fallbacks to another model and token or cost budgets, and say what happens when the main model is slow, overloaded or retired",
+      "lesson": "reliability",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "caching",
+      "name": "Caching: prompt, response and semantic",
+      "kind": "skill",
+      "requires": [
+        "cost_latency"
+      ],
+      "can": "Can explain prompt caching (reused prefixes), exact response caching and semantic caching, and what silently breaks a cache",
+      "lesson": "caching",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "latency_optimisation",
+      "name": "Reducing latency",
+      "kind": "skill",
+      "requires": [
+        "cost_latency"
+      ],
+      "can": "Can name and order the levers for latency (streaming, shorter prompts and outputs, smaller models, parallel calls, caching)",
+      "lesson": "latency",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "observability",
+      "name": "Observability for LLM features",
+      "kind": "skill",
+      "requires": [
+        "reliability",
+        "regression_evals"
+      ],
+      "can": "Can say what to trace and log for an LLM call (inputs, model, parameters, tokens, latency, cost, prompt version, outcome) and what not to log (secrets, personal data)",
+      "lesson": "observability",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "cost_control",
+      "name": "Cost control and routing",
+      "kind": "skill",
+      "requires": [
+        "caching",
+        "model_landscape"
+      ],
+      "can": "Can reduce cost per completed task (cheaper model for easy cases, caching, shorter prompts, batching) and measure that quality held",
+      "lesson": "cost control",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "ai_architecture",
+      "name": "Architecture of a production AI application",
+      "kind": "skill",
+      "requires": [
+        "reliability",
+        "caching"
+      ],
+      "can": "Can draw the parts around a model in production (gateway, router, guardrails, retrieval, cache, queue, logging) and say what each protects against",
+      "lesson": "AI architecture",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "user_feedback",
+      "name": "User feedback and UX for AI",
+      "kind": "skill",
+      "requires": [
+        "observability"
+      ],
+      "can": "Can design feedback collection (explicit ratings, edits, implicit signals), turn it into evaluation cases, and design an interface that shows uncertainty and lets users correct the system",
+      "lesson": "user feedback",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "pipelines_orchestration",
+      "name": "Orchestrating pipelines",
+      "kind": "skill",
+      "requires": [
+        "data_ingestion",
+        "observability"
+      ],
+      "can": "Can schedule ingestion, re-indexing and evaluation runs with an orchestrator or a simple scheduler, with retries, alerts and run history",
+      "lesson": "orchestration",
+      "module": "m09_production_operations"
+    },
+    {
+      "id": "prompt_injection",
+      "name": "Prompt injection",
+      "kind": "skill",
+      "requires": [
+        "tool_calling"
+      ],
+      "can": "Can explain direct and indirect prompt injection with an example of each, and say why a model refusing is not a control",
+      "lesson": "prompt injection",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "excessive_agency",
+      "name": "Excessive agency and least privilege",
+      "kind": "skill",
+      "requires": [
+        "prompt_injection",
+        "tool_design"
+      ],
+      "can": "Can limit what an agent can do (scoped tools, read-only by default, human approval for irreversible actions) and explain why",
+      "lesson": "excessive agency",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "guardrails_validation",
+      "name": "Guardrails and output validation",
+      "kind": "skill",
+      "requires": [
+        "structured_output"
+      ],
+      "can": "Can validate inputs and outputs in code (allow-lists, schemas, length, moderation) and place the checks outside the model",
+      "lesson": "guardrails",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "data_privacy_routing",
+      "name": "Sensitive data and model routing",
+      "kind": "skill",
+      "requires": [
+        "local_vs_hosted"
+      ],
+      "can": "Can decide which data may go to a hosted model, which must be redacted or kept local, and what to ask a provider about retention and training use",
+      "lesson": "sensitive data",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "mcp_security",
+      "name": "MCP and tool security",
+      "kind": "skill",
+      "requires": [
+        "mcp_protocol",
+        "prompt_injection"
+      ],
+      "can": "Can name the risks of installing a third-party tool server (tool poisoning, over-broad permissions, data exposure) and the controls",
+      "lesson": "tool server security",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "ai_regulation",
+      "name": "Regulation basics",
+      "kind": "skill",
+      "requires": [],
+      "can": "Can summarise what the EU AI Act asks of a team that ships a chatbot (transparency, risk classes) and where to check the current text",
+      "lesson": "regulation basics",
+      "module": "m10_safety_security"
+    },
+    {
+      "id": "ai_ethics_bias",
+      "name": "Responsible AI: bias, fairness and moderation",
+      "kind": "skill",
+      "requires": [
+        "hallucination"
+      ],
+      "can": "Can name where bias enters a system (data, model, prompt, use), test for it with paired inputs, use content-moderation tools, and run simple adversarial tests",
+      "lesson": "responsible AI",
+      "module": "m10_safety_security"
+    }
+  ]
+}
