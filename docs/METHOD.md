@@ -121,7 +121,7 @@ daily templates in `DAILY_SESSION.md` follow this split.
 | Learn | teach-me lessons, probes, and the tutor's explanations and feedback between exercises (the session clock) | 20% | 25% | 25% | 30% |
 | Write | every attempt at a write exercise, new or redo, and outside problems | 25% | 25% | 20% | 20% |
 | Read and debug | read and debug drills (often on AI-written code), code reading, and the read-and-predict and fix-the-bug exercises | 20% | 20% | 20% | 15% |
-| Build | the current project | 10% | 15% | 25% | 35% |
+| Build | the current project, and labs on real accounts | 10% | 15% | 25% | 35% |
 | Perform | a talk-aloud timed problem, mock interviews | 25% | 15% | 10% | 0% |
 
 **What a mode switches on** (`python3 dojo.py mode` shows it; `mode <name>` changes it):

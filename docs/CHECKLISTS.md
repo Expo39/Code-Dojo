@@ -124,6 +124,24 @@ and a done-when bar.
 `today` and the brief show the interview, the items done, the next item and the days left, and
 once the date has passed they say it is time to close it out.
 
+## 9. Labs: real accounts, real money
+
+A lab (a module's `labs.md`) is practice on a real service with the learner's own account, so a mistake
+costs money. It has its own steps; the exercise loop's "predict before running" applies to the cost.
+
+| # | Step | You show | Done when |
+| --- | --- | --- | --- |
+| 1 | **Safe** | the account set-up of the track's `labs/README.md` done once: multi-factor authentication, a limited login, a budget with alerts, tags | the tutor has heard each of the four, never seen a key or password |
+| 2 | **Estimate** | the cost before starting, from the prices on the provider's own page and the lab's drivers (tokens, hours, units), written down, with the traps the lab names | a number the learner can defend and compare later |
+| 3 | **Do** | the lab's goal reached by the learner: they read the documentation, run every command and write the infrastructure code; hints follow the hint ladder, and the tutor never creates, changes or deletes cloud resources | the "done when" check of the lab is met |
+| 4 | **Tear down** | everything the lab created deleted the same day, then a tag search and a check of the usual leftovers | an empty search |
+| 5 | **Compare** | the next morning's bill beside the estimate, the gap explained, `dojo.py log lab <minutes> <id> --estimate E --cost C --note "..."` | the log row has both numbers |
+| 6 | **Record** | the concepts the lab showed, in the graph (`graph set`), and the cheat-sheet line with its "Check:" question | a held or fragile state with a note |
+
+A key, token or password pasted into the chat is never used: the tutor says so, and tells the learner to
+revoke it and create a new one. `today` shows the month's spend against `settings lab_budget=N` and reminds
+about teardown after a lab; `stats` shows how close the estimates are to the bills.
+
 ## 7. All the good practices, and what the tutor does if one is skipped
 
 The checklists above are the step-by-step part. These are every other practice the dojo is

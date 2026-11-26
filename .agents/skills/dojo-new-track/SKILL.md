@@ -78,7 +78,13 @@ than any one of them. Always in the dojo's own format, never a copy.
    - `README.md`: "Last reviewed: <date>, against <tool and version>" at the top; phases, modules,
      milestones, Prerequisites, Theory, and a "Sources" table (what each was used for, why it is
      trusted). No time estimates.
-   - `track.json` with `"reviewed": "<DD/MM/YYYY>"` and `"builds_on"`: the tracks it is built on
+   - A track whose practice is work on real paid services (cloud, model providers) also gets a
+     `labs/README.md` (account set-up, the teardown routine, the money traps, and every price with how it
+     was checked: **read the provider's own pricing page, never a snippet, and mark any figure taken from
+     a third party or not confirmed as unverified**) and a `labs.md` in each module (goal, services,
+     estimated cost and what drives it, time, "done when", teardown; never the steps). A lab with a known
+     expensive default (a service that bills by the hour while idle) names the cheap alternative first.
+   - `track.json` with `"kind"` (`practice` or `theory`) and `"reviewed": "<DD/MM/YYYY>"` and `"builds_on"`: the tracks it is built on
      (a library or framework track names its language, e.g. `["python"]` for pandas; ROS names
      `["cpp", "python"]`). A library is its own track beside its language, never a folder inside it.
    - `graph.json`, the concept graph (`docs/TRACKS.md`, "Concept graph"): every concept the

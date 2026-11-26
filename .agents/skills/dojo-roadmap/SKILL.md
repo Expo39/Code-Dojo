@@ -42,6 +42,10 @@ Rules: `docs/ROADMAP.md` (read it first). Everything written here is personal (`
      `hybrid`, `industry`, `hobby`), the mix restored, and a dated Plan changes line.
    - `dojo.py mix <track>=N ...` (sum 100, 0 = maintenance) and `--priority "<text>"` (`""`
      clears it).
+   - A track whose practice is labs on real accounts (cloud, model providers): ask the monthly amount
+     the learner will spend (`dojo.py settings lab_budget=N`, in the currency of their bills), say what the
+     track's labs cost in total (the track's `labs/README.md`) and its biggest traps, and plan labs against
+     that budget; never choose it for them.
 6. Modules move in or out: show `dojo.py modules` and agree them (`dojo-assess`, 3b).
 7. A track starting now that is a placeholder: design it with `dojo-new-track` (research,
    toolchain agreed with the learner, first module only).
