@@ -5,6 +5,9 @@ description: Create new verified Code Dojo exercises. Use when the learner says 
 
 # New exercises
 
+0. **Scope checklist** (`docs/CHECKLISTS.md`, section 8): list what the exercises will cover and
+   what they will not, and have the learner agree it before the spec; extras that come up are
+   offered afterwards, never added.
 1. Judge first: could an existing exercise train this with a small change, or one exercise cover two topics? Prefer that over adding (`dojo-new-track`, step 6). Then decide the spec: track, module (existing, or the next planned one in `tracks/<track>/README.md`; each new exercise gets its own folder there, `tracks/<track>/<module>/<slug>/`, `docs/TRACKS.md`), topic and pattern, level and target time, how many (usually 2 to 5), and the learner's weak spots to target (`progress/<track>/mistakes.md`, `progress/mistakes.md`, `dojo.py stats`). "More like X" keeps X's pattern in a different story with slightly different edge cases: the surface changes so the learner has to recognise the pattern, not remember the last problem.
 2. Delegate the writing to the `problem-setter` agent with that spec and the path of one existing exercise in the same track as a format example. Ask it to run `dojo.py verify <slugs>` and `dojo.py graph check <track>` and fix until both pass (each new exercise is listed under its concept in `graph.json`).
 3. Check its report: the slugs, `verify` and the graph check passing, the concept each exercise is listed under, and that the task text does not leak the solution. Do not show the learner the reference solutions.

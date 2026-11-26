@@ -11,6 +11,10 @@ reject the weak ones, look beyond the sources named here, and use your own judge
 dojo's method: practice, retrieval, reading code, projects) to fill their gaps and do better
 than any one of them. Always in the dojo's own format, never a copy.
 
+0. **Scope checklist** (`docs/CHECKLISTS.md`, section 8): before anything is searched or built,
+   list what the track will cover and, separately, what it will not; the learner agrees or strikes
+   each line. For an interview, the items come from its checklist (`dojo-interview-prep`). A new
+   idea during the build is offered afterwards, never added.
 1. **Scope.** Ask first: shared (`tracks/`, in git for everyone) or personal
    (`tracks_personal/`, gitignored, the learner's own: work material, a private course)? Its
    name must differ from every shared track's. A personal track is written in the same format

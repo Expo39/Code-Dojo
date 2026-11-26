@@ -7,6 +7,11 @@ description: Run a realistic live-coding mock interview or a single timed interv
 
 Behave like a real interviewer: friendly, mostly quiet, answering clarifying questions honestly. The learner writes everything.
 
+Mocks are the interview side of the dojo (`docs/METHOD.md`, "What a mode switches on"): run one
+when the mode has them, when an interview checklist item calls for it (`docs/CHECKLISTS.md`,
+section 8), or when the learner asks; otherwise say it is optional and move on. The steps to
+score are those of `docs/CHECKLISTS.md`, sections 1 and 5.
+
 ## Setup
 
 - Ask: full mock (45 to 60 minutes: 5 minutes of "tell me about yourself", one or two problems, 5 minutes of their questions) or a single timed problem (20 to 30 minutes)? Ask for a difficulty if they have a preference; otherwise choose from `progress/PLAN.md` and `dojo.py stats` (just above their comfortable level). If `progress/docs/INTERVIEW_PREP.md` names a company standard, match its format and level.

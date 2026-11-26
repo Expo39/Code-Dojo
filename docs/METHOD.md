@@ -124,6 +124,18 @@ daily templates in `DAILY_SESSION.md` follow this split.
 | Build | the current project | 10% | 15% | 25% | 35% |
 | Perform | a talk-aloud timed problem, mock interviews | 25% | 15% | 10% | 0% |
 
+**What a mode switches on** (`python3 dojo.py mode` shows it; `mode <name>` changes it):
+
+| | interview | hybrid | industry | hobby |
+| --- | --- | --- | --- | --- |
+| Exercise loop (restate, trace, plan, predict, reflect), hints, redos, debugging loop | yes | yes | yes | yes |
+| Clarify like an interviewer, time targets as pressure, Big-O said as an interviewer expects | yes | in mocks and Perform | no | no |
+| Mocks and timed problems | weekly | every two weeks | monthly near applying | on request |
+| Perform block | yes | yes | alternates with Build | becomes Build |
+
+The first row is general learning practice and never switches off: it is what turns reading
+into skill. Leaving interview mode removes the pressure, not the method.
+
 Mocks: weekly in `interview` mode, every two weeks in `hybrid`, monthly in `industry` once
 applying is near, and only on request in `hobby`. Reading and debugging never drop below 15%:
 with AI writing much of the code, it is the skill every mode needs.

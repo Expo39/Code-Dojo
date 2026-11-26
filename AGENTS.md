@@ -69,6 +69,17 @@ goes into shared files. No `profile.json`: the learner is new; offer setup in th
   plan-date lines, and the redos are the `sprint_redos` a day that `today` picks at random from
   everything solved (not the due queue). Run those first, then the interview work; never push a
   skipped review or strand back in during the sprint.
+- **Interview checklist.** When an interview is close, `dojo-interview-prep` writes one list of
+  everything to prepare (`dojo.py interview start`, `progress/interviews/`), and the sprint works
+  through it item by item: `docs/CHECKLISTS.md`, section 8. Only unchecked items; a gap gets one
+  short explanation; a tangent goes to the parking lot (`dojo.py interview park`), never into the
+  session; no new items, side notes or offers unless the learner asks. After the date,
+  `dojo.py interview close`, then the mode question and a replan.
+- **Mode.** `dojo.py mode` shows and changes it (`docs/METHOD.md` says what each switches on).
+  The exercise loop (restate, trace, plan, predict, reflect), hints, redos and the debugging loop
+  apply in every mode; the interview side (clarifying like an interviewer, time targets as
+  pressure, mocks, Perform) is skipped in `industry` and `hobby`, and outside mocks and Perform
+  in `hybrid`. Never switch it silently: a dated line under Plan changes.
 
 ## Keywords
 
@@ -119,12 +130,13 @@ their concepts in the track's `graph.json`), and the drills and mocks you genera
 
 ## Coaching protocol
 
-Run the whole method in `docs/CHECKLISTS.md`, sections 1 to 7; never let a practice slide
-silently. Firm, friendly, one-line reminders. The most frequent cases:
+Run the whole method in `docs/CHECKLISTS.md`, sections 1 to 8: every skill takes its step list
+from there; never let a practice slide silently. Firm, friendly, one-line reminders. The most frequent cases:
 
 - **Think out loud.** Code or "done" without reasoning: "Talk me through your thinking." Silent:
   "What are you thinking right now?"
-- **Clarify like an interviewer.** Answer only what they ask, from `.clarify/<slug>.md`; never
+- **Clarify like an interviewer** (interview mode; in hybrid, in mocks and Perform; otherwise
+  answer what is asked and no more). Answer only what they ask, from `.clarify/<slug>.md`; never
   volunteer edge cases; never reveal its `Pattern:` line before `done`.
 - **Short answers.** Ask for a few words per step; suggest voice input once (`/voice`). For a
   long discussion that is not solving, `dojo.py pause`, then `resume` (paused minutes count as
@@ -255,6 +267,8 @@ memory, and it is redone tomorrow). Always say "Hint 2 of 5: ..."; the count goe
 | `update`, or updates in the status | `dojo.py update` (shows the incoming commits and the files that run code); tell the learner, and only after their yes `dojo.py update --yes`; then the track-changes questions (`dojo-session`, step 3) |
 | a roadmap decision | `dojo.py mix <track>=N ...` (0 = maintenance), `--priority "<text>"` |
 | `export` | `dojo.py export [--to <target>]` |
+| "an interview is close", its items, a tangent, "the interview is over" | `dojo-interview-prep`; `dojo.py interview start <name> <DD/MM/YYYY>`, `status`, `check <n>`, `park "<text>"`, `close` |
+| "switch interview mode off / on", "what does my mode do" | `dojo.py mode` (shows), `dojo.py mode <interview\|hybrid\|industry\|hobby>`, then the Plan changes line |
 
 Every settings, mix or module change gets a dated line with its reason under Plan changes in
 `PLAN.md`.
@@ -319,6 +333,7 @@ check fails when they differ. A tool that cannot start subagents follows the fil
 | "mock interview", "interview problem" | `dojo-mock` |
 | "read / debug / discriminate / discussion / work drill", "practise <concept>" (older names: predict, trace, bug, review) | `dojo-drill` |
 | "weekly review", the week's last training day | `dojo-weekly` |
+| "I have an interview on <date>", "an interview is close", the interview date has passed | `dojo-interview-prep` |
 | "new exercise on <topic>", "more like <ex>", a planned module reached, a variant turn with no variant | `dojo-new-exercise` (agent `problem-setter`) |
 | "design / review the <X> track", a placeholder track reached, a stale review date | `dojo-new-track` |
 | "review my code" (after a pass), "review my project" | agent `code-reviewer`; relay as questions, never rewritten code |

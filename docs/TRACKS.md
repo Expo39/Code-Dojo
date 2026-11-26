@@ -126,7 +126,10 @@ is never pushed, and `export` puts it in your backup zip with `progress/` and `w
 the concept graph, `builds_on` a shared track such as `python`), and `today`, `modules` and
 `stats` mark it "(personal)". Two rules: its name must differ from every shared track's (a
 clash is ignored and `doctor` flags it), and its exercise names must be unique across both
-folders. To share it later, move its folder into `tracks/`. Add it to your profile like any
+folders. A personal track built for an interview is scoped by that interview's checklist
+(`CHECKLISTS.md`, section 8; `dojo-interview-prep`): it covers the listed items and nothing else,
+and a read-first or discussion block in it has a step list and a time box (read, recall, questions,
+stop) so that it cannot grow past them. To share it later, move its folder into `tracks/`. Add it to your profile like any
 track (`python dojo.py settings tracks+=<name>`, or `plan my learning`).
 
 ## Adding a track

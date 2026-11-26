@@ -9,6 +9,14 @@ report shows how often you followed every step, next to your speed.
 Rule for all of them: **say what you are thinking, out loud, all the time.** Silent work cannot
 be coached, and silent candidates cannot be assessed.
 
+**Which parts depend on the mode** (`dojo.py mode`, `METHOD.md`): the steps of sections 1 to 4 and
+6 are general learning practice and apply in every mode: restating the task, tracing an example,
+planning before typing, predicting before running, reflecting afterwards. Only the interview
+side is tagged **[interview]** and is skipped in `industry` and `hobby` mode (and outside mocks
+and the Perform block in `hybrid`): asking clarifying questions like an interviewer, time
+targets as pressure, complexity said as an interviewer expects it, mocks (section 5) and
+timed problems.
+
 ## 1. Exercise loop (every exercise, every problem)
 
 The same six steps as the interview process (`INTERVIEW_PLAYBOOK.md`), with "predict" added
@@ -72,7 +80,7 @@ Changing code before step 3 is guessing, not debugging.
 | 4 | Edge cases: empty, one item, duplicates, invalid values |
 | 5 | What you would ask the author, or what you would change |
 
-## 5. Mock interview
+## 5. Mock interview [interview]
 
 The exercise loop under interview conditions, plus: greet, ask questions at the end, and stay
 calm when stuck (say what you know, what you are unsure of, the simplest next step). Scored by
@@ -86,6 +94,35 @@ calm when stuck (say what you know, what you are unsure of, the simplest next st
 | 2 | Mistakes logged in words ("what went wrong" and "correct form") |
 | 3 | One cheat-sheet line per new concept, with a self-check question |
 | 4 | Say tomorrow's first task |
+
+## 8. A checklist for what is being made or prepared
+
+Two moments get a written checklist before any work starts, so that the work stays on what the
+learner asked for and nothing else:
+
+**When a track, exercise or module is created** (`dojo-new-track`, `dojo-new-exercise`):
+
+| # | Step |
+| --- | --- |
+| 1 | List what it will cover and, separately, what it will not |
+| 2 | The learner agrees or strikes each line |
+| 3 | Only then is anything built; a new idea during the build is offered after, never added |
+
+**When an interview is close** (`dojo-interview-prep`, `dojo.py interview`): the learner and the
+tutor write one list of everything to prepare (a custom track too, when the material does not
+exist yet) in `progress/interviews/<DD-MM-YYYY>_<name>.md`, each item with how it is practised
+and a done-when bar.
+
+| # | Rule while the checklist is open |
+| --- | --- |
+| 1 | Work only on unchecked items, in the listed order, until the date; `dojo.py interview check <n>` when the done-when bar is met |
+| 2 | A gap in an item gets one short explanation (a few lines, a concrete example), then the next question; it never grows into a lesson |
+| 3 | A tangent (a side question, an idea, a tool met on the way) goes to the parking lot with one line (`dojo.py interview park "..."`) and the item continues |
+| 4 | No new items, no new notes or side files, and no offers (theory, probes, "read next") unless the learner asks; the tutor says when an item or block is over |
+| 5 | After the date: `dojo.py interview close`, then offer the parking lot, the mode question (`dojo.py mode`) and a replan (`dojo-roadmap`) |
+
+`today` and the brief show the interview, the items done, the next item and the days left, and
+once the date has passed they say it is time to close it out.
 
 ## 7. All the good practices, and what the tutor does if one is skipped
 

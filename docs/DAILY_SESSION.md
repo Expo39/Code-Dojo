@@ -5,7 +5,9 @@ The order matters more than the exact minutes: **retrieval first, new material w
 performance practice, then logging**. Your own week (which day is for what, from your hours and
 your track mix) is in `progress/docs/WEEK.md`; with several tracks, the "Learn and write" block
 follows the mix that `today` shows. The Perform block follows your mode (`METHOD.md`): in `hobby`
-mode it becomes more Build, and in `industry` mode it alternates with Build.
+mode it becomes more Build, and in `industry` mode it alternates with Build. An interview that is
+close has its own checklist (`CHECKLISTS.md`, section 8): until its date every block works through
+those items and nothing else; tangents wait in the parking lot.
 
 Every session starts the same way: open the tutor in the repo (Claude Code, Codex or Gemini
 CLI) and say hello. It runs the catch-up (what changed, what is due, the week balance, the

@@ -32,11 +32,14 @@ Rules: `docs/ROADMAP.md` (read it first). Everything written here is personal (`
      estimate_date=<today>` so `today` measures missed time from the new estimates.
    - `progress/docs/`: `WEEK.md` when mix or hours change; `INTERVIEW_PREP.md` when an interview
      becomes a goal or gets a date.
-   - An interview within about two weeks: offer an interview sprint (yes or no), `dojo.py settings
-     sprint_until=<interview date> sprint_redos=<N>`. Until that date the status leaves out the
+   - An interview within about two weeks: run `dojo-interview-prep` (the checklist of what to
+     prepare, a custom track if needed) and offer the sprint (yes or no), `dojo.py settings
+     sprint_redos=<N>` (`interview start` has set `sprint_until`). Until that date the status leaves out the
      weekly review, the strand balance and the plan dates, and the redo queue becomes N redos a day
      picked at random from everything solved, so it all stays fresh; the rest of the day goes to
-     the interview. It ends by itself the day after; then a weekly review replans.
+     the checklist's items. After the date `today` says to close it (`dojo.py interview close`);
+     then this skill replans: the mode question (`dojo.py mode`: keep training for interviews, or
+     `hybrid`, `industry`, `hobby`), the mix restored, and a dated Plan changes line.
    - `dojo.py mix <track>=N ...` (sum 100, 0 = maintenance) and `--priority "<text>"` (`""`
      clears it).
 6. Modules move in or out: show `dojo.py modules` and agree them (`dojo-assess`, 3b).

@@ -18,6 +18,10 @@ any time):
 | `industry` | entering an industry or role, no interview yet | more projects in that industry's style, a mock a month once applying is near |
 | `hobby` | the subject for its own sake | projects and exploration, no mocks unless asked, no timed pressure |
 
+`dojo.py mode` shows what each switches on and changes it; the exercise loop stays on in every
+mode (`METHOD.md`, "What a mode switches on"). An interview with a date has its own checklist
+and sprint (`dojo-interview-prep`) on top of the mode, and closes out when it has passed.
+
 | Target level | Means | Typical bar |
 | --- | --- | --- |
 | `hobbyist` | build your own things, read docs, fix your own bugs | working programs and the basics behind them |

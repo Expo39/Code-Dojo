@@ -154,7 +154,7 @@ python dojo.py graph next            # what you can do now, from the concept gra
 | Group | Commands |
 | --- | --- |
 | Set up | `setup` (installs and checks for you), `install`, `doctor` |
-| Plan | `today`, `list [module]`, `stats`, `graph [--html]`, `graph next [--goal X]`, `graph path <X>`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `settings [key=value ...] [--review]`, `modules`, `overrides` (your personal rules, each naming the shared rule it replaces) |
+| Plan | `today`, `list [module]`, `stats`, `graph [--html]`, `graph next [--goal X]`, `graph path <X>`, `week [--write]`, `mix [track=N ...] [--priority TEXT]`, `mode [name]`, `interview start|status|check|park|close`, `settings [key=value ...] [--review]`, `modules`, `overrides` (your personal rules, each naming the shared rule it replaces) |
 | Practise | `start`, `test [--debug]`, `debug <file>` (any exercise, drill, mock or lesson, with editor breakpoints), `done --hints N [--skipped steps] [--deferred steps] [--confidence N --prediction right\|wrong]`, `debt [clear]` (quiet mode), `pause` / `resume`, `cancel`, `clarify`, `session start\|pause\|resume\|status\|end` (the session clock), `away <from> <to>` (time away: nothing owed; coming back, a re-entry sized from the days away and your pace) |
 | Learn | `primm <module> <topic>` (lesson file and timer), `done lesson:<topic>`, `start probe:<track>` / `done probe:<track>`, `log study <minutes> [<topic>]` |
 | Record | `mistake`, `log <kind> <minutes>`, `mark --box N` (things you already know), `graph set` / `graph undo` (concept evidence), `sync` |
